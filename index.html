@@ -6,28 +6,29 @@
 <title>Celeste – Welcome</title>
 
 <style>
-    body {
-        background: #ffffff;
-        font-family: 'Garamond', serif;
-        text-align: center;
-        padding: 80px 20px;
-    }
-
     html, body {
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: hidden; /* iframe内のスクロールを消す */
-      }
+        overflow: hidden;
+        font-family: 'Garamond', serif;
+    }
+
+    /* 背景画像A（全画面） */
+    body {
+        background: url('A_digital_gradient_gradient_image_transitions_vert.png') no-repeat center center fixed;
+        background-size: cover;
+        color: #ffffff;
+        text-align: center;
+        padding: 80px 20px;
+    }
 
     #container {
         max-width: 780px;
         margin: auto;
-        padding-top: 40px;  /* 追加（任意） */
     }
 
-    
-
+    /* フェードアニメーション */
     .fade {
         opacity: 0;
         transform: translateY(20px);
@@ -51,11 +52,13 @@
     h1 {
         font-size: 36px;
         margin-bottom: 40px;
+        font-weight: normal;
     }
 
     p {
         font-size: 18px;
         line-height: 1.8;
+        margin: 0 0 20px;
     }
 
     .spacer {
