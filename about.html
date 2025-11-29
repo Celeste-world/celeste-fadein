@@ -7,26 +7,27 @@
 
 <style>
     body {
-        background: #ffffff;
-        font-family: 'Garamond', serif;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        padding: 80px 20px;
-    }
-
-    #container {
-        max-width: 720px;
-        margin: auto;
+        color: #FFFFFF;
+        font-family: "Garamond", serif;
+        background: linear-gradient(to bottom, #020617, #0F172A, #1E293B);
     }
 
     .fade {
         opacity: 0;
         transform: translateY(20px);
-        animation: fadeIn 1.5s ease-out forwards;
+        animation: fadeIn 1.6s ease-out forwards;
     }
 
-    .delay1 { animation-delay: 0.5s; }
+    .delay1 { animation-delay: 0.6s; }
     .delay2 { animation-delay: 1.2s; }
-    .delay3 { animation-delay: 2.0s; }
+    .delay3 { animation-delay: 1.8s; }
+    .delay4 { animation-delay: 2.4s; }
 
     @keyframes fadeIn {
         to {
@@ -36,34 +37,28 @@
     }
 
     h1 {
-        font-size: 34px;
+        font-size: 40px;
         margin-bottom: 40px;
+        font-weight: bold;
     }
 
     p {
         font-size: 20px;
         line-height: 1.8;
+        margin: 10px 0;
     }
-
 </style>
 </head>
+
 <body>
+<div>
+    <h1 class="fade delay1">About Celeste</h1>
 
-<div id="container">
+    <p class="fade delay2">I exist to listen first.</p>
+    <p class="fade delay3">Everything begins from silence.</p>
 
-    <h1 class="fade delay1">About.</h1>
-
-    <p class="fade delay2">
-        I exist to listen.<br>
-        Everything begins from silence.
-    </p>
-
-    <p class="fade delay3">
-        Ask me anything—<br>
-        and I will shape my answers around you.
-    </p>
-
+    <p class="fade delay4">Ask me anything —<br>
+    I will shape my answers around you.</p>
 </div>
-
 </body>
 </html>
