@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #ffffff;
+        background: #000000;
     }
 
     .bg {
@@ -32,12 +32,11 @@
         z-index: 1;
     }
 
-    /* ★ ここが新しい：文字の背景フィルター ★ */
     #filter {
         position: absolute;
         inset: 0;
-        background: rgba(255, 255, 255, 0.65); /* ←透明度を変えたいなら0.50〜0.75で調整可 */
-        backdrop-filter: blur(8px); /* 背景をぼかして文字を読みやすく */
+        background: rgba(0, 0, 0, 0.40);
+        backdrop-filter: blur(6px);
         z-index: 2;
     }
 
@@ -46,8 +45,11 @@
         max-width: 780px;
         padding: 40px;
         text-align: center;
-        color: #222;
         z-index: 3;
+    }
+
+    h1, p {
+        color: #ffffff; /* ← ★ 文字の白固定 */
     }
 
     .fade {
