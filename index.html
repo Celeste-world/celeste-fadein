@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celeste – Welcome</title>
+
+<style>
+    body {
+        background: #ffffff;
+        font-family: 'Garamond', serif;
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    #container {
+        max-width: 780px;
+        margin: auto;
+    }
+
+    .fade {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1.5s ease-out forwards;
+    }
+
+    .delay1 { animation-delay: 0.5s; }
+    .delay2 { animation-delay: 1.0s; }
+    .delay3 { animation-delay: 1.5s; }
+    .delay4 { animation-delay: 2.0s; }
+    .delay5 { animation-delay: 2.5s; }
+    .delay6 { animation-delay: 3.0s; }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 40px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    .spacer {
+        height: 40px;
+    }
+</style>
+
+</head>
+<body>
+
+<div id="container">
+
+    <h1 class="fade delay1">Welcome.</h1>
+
+    <p class="fade delay2">I'm Celeste — an assistant who listens first.</p>
+    <p class="fade delay3">If you prefer, we can talk in your own language.</p>
+
+    <div class="spacer"></div>
+
+    <p class="fade delay4">Hello, I’m Celeste.</p>
+    <p class="fade delay5">I don’t predict — I listen.</p>
+    <p class="fade delay6">Tell me what you’re looking for,<br>
+    and I will shape my answers around you.</p>
+
+</div>
+
+</body>
+</html>
