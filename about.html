@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Celeste</title>
+
+<style>
+    body {
+        background: #ffffff;
+        font-family: 'Garamond', serif;
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    #container {
+        max-width: 720px;
+        margin: auto;
+    }
+
+    .fade {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 1.5s ease-out forwards;
+    }
+
+    .delay1 { animation-delay: 0.5s; }
+    .delay2 { animation-delay: 1.2s; }
+    .delay3 { animation-delay: 2.0s; }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        font-size: 34px;
+        margin-bottom: 40px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 1.8;
+    }
+
+</style>
+</head>
+<body>
+
+<div id="container">
+
+    <h1 class="fade delay1">About.</h1>
+
+    <p class="fade delay2">
+        I exist to listen.<br>
+        Everything begins from silence.
+    </p>
+
+    <p class="fade delay3">
+        Ask me anything—<br>
+        and I will shape my answers around you.
+    </p>
+
+</div>
+
+</body>
+</html>
