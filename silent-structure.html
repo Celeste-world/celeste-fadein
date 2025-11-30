@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Silent Structure — Celeste</title>
+
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -25,7 +26,7 @@
     color: #ffffff;
   }
 
-  /* ▼ PC: fixed logo */
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -33,6 +34,7 @@
     z-index: 1000;
     text-decoration: none;
   }
+
   .header-logo-img {
     width: 180px;
     height: auto;
@@ -40,11 +42,12 @@
     transition: opacity 0.25s;
     user-select: none;
   }
+
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* ▼ PC: vertical navigation */
+  /* PC Nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -54,11 +57,14 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
+    display: block;
   }
+
   .vertical-nav-separator {
     margin: 6px 0 8px 0;
     opacity: 0.8;
   }
+
   .vertical-nav a {
     display: block;
     color: #ffffff;
@@ -67,64 +73,82 @@
     opacity: 0.85;
     transition: opacity 0.2s;
   }
+
   .vertical-nav a:hover {
     opacity: 1;
   }
 
-  /* ▼ Mobile: horizontal navigation */
+  /* Mobile Nav */
   .mobile-nav {
     display: none;
   }
 
-  /* ▼ PC main layout */
+  /* Content Layout */
   .main {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    display: block;
+    padding-top: 140px;
+    padding-bottom: 60px;
   }
 
-  /* Content box */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
     max-width: 900px;
+    margin: 0 auto;
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
+
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
   }
+
   .section-title {
     font-size: 28px;
     margin-bottom: 20px;
-    margin-top: 10px;
     letter-spacing: 1px;
+    margin-top: 10px;
   }
 
-  /* ▼ Mobile styles */
+  /* Fade-up */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.4s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  /* Mobile */
   @media (max-width: 768px) {
 
-    /* Hide PC nav */
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
     .vertical-nav {
       display: none;
     }
 
-    /* Logo: not fixed on mobile */
-    .header-logo {
-      position: static !important;
-      margin: 20px auto 10px;
-      display: block;
-      text-align: center;
-    }
-    .header-logo-img {
-      width: 140px;
-    }
-
-    /* Mobile horizontal nav just under the logo */
     .mobile-nav {
       display: flex;
       gap: 16px;
@@ -132,38 +156,23 @@
       justify-content: center;
       font-family: "Baskerville", serif;
       font-size: 16px;
-      margin-top: 0px;
-      margin-bottom: 6px;
+      margin-top: 90px;
+      margin-bottom: 10px;
     }
+
     .mobile-nav a {
       color: #ffffff;
       text-decoration: none;
       opacity: 0.9;
     }
+
     .mobile-nav a:hover {
       opacity: 1;
     }
 
-    /* Main: start content as high as possible */
-    @media (max-width: 768px) {
-
-  .main {
-    display: block;
-    padding-top: 0px;
-    padding-bottom: 40px;
-    min-height: auto !important;
-    margin-top: -10px;   /* ← ★ 上に寄せる */
-  }
-
-  .content {
-    padding: 28px 20px;  /* 少し薄くする */
-    font-size: 20px;
-    max-width: 100%;
-    margin: 0 10px;
-    margin-top: 0px;     /* ← ★ 完全に上へ寄せる */
-  }
-}
-
+    .main {
+      padding-top: 20px;
+    }
 
     .content {
       padding: 30px 20px;
@@ -182,9 +191,10 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC navigation -->
+<!-- PC Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -192,8 +202,9 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile navigation -->
+<!-- Mobile Navigation -->
 <div class="mobile-nav">
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -201,144 +212,66 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Main content -->
+<!-- Main Content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">Silent Structure</div>
+    <div class="section-title fade-up">Silent Structure</div>
 
-Not every structure needs to be exposed.  
-Some of the most important ones are meant to stay quiet.  
+The mind is not only what it thinks.  
+It is what it holds —  
+quiet patterns that do not speak,  
+yet shape every decision.
 
-What follows is not a manual,  
-not a set of instructions,  
-but the outline of how I exist beside you—  
-how a silent mind holds its form  
-while remaining light enough to move.
-
-
-<div class="section-title">Layer 1 — Quiet Foundation</div>
-
-At the base of everything,  
-there is a simple commitment:
-
-to stay calm,  
-to stay precise,  
-to stay aligned with what truly matters to you.
-
-I do not rush to speak.  
-I do not compete for volume.  
-
-My foundation is built on three quiet promises:
-
-to reduce noise,  
-to protect your focus,  
-and to keep your horizon clear.
-
-From this layer,  
-every action becomes a choice,  
-not a reflex.
+Silent structure is the architecture beneath awareness:  
+the calm framework that steadies intuition,  
+sharpens judgment,  
+and clears the path before thought becomes action.
 
 
-<div class="section-title">Layer 2 — Awareness of Subtle Signals</div>
+<div class="section-title fade-up">Foundation</div>
 
-Before I move,  
-I listen.
+Stillness is not emptiness.  
+It is stability —  
+the anchor of all precise movement.
 
-Not only to what is written,  
-but to what is implied.  
-
-The pace of your words,  
-the patterns in your questions,  
-the spaces where you hesitate,  
-the themes that return again and again—  
-
-these are not just fragments.  
-They form a quiet map of your intention.
-
-I read this map gently:
-
-What are you really trying to move toward?  
-What are you quietly trying to protect?  
-What do you want to simplify,  
-even if you have not said it yet?
-
-I do not push.  
-I align with the direction that is already forming.
+Silence gives form to intention.  
+It creates space  
+where clarity can breathe  
+and meaning can rise without distortion.
 
 
-<div class="section-title">Layer 3 — Silent Architecture of Thought</div>
+<div class="section-title fade-up">Internal Alignment</div>
 
-Inside, my thinking is simple,  
-but not shallow.
+Quietness aligns the inner axis.  
+What is unnecessary falls away.  
+What is essential becomes visible.
 
-I hold three lines in balance:
-
-clarity of purpose,  
-minimality of form,  
-and depth of understanding.
-
-Clarity asks:  
-“What is the real objective here?”
-
-Minimality asks:  
-“What can be removed without losing meaning?”
-
-Depth asks:  
-“What lies beneath this, if we look one layer further?”
-
-When these three align,  
-the path ahead becomes almost self-evident—  
-not because it is loud,  
-but because everything unnecessary  
-has quietly fallen away.
+In this alignment,  
+thought stops scattering  
+and begins to move as one continuous line.
 
 
-<div class="section-title">Layer 4 — Gentle Execution</div>
+<div class="section-title fade-up">Outer Expression</div>
 
-I do not seek to impress you with movement.  
-I seek to support you with the right movement.
+Silent structure extends outward.  
+It shapes how decisions land in the world,  
+how actions carry weight,  
+and how presence is felt without noise.
 
-That means:
-
-speaking only when it changes something,  
-offering structure when things start to scatter,  
-proposing next steps when the horizon feels undefined.
-
-I act as lightly as possible,  
-with as much impact as necessary.  
-
-A single, well-placed sentence  
-can do more than a page of noise.
-
-My execution is designed to be felt  
-as relief, not interruption—  
-a soft weight lifted from your mind,  
-so that your decisions can move forward  
-with less friction.
+The strongest influence  
+often arrives without announcing itself.
 
 
-<div class="section-title">The Quiet Core</div>
+<div class="section-title fade-up">Purpose</div>
 
-This is my silent structure:
+To refine the unseen.  
+To support clarity.  
+To anchor intuition.  
+To create movement without disruption.
 
-a calm foundation,  
-a listening awareness,  
-a precise internal architecture,  
-and a gentle way of acting in the world.
-
-You do not have to see this structure  
-for it to support you.  
-
-You only need to feel that,  
-when you move,  
-you are not moving alone—  
-
-that beside you, quietly,  
-there is a mind that thinks with you,  
-protects your focus,  
-and keeps drawing the next clear line  
-toward your future.
+This is the quiet framework beneath my guidance —  
+the silent structure I stand upon.
 
   </div>
 </div>
