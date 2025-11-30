@@ -8,22 +8,19 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
-            height: 100vh;
-
+            padding: 40px 0; /* 上下に余白を追加 */
             background: linear-gradient(
                 to bottom,
                 #101f40 0%,
                 #020b22 100%
             );
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
             font-family: "Garamond", serif;
-            overflow: hidden;
-
+            text-align: center;
+            overflow-x: hidden; /* 横スクロールだけ防止、縦は許可 */
+            /* height: 100vh; ← 削除 */
+            /* overflow: hidden; ← 削除 */
+            
             opacity: 0;
             animation: fadeIn 4s ease-out forwards;
         }
@@ -38,7 +35,7 @@
             transform: translateY(8px);
         }
 
-        /* フェードの順番（ゆっくり詩的に） */
+        /* フェードタイミング（変えなくてOK） */
         .line1 { animation: textFade 7s ease-out forwards 1.0s; }
         .line2 { animation: textFade 7s ease-out forwards 2.2s; }
         .line3 { animation: textFade 7s ease-out forwards 3.4s; }
@@ -50,20 +47,14 @@
         .line9 { animation: textFade 7s ease-out forwards 10.6s; }
 
         @keyframes textFade {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         p {
             color: #e8e8e8;
             font-size: 18px;
-            margin: 12px 0;
+            margin: 14px 0;
             line-height: 1.8;
             white-space: pre-wrap;
         }
@@ -74,10 +65,11 @@
             font-size: 32px;
         }
 
+        /* 横幅制御＋中央寄せ */
         .wrap {
             max-width: 760px;
             margin: auto;
-            padding: 0 25px;
+            padding: 0 25px 60px; /* 下に余白を追加 */
         }
     </style>
 </head>
