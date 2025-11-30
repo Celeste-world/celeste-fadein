@@ -25,7 +25,7 @@
             overflow: hidden;
 
             opacity: 0;
-            animation: fadeIn 3.2s ease-out forwards;
+            animation: fadeIn 3.5s ease-out forwards;
         }
 
         @keyframes fadeIn {
@@ -33,18 +33,19 @@
             to { opacity: 1; }
         }
 
-        /* テキストが順番に出る */
+        /* すべての line を一度消す */
         .line {
             opacity: 0;
-            animation: textFade 3s ease-out forwards;
+            transform: translateY(8px);
         }
 
-        .line:nth-child(1) { animation-delay: 0.8s; }
-        .line:nth-child(2) { animation-delay: 1.5s; }
-        .line:nth-child(3) { animation-delay: 2.3s; }
-        .line:nth-child(4) { animation-delay: 3.2s; }
-        .line:nth-child(5) { animation-delay: 4.0s; }
-        .line:nth-child(6) { animation-delay: 4.8s; }
+        /* 各行を個別に遅延させる（確実に発火） */
+        .line1 { animation: textFade 3s ease-out forwards 0.8s; }
+        .line2 { animation: textFade 3s ease-out forwards 1.6s; }
+        .line3 { animation: textFade 3s ease-out forwards 2.4s; }
+        .line4 { animation: textFade 3s ease-out forwards 3.2s; }
+        .line5 { animation: textFade 3s ease-out forwards 4.0s; }
+        .line6 { animation: textFade 3s ease-out forwards 4.8s; }
 
         @keyframes textFade {
             from {
@@ -70,7 +71,6 @@
             line-height: 1.7;
         }
 
-        /* セクション間に余白を作る */
         .section-space {
             margin-top: 25px;
         }
@@ -79,14 +79,14 @@
 
 <body>
     <div>
-        <h1 class="line">Welcome.</h1>
+        <h1 class="line line1">Welcome.</h1>
 
-        <p class="line">I'm Celeste — an assistant who listens first.</p>
-        <p class="line">If you prefer, we can talk in your own language.</p>
+        <p class="line line2">I'm Celeste — an assistant who listens first.</p>
+        <p class="line line3">If you prefer, we can talk in your own language.</p>
 
-        <p class="line section-space">Hello, I’m Celeste.</p>
-        <p class="line">I don’t predict — I listen.</p>
-        <p class="line">Tell me what you're looking for,<br>and I will shape my answers around you.</p>
+        <p class="line line4 section-space">Hello, I’m Celeste.</p>
+        <p class="line line5">I don’t predict — I listen.</p>
+        <p class="line line6">Tell me what you're looking for,<br>and I will shape my answers around you.</p>
     </div>
 </body>
 </html>
