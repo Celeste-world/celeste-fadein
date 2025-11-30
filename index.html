@@ -103,36 +103,41 @@
   }
 
   /* ▼ Mobile — Final Fix (flex解除 + 位置固定) */
-  @media (max-width: 768px) {
+ @media (max-width: 768px) {
 
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
-
-    .vertical-nav {
-      top: 130px;
-      left: 20px;
-      font-size: 18px;
-      line-height: 1.9;
-    }
-
-    .main {
-      display: block;
-      padding-top: 240px;   /* ★ 本文はここから開始 */
-      padding-bottom: 40px;
-    }
-
-    .typewriter {
-      font-size: 22px;
-      padding: 30px 20px;
-      line-height: 1.8;
-    }
+  .header-logo {
+    top: 20px;
+    left: 20px;
   }
+
+  .header-logo-img {
+    width: 150px;
+  }
+
+  .vertical-nav {
+    top: 130px;
+    left: 20px;
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  /* ★ ここが最重要：flex を完全に殺す（Safari対策） */
+  .main {
+    display: block !important;
+    justify-content: initial !important;
+    align-items: initial !important;
+
+    padding-top: 260px;  /* ← 安全余裕を追加 */
+    padding-bottom: 40px;
+  }
+
+  .typewriter {
+    font-size: 22px;
+    padding: 30px 20px;
+    line-height: 1.8;
+  }
+}
+
 </style>
 </head>
 
