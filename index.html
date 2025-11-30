@@ -19,27 +19,27 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
     color: #ffffff;
   }
 
-  /* 左上ロゴ */
+  /* ▼ SVGロゴ */
   .header-logo {
     position: fixed;
     top: 25px;
     left: 40px;
-    font-family: "Baskerville", serif;
-    font-size: 34px;
-    letter-spacing: 2px;
-    font-weight: 300;
-    opacity: 0.95;
-    color: #ffffff;
-    text-decoration: none;
     z-index: 1000;
+    text-decoration: none;
+  }
+
+  .header-logo-img {
+    width: 180px;    /* PCで最適な見た目 */
+    height: auto;
+    opacity: 0.94;
+    transition: opacity 0.25s;
     user-select: none;
   }
 
-  .header-logo:hover {
+  .header-logo-img:hover {
     opacity: 1;
   }
 
@@ -96,9 +96,12 @@
   /* ▼ スマホ最適化 */
   @media (max-width: 768px) {
     .header-logo {
-      font-size: 26px;
-      left: 20px;
       top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
     }
 
     .vertical-nav {
@@ -116,7 +119,6 @@
       font-size: 22px;
       padding: 30px 20px;
       line-height: 1.8;
-      max-width: 100%;
     }
   }
 </style>
@@ -124,17 +126,19 @@
 
 <body>
 
-<!-- ロゴ -->
-<a class="header-logo" href="/">Celeste</a>
+<!-- ▼ SVGロゴ（ここが新しくなった部分） -->
+<a href="/" class="header-logo">
+  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+</a>
 
-<!-- ▼ 縦ナビ（ハイエンド） -->
+<!-- ▼ 縦ナビ -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
 </div>
 
-<!-- ▼ メインテキスト（中央） -->
+<!-- ▼ メインテキスト -->
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
