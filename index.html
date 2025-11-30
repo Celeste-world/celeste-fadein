@@ -211,10 +211,23 @@ and prepare what lies ahead.`;
 
   function typeWriter() {
     if (i < text.length) {
+
       tw.textContent += text.charAt(i);
 
-      // 行が変わるところだけ少し間を置く
-      const delay = (text.charAt(i) === "\n") ? 450 : 65;
+      let delay;
+
+      // 最初の "Hello, I’m Celeste." をゆっくり
+      if (i < 21) { 
+        delay = 180; // 非常にゆっくり
+      }
+      else {
+        delay = 110; // 2〜3行目の通常の静かな速度
+      }
+
+      // 改行は長く「呼吸」するようなポーズ
+      if (text.charAt(i) === "\n") {
+        delay = 700;
+      }
 
       i++;
       setTimeout(typeWriter, delay);
@@ -224,6 +237,7 @@ and prepare what lies ahead.`;
   typeWriter();
 });
 </script>
+
 
 
 </body>
