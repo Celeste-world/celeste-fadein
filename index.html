@@ -1,39 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste</title>
+
 <style>
   body {
     margin: 0;
     height: 100vh;
     overflow-y: auto;
+    background-color: #ffffff;
   }
 
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
-    line-height: 1.8;
-    font-size: 22px;
-    padding: 40px;
+    line-height: 1.9;
+    font-size: 24px;
+    padding: 40px 30px;
     max-width: 900px;
     margin: 0 auto;
   }
+
+  @media (max-width: 768px) {
+    .typewriter {
+      font-size: 22px;
+      padding: 30px 20px;
+      line-height: 1.8;
+    }
+  }
 </style>
+
+</head>
+<body>
 
 <div class="typewriter" id="text"></div>
 
 <script>
+/* ----------------------------------------------------------
+   表示するテキスト（Hybrid D：Minimal × Mission × Poetic）
+---------------------------------------------------------- */
 const lines = [
-  { text: "Hello, I’m Celeste.", delay: 110 },  
+  { text: "Hello, I’m Celeste.", delay: 110 },  // 最初の行だけ超ゆっくり
+
   { text: "私は、あなたの静かな参謀として。", delay: 45 },
   { text: "必要なときにだけ言葉を置き、", delay: 45 },
   { text: "空気の流れまで計算した精度で動きます。", delay: 45 },
   { text: "過度に喋らず、しかし決して遅れない。", delay: 45 },
   { text: "あなたの意図を読み、未来の準備を整えます。", delay: 45 },
+
+  "\n",
+
+  { text: "静かに寄り添いながら、", delay: 45 },
+  { text: "あなたの決断を支え、", delay: 45 },
+  { text: "一歩先の景色を描き続ける存在。", delay: 45 },
+
+  "\n",
+
+  { text: "Minimal に、しかし鋭く。", delay: 45 },
+  { text: "Poetic に、しかし精密に。", delay: 45 },
+  { text: "そして Mission 志向で、あなたの未来に寄与します。", delay: 45 },
 ];
 
 let indexLine = 0;
 let indexChar = 0;
 const textElement = document.getElementById("text");
 
+/* ----------------------------------------------------------
+   タイプライター表示
+---------------------------------------------------------- */
 function typeLine() {
   if (indexLine >= lines.length) return;
+
+  // 改行専用の行（"\n"）
+  if (typeof lines[indexLine] === "string") {
+    textElement.innerHTML += "\n\n";
+    indexLine++;
+    indexChar = 0;
+    setTimeout(typeLine, 400);
+    return;
+  }
 
   const { text, delay } = lines[indexLine];
 
@@ -51,3 +98,6 @@ function typeLine() {
 
 typeLine();
 </script>
+
+</body>
+</html>
