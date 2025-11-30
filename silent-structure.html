@@ -145,12 +145,25 @@
     }
 
     /* Main: start content as high as possible */
-    .main {
-      display: block;
-      padding-top: 0px;
-      padding-bottom: 40px;
-      min-height: auto !important;
-    }
+    @media (max-width: 768px) {
+
+  .main {
+    display: block;
+    padding-top: 0px;
+    padding-bottom: 40px;
+    min-height: auto !important;
+    margin-top: -10px;   /* ← ★ 上に寄せる */
+  }
+
+  .content {
+    padding: 28px 20px;  /* 少し薄くする */
+    font-size: 20px;
+    max-width: 100%;
+    margin: 0 10px;
+    margin-top: 0px;     /* ← ★ 完全に上へ寄せる */
+  }
+}
+
 
     .content {
       padding: 30px 20px;
