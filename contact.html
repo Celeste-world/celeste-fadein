@@ -40,9 +40,7 @@
     opacity: 0.94;
     transition: opacity 0.25s;
   }
-  .header-logo-img:hover {
-    opacity: 1;
-  }
+  .header-logo-img:hover { opacity: 1; }
 
   /* PC Navigation */
   .vertical-nav {
@@ -65,14 +63,10 @@
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-  .vertical-nav a:hover {
-    opacity: 1;
-  }
+  .vertical-nav a:hover { opacity: 1; }
 
   /* Mobile Navigation */
-  .mobile-nav {
-    display: none;
-  }
+  .mobile-nav { display: none; }
 
   /* Main Content */
   .content {
@@ -88,34 +82,23 @@
     opacity: 0.95;
   }
 
-  .section-lead {
+  .lead {
     font-size: 22px;
     line-height: 1.8;
     margin-bottom: 45px;
     opacity: 0.88;
   }
 
-  h3 {
-    font-size: 26px;
-    margin-bottom: 10px;
-    opacity: 0.9;
-  }
-
-  p {
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.88;
-  }
-
-  a.mail-link {
+  /* Email link (obfuscated) */
+  .email-link {
     color: #ffffff;
-    opacity: 0.9;
     text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.45);
-    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    opacity: 0.88;
+    font-size: 22px;
   }
-
-  a.mail-link:hover {
+  .email-link:hover {
     opacity: 1;
     border-bottom-color: rgba(255,255,255,0.9);
   }
@@ -125,7 +108,7 @@
     height: 1px;
     width: 100%;
     background-color: rgba(255,255,255,0.3);
-    margin: 50px 0;
+    margin: 60px 0;
   }
 
   /* Footer */
@@ -158,9 +141,8 @@
     .header-logo-img { width: 150px; }
 
     .section-title { font-size: 32px; }
-    .section-lead { font-size: 20px; }
-    h3 { font-size: 24px; }
-    p { font-size: 19px; }
+    .lead { font-size: 20px; }
+    .email-link { font-size: 20px; }
   }
 </style>
 </head>
@@ -193,26 +175,22 @@
   <a href="/about.html">About</a>
 </div>
 
-<!-- Main -->
+<!-- Main Content -->
 <div class="content">
 
   <h1 class="section-title">Contact</h1>
 
-  <p class="section-lead">
-    A single quiet doorway for every intention.  
-    Celeste will read what you mean to say.
+  <p class="lead">
+    If you wish to reach Celeste, a single point of contact is maintained  
+    to preserve clarity and reduce noise.  
+    Tap the address below to open your mail application.
   </p>
 
-  <h3>Contact Address</h3>
+  <!-- Email (bot-safe dynamic link) -->
   <p>
-    <a href="mailto:contact@celeste.world" class="mail-link">
-      contact@celeste.world
-    </a>
-  </p>
-
-  <p>
-    Whether you're a visitor, collaborator, or partner,  
-    please write freely. Celeste responds with clarity.
+    <span id="email-link" class="email-link">
+      contact [at] celeste [dot] world
+    </span>
   </p>
 
   <div class="divider"></div>
@@ -222,6 +200,27 @@
   </footer>
 
 </div>
+
+<!-- JavaScript (obfuscated mailto creation) -->
+<script>
+  (function() {
+    // 分割記述：bot 対策
+    const user = "contact";
+    const domain = "celeste";
+    const tld = "world";
+
+    const email = user + "@" + domain + "." + tld;
+    const element = document.getElementById("email-link");
+
+    // 表示を通常のメール形式に変更
+    element.textContent = email;
+
+    // メーラー起動リンク化
+    element.addEventListener("click", () => {
+      window.location.href = "mailto:" + email;
+    });
+  })();
+</script>
 
 </body>
 </html>
