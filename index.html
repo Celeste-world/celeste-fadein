@@ -26,13 +26,14 @@
   }
 
   /* ▼ SVGロゴ */
-  .header-logo {
-    position: fixed;
-    top: 25px;
-    left: 40px;
-    z-index: 1000;
-    text-decoration: none;
-  }
+ .header-logo {
+  position: fixed;
+  top: 30px;
+  left: 40px;
+  z-index: 1000;
+  text-decoration: none;
+}
+
 
   .header-logo-img {
     width: 180px;    /* PCで最適な見た目 */
@@ -48,15 +49,16 @@
 
   /* ▼ 縦ナビ（ハイエンド） */
   .vertical-nav {
-    position: fixed;
-    top: 80px;
-    left: 40px;
-    font-family: "Baskerville", serif;
-    font-size: 20px;
-    line-height: 1.7;
-    opacity: 0.95;
-    z-index: 999;
-  }
+  position: fixed;
+  top: 105px;
+  left: 40px;
+  font-family: "Baskerville", serif;
+  font-size: 20px;
+  line-height: 1.9; /* ★ 1.9 に変更 */
+  opacity: 0.95;
+  z-index: 999;
+}
+
 
   .vertical-nav-separator {
     margin: 6px 0 8px 0;
@@ -97,33 +99,24 @@
   }
 
   /* ▼ スマホ最適化 */
-  @media (max-width: 768px) {
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
-
-    .vertical-nav {
-      top: 65px;
-      left: 20px;
-      font-size: 18px;
-    }
-
-    .main {
-      align-items: flex-start;
-      padding-top: 120px;
-    }
-
-    .typewriter {
-      font-size: 22px;
-      padding: 30px 20px;
-      line-height: 1.8;
-    }
+@media (max-width: 768px) {
+  .header-logo {
+    top: 20px;
+    left: 20px;
   }
+
+  .header-logo-img {
+    width: 150px;
+  }
+
+  .vertical-nav {
+    top: 85px; /* ★ 65 → 85 に変更 */
+    left: 20px;
+    font-size: 18px;
+    line-height: 1.9; /* ★ 統一 */
+  }
+}
+
 </style>
 </head>
 
