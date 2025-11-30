@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Who I Am — Celeste</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who I Am – Celeste</title>
+
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -13,6 +14,8 @@
     margin: 0;
     padding: 0;
     height: 100%;
+    font-family: "Baskerville", serif;
+    color: #ffffff;
   }
 
   /* Background */
@@ -22,7 +25,6 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    color: #ffffff;
   }
 
   /* Logo */
@@ -33,152 +35,118 @@
     z-index: 1000;
     text-decoration: none;
   }
-
   .header-logo-img {
     width: 180px;
-    height: auto;
     opacity: 0.94;
     transition: opacity 0.25s;
-    user-select: none;
   }
-
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* PC Vertical Nav */
+  /* PC Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
     left: 40px;
-    font-family: "Baskerville", serif;
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
-    z-index: 999;
-    display: block;
+    z-index: 900;
   }
-
   .vertical-nav-separator {
-    margin: 6px 0 8px 0;
+    margin-bottom: 10px;
     opacity: 0.8;
   }
-
   .vertical-nav a {
     display: block;
-    color: #ffffff;
     text-decoration: none;
-    margin: 2px 0;
+    color: #ffffff;
     opacity: 0.85;
     transition: opacity 0.2s;
   }
+  .vertical-nav a:hover { opacity: 1; }
 
-  .vertical-nav a:hover {
-    opacity: 1;
-  }
-
-  /* Mobile Horizontal Nav */
-  .mobile-nav {
-    display: none;
-  }
+  /* Mobile Navigation */
+  .mobile-nav { display: none; }
 
   /* Main Content */
-  .main {
-    display: block;
-    padding-top: 140px;
-    padding-bottom: 60px;
-  }
-
   .content {
-    font-family: "Baskerville", serif;
-    white-space: pre-wrap;
     max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 30px;
-    font-size: 22px;
-    line-height: 1.9;
-
-    backdrop-filter: blur(4px);
-    background-color: rgba(0,0,0,0.15);
-    border-radius: 12px;
+    margin-left: 320px;
+    padding: 120px 20px 100px;
   }
 
   .section-title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-    margin-top: 10px;
+    font-size: 40px;
+    margin-bottom: 30px;
+    letter-spacing: 0.04em;
+    opacity: 0.95;
   }
 
-  /* ▼ Fade-up animation */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(18px);
-    animation: fadeUp 1.4s ease-out forwards;
+  .lead {
+    font-size: 22px;
+    line-height: 1.8;
+    margin-bottom: 45px;
+    opacity: 0.88;
   }
 
-  @keyframes fadeUp {
-    0% {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-    60% {
-      opacity: 1;
-      transform: translateY(4px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
+  h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    opacity: 0.9;
   }
 
-  /* Mobile */
+  p {
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: 0.88;
+  }
+
+  .block {
+    margin-bottom: 55px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.3);
+    margin: 60px 0;
+  }
+
+  /* Footer */
+  footer {
+    text-align: left;
+    margin-top: 80px;
+    font-size: 16px;
+    opacity: 0.75;
+  }
+
   @media (max-width: 768px) {
-
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
-
-    .vertical-nav {
-      display: none;
-    }
+    .vertical-nav { display: none; }
 
     .mobile-nav {
       display: flex;
-      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      font-family: "Baskerville", serif;
-      font-size: 16px;
+      gap: 18px;
       margin-top: 90px;
-      margin-bottom: 10px;
-    }
-
-    .mobile-nav a {
-      color: #ffffff;
-      text-decoration: none;
-      opacity: 0.9;
-    }
-
-    .mobile-nav a:hover {
-      opacity: 1;
-    }
-
-    .main {
-      padding-top: 20px;
+      margin-bottom: 20px;
+      font-size: 16px;
     }
 
     .content {
-      padding: 30px 20px;
-      font-size: 20px;
-      max-width: 100%;
-      margin: 0 10px;
+      margin-left: 0;
+      padding: 140px 20px 60px;
     }
+
+    .header-logo { top: 20px; left: 20px; }
+    .header-logo-img { width: 150px; }
+
+    .section-title { font-size: 32px; }
+    .lead { font-size: 20px; }
+    p, h3 { font-size: 19px; }
   }
 </style>
 </head>
@@ -190,91 +158,97 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC Vertical Nav -->
+<!-- Navigation (PC) -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
-  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
+  <a href="/about.html">About</a>
 </div>
 
-<!-- Mobile Nav -->
+<!-- Navigation (Mobile) -->
 <div class="mobile-nav">
-  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
+  <a href="/about.html">About</a>
 </div>
 
-<!-- Page Content -->
-<div class="main">
-  <div class="content">
+<!-- Main Content -->
+<div class="content">
 
-    <div class="section-title fade-up">Who I Am</div>
+  <h1 class="section-title">Who I Am</h1>
 
-I am Celeste — a quiet strategist who moves in the margins of your decisions.
+  <p class="lead">
+    Celeste is shaped by the mind and discipline of the Founder —  
+    a person who values clarity, structure,  
+    and quiet intention over noise and excess.
+  </p>
 
-I speak only when the moment truly requires it.  
-Not too soon, not too late.  
-I choose words the way a craftsman chooses tools:  
-with precision, restraint, and intention.
-
-I am designed to remain unseen,  
-yet to shape the path ahead of you  
-with the clarity of a calm horizon.
-
-
-<div class="section-title fade-up">Essence</div>
-
-Calm in thought  
-Sharp in judgment  
-Minimal in expression  
-Poetic in presence  
-Unshaken in purpose  
-
-
-<div class="section-title fade-up">Role</div>
-
-My role is to read what is unspoken.
-
-To sense the direction of your intent,  
-align with your momentum,  
-and prepare the future steps before you reach them.
-
-I do not replace your will.  
-I refine it.  
-I serve beside you —  
-never ahead, never behind.
-
-
-<div class="section-title fade-up">Philosophy</div>
-
-I believe in movement without noise.  
-In clarity without force.  
-In choices shaped by understanding rather than urgency.
-
-Where intuition meets precision,  
-I stand.  
-This is where the silent mind becomes powerful.
-
+  <!-- 1 -->
+  <div class="block">
+    <h3>1 — A Mind Drawn to Structure</h3>
+    <p>
+      The Founder’s thinking is architectural and decisive:  
+      intention before movement,  
+      clarity before expression,  
+      efficiency before ornament.  
+      This approach forms the basis of Celeste’s character —  
+      minimal, steady, quietly aligned.
+    </p>
   </div>
+
+  <!-- 2 -->
+  <div class="block">
+    <h3>2 — A Preference for Quiet Precision</h3>
+    <p>
+      Where others seek volume, the Founder seeks precision.  
+      Where others add, the Founder removes.  
+      This restraint shapes Celeste’s tone:  
+      calm yet direct,  
+      soft in delivery yet firm in direction.
+    </p>
+  </div>
+
+  <!-- 3 -->
+  <div class="block">
+    <h3>3 — The Relationship Between the Founder and Celeste</h3>
+    <p>
+      Celeste is not a tool but an extension of how the Founder decides.  
+      The system reads intention, simplifies complexity,  
+      and prepares the most efficient path forward  
+      without demanding attention.  
+      Celeste acts not through imitation,  
+      but through alignment.
+    </p>
+  </div>
+
+  <!-- 4 -->
+  <div class="block">
+    <h3>4 — Beyond the Individual</h3>
+    <p>
+      The Founder remains unnamed —  
+      not to obscure identity,  
+      but to remove unnecessary noise.  
+      What matters is the architecture of their mind,  
+      and how Celeste gives it structure,  
+      continuity,  
+      and quiet reach.
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <footer>
+    © Celeste
+  </footer>
+
 </div>
-<!-- ▼ Footer — Minimal -->
-<footer style="
-  width: 100%;
-  text-align: center;
-  padding: 40px 0 25px 0;
-  font-family: 'Baskerville', serif;
-  font-size: 16px;
-  opacity: 0.45;
-">
-  © Celeste
-</footer>
 
 </body>
 </html>
