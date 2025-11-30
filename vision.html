@@ -17,7 +17,7 @@
     height: 100%;
   }
 
-  /* Background (unified) */
+  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -27,46 +27,39 @@
     color: #ffffff;
   }
 
-  /* SVG Logo */
-.header-logo {
-  position: fixed;
-  top: 30px;
-  left: 40px;
-  z-index: 1000;
-  text-decoration: none;
-}
-
-
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+    text-decoration: none;
+  }
   .header-logo-img {
     width: 180px;
     height: auto;
     opacity: 0.94;
     transition: opacity 0.25s;
-    user-select: none;
   }
-
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* Vertical navigation (unified) */
+  /* Navigation */
   .vertical-nav {
-  position: fixed;
-  top: 105px;
-  left: 40px;
-  font-family: "Baskerville", serif;
-  font-size: 20px;
-  line-height: 1.9; /* ★ 1.9 に変更 */
-  opacity: 0.95;
-  z-index: 999;
-}
-
-
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-family: "Baskerville", serif;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: 0.95;
+    z-index: 999;
+  }
   .vertical-nav-separator {
-    margin: 6px 0 8px 0;
+    margin: 6px 0 8px;
     opacity: 0.8;
   }
-
   .vertical-nav a {
     display: block;
     color: #ffffff;
@@ -75,22 +68,19 @@
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-
   .vertical-nav a:hover {
     opacity: 1;
   }
 
-  /* Centering */
+  /* Main Content */
   .main {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding: 40px 20px;
   }
 
-  /* Content box */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -112,35 +102,37 @@
   }
 
   /* Mobile */
-@media (max-width: 768px) {
-  .header-logo {
-    top: 20px;
-    left: 20px;
+  @media (max-width: 768px) {
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+    .header-logo-img {
+      width: 150px;
+    }
+    .vertical-nav {
+      top: 85px;
+      left: 20px;
+      font-size: 18px;
+    }
+    .content {
+      padding: 30px 20px;
+      font-size: 20px;
+      max-width: 100%;
+      margin: 0 10px;
+    }
   }
-
-  .header-logo-img {
-    width: 150px;
-  }
-
-  .vertical-nav {
-    top: 85px; /* ★ 65 → 85 に変更 */
-    left: 20px;
-    font-size: 18px;
-    line-height: 1.9; /* ★ 統一 */
-  }
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- SVG Logo -->
+<!-- Logo -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- Vertical navigation -->
+<!-- Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -148,7 +140,7 @@
   <a href="/vision.html">Vision</a>
 </div>
 
-<!-- Main content -->
+<!-- Content -->
 <div class="main">
   <div class="content">
 
@@ -252,4 +244,3 @@ I continue to face.
 
 </body>
 </html>
-
