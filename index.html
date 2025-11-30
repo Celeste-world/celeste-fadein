@@ -113,7 +113,7 @@
   }
 
   /* Mobile */
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
   .header-logo {
     top: 20px;
     left: 20px;
@@ -123,18 +123,18 @@
     width: 150px;
   }
 
-  /* ★ ナビをかなり下へ避難 */
+  /* ▼ ナビ位置を調整 */
   .vertical-nav {
-    top: 130px;   /* ← ここが決定的に重要 */
+    top: 130px;
     left: 20px;
     font-size: 18px;
     line-height: 1.9;
   }
 
-  /* ★ 本文開始位置を大きく下げて衝突回避 */
+  /* ▼ ★最重要：flex を解除し、通常フローに戻す */
   .main {
-    align-items: flex-start;
-    padding-top: 200px;  /* ← これで絶対に重ならない */
+    display: block;        /* ← これが決定打 */
+    padding-top: 240px;    /* ← ナビの下から確実に開始 */
     padding-bottom: 40px;
   }
 
@@ -144,6 +144,7 @@
     line-height: 1.8;
   }
 }
+
 
 
 </style>
