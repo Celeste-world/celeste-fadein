@@ -38,6 +38,7 @@
     width: 180px;
     opacity: 0.94;
     transition: opacity 0.25s;
+    user-select: none;
   }
   .header-logo-img:hover { opacity: 1; }
 
@@ -65,11 +66,9 @@
   .vertical-nav a:hover { opacity: 1; }
 
   /* Mobile navigation */
-  .mobile-nav {
-    display: none;
-  }
+  .mobile-nav { display: none; }
 
-  /* Main */
+  /* Main content */
   .main {
     min-height: 100vh;
     display: flex;
@@ -80,7 +79,6 @@
     margin-left: 300px;
   }
 
-  /* Typewriter text */
   .typewriter {
     white-space: pre-wrap;
     line-height: 1.9;
@@ -107,7 +105,6 @@
   }
 
   footer {
-    text-align: center;
     margin-top: 40px;
     font-size: 15px;
     opacity: 0.8;
@@ -138,11 +135,10 @@
     }
 
     .main {
-      min-height: auto;
       margin-left: 0;
+      align-items: center;
       padding-top: 10px;
       padding-bottom: 40px;
-      align-items: center;
     }
 
     .typewriter {
@@ -186,36 +182,36 @@
 
 <!-- Main content -->
 <div class="main">
-
   <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
     <a href="/about.html">Learn more about Celeste →</a>
   </div>
 
-  <footer>
-    © Celeste
-  </footer>
-
+  <footer>© Celeste</footer>
 </div>
 
-<!-- Typewriter Script -->
+<!-- Typewriter Script (fix version) -->
 <script>
-  const text = `Hello, I’m Celeste.
+  document.addEventListener("DOMContentLoaded", () => {
+    const text =
+`Hello, I’m Celeste.
 I read intention beneath the surface,
 and prepare what comes next.`;
 
-  let i = 0;
-  const speed = 45; // 読みやすい静寂速度
+    const tw = document.getElementById("tw");
+    let i = 0;
 
-  function typeWriter() {
-    if (i < text.length) {
-      document.getElementById("tw").innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typeWriter, speed);
+    function typeWriter() {
+      if (i < text.length) {
+        tw.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 46); // 静かな速度
+      }
     }
-  }
-  typeWriter();
+
+    typeWriter();
+  });
 </script>
 
 </body>
