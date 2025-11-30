@@ -1,0 +1,12 @@
+<svg width="300" height="80" viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo {
+      fill: #ffffff;
+      font-family: "Baskerville", serif;
+      font-size: 120px;
+      font-weight: 300;
+      letter-spacing: 6px;
+    }
+  </style>
+  <text x="0" y="115" class="logo">Celeste</text>
+</svg>
