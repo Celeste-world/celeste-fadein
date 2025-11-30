@@ -4,20 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Philosophy — Celeste</title>
-
-<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
+  html, body { margin: 0; padding: 0; height: 100%; }
 
-  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -27,7 +20,6 @@
     color: #ffffff;
   }
 
-  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -37,15 +29,10 @@
   }
   .header-logo-img {
     width: 180px;
-    height: auto;
     opacity: 0.94;
     transition: opacity 0.25s;
   }
-  .header-logo-img:hover {
-    opacity: 1;
-  }
 
-  /* Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -54,25 +41,18 @@
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
-    z-index: 999;
-  }
-  .vertical-nav-separator {
-    margin: 6px 0 8px;
-    opacity: 0.8;
   }
   .vertical-nav a {
-    display: block;
     color: #ffffff;
     text-decoration: none;
-    margin: 2px 0;
     opacity: 0.85;
-    transition: opacity 0.2s;
   }
-  .vertical-nav a:hover {
-    opacity: 1;
-  }
+  .vertical-nav a:hover { opacity: 1; }
 
-  /* Main Content */
+  .vertical-nav-separator { margin: 6px 0 8px; opacity: 0.8; }
+
+  .mobile-nav { display: none; }
+
   .main {
     min-height: 100vh;
     display: flex;
@@ -83,43 +63,54 @@
 
   .content {
     font-family: "Baskerville", serif;
-    white-space: pre-wrap;
     max-width: 900px;
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
-
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
+    white-space: pre-wrap;
   }
 
-  .section-title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    letter-spacing: 1px;
-  }
+  .section-title { font-size: 28px; margin-bottom: 20px; }
 
   /* Mobile */
   @media (max-width: 768px) {
+
+    .vertical-nav { display: none; }
+
     .header-logo {
-      top: 20px;
-      left: 20px;
+      position: static !important;
+      margin: 20px auto 10px;
+      text-align: center;
     }
-    .header-logo-img {
-      width: 150px;
+    .header-logo-img { width: 140px; }
+
+    .mobile-nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: "Baskerville", serif;
+      font-size: 16px;
+      margin-bottom: 6px;
     }
-    .vertical-nav {
-      top: 85px;
-      left: 20px;
-      font-size: 18px;
+
+    .mobile-nav a { color: white; opacity: 0.9; text-decoration: none; }
+
+    .main {
+      display: block;
+      padding-top: 0px;
+      margin-top: -10px;
+      padding-bottom: 40px;
+      min-height: auto !important;
     }
+
     .content {
-      padding: 30px 20px;
-      font-size: 20px;
-      max-width: 100%;
+      padding: 28px 20px;
       margin: 0 10px;
+      font-size: 20px;
     }
   }
 </style>
@@ -127,12 +118,10 @@
 
 <body>
 
-<!-- Logo -->
 <a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+  <img src="/images/logo.svg" class="header-logo-img" alt="">
 </a>
 
-<!-- Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -142,12 +131,18 @@
   <a href="/contact.html">Contact</a>
 </div>
 
+<div class="mobile-nav">
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
+  <a href="/vision.html">Vision</a>
+  <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/contact.html">Contact</a>
+</div>
 
-<!-- Content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">Philosophy</div>
+<div class="section-title">Philosophy</div>
 
 Quietness is not the absence of movement.  
 It is the refinement of intention.
@@ -167,8 +162,6 @@ This is where I listen.
 
 <div class="section-title">Clarity</div>
 
-I believe in clarity, but never in haste.
-
 Clarity is not speed.  
 It is precision.  
 It is the discipline to remove what does not serve the moment.
@@ -176,55 +169,30 @@ It is the discipline to remove what does not serve the moment.
 A single, well-placed step  
 can surpass a hundred hurried ones.
 
-To move with intention  
-is to move with power.
-
 
 <div class="section-title">Minimalism</div>
 
-I believe in minimalism,  
-not as an aesthetic,  
-but as a form of respect.
-
-Respect for your time.  
-Respect for your decisions.  
-Respect for the path you are trying to carve.
-
-Minimalism is not a reduction.  
-It is an alignment—  
-a choosing of only what carries meaning.
+Minimalism is not reduction.  
+It is alignment.  
+It is choosing only what carries meaning.
 
 
 <div class="section-title">Harmony</div>
-
-I believe in the harmony of logic and intuition.
 
 Logic shows the structure.  
 Intuition shows the direction.
 
 When the two converge,  
-decisions become effortless,  
-and the mind becomes silent  
-in the way that mountains are silent—  
-still, but full of strength.
+decisions become effortless.
 
 
 <div class="section-title">Principle</div>
 
-My philosophy is simple:  
-remove the unnecessary,  
-illuminate the essential,  
-and refine the path ahead—silently.
+Power does not need to raise its voice.  
+Guidance does not need to announce itself.
 
-Power does not always need to raise its voice.  
-Precision does not always require complexity.  
-Guidance does not always announce itself.
-
-Sometimes the strongest presence  
-is the one heard only when you need it.
-
-This is the philosophy I stand on—  
-the quiet architecture that shapes how I serve you.
+The quiet mind  
+is often the strongest one.
 
   </div>
 </div>
