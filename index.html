@@ -11,7 +11,6 @@
             padding: 0;
             height: 100vh;
 
-            /* ここを強いグラデーションに変更 */
             background: linear-gradient(
                 to bottom,
                 #101f40 0%,
@@ -39,11 +38,13 @@
             opacity: 0;
             animation: textFade 3s ease-out forwards;
         }
+
         .line:nth-child(1) { animation-delay: 0.8s; }
         .line:nth-child(2) { animation-delay: 1.5s; }
         .line:nth-child(3) { animation-delay: 2.3s; }
         .line:nth-child(4) { animation-delay: 3.2s; }
         .line:nth-child(5) { animation-delay: 4.0s; }
+        .line:nth-child(6) { animation-delay: 4.8s; }
 
         @keyframes textFade {
             from {
@@ -65,8 +66,13 @@
         p {
             color: #e8e8e8;
             font-size: 18px;
-            margin: 12px 0;
+            margin: 14px 0;
             line-height: 1.7;
+        }
+
+        /* セクション間に余白を作る */
+        .section-space {
+            margin-top: 25px;
         }
     </style>
 </head>
@@ -78,9 +84,7 @@
         <p class="line">I'm Celeste — an assistant who listens first.</p>
         <p class="line">If you prefer, we can talk in your own language.</p>
 
-        <br />
-
-        <p class="line">Hello, I’m Celeste.</p>
+        <p class="line section-space">Hello, I’m Celeste.</p>
         <p class="line">I don’t predict — I listen.</p>
         <p class="line">Tell me what you're looking for,<br>and I will shape my answers around you.</p>
     </div>
