@@ -152,11 +152,12 @@
     }
 
     /* ★ 本文が上から自然に始まる設定（今回の本質的解決） */
-    .main {
+   .main {
+      min-height: auto !important;   /* ← これが最終解決 */
       display: block;
-      padding-top: 20px; /* ← ナビのあと自然に本文開始 */
+      padding-top: 20px;
       padding-bottom: 40px;
-      align-items: flex-start !important; /* ← これが決定打 */
+      align-items: flex-start !important;
     }
 
     /* 内容ボックス最適化 */
