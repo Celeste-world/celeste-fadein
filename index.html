@@ -16,7 +16,7 @@
     height: 100%;
   }
 
-  body {
+  body#index-page {
     background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
@@ -27,26 +27,26 @@
   }
 
   /* Logo */
-  .header-logo {
+  body#index-page .header-logo {
     position: fixed;
     top: 30px;
     left: 40px;
     z-index: 1000;
     text-decoration: none;
   }
-  .header-logo-img {
+  body#index-page .header-logo-img {
     width: 180px;
     opacity: 0.94;
     transition: opacity 0.25s;
     user-select: none;
   }
-  .header-logo-img:hover { opacity: 1; }
+  body#index-page .header-logo-img:hover { opacity: 1; }
 
-  /* PC navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
+  /* Navigation */
+  body#index-page .vertical-nav {
+    position: fixed !important;
+    top: 105px !important;
+    left: 40px !important;
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
@@ -56,22 +56,21 @@
     margin-bottom: 10px;
     opacity: 0.8;
   }
-  .vertical-nav a {
+  body#index-page .vertical-nav a {
     display: block;
     color: #ffffff;
     text-decoration: none;
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-  .vertical-nav a:hover { opacity: 1; }
+  body#index-page .vertical-nav a:hover { opacity: 1; }
 
-  /* Mobile navigation */
-  .mobile-nav {
+  body#index-page .mobile-nav {
     display: none;
   }
 
   /* Main content */
-  .main {
+  body#index-page .main {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -81,7 +80,11 @@
     margin-left: 300px;
   }
 
-  .typewriter {
+  /* Typewriter → index専用に固定 */
+  body#index-page .typewriter {
+    all: unset;
+    display: block;
+    font-family: "Baskerville", serif;
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 28px;
@@ -89,6 +92,7 @@
     opacity: 0.96;
   }
 
+  /* Learn more */
   .learn-more {
     margin-top: 28px;
     font-size: 22px;
@@ -114,9 +118,9 @@
   /* Mobile */
   @media (max-width: 768px) {
 
-    .vertical-nav { display: none; }
+    body#index-page .vertical-nav { display: none !important; }
 
-    .mobile-nav {
+    body#index-page .mobile-nav {
       display: flex;
       gap: 18px;
       flex-wrap: wrap;
@@ -126,23 +130,23 @@
       margin-bottom: 20px;
     }
 
-    .header-logo {
+    body#index-page .header-logo {
       top: 20px;
       left: 20px;
     }
 
-    .header-logo-img {
+    body#index-page .header-logo-img {
       width: 150px;
     }
 
-    .main {
+    body#index-page .main {
       margin-left: 0;
       align-items: center;
       padding-top: 10px;
       padding-bottom: 40px;
     }
 
-    .typewriter {
+    body#index-page .typewriter {
       font-size: 22px;
       padding: 0 20px;
       text-align: center;
@@ -153,7 +157,7 @@
 </style>
 </head>
 
-<body>
+<body id="index-page">
 
 <!-- Logo -->
 <a href="/" class="header-logo">
@@ -183,15 +187,15 @@
 
 <!-- Main content -->
 <div class="main">
-  <!-- 必ず空にする ↓↓↓↓↓ -->
+
   <div class="typewriter" id="tw"></div>
-  <!-- ↑↑↑↑↑ ここに絶対にテキストを書かない -->
 
   <div class="learn-more">
     <a href="/about.html">Learn more about Celeste →</a>
   </div>
 
   <footer>© Celeste</footer>
+
 </div>
 
 <!-- Typewriter Script -->
@@ -209,7 +213,7 @@ and prepare what lies ahead.`;
     if (i < text.length) {
       tw.textContent += text.charAt(i);
       i++;
-      setTimeout(typeWriter, 46);
+      requestAnimationFrame(typeWriter);
     }
   }
 
