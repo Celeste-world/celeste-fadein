@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
 
-<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -17,7 +16,6 @@
     height: 100%;
   }
 
-  /* ===== Background ===== */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -28,7 +26,7 @@
     font-family: "Baskerville", serif;
   }
 
-  /* ===== Logo ===== */
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -36,17 +34,14 @@
     z-index: 1000;
     text-decoration: none;
   }
-
   .header-logo-img {
     width: 180px;
     opacity: 0.94;
     transition: opacity 0.25s;
   }
-  .header-logo-img:hover {
-    opacity: 1;
-  }
+  .header-logo-img:hover { opacity: 1; }
 
-  /* ===== PC vertical navigation ===== */
+  /* PC navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -56,29 +51,25 @@
     opacity: 0.95;
     z-index: 900;
   }
-
   .vertical-nav-separator {
     margin-bottom: 10px;
     opacity: 0.8;
   }
-
   .vertical-nav a {
     display: block;
-    text-decoration: none;
     color: #ffffff;
+    text-decoration: none;
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-  .vertical-nav a:hover {
-    opacity: 1;
-  }
+  .vertical-nav a:hover { opacity: 1; }
 
-  /* ===== Mobile navigation ===== */
+  /* Mobile navigation */
   .mobile-nav {
     display: none;
   }
 
-  /* ===== Main content ===== */
+  /* Main */
   .main {
     min-height: 100vh;
     display: flex;
@@ -86,89 +77,55 @@
     justify-content: center;
     align-items: flex-start;
     padding: 40px 20px;
-    margin-left: 320px;     /* ← 調整して最適位置に */
-    max-width: 900px;
+    margin-left: 300px;
   }
 
-  /* ===== Typewriter Text ===== */
+  /* Typewriter text */
   .typewriter {
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 28px;
-    position: relative;
-    overflow: hidden;
+    max-width: 900px;
+    opacity: 0.96;
   }
 
-  .typewriter span {
-    display: inline-block;
-    white-space: pre-wrap;
-    border-right: 2px solid rgba(255,255,255,0.75);
-    animation:
-      typing 14s steps(38, end) forwards,
-      blink 0.75s step-end infinite;
-  }
-
-  @keyframes typing {
-    from { width: 0; }
-    to   { width: 100%; }
-  }
-
-  @keyframes blink {
-    0%, 100% { border-color: transparent; }
-    50% { border-color: rgba(255,255,255,0.75); }
-  }
-
-  /* ===== Learn More ===== */
+  /* Learn more */
   .learn-more {
-    margin-top: 32px;
+    margin-top: 28px;
     font-size: 22px;
   }
-
   .learn-more a {
     color: #ffffff;
     text-decoration: none;
     opacity: 0.9;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
     padding-bottom: 3px;
-    border-bottom: 1px solid rgba(255,255,255,0.5);
   }
-
   .learn-more a:hover {
     opacity: 1;
     border-bottom-color: rgba(255,255,255,0.9);
   }
 
-  /* ===== Footer ===== */
   footer {
+    text-align: center;
     margin-top: 40px;
-    opacity: 0.85;
     font-size: 15px;
+    opacity: 0.8;
   }
 
-  /* ===== Mobile ===== */
+  /* Mobile */
   @media (max-width: 768px) {
 
-    .vertical-nav {
-      display: none;
-    }
+    .vertical-nav { display: none; }
 
     .mobile-nav {
       display: flex;
+      gap: 18px;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 18px;
+      font-size: 16px;
       margin-top: 90px;
       margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .mobile-nav a {
-      color: #ffffff;
-      text-decoration: none;
-      opacity: 0.9;
-    }
-
-    .mobile-nav a:hover {
-      opacity: 1;
     }
 
     .header-logo {
@@ -181,34 +138,32 @@
     }
 
     .main {
+      min-height: auto;
       margin-left: 0;
-      align-items: center;
-      padding-top: 20px;
+      padding-top: 10px;
       padding-bottom: 40px;
-      text-align: center;
+      align-items: center;
     }
 
     .typewriter {
       font-size: 22px;
       padding: 0 20px;
-    }
-
-    .learn-more {
       text-align: center;
     }
-  }
 
+    .learn-more { text-align: center; }
+  }
 </style>
 </head>
 
 <body>
 
-<!-- ===== Logo ===== -->
+<!-- Logo -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- ===== PC Navigation ===== -->
+<!-- PC navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -219,7 +174,7 @@
   <a href="/about.html">About</a>
 </div>
 
-<!-- ===== Mobile Navigation ===== -->
+<!-- Mobile navigation -->
 <div class="mobile-nav">
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
@@ -229,15 +184,10 @@
   <a href="/about.html">About</a>
 </div>
 
-<!-- ===== Main ===== -->
+<!-- Main content -->
 <div class="main">
 
-  <div class="typewriter">
-    <span>
-Hello, I’m Celeste.
-I read your intentions and prepare what lies ahead.
-    </span>
-  </div>
+  <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
     <a href="/about.html">Learn more about Celeste →</a>
@@ -248,6 +198,25 @@ I read your intentions and prepare what lies ahead.
   </footer>
 
 </div>
+
+<!-- Typewriter Script -->
+<script>
+  const text = `Hello, I’m Celeste.
+I read intention beneath the surface,
+and prepare what comes next.`;
+
+  let i = 0;
+  const speed = 45; // 読みやすい静寂速度
+
+  function typeWriter() {
+    if (i < text.length) {
+      document.getElementById("tw").innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
+    }
+  }
+  typeWriter();
+</script>
 
 </body>
 </html>
