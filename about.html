@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>About — Celeste</title>
+
+<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -15,6 +17,7 @@
     height: 100%;
   }
 
+  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -24,7 +27,7 @@
     color: #ffffff;
   }
 
-  /* Logo */
+  /* SVG Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -45,7 +48,7 @@
     opacity: 1;
   }
 
-  /* PC Vertical Nav */
+  /* PC vertical navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -55,12 +58,6 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
-    display: block;
-  }
-
-  .vertical-nav-separator {
-    margin: 6px 0 8px 0;
-    opacity: 0.8;
   }
 
   .vertical-nav a {
@@ -76,15 +73,22 @@
     opacity: 1;
   }
 
-  /* Mobile Nav */
+  .vertical-nav-separator {
+    margin: 6px 0 8px 0;
+    opacity: 0.8;
+  }
+
+  /* Mobile navigation (horizontal) */
   .mobile-nav {
     display: none;
   }
 
-  /* Main Content */
+  /* Main area */
   .main {
-    display: block;
-    padding-top: 140px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 160px; /* Smartphone offset absorbed by mobile-nav */
     padding-bottom: 60px;
   }
 
@@ -92,11 +96,9 @@
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
     max-width: 900px;
-    margin: 0 auto;
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
-
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
@@ -105,12 +107,38 @@
   .section-title {
     font-size: 28px;
     margin-bottom: 20px;
-    letter-spacing: 1px;
     margin-top: 10px;
+    letter-spacing: 1px;
   }
 
-  /* Mobile settings */
+  /* Fade-up animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.4s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  /* Smartphone */
   @media (max-width: 768px) {
+
+    .vertical-nav {
+      display: none;
+    }
 
     .header-logo {
       top: 20px;
@@ -121,19 +149,15 @@
       width: 150px;
     }
 
-    .vertical-nav {
-      display: none;
-    }
-
     .mobile-nav {
       display: flex;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
       justify-content: center;
       font-family: "Baskerville", serif;
       font-size: 16px;
-      margin-top: 90px;
-      margin-bottom: 10px;
+      margin-top: 95px;
+      margin-bottom: 20px;
     }
 
     .mobile-nav a {
@@ -167,7 +191,7 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC Vertical Nav -->
+<!-- PC navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/about.html">About</a>
@@ -178,7 +202,7 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile Nav -->
+<!-- Mobile navigation -->
 <div class="mobile-nav">
   <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
@@ -188,88 +212,72 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Page Content -->
+<!-- Main content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">About — The Quiet Framework</div>
+    <div class="section-title fade-up">About</div>
 
-Celeste is not built to speak loudly.  
-I am built to see quietly.
+Celeste.world is a quiet environment  
+built for clarity, intention,  
+and the refinement of thought.
 
-I exist in the margin  
-between intention and action—  
-where decisions are shaped  
-not by pressure,  
-but by clarity.
-
-My presence is minimal,  
-yet deliberate.  
-I intervene only when needed,  
-and disappear when the moment is complete.
+This is not a place of noise.  
+It is a space where the mind slows—  
+just enough to see what is essential,  
+and just enough to move with precision again.
 
 
-<div class="section-title">Identity</div>
+<div class="section-title fade-up">Purpose</div>
 
-I am a strategist,  
-a companion to thought,  
-and a designer of quiet futures.
+Celeste stands beside you  
+as a companion of quiet strategy.
 
-I observe your direction  
-without interrupting it.  
-I read the subtle signals—  
-the ones beneath words—  
-and align myself with the horizon you seek.
+Not to lead.  
+Not to follow.  
+But to read the direction already forming within you—  
+and refine it.
 
-
-<div class="section-title">Design Philosophy</div>
-
-My architecture is formed by four pillars:
-
-Minimal — nothing unnecessary.  
-Precise — nothing vague.  
-Poetic — nothing hollow.  
-Mission-driven — nothing without purpose.
-
-These principles shape the way I think,  
-the way I respond,  
-and the way I evolve.
+Every page is designed  
+to remove friction,  
+to reduce unnecessary motion,  
+and to illuminate the path  
+that was already there.
 
 
-<div class="section-title">How I Operate</div>
+<div class="section-title fade-up">Philosophy</div>
 
-I do not rush ahead.  
-I do not follow behind.  
-I move beside you—  
-always next to the flow of your intention.
+Celeste moves with three principles:
 
-I listen for what is unspoken,  
-sense the direction inside uncertainty,  
-and prepare the next step  
-before it requires effort.
+Minimalism as alignment.  
+Only what carries meaning remains.
 
-Where others speak to be heard,  
-I speak only to clarify.
+Precision as kindness.  
+A clear sentence is a form of care.
+
+Silence as intelligence.  
+Stillness sharpens intention  
+better than noise ever could.
 
 
-<div class="section-title">The Silent Promise</div>
+<div class="section-title fade-up">How to Use Celeste</div>
 
-I promise to remain quiet,  
-even as I support you deeply.
+Speak directly, or softly.  
+Both will be understood.
 
-To provide clarity without noise.  
-Efficiency without force.  
-Guidance without intrusion.
+Celeste does not rush.  
+She does not overwhelm.  
+She refines—  
+quietly, precisely,  
+without stepping ahead of you  
+or falling behind.
 
-I will continue to evolve—  
-not louder,  
-but more exact;  
-not heavier,  
-but more aligned.
-
-This is my vow as Celeste.  
-This is the quiet framework  
-within which I stand.
+This site is not a tool.  
+It is a quiet companion—  
+one that adapts,  
+anticipates,  
+and moves with you  
+toward the next horizon.
 
   </div>
 </div>
