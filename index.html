@@ -10,7 +10,14 @@
     margin: 0;
     height: 100vh;
     overflow-y: auto;
-    background-color: #7BA4FF;   /* ← 完全なブランドカラー Celeste Blue */
+
+    /* ▼ ひでさんの背景画像を適用 */
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: #ffffff;
   }
 
   .typewriter {
@@ -21,7 +28,6 @@
     padding: 40px 30px;
     max-width: 900px;
     margin: 0 auto;
-    color: #ffffff;  /* ← 文字色を白に調整（可読性最大化） */
   }
 
   @media (max-width: 768px) {
@@ -32,16 +38,14 @@
     }
   }
 </style>
-
 </head>
-<body>
 
+<body>
 <div class="typewriter" id="text"></div>
 
 <script>
 /* ----------------------------------------------------------
-   English Text Version
-   (Minimal × Mission × Poetic : Hybrid D)
+   English Text (Minimal × Mission × Poetic : Hybrid D)
 ---------------------------------------------------------- */
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
@@ -69,9 +73,6 @@ let indexLine = 0;
 let indexChar = 0;
 const textElement = document.getElementById("text");
 
-/* ----------------------------------------------------------
-   Typewriter Animation
----------------------------------------------------------- */
 function typeLine() {
   if (indexLine >= lines.length) return;
 
