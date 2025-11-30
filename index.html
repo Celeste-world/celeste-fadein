@@ -4,12 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
-
-<!-- ▼ Cache Breaker -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -21,9 +15,9 @@
     height: 100%;
   }
 
-  /* ▼ Background */
+  /* Background */
   body {
-    background-image: url("/images/bg.png");
+    background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -31,7 +25,7 @@
     color: #ffffff;
   }
 
-  /* ▼ Logo */
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -52,7 +46,7 @@
     opacity: 1;
   }
 
-  /* ▼ PC 左ナビ */
+  /* PC vertical nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -62,6 +56,7 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
+    display: block;
   }
 
   .vertical-nav-separator {
@@ -82,36 +77,22 @@
     opacity: 1;
   }
 
-  /* ▼ スマホ用ミニ横ナビ（最初は非表示） */
+  /* Mobile horizontal nav */
   .mobile-nav {
     display: none;
-    font-family: "Baskerville", serif;
-    font-size: 16px;
-    text-align: center;
-    margin-top: 90px; /* ロゴの下に配置 */
-    line-height: 1.8;
   }
 
-  .mobile-nav a {
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.85;
-    padding: 0 6px;
-  }
-
-  .mobile-nav a:hover {
-    opacity: 1;
-  }
-
-  /* ▼ Main */
+  /* Main */
   .main {
-    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+    align-items: flex-start;
+    padding-top: 160px;
+    padding-bottom: 60px;
+    min-height: 100vh;
   }
 
+  /* Typewriter */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -120,12 +101,15 @@
     max-width: 900px;
     padding: 40px 30px;
     text-align: left;
+
+    backdrop-filter: blur(4px);
+    background-color: rgba(0,0,0,0.10);
+    border-radius: 12px;
   }
 
-  /* ▼ Mobile */
+  /* Mobile */
   @media (max-width: 768px) {
 
-    /* ロゴを上に */
     .header-logo {
       top: 20px;
       left: 20px;
@@ -135,28 +119,44 @@
       width: 150px;
     }
 
-    /* PCナビを消す */
+    /* Hide PC nav */
     .vertical-nav {
       display: none;
     }
 
-    /* スマホ用横ナビを表示 */
+    /* Mobile nav */
     .mobile-nav {
-      display: block;
-      margin-top: 80px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: "Baskerville", serif;
+      font-size: 16px;
+      margin-top: 90px;
+      margin-bottom: 10px;
     }
 
-   .main {
-      display: block;
-      padding-top: 100px;   /* ← 180px → 100px に最適化 */
-      padding-bottom: 40px;
+    .mobile-nav a {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.9;
     }
 
+    .mobile-nav a:hover {
+      opacity: 1;
+    }
+
+    /* Typewriter box */
+    .main {
+      padding-top: 20px;
+      align-items: flex-start;
+    }
 
     .typewriter {
-      font-size: 22px;
+      font-size: 20px;
       padding: 30px 20px;
-      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 10px;
     }
   }
 </style>
@@ -164,14 +164,15 @@
 
 <body>
 
-<!-- ▼ Logo -->
+<!-- Logo -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- ▼ PC用ナビ -->
+<!-- PC vertical nav -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -179,28 +180,27 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- ▼ スマホ用ミニ横ナビ -->
+<!-- Mobile horizontal nav -->
 <div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a> |
-  <a href="/philosophy.html">Philosophy</a> |
+  <a href="/about.html">About</a>
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
-  <br>
-  <a href="/silent-structure.html">Silent Structure</a> |
+  <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- ▼ Main -->
+<!-- Main content -->
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
 
 <script>
-/* タイピングアニメーション（既存） */
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
   { text: "I serve as your quiet strategist.", delay: 45 },
   { text: "I speak only when needed,", delay: 45 },
-  { text: "with precision calculated to the flow of the moment.", delay: 45 },
+  { text: "with precision aligned to the flow of the moment.", delay: 45 },
   { text: "Never excessive, yet never late.", delay: 45 },
   { text: "I read your intentions and prepare what lies ahead.", delay: 45 },
 
