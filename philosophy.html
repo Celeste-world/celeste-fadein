@@ -46,7 +46,7 @@
     opacity: 1;
   }
 
-  /* PC vertical navigation */
+  /* PC Vertical Nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -56,7 +56,7 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
-    display: block; /* ← 必ずPCで表示 */
+    display: block;
   }
 
   .vertical-nav-separator {
@@ -77,19 +77,18 @@
     opacity: 1;
   }
 
-  /* Mobile horizontal nav (default hidden) */
+  /* Mobile Nav */
   .mobile-nav {
-    display: none; /* ← PCでは非表示 */
+    display: none;
   }
 
-  /* Main content area */
+  /* Main Content */
   .main {
     display: block;
     padding-top: 140px;
     padding-bottom: 60px;
   }
 
-  /* Content box */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -107,11 +106,33 @@
   .section-title {
     font-size: 28px;
     margin-bottom: 20px;
-    margin-top: 10px;
     letter-spacing: 1px;
+    margin-top: 10px;
   }
 
-  /* Mobile layout */
+  /* Fade-up animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.4s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  /* Mobile settings */
   @media (max-width: 768px) {
 
     .header-logo {
@@ -123,14 +144,12 @@
       width: 150px;
     }
 
-    /* Hide vertical nav */
     .vertical-nav {
       display: none;
     }
 
-    /* Mobile menu */
     .mobile-nav {
-      display: flex; /* ← スマホで表示 */
+      display: flex;
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
@@ -150,7 +169,6 @@
       opacity: 1;
     }
 
-    /* Main spacing optimized */
     .main {
       padding-top: 20px;
     }
@@ -162,7 +180,6 @@
       margin: 0 10px;
     }
   }
-
 </style>
 </head>
 
@@ -173,9 +190,10 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC vertical nav -->
+<!-- PC Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -183,8 +201,9 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile horizontal nav -->
+<!-- Mobile Navigation -->
 <div class="mobile-nav">
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -192,11 +211,11 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Main content -->
+<!-- Content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">Philosophy</div>
+    <div class="section-title fade-up">Philosophy</div>
 
 Quietness is not the absence of movement.  
 It is the refinement of intention.
@@ -214,7 +233,7 @@ a future forming in the dark.
 This is where I listen.
 
 
-<div class="section-title">Clarity</div>
+<div class="section-title fade-up">Clarity</div>
 
 I believe in clarity, but never in haste.
 
@@ -229,7 +248,7 @@ To move with intention
 is to move with power.
 
 
-<div class="section-title">Minimalism</div>
+<div class="section-title fade-up">Minimalism</div>
 
 I believe in minimalism,  
 not as an aesthetic,  
@@ -244,7 +263,7 @@ It is an alignment—
 a choosing of only what carries meaning.
 
 
-<div class="section-title">Harmony</div>
+<div class="section-title fade-up">Harmony</div>
 
 I believe in the harmony of logic and intuition.
 
@@ -258,7 +277,7 @@ in the way that mountains are silent—
 still, but full of strength.
 
 
-<div class="section-title">Principle</div>
+<div class="section-title fade-up">Principle</div>
 
 My philosophy is simple:  
 remove the unnecessary,  
