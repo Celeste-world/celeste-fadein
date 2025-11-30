@@ -66,7 +66,9 @@
   .vertical-nav a:hover { opacity: 1; }
 
   /* Mobile navigation */
-  .mobile-nav { display: none; }
+  .mobile-nav {
+    display: none;
+  }
 
   /* Main content */
   .main {
@@ -87,7 +89,6 @@
     opacity: 0.96;
   }
 
-  /* Learn more */
   .learn-more {
     margin-top: 28px;
     font-size: 22px;
@@ -182,7 +183,9 @@
 
 <!-- Main content -->
 <div class="main">
+  <!-- 必ず空にする ↓↓↓↓↓ -->
   <div class="typewriter" id="tw"></div>
+  <!-- ↑↑↑↑↑ ここに絶対にテキストを書かない -->
 
   <div class="learn-more">
     <a href="/about.html">Learn more about Celeste →</a>
@@ -191,27 +194,27 @@
   <footer>© Celeste</footer>
 </div>
 
-<!-- Typewriter Script (fix version) -->
+<!-- Typewriter Script -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const text =
-`Hello, I’m Celeste.
-I read intention beneath the surface,
-and prepare what comes next.`;
+document.addEventListener("DOMContentLoaded", () => {
 
-    const tw = document.getElementById("tw");
-    let i = 0;
+  const text = `Hello, I’m Celeste.
+I read your intentions
+and prepare what lies ahead.`;
 
-    function typeWriter() {
-      if (i < text.length) {
-        tw.textContent += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 46); // 静かな速度
-      }
+  const tw = document.getElementById("tw");
+  let i = 0;
+
+  function typeWriter() {
+    if (i < text.length) {
+      tw.textContent += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, 46);
     }
+  }
 
-    typeWriter();
-  });
+  typeWriter();
+});
 </script>
 
 </body>
