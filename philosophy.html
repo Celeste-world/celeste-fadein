@@ -12,7 +12,7 @@
     height: 100%;
   }
 
-  /* 背景（トップ & Who-I-Am と同じ） */
+  /* 背景（統一） */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -32,8 +32,8 @@
     font-size: 34px;
     letter-spacing: 2px;
     font-weight: 300;
-    opacity: 0.95;
     color: #ffffff;
+    opacity: 0.95;
     text-decoration: none;
     z-index: 1000;
     user-select: none;
@@ -43,7 +43,37 @@
     opacity: 1;
   }
 
-  /* センタリングコンテナ */
+  /* ▼ 縦ナビ（統一） */
+  .vertical-nav {
+    position: fixed;
+    top: 80px;
+    left: 40px;
+    font-family: "Baskerville", serif;
+    font-size: 20px;
+    line-height: 1.7;
+    opacity: 0.95;
+    z-index: 999;
+  }
+
+  .vertical-nav-separator {
+    margin: 6px 0 8px 0;
+    opacity: 0.8;
+  }
+
+  .vertical-nav a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 2px 0;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+
+  .vertical-nav a:hover {
+    opacity: 1;
+  }
+
+  /* センタリング */
   .main {
     min-height: 100vh;
     display: flex;
@@ -53,7 +83,7 @@
     padding-bottom: 40px;
   }
 
-  /* 内容のボックス */
+  /* 内容ブロック */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -74,6 +104,7 @@
     letter-spacing: 1px;
   }
 
+  /* スマホ最適化 */
   @media (max-width: 768px) {
     .header-logo {
       font-size: 26px;
@@ -81,9 +112,15 @@
       top: 20px;
     }
 
+    .vertical-nav {
+      top: 65px;
+      left: 20px;
+      font-size: 18px;
+    }
+
     .main {
       align-items: flex-start;
-      padding-top: 100px;
+      padding-top: 120px;
     }
 
     .content {
@@ -100,6 +137,13 @@
 <body>
 
 <a class="header-logo" href="/">Celeste</a>
+
+<!-- ▼ 縦ナビ -->
+<div class="vertical-nav">
+  <div class="vertical-nav-separator">—</div>
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
+</div>
 
 <div class="main">
   <div class="content">
@@ -188,4 +232,3 @@ the quiet architecture that shapes how I serve you.
 
 </body>
 </html>
-
