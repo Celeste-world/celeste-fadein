@@ -123,16 +123,19 @@
     width: 150px;
   }
 
+  /* ★ ナビをかなり下へ避難 */
   .vertical-nav {
-    top: 110px;   /* ★ 85 → 110 に修正（重なり防止） */
+    top: 130px;   /* ← ここが決定的に重要 */
     left: 20px;
     font-size: 18px;
     line-height: 1.9;
   }
 
+  /* ★ 本文開始位置を大きく下げて衝突回避 */
   .main {
     align-items: flex-start;
-    padding-top: 150px;   /* ★ 120 → 150 に増加して重なり完全解消 */
+    padding-top: 200px;  /* ← これで絶対に重ならない */
+    padding-bottom: 40px;
   }
 
   .typewriter {
@@ -141,6 +144,7 @@
     line-height: 1.8;
   }
 }
+
 
 </style>
 </head>
