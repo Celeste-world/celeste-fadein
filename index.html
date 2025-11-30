@@ -33,19 +33,20 @@
             to { opacity: 1; }
         }
 
-       /* すべての line を一度透明に */
-.line {
-    opacity: 0;
-    transform: translateY(8px);
-}
+        /* すべての line を透明から開始 */
+        .line {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        
+        /* 行ごとの最適リズム（Celeste詩的バージョン） */
+        .line1 { animation: textFade 7s ease-out forwards 1.5s; }   /* Welcome */
+        .line2 { animation: textFade 7s ease-out forwards 3.0s; }   /* I'm Celeste */
+        .line3 { animation: textFade 7s ease-out forwards 4.8s; }   /* If you prefer */
+        .line4 { animation: textFade 14s ease-out forwards 7.0s; }  /* Hello, I'm Celeste. → 最重要、ゆっくり */
+        .line5 { animation: textFade 9s ease-out forwards 9.5s; }   /* I don't predict */
+        .line6 { animation: textFade 9s ease-out forwards 11.8s; }  /* Tell me what you're looking for */
 
-        /* フェードイン 7秒 + 行ごとに 1.5秒 間隔 */
-        .line1 { animation: textFade 7s ease-out forwards 1.5s; }
-        .line2 { animation: textFade 7s ease-out forwards 3.0s; }
-        .line3 { animation: textFade 7s ease-out forwards 4.5s; }
-        .line4 { animation: textFade 14s ease-out forwards 6.0s; }
-        .line5 { animation: textFade 7s ease-out forwards 7.5s; }
-        .line6 { animation: textFade 7s ease-out forwards 9.0s; }
 
         @keyframes textFade {
             from {
