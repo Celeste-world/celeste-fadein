@@ -4,13 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact — Celeste</title>
+
+<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
 
 <style>
-  html, body { margin: 0; padding: 0; height: 100%; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
 
+  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -20,18 +27,28 @@
     color: #ffffff;
   }
 
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
     left: 40px;
     z-index: 1000;
+    text-decoration: none;
   }
 
   .header-logo-img {
     width: 180px;
+    height: auto;
     opacity: 0.94;
+    transition: opacity 0.25s;
+    user-select: none;
   }
 
+  .header-logo-img:hover {
+    opacity: 1;
+  }
+
+  /* PC Vertical Nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -40,77 +57,106 @@
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
+    z-index: 999;
   }
 
-  .vertical-nav-separator { margin: 6px 0 8px; opacity: 0.8; }
+  .vertical-nav-separator {
+    margin: 6px 0 8px 0;
+    opacity: 0.8;
+  }
 
   .vertical-nav a {
     display: block;
-    color: white;
+    color: #ffffff;
     text-decoration: none;
+    margin: 2px 0;
     opacity: 0.85;
+    transition: opacity 0.2s;
   }
-  .vertical-nav a:hover { opacity: 1; }
 
-  .mobile-nav { display: none; }
+  .vertical-nav a:hover {
+    opacity: 1;
+  }
 
+  /* Mobile Nav */
+  .mobile-nav {
+    display: none;
+  }
+
+  /* Main */
   .main {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+    min-height: auto;
+    display: block;
+    padding-top: 120px;
+    padding-bottom: 60px;
   }
 
+  /* Content */
   .content {
     font-family: "Baskerville", serif;
+    white-space: pre-wrap;
     max-width: 700px;
+    margin: 0 auto;
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
-    white-space: pre-wrap;
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
   }
 
-  .section-title { font-size: 28px; margin-bottom: 20px; }
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
 
+  /* Mobile */
   @media (max-width: 768px) {
 
-    .vertical-nav { display: none; }
-
-    .header-logo {
-      position: static !important;
-      margin: 20px auto 10px;
-      text-align: center;
+    .vertical-nav {
+      display: none;
     }
-    .header-logo-img { width: 140px; }
 
     .mobile-nav {
       display: flex;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
       justify-content: center;
-      font-size: 16px;
       font-family: "Baskerville", serif;
-      margin-bottom: 6px;
+      font-size: 16px;
+      margin-top: 90px;
+      margin-bottom: 20px;
     }
 
-    .mobile-nav a { color: white; text-decoration: none; opacity: 0.9; }
+    .mobile-nav a {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.9;
+    }
+
+    .mobile-nav a:hover {
+      opacity: 1;
+    }
+
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
 
     .main {
-      display: block;
-      padding-top: 0px;
-      margin-top: -10px;
-      padding-bottom: 40px;
-      min-height: auto !important;
+      padding-top: 40px;
     }
 
     .content {
-      padding: 28px 20px;
-      margin: 0 10px;
+      padding: 30px 20px;
       font-size: 20px;
+      max-width: 100%;
+      margin: 0 10px;
     }
   }
 </style>
@@ -118,12 +164,15 @@
 
 <body>
 
+<!-- Logo -->
 <a href="/" class="header-logo">
-  <img src="/images/logo.svg" class="header-logo-img" alt="">
+  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
+<!-- PC Vertical Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -131,7 +180,9 @@
   <a href="/contact.html">Contact</a>
 </div>
 
+<!-- Mobile Navigation -->
 <div class="mobile-nav">
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -139,13 +190,14 @@
   <a href="/contact.html">Contact</a>
 </div>
 
+<!-- Main Content -->
 <div class="main">
   <div class="content">
 
-<div class="section-title">Contact</div>
+    <div class="section-title">Contact</div>
 
 If you wish to reach out,  
-you may do so quietly—  
+you may do so quietly —  
 in your time,  
 in your way.
 
@@ -156,8 +208,8 @@ when your message arrives.
 
 <div class="section-title">Email</div>
 
-<a href="mailto:contact@celeste.world" style="color:white; text-decoration:none; opacity:0.95;">
-contact@celeste.world
+<a href="mailto:contact@celeste.world" style="color:#fff; text-decoration:underline;">
+  contact@celeste.world
 </a>
 
 
