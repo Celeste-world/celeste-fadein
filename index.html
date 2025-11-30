@@ -6,48 +6,47 @@
 <title>Celeste</title>
 
 <style>
-  /* ----------------------------------------------------------
-     BACKGROUND: fixed bg.png
-  ---------------------------------------------------------- */
-  body {
+  /* 全体リセット */
+  html, body {
     margin: 0;
-    height: 100vh;
+    padding: 0;
+    height: 100%;
+  }
 
+  /* 背景担当：body  */
+  body {
     background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 
-    display: flex;
-    justify-content: center;   /* ← 横方向センタリング */
-    align-items: center;       /* ← 縦方向センタリング（重要） */
-    overflow-y: auto;
-
     color: #ffffff;
   }
 
-  /* ----------------------------------------------------------
-     TEXT LAYOUT
-     PC：完全中央
-     SP：上寄せ & 左揃え
-  ---------------------------------------------------------- */
+  /* センタリング担当：.main */
+  .main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;   /* 横方向センタリング */
+    align-items: center;       /* 縦方向センタリング */
+  }
+
+  /* テキストブロック */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 24px;
-
     max-width: 900px;
     padding: 40px 30px;
-
     text-align: left;
   }
 
-  /* スマホ時は「上揃え・左寄せ」に戻す */
+  /* スマホ時：上寄せ & 左寄せ優先 */
   @media (max-width: 768px) {
-    body {
-      align-items: flex-start; /* ← 上寄せに切り替え */
+    .main {
+      align-items: flex-start;   /* 上寄せ */
       padding-top: 40px;
     }
 
@@ -63,7 +62,9 @@
 
 <body>
 
-<div class="typewriter" id="text"></div>
+<div class="main">
+  <div class="typewriter" id="text"></div>
+</div>
 
 <script>
 const lines = [
