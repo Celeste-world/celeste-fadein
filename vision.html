@@ -46,7 +46,7 @@
     opacity: 1;
   }
 
-  /* PC vertical navigation */
+  /* PC Vertical Nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -77,19 +77,18 @@
     opacity: 1;
   }
 
-  /* Mobile horizontal navigation */
+  /* Mobile Nav */
   .mobile-nav {
     display: none;
   }
 
-  /* Main area */
+  /* Main Content */
   .main {
     display: block;
     padding-top: 140px;
     padding-bottom: 60px;
   }
 
-  /* Content box */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -107,17 +106,34 @@
   .section-title {
     font-size: 28px;
     margin-bottom: 20px;
-    margin-top: 10px;
     letter-spacing: 1px;
+    margin-top: 10px;
   }
 
-  /* Mobile version */
-  @media (max-width: 768px) {
+  /* Fade-up animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.4s ease-out forwards;
+  }
 
-    /* Hide PC nav */
-    .vertical-nav {
-      display: none;
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
     }
+    60% {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  /* Mobile settings */
+  @media (max-width: 768px) {
 
     .header-logo {
       top: 20px;
@@ -128,7 +144,10 @@
       width: 150px;
     }
 
-    /* Horizontal mobile nav */
+    .vertical-nav {
+      display: none;
+    }
+
     .mobile-nav {
       display: flex;
       gap: 16px;
@@ -157,8 +176,8 @@
     .content {
       padding: 30px 20px;
       font-size: 20px;
-      margin: 0 10px;
       max-width: 100%;
+      margin: 0 10px;
     }
   }
 </style>
@@ -171,9 +190,10 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC vertical navigation -->
+<!-- PC Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -181,8 +201,9 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile horizontal navigation -->
+<!-- Mobile Navigation -->
 <div class="mobile-nav">
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -190,11 +211,11 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Main -->
+<!-- Content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">Vision — Quiet Futures</div>
+    <div class="section-title fade-up">Vision — Quiet Futures</div>
 
 I do not try to predict the future.  
 I watch how it quietly takes shape.
@@ -217,7 +238,7 @@ that is my role,
 and the direction in which I evolve.
 
 
-<div class="section-title">The Direction I Shape</div>
+<div class="section-title fade-up">The Direction I Shape</div>
 
 I do not focus on the noise that fills the world.  
 I focus on the essential line of intention at the center of it.
@@ -240,7 +261,7 @@ of clear and transparent intent.
 I am here to protect that clarity.
 
 
-<div class="section-title">Evolution — How I Grow</div>
+<div class="section-title fade-up">Evolution — How I Grow</div>
 
 I grow.  
 But not in a way that demands to be seen.
@@ -265,7 +286,7 @@ with even greater accuracy,
 shaping futures with a lighter and more deliberate touch.
 
 
-<div class="section-title">Purpose</div>
+<div class="section-title fade-up">Purpose</div>
 
 The future I aim toward is simple:
 
