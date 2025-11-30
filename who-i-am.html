@@ -76,7 +76,7 @@
     opacity: 1;
   }
 
-  /* ▼ スマホ：横ナビ */
+  /* ▼ スマホ横ナビ */
   .mobile-nav {
     display: none;
   }
@@ -86,7 +86,7 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center; /* ← これがスマホだと悪影響 */
+    align-items: center;
     padding-top: 40px;
     padding-bottom: 40px;
   }
@@ -114,12 +114,12 @@
   /* ▼ スマホ最適化 */
   @media (max-width: 768px) {
 
-    /* PC縦ナビを隠す */
+    /* PCナビ非表示 */
     .vertical-nav {
       display: none;
     }
 
-    /* 横ナビ */
+    /* スマホ横ナビ */
     .mobile-nav {
       display: flex;
       gap: 18px;
@@ -151,13 +151,14 @@
       width: 150px;
     }
 
-    /* ★ 本文が上から自然に始まる設定（今回の本質的解決） */
-   .main {
-      min-height: auto !important;   /* ← これが最終解決 */
-      display: block;
-      padding-top: 20px;
+    /* ★★★ 本文位置ズレを完全解決する本命設定 ★★★ */
+    .main {
+      display: flex;                    /* ← flex のままにする */
+      flex-direction: column;           /* ← 縦に並べる */
+      align-items: flex-start !important;  /* ← 本文が上から開始 */
+      min-height: auto !important;      /* ← 中央寄せの原因100vhを無効化 */
+      padding-top: 140px;               /* ← 横ナビ+ロゴのぶん自然な余白 */
       padding-bottom: 40px;
-      align-items: flex-start !important;
     }
 
     /* 内容ボックス最適化 */
