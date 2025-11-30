@@ -4,12 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Who I Am — Celeste</title>
-
-<!-- Cache Breaker -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -21,9 +15,9 @@
     height: 100%;
   }
 
-  /* Background */
+  /* 背景（統一） */
   body {
-    background-image: url("/images/bg.png");
+    background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -31,7 +25,7 @@
     color: #ffffff;
   }
 
-  /* Logo */
+  /* ▼ SVGロゴ */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -52,7 +46,7 @@
     opacity: 1;
   }
 
-  /* PC Vertical Navigation */
+  /* ▼ PC：縦ナビ */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -82,28 +76,12 @@
     opacity: 1;
   }
 
-  /* Mobile Horizontal Navigation */
+  /* ▼ スマホ：横ナビ */
   .mobile-nav {
     display: none;
-    font-family: "Baskerville", serif;
-    font-size: 16px;
-    text-align: center;
-    margin-top: 90px;
-    line-height: 1.8;
   }
 
-  .mobile-nav a {
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.85;
-    padding: 0 6px;
-  }
-
-  .mobile-nav a:hover {
-    opacity: 1;
-  }
-
-  /* Centered main content area */
+  /* ▼ メイン（PC） */
   .main {
     min-height: 100vh;
     display: flex;
@@ -113,6 +91,7 @@
     padding-bottom: 40px;
   }
 
+  /* ▼ 内容ボックス */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -120,7 +99,6 @@
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
-
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
@@ -133,35 +111,51 @@
     letter-spacing: 1px;
   }
 
-  /* Mobile settings */
+  /* ▼ スマホ最適化 */
   @media (max-width: 768px) {
 
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
-
-    /* Hide PC nav */
+    /* スマホ：縦ナビ非表示 */
     .vertical-nav {
       display: none;
     }
 
-    /* Show horizontal nav */
+    /* スマホ：横ナビ表示 */
     .mobile-nav {
-      display: block;
-      margin-top: 80px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: "Baskerville", serif;
+      font-size: 16px;
+      margin-top: 90px;
+      margin-bottom: 20px;
+    }
+    .mobile-nav a {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.9;
+    }
+    .mobile-nav a:hover {
+      opacity: 1;
     }
 
+    /* ロゴ位置調整 */
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+    .header-logo-img {
+      width: 150px;
+    }
+
+    /* メイン位置：120px が最適 */
     .main {
       display: block;
-      padding-top: 180px;
+      padding-top: 120px;
       padding-bottom: 40px;
     }
 
+    /* 内容ボックス最適化 */
     .content {
       padding: 30px 20px;
       font-size: 20px;
@@ -174,12 +168,12 @@
 
 <body>
 
-<!-- Logo -->
+<!-- ▼ SVGロゴ -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC Navigation -->
+<!-- ▼ PC：縦ナビ -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -189,17 +183,16 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile Navigation -->
+<!-- ▼ スマホ：横ナビ -->
 <div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a> |
-  <a href="/philosophy.html">Philosophy</a> |
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
-  <br>
-  <a href="/silent-structure.html">Silent Structure</a> |
+  <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Main Content -->
+<!-- ▼ 本文 -->
 <div class="main">
   <div class="content">
 
