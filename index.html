@@ -46,7 +46,7 @@
   /* ▼ 縦ナビ（ハイエンド） */
   .vertical-nav {
     position: fixed;
-    top: 80px;         /* ロゴの下に配置 */
+    top: 80px;
     left: 40px;
     font-family: "Baskerville", serif;
     font-size: 20px;
@@ -82,7 +82,7 @@
     padding: 40px 20px;
   }
 
-  /* ▼ テキストブロック */
+  /* ▼ 中央テキスト */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -93,7 +93,7 @@
     text-align: left;
   }
 
-  /* ▼ スマホ調整 */
+  /* ▼ スマホ最適化 */
   @media (max-width: 768px) {
     .header-logo {
       font-size: 26px;
@@ -134,7 +134,7 @@
   <a href="/philosophy.html">Philosophy</a>
 </div>
 
-<!-- ▼ メイン（中央テキスト） -->
+<!-- ▼ メインテキスト（中央） -->
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
@@ -158,7 +158,7 @@ const lines = [
 
   { text: "Minimal, yet sharp.", delay: 45 },
   { text: "Poetic, yet precise.", delay: 45 },
-  { text: "Mission-driven, always aligned with your future.", delay: 45 },
+  { text: "Mission-driven, always aligned with your future.", delay: 45 }
 ];
 
 let indexLine = 0;
