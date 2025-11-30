@@ -17,7 +17,7 @@
     height: 100%;
   }
 
-  /* Background */
+  /* ===== Background ===== */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -25,9 +25,10 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: #ffffff;
+    font-family: "Baskerville", serif;
   }
 
-  /* Logo */
+  /* ===== Logo ===== */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -38,52 +39,46 @@
 
   .header-logo-img {
     width: 180px;
-    height: auto;
     opacity: 0.94;
     transition: opacity 0.25s;
-    user-select: none;
   }
-
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* PC vertical navigation */
+  /* ===== PC vertical navigation ===== */
   .vertical-nav {
     position: fixed;
     top: 105px;
     left: 40px;
-    font-family: "Baskerville", serif;
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
-    z-index: 999;
+    z-index: 900;
   }
 
   .vertical-nav-separator {
-    margin: 6px 0 8px 0;
+    margin-bottom: 10px;
     opacity: 0.8;
   }
 
   .vertical-nav a {
     display: block;
-    color: #ffffff;
     text-decoration: none;
-    margin: 2px 0;
+    color: #ffffff;
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-
   .vertical-nav a:hover {
     opacity: 1;
   }
 
-  /* Mobile navigation */
+  /* ===== Mobile navigation ===== */
   .mobile-nav {
     display: none;
   }
 
-  /* Main */
+  /* ===== Main content ===== */
   .main {
     min-height: 100vh;
     display: flex;
@@ -91,33 +86,50 @@
     justify-content: center;
     align-items: flex-start;
     padding: 40px 20px;
-    margin-left: 300px;
+    margin-left: 320px;     /* ← 調整して最適位置に */
+    max-width: 900px;
   }
 
-  /* Center text block */
+  /* ===== Typewriter Text ===== */
   .typewriter {
-    font-family: "Baskerville", serif;
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 28px;
-    max-width: 900px;
-    text-align: left;
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Learn more link */
+  .typewriter span {
+    display: inline-block;
+    white-space: pre-wrap;
+    border-right: 2px solid rgba(255,255,255,0.75);
+    animation:
+      typing 14s steps(38, end) forwards,
+      blink 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  @keyframes blink {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: rgba(255,255,255,0.75); }
+  }
+
+  /* ===== Learn More ===== */
   .learn-more {
-    margin-top: 28px;
-    font-family: "Baskerville", serif;
+    margin-top: 32px;
     font-size: 22px;
-    text-align: left;
   }
 
   .learn-more a {
     color: #ffffff;
     text-decoration: none;
     opacity: 0.9;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
     padding-bottom: 3px;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
   }
 
   .learn-more a:hover {
@@ -125,16 +137,14 @@
     border-bottom-color: rgba(255,255,255,0.9);
   }
 
-  /* Footer */
+  /* ===== Footer ===== */
   footer {
-    text-align: center;
     margin-top: 40px;
-    font-family: "Baskerville", serif;
-    opacity: 0.8;
+    opacity: 0.85;
     font-size: 15px;
   }
 
-  /* Mobile */
+  /* ===== Mobile ===== */
   @media (max-width: 768px) {
 
     .vertical-nav {
@@ -143,13 +153,12 @@
 
     .mobile-nav {
       display: flex;
-      gap: 18px;
       flex-wrap: wrap;
       justify-content: center;
-      font-family: "Baskerville", serif;
-      font-size: 16px;
+      gap: 18px;
       margin-top: 90px;
       margin-bottom: 20px;
+      font-size: 16px;
     }
 
     .mobile-nav a {
@@ -172,34 +181,34 @@
     }
 
     .main {
-      min-height: auto;
       margin-left: 0;
-      padding-top: 10px;
-      padding-bottom: 40px;
       align-items: center;
+      padding-top: 20px;
+      padding-bottom: 40px;
+      text-align: center;
     }
 
     .typewriter {
       font-size: 22px;
       padding: 0 20px;
-      text-align: center;
     }
 
     .learn-more {
       text-align: center;
     }
   }
+
 </style>
 </head>
 
 <body>
 
-<!-- Logo -->
+<!-- ===== Logo ===== -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC navigation -->
+<!-- ===== PC Navigation ===== -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -210,7 +219,7 @@
   <a href="/about.html">About</a>
 </div>
 
-<!-- Mobile navigation -->
+<!-- ===== Mobile Navigation ===== -->
 <div class="mobile-nav">
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
@@ -220,12 +229,14 @@
   <a href="/about.html">About</a>
 </div>
 
-<!-- Main content -->
+<!-- ===== Main ===== -->
 <div class="main">
 
   <div class="typewriter">
+    <span>
 Hello, I’m Celeste.
 I read your intentions and prepare what lies ahead.
+    </span>
   </div>
 
   <div class="learn-more">
