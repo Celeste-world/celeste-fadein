@@ -1,99 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome – Celeste</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
+  .typewriter {
+    font-family: "Baskerville", serif;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    font-size: 22px;
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+</style>
 
-            background: linear-gradient(
-                to bottom,
-                #101f40 0%,
-                #020b22 100%
-            );
+<div class="typewriter" id="text"></div>
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-family: "Garamond", serif;
-            overflow: hidden;
+<script>
+const lines = [
+  { text: "Hello, I’m Celeste.", delay: 110 },  
+  { text: "私は、あなたの静かな参謀として。", delay: 45 },
+  { text: "必要なときにだけ言葉を置き、", delay: 45 },
+  { text: "空気の流れまで計算した精度で動きます。", delay: 45 },
+  { text: "過度に喋らず、しかし決して遅れない。", delay: 45 },
+  { text: "あなたの意図を読み、未来の準備を整えます。", delay: 45 },
+];
 
-            opacity: 0;
-            animation: fadeIn 4s ease-out forwards;
-        }
+let indexLine = 0;
+let indexChar = 0;
+const textElement = document.getElementById("text");
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+function typeLine() {
+  if (indexLine >= lines.length) return;
 
-        /* テキストのフェードベース */
-        .line {
-            opacity: 0;
-            transform: translateY(8px);
-        }
+  const { text, delay } = lines[indexLine];
 
-        /* --- フェードインの個別タイミング設定 --- */
-        .line1 { animation: textFade 7s ease-out forwards 1.5s; }   /* Welcome */
-        .line2 { animation: textFade 7s ease-out forwards 3.0s; }   /* I'm Celeste */
-        .line3 { animation: textFade 7s ease-out forwards 4.8s; }   /* If you prefer */
-        .line4 { animation: textFade 14s ease-out forwards 7.0s; }  /* Hello, I'm Celeste → 最重要ゆっくり */
-        .line5 { animation: textFade 9s ease-out forwards 9.5s; }   /* I don't predict */
-        .line6 { animation: textFade 9s ease-out forwards 11.8s; }  /* Tell me what you're looking for */
+  if (indexChar < text.length) {
+    textElement.innerHTML += text[indexChar];
+    indexChar++;
+    setTimeout(typeLine, delay);
+  } else {
+    textElement.innerHTML += "\n";
+    indexLine++;
+    indexChar = 0;
+    setTimeout(typeLine, 600);
+  }
+}
 
-        @keyframes textFade {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            color: #f5f5f5;
-            font-size: 36px;
-            margin-bottom: 40px;
-        }
-
-        p {
-            color: #e8e8e8;
-            font-size: 18px;
-            margin: 14px 0;
-            line-height: 1.7;
-        }
-
-        .space {
-            margin-top: 24px;
-        }
-    </style>
-</head>
-
-<body>
-    <div>
-
-        <h1 class="line line1">Welcome.</h1>
-
-        <p class="line line2">I'm Celeste — an assistant who listens first.</p>
-        <p class="line line3">If you prefer, we can talk in your own language.</p>
-
-        <p class="line line4 space">Hello, I’m Celeste.</p>
-
-        <p class="line line5">I don’t predict — I listen.</p>
-
-        <p class="line line6">
-            Tell me what you're looking for,<br>
-            and I will shape my answers around you.
-        </p>
-
-    </div>
-</body>
-</html>
+typeLine();
+</script>
