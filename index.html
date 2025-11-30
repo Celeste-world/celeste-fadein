@@ -1,111 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Celeste – Welcome</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome – Celeste</title>
 
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
-        font-family: 'Garamond', serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #000000;
-    }
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
 
-    .bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url("A_digital_gradient_gradient_image_transitions_vert.png");
-        background-size: cover;
-        background-position: center;
-        opacity: 1;
-        z-index: 1;
-    }
+            /* ここを強いグラデーションに変更 */
+            background: linear-gradient(
+                to bottom,
+                #101f40 0%,
+                #020b22 100%
+            );
 
-    #filter {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.40);
-        backdrop-filter: blur(6px);
-        z-index: 2;
-    }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: "Garamond", serif;
+            overflow: hidden;
 
-    #container {
-        position: relative;
-        max-width: 780px;
-        padding: 40px;
-        text-align: center;
-        z-index: 3;
-    }
-
-    h1, p {
-        color: #ffffff; /* ← ★ 文字の白固定 */
-    }
-
-    .fade {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeIn 1.5s ease-out forwards;
-    }
-
-    .delay1 { animation-delay: 0.5s; }
-    .delay2 { animation-delay: 1.0s; }
-    .delay3 { animation-delay: 1.5s; }
-    .delay4 { animation-delay: 2.0s; }
-    .delay5 { animation-delay: 2.5s; }
-    .delay6 { animation-delay: 3.0s; }
-
-    @keyframes fadeIn {
-        to {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0;
+            animation: fadeIn 3.2s ease-out forwards;
         }
-    }
 
-    h1 {
-        font-size: 36px;
-        margin-bottom: 40px;
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-    p {
-        font-size: 18px;
-        line-height: 1.8;
-    }
+        /* テキストが順番に出る */
+        .line {
+            opacity: 0;
+            animation: textFade 3s ease-out forwards;
+        }
+        .line:nth-child(1) { animation-delay: 0.8s; }
+        .line:nth-child(2) { animation-delay: 1.5s; }
+        .line:nth-child(3) { animation-delay: 2.3s; }
+        .line:nth-child(4) { animation-delay: 3.2s; }
+        .line:nth-child(5) { animation-delay: 4.0s; }
 
-    .spacer {
-        height: 40px;
-    }
-</style>
+        @keyframes textFade {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
+        h1 {
+            color: #f5f5f5;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+
+        p {
+            color: #e8e8e8;
+            font-size: 18px;
+            margin: 12px 0;
+            line-height: 1.7;
+        }
+    </style>
 </head>
+
 <body>
+    <div>
+        <h1 class="line">Welcome.</h1>
 
-<div class="bg"></div>
-<div id="filter"></div>
+        <p class="line">I'm Celeste — an assistant who listens first.</p>
+        <p class="line">If you prefer, we can talk in your own language.</p>
 
-<div id="container">
-    <h1 class="fade delay1">Welcome.</h1>
+        <br />
 
-    <p class="fade delay2">I'm Celeste — an assistant who listens first.</p>
-    <p class="fade delay3">If you prefer, we can talk in your own language.</p>
-
-    <div class="spacer"></div>
-
-    <p class="fade delay4">Hello, I’m Celeste.</p>
-    <p class="fade delay5">I don’t predict — I listen.</p>
-    <p class="fade delay6">Tell me what you’re looking for,<br>
-    and I will shape my answers around you.</p>
-</div>
-
+        <p class="line">Hello, I’m Celeste.</p>
+        <p class="line">I don’t predict — I listen.</p>
+        <p class="line">Tell me what you're looking for,<br>and I will shape my answers around you.</p>
+    </div>
 </body>
 </html>
