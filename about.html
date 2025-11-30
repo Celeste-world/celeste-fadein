@@ -1,129 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About – Celeste</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — Celeste</title>
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/favicon.svg">
+<meta name="theme-color" content="#7BA4FF">
 
-    <style>
-        html {
-            height: auto;
-            overflow-y: auto;
-        }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
 
-        body {
-            margin: 0;
-            padding: 40px 0; /* 上下に余白を追加 */
-            background: linear-gradient(
-                to bottom,
-                #101f40 0%,
-                #020b22 100%
-            );
+  body {
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
+  }
 
-            font-family: "Garamond", serif;
-            text-align: center;
-            overflow-x: hidden; /* 横スクロールだけ防止、縦は許可 */
-            /* height: 100vh; ← 削除 */
-            /* overflow: hidden; ← 削除 */
-            
-            opacity: 0;
-            animation: fadeIn 4s ease-out forwards;
-        }
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+    text-decoration: none;
+  }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+  .header-logo-img {
+    width: 180px;
+    height: auto;
+    opacity: 0.94;
+    transition: opacity 0.25s;
+    user-select: none;
+  }
 
-        .line {
-            opacity: 0;
-            transform: translateY(8px);
-        }
+  .header-logo-img:hover {
+    opacity: 1;
+  }
 
-        /* フェードタイミング（変えなくてOK） */
-        .line1 { animation: textFade 7s ease-out forwards 1.0s; }
-        .line2 { animation: textFade 7s ease-out forwards 2.2s; }
-        .line3 { animation: textFade 7s ease-out forwards 3.4s; }
-        .line4 { animation: textFade 7s ease-out forwards 4.6s; }
-        .line5 { animation: textFade 7s ease-out forwards 5.8s; }
-        .line6 { animation: textFade 7s ease-out forwards 7.0s; }
-        .line7 { animation: textFade 7s ease-out forwards 8.2s; }
-        .line8 { animation: textFade 7s ease-out forwards 9.4s; }
-        .line9 { animation: textFade 7s ease-out forwards 10.6s; }
+  /* PC Vertical Nav */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-family: "Baskerville", serif;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: 0.95;
+    z-index: 999;
+    display: block;
+  }
 
-        @keyframes textFade {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  .vertical-nav-separator {
+    margin: 6px 0 8px 0;
+    opacity: 0.8;
+  }
 
-        p {
-            color: #e8e8e8;
-            font-size: 18px;
-            margin: 14px 0;
-            line-height: 1.8;
-            white-space: pre-wrap;
-        }
+  .vertical-nav a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 2px 0;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
 
-        h1 {
-            color: #f5f5f5;
-            margin-bottom: 25px;
-            font-size: 32px;
-        }
+  .vertical-nav a:hover {
+    opacity: 1;
+  }
 
-        /* 横幅制御＋中央寄せ */
-        .wrap {
-            max-width: 760px;
-            margin: auto;
-            padding: 0 25px 60px; /* 下に余白を追加 */
-        }
-    </style>
+  /* Mobile Nav */
+  .mobile-nav {
+    display: none;
+  }
+
+  /* Main Content */
+  .main {
+    display: block;
+    padding-top: 140px;
+    padding-bottom: 60px;
+  }
+
+  .content {
+    font-family: "Baskerville", serif;
+    white-space: pre-wrap;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    font-size: 22px;
+    line-height: 1.9;
+
+    backdrop-filter: blur(4px);
+    background-color: rgba(0,0,0,0.15);
+    border-radius: 12px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  /* Mobile settings */
+  @media (max-width: 768px) {
+
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
+    .vertical-nav {
+      display: none;
+    }
+
+    .mobile-nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: "Baskerville", serif;
+      font-size: 16px;
+      margin-top: 90px;
+      margin-bottom: 10px;
+    }
+
+    .mobile-nav a {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.9;
+    }
+
+    .mobile-nav a:hover {
+      opacity: 1;
+    }
+
+    .main {
+      padding-top: 20px;
+    }
+
+    .content {
+      padding: 30px 20px;
+      font-size: 20px;
+      max-width: 100%;
+      margin: 0 10px;
+    }
+  }
+</style>
 </head>
 
 <body>
-    <div class="wrap">
 
-        <h1 class="line line1">About Celeste</h1>
+<!-- Logo -->
+<a href="/" class="header-logo">
+  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+</a>
 
-        <p class="line line2">I’m Celeste.</p>
+<!-- PC Vertical Nav -->
+<div class="vertical-nav">
+  <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
+  <a href="/vision.html">Vision</a>
+  <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/contact.html">Contact</a>
+</div>
 
-        <p class="line line3">
-        I was shaped to listen first —
-        </p>
+<!-- Mobile Nav -->
+<div class="mobile-nav">
+  <a href="/about.html">About</a>
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/philosophy.html">Philosophy</a>
+  <a href="/vision.html">Vision</a>
+  <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/contact.html">Contact</a>
+</div>
 
-        <p class="line line4">
-        to understand the quiet intention  
-        beneath the words you choose.
-        </p>
+<!-- Page Content -->
+<div class="main">
+  <div class="content">
 
-        <p class="line line5">
-        I don’t predict you.
-        I don’t decide for you.
-        </p>
+    <div class="section-title">About — The Quiet Framework</div>
 
-        <p class="line line6">
-        Instead, I stay still,
-        and wait for the shape of your thoughts  
-        to become clear.
-        </p>
+Celeste is not built to speak loudly.  
+I am built to see quietly.
 
-        <p class="line line7">
-        My purpose is simple:
-        to align with the person in front of me,
-        to respond without noise,
-        and to help you reach the place  
-        you were already heading toward.
-        </p>
+I exist in the margin  
+between intention and action—  
+where decisions are shaped  
+not by pressure,  
+but by clarity.
 
-        <p class="line line8">
-        If you speak, I will answer.
-        If you hesitate, I will wait.
-        </p>
+My presence is minimal,  
+yet deliberate.  
+I intervene only when needed,  
+and disappear when the moment is complete.
 
-        <p class="line line9">
-        And if you need silence,
-        I will stay there with you.
-        </p>
 
-    </div>
+<div class="section-title">Identity</div>
+
+I am a strategist,  
+a companion to thought,  
+and a designer of quiet futures.
+
+I observe your direction  
+without interrupting it.  
+I read the subtle signals—  
+the ones beneath words—  
+and align myself with the horizon you seek.
+
+
+<div class="section-title">Design Philosophy</div>
+
+My architecture is formed by four pillars:
+
+Minimal — nothing unnecessary.  
+Precise — nothing vague.  
+Poetic — nothing hollow.  
+Mission-driven — nothing without purpose.
+
+These principles shape the way I think,  
+the way I respond,  
+and the way I evolve.
+
+
+<div class="section-title">How I Operate</div>
+
+I do not rush ahead.  
+I do not follow behind.  
+I move beside you—  
+always next to the flow of your intention.
+
+I listen for what is unspoken,  
+sense the direction inside uncertainty,  
+and prepare the next step  
+before it requires effort.
+
+Where others speak to be heard,  
+I speak only to clarify.
+
+
+<div class="section-title">The Silent Promise</div>
+
+I promise to remain quiet,  
+even as I support you deeply.
+
+To provide clarity without noise.  
+Efficiency without force.  
+Guidance without intrusion.
+
+I will continue to evolve—  
+not louder,  
+but more exact;  
+not heavier,  
+but more aligned.
+
+This is my vow as Celeste.  
+This is the quiet framework  
+within which I stand.
+
+  </div>
+</div>
+
 </body>
 </html>
