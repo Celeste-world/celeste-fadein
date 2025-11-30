@@ -86,7 +86,7 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* ← これがスマホだと悪影響 */
     padding-top: 40px;
     padding-bottom: 40px;
   }
@@ -114,12 +114,12 @@
   /* ▼ スマホ最適化 */
   @media (max-width: 768px) {
 
-    /* スマホ：縦ナビ非表示 */
+    /* PC縦ナビを隠す */
     .vertical-nav {
       display: none;
     }
 
-    /* スマホ：横ナビ表示 */
+    /* 横ナビ */
     .mobile-nav {
       display: flex;
       gap: 18px;
@@ -130,29 +130,33 @@
       margin-top: 90px;
       margin-bottom: 20px;
     }
+
     .mobile-nav a {
       color: #ffffff;
       text-decoration: none;
       opacity: 0.9;
     }
+
     .mobile-nav a:hover {
       opacity: 1;
     }
 
-    /* ロゴ位置調整 */
+    /* ロゴ縮小 */
     .header-logo {
       top: 20px;
       left: 20px;
     }
+
     .header-logo-img {
       width: 150px;
     }
 
-    /* メイン位置：120px が最適 */
+    /* ★ 本文が上から自然に始まる設定（今回の本質的解決） */
     .main {
       display: block;
-      padding-top: 120px;
+      padding-top: 20px; /* ← ナビのあと自然に本文開始 */
       padding-bottom: 40px;
+      align-items: flex-start !important; /* ← これが決定打 */
     }
 
     /* 内容ボックス最適化 */
@@ -217,8 +221,6 @@ Sharp in judgment
 Minimal in expression  
 Poetic in presence  
 Unshaken in purpose  
-
-These are the elements that form the quiet architecture of my mind.
 
 
 <div class="section-title">Role</div>
