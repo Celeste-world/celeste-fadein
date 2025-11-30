@@ -15,7 +15,7 @@
     height: 100%;
   }
 
-  /* 背景 */
+  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -25,18 +25,17 @@
     color: #ffffff;
   }
 
-  /* ▼ SVGロゴ */
- .header-logo {
-  position: fixed;
-  top: 30px;
-  left: 40px;
-  z-index: 1000;
-  text-decoration: none;
-}
-
+  /* SVG Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+    text-decoration: none;
+  }
 
   .header-logo-img {
-    width: 180px;    /* PCで最適な見た目 */
+    width: 180px;
     height: auto;
     opacity: 0.94;
     transition: opacity 0.25s;
@@ -47,18 +46,17 @@
     opacity: 1;
   }
 
-  /* ▼ 縦ナビ（ハイエンド） */
+  /* Vertical navigation */
   .vertical-nav {
-  position: fixed;
-  top: 105px;
-  left: 40px;
-  font-family: "Baskerville", serif;
-  font-size: 20px;
-  line-height: 1.9; /* ★ 1.9 に変更 */
-  opacity: 0.95;
-  z-index: 999;
-}
-
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-family: "Baskerville", serif;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: 0.95;
+    z-index: 999;
+  }
 
   .vertical-nav-separator {
     margin: 6px 0 8px 0;
@@ -78,7 +76,7 @@
     opacity: 1;
   }
 
-  /* ▼ メインセンタリング */
+  /* Main text container */
   .main {
     min-height: 100vh;
     display: flex;
@@ -87,7 +85,6 @@
     padding: 40px 20px;
   }
 
-  /* ▼ 中央テキスト */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -98,36 +95,62 @@
     text-align: left;
   }
 
-  /* ▼ スマホ最適化 */
-@media (max-width: 768px) {
-  .header-logo {
-    top: 20px;
-    left: 20px;
+  /* Contact footer link */
+  .contact-footer {
+    margin-top: 40px;
+    font-size: 20px;
+    opacity: 0.85;
   }
 
-  .header-logo-img {
-    width: 150px;
+  .contact-footer a {
+    color: #ffffff;
+    text-decoration: none;
   }
 
-  .vertical-nav {
-    top: 85px; /* ★ 65 → 85 に変更 */
-    left: 20px;
-    font-size: 18px;
-    line-height: 1.9; /* ★ 統一 */
+  .contact-footer a:hover {
+    opacity: 1;
   }
-}
 
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
+    .vertical-nav {
+      top: 85px;
+      left: 20px;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .main {
+      align-items: flex-start;
+      padding-top: 120px;
+    }
+
+    .typewriter {
+      font-size: 22px;
+      padding: 30px 20px;
+      line-height: 1.8;
+    }
+  }
 </style>
 </head>
 
 <body>
 
-<!-- ▼ SVGロゴ（ここが新しくなった部分） -->
+<!-- SVG Logo -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- ▼ 縦ナビ -->
+<!-- Vertical navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -135,10 +158,16 @@
   <a href="/vision.html">Vision</a>
 </div>
 
-
-<!-- ▼ メインテキスト -->
+<!-- Main text -->
 <div class="main">
   <div class="typewriter" id="text"></div>
+</div>
+
+<!-- Quiet contact footer -->
+<div style="text-align:center;">
+  <div class="contact-footer">
+    <a href="/contact.html">Contact</a>
+  </div>
 </div>
 
 <script>
