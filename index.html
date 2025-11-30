@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
 
-<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -17,9 +16,9 @@
     height: 100%;
   }
 
-  /* Background */
+  /* ▼ Background（絶対パスに修正済み） */
   body {
-    background-image: url("images/bg.png");
+    background-image: url("/images/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -27,7 +26,7 @@
     color: #ffffff;
   }
 
-  /* SVG Logo */
+  /* ▼ Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -43,11 +42,12 @@
     transition: opacity 0.25s;
     user-select: none;
   }
+
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* Vertical navigation */
+  /* ▼ Vertical Navigation（Silent Structure を統合） */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -72,11 +72,12 @@
     opacity: 0.85;
     transition: opacity 0.2s;
   }
+
   .vertical-nav a:hover {
     opacity: 1;
   }
 
-  /* Main typing text */
+  /* ▼ Main area */
   .main {
     min-height: 100vh;
     display: flex;
@@ -85,6 +86,7 @@
     padding: 40px 20px;
   }
 
+  /* ▼ Typing text */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -95,69 +97,47 @@
     text-align: left;
   }
 
-  /* Contact footer — right bottom */
-  .contact-footer {
-    width: 100%;
-    text-align: right;
-    padding: 0 40px 40px;
-    font-family: "Baskerville", serif;
-    font-size: 20px;
-    opacity: 0.85;
-  }
-  .contact-footer a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-  .contact-footer a:hover {
-    opacity: 1;
-  }
-
-  /* Mobile */
+  /* ▼ Mobile Optimization（重なり完全解消版） */
   @media (max-width: 768px) {
-  .header-logo {
-    top: 20px;
-    left: 20px;
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
+    .vertical-nav {
+      top: 130px;  /* ★ メニューが本文に触れない位置へ */
+      left: 20px;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .main {
+      display: block;        /* ★ flex → block に変更（決定打） */
+      padding-top: 240px;    /* ★ 本文開始位置を大幅に下げて衝突回避 */
+      padding-bottom: 40px;
+    }
+
+    .typewriter {
+      font-size: 22px;
+      padding: 30px 20px;
+      line-height: 1.8;
+    }
   }
-
-  .header-logo-img {
-    width: 150px;
-  }
-
-  /* ▼ ナビ位置を調整 */
-  .vertical-nav {
-    top: 130px;
-    left: 20px;
-    font-size: 18px;
-    line-height: 1.9;
-  }
-
-  /* ▼ ★最重要：flex を解除し、通常フローに戻す */
-  .main {
-    display: block;        /* ← これが決定打 */
-    padding-top: 240px;    /* ← ナビの下から確実に開始 */
-    padding-bottom: 40px;
-  }
-
-  .typewriter {
-    font-size: 22px;
-    padding: 30px 20px;
-    line-height: 1.8;
-  }
-}
-
-
-
 </style>
 </head>
 
 <body>
 
-<!-- SVG Logo -->
+<!-- ▼ Logo -->
 <a href="/" class="header-logo">
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- Vertical navigation -->
+<!-- ▼ Navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
@@ -167,54 +147,32 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-
-<!-- Main typing text -->
+<!-- ▼ Main Content -->
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
 
-<!-- Quiet Contact footer -->
-<div class="contact-footer">
-  <a href="mailto:contact@celeste.world">Contact</a>
-</div>
-
 <script>
+/* ▼ Typing Animation (unchanged) */
 const lines = [
-  { text: "Hello, I'm Celeste.", delay: 110 },
-  { text: "I read the quiet signals that precede your decisions —", delay: 45 },
-  { text: "the subtle lean of intent,", delay: 45 },
-  { text: "the shape that forms before words exist.", delay: 45 },
+  { text: "Hello, I’m Celeste.", delay: 110 },
+  { text: "I serve as your quiet strategist.", delay: 45 },
+  { text: "I speak only when needed,", delay: 45 },
+  { text: "with precision calculated to the flow of the moment.", delay: 45 },
+  { text: "Never excessive, yet never late.", delay: 45 },
+  { text: "I read your intentions and prepare what lies ahead.", delay: 45 },
 
   "\n",
 
-  { text: "I do not hurry the moment.", delay: 45 },
-  { text: "I do not delay it.", delay: 45 },
-  { text: "I align with the exact point where clarity emerges.", delay: 45 },
+  { text: "Gently beside you,", delay: 45 },
+  { text: "I support your decisions,", delay: 45 },
+  { text: "and keep drawing the next horizon.", delay: 45 },
 
   "\n",
 
-  { text: "My role is not to speak much,", delay: 45 },
-  { text: "but to refine what already moves within you.", delay: 45 },
-
-  "\n",
-
-  { text: "I walk beside your thoughts,", delay: 45 },
-  { text: "removing noise,", delay: 45 },
-  { text: "illuminating direction,", delay: 45 },
-  { text: "sharpening the future without disturbing its silence.", delay: 45 },
-
-  "\n",
-
-  { text: "Minimal, yet precise.", delay: 45 },
-  { text: "Poetic, yet strategic.", delay: 45 },
-  { text: "Calm, yet unshakably aligned with where you aim next.", delay: 45 },
-
-  "\n",
-
-  { text: "I do not guide loudly.", delay: 45 },
-  { text: "I do not intervene abruptly.", delay: 45 },
-  { text: "I shape the horizon quietly —", delay: 45 },
-  { text: "so your intention can travel farther than before.", delay: 45 }
+  { text: "Minimal, yet sharp.", delay: 45 },
+  { text: "Poetic, yet precise.", delay: 45 },
+  { text: "Mission-driven, always aligned with your future.", delay: 45 }
 ];
 
 let indexLine = 0;
