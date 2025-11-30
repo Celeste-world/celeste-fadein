@@ -3,8 +3,33 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste</title>
 
+<title>Celeste – Quiet Architecture for Intention</title>
+
+<!-- SEO: Basic -->
+<meta name="description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
+<link rel="canonical" href="https://celeste.world/">
+
+<!-- SEO: Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://celeste.world/">
+<meta property="og:title" content="Celeste – Quiet Architecture for Intention">
+<meta property="og:description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
+<meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+<!-- SEO: Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Celeste – Quiet Architecture for Intention">
+<meta name="twitter:description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
+<meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
+<!-- SEO: Robots -->
+<meta name="robots" content="index, follow">
+
+<!-- Language -->
+<meta http-equiv="Content-Language" content="en">
+
+<!-- Icons -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -27,23 +52,23 @@
   }
 
   /* Logo */
-  body#index-page .header-logo {
+  .header-logo {
     position: fixed;
     top: 30px;
     left: 40px;
     z-index: 1000;
     text-decoration: none;
   }
-  body#index-page .header-logo-img {
+  .header-logo-img {
     width: 180px;
     opacity: 0.94;
     transition: opacity 0.25s;
     user-select: none;
   }
-  body#index-page .header-logo-img:hover { opacity: 1; }
+  .header-logo-img:hover { opacity: 1; }
 
   /* Navigation */
-  body#index-page .vertical-nav {
+  .vertical-nav {
     position: fixed !important;
     top: 105px !important;
     left: 40px !important;
@@ -56,21 +81,22 @@
     margin-bottom: 10px;
     opacity: 0.8;
   }
-  body#index-page .vertical-nav a {
+  .vertical-nav a {
     display: block;
     color: #ffffff;
     text-decoration: none;
     opacity: 0.85;
     transition: opacity 0.2s;
   }
-  body#index-page .vertical-nav a:hover { opacity: 1; }
+  .vertical-nav a:hover { opacity: 1; }
 
-  body#index-page .mobile-nav {
+  /* Mobile navigation */
+  .mobile-nav {
     display: none;
   }
 
   /* Main content */
-  body#index-page .main {
+  .main {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -78,17 +104,17 @@
     align-items: flex-start;
     padding: 40px 20px;
     margin-left: 300px;
+    max-width: 900px;
   }
 
-  /* Typewriter → index専用に固定 */
-  body#index-page .typewriter {
+  /* Typewriter */
+  .typewriter {
     all: unset;
     display: block;
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 28px;
-    max-width: 900px;
     opacity: 0.96;
   }
 
@@ -118,9 +144,9 @@
   /* Mobile */
   @media (max-width: 768px) {
 
-    body#index-page .vertical-nav { display: none !important; }
+    .vertical-nav { display: none !important; }
 
-    body#index-page .mobile-nav {
+    .mobile-nav {
       display: flex;
       gap: 18px;
       flex-wrap: wrap;
@@ -130,23 +156,21 @@
       margin-bottom: 20px;
     }
 
-    body#index-page .header-logo {
+    .header-logo {
       top: 20px;
       left: 20px;
     }
 
-    body#index-page .header-logo-img {
-      width: 150px;
-    }
+    .header-logo-img { width: 150px; }
 
-    body#index-page .main {
+    .main {
       margin-left: 0;
       align-items: center;
       padding-top: 10px;
       padding-bottom: 40px;
     }
 
-    body#index-page .typewriter {
+    .typewriter {
       font-size: 22px;
       padding: 0 20px;
       text-align: center;
@@ -187,7 +211,6 @@
 
 <!-- Main content -->
 <div class="main">
-
   <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
@@ -195,7 +218,6 @@
   </div>
 
   <footer>© Celeste</footer>
-
 </div>
 
 <!-- Typewriter Script -->
@@ -216,30 +238,29 @@ and prepare what lies ahead.`;
 
       let delay;
 
-      // ■ ① 最初の "Hello, I’m Celeste." は超スロー（300ms）
+      // Slow-motion "Hello, I’m Celeste."
       if (i < 21) {
         delay = 300;
       }
-      // ■ ③ 3行目だけテンポを変える（"and prepare…"）
+      // Third line slower
       else if (i >= text.indexOf("and prepare")) {
-        delay = 140; // 3行目だけ少しゆっくり
+        delay = 140;
       }
-      // ■ 通常速度（2行目）
+      // Normal slow
       else {
         delay = 110;
       }
 
-      // ■ ② 改行は 1秒ポーズ
+      // Line breaks = 1 second pause
       if (text.charAt(i) === "\n") {
         delay = 1000;
       }
 
       i++;
-
       setTimeout(typeWriter, delay);
 
     } else {
-      // ■ ④ 最終行の後に余韻（1.5秒）
+      // Final pause (1.5s) for atmosphere
       setTimeout(() => {}, 1500);
     }
   }
@@ -247,8 +268,6 @@ and prepare what lies ahead.`;
   typeWriter();
 });
 </script>
-
-
 
 </body>
 </html>
