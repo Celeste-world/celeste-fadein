@@ -212,14 +212,19 @@ and prepare what lies ahead.`;
   function typeWriter() {
     if (i < text.length) {
       tw.textContent += text.charAt(i);
+
+      // 行が変わるところだけ少し間を置く
+      const delay = (text.charAt(i) === "\n") ? 450 : 65;
+
       i++;
-      requestAnimationFrame(typeWriter);
+      setTimeout(typeWriter, delay);
     }
   }
 
   typeWriter();
 });
 </script>
+
 
 </body>
 </html>
