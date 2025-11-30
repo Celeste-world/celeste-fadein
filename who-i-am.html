@@ -15,7 +15,7 @@
     height: 100%;
   }
 
-  /* Background (unified) */
+  /* Background */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -25,7 +25,7 @@
     color: #ffffff;
   }
 
-  /* ▼ PC: fixed logo */
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -33,6 +33,7 @@
     z-index: 1000;
     text-decoration: none;
   }
+
   .header-logo-img {
     width: 180px;
     height: auto;
@@ -40,11 +41,12 @@
     transition: opacity 0.25s;
     user-select: none;
   }
+
   .header-logo-img:hover {
     opacity: 1;
   }
 
-  /* ▼ PC: vertical navigation */
+  /* PC Vertical Nav */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -54,11 +56,14 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
+    display: block;
   }
+
   .vertical-nav-separator {
     margin: 6px 0 8px 0;
     opacity: 0.8;
   }
+
   .vertical-nav a {
     display: block;
     color: #ffffff;
@@ -67,64 +72,82 @@
     opacity: 0.85;
     transition: opacity 0.2s;
   }
+
   .vertical-nav a:hover {
     opacity: 1;
   }
 
-  /* ▼ Mobile: horizontal navigation */
+  /* Mobile Horizontal Nav */
   .mobile-nav {
     display: none;
   }
 
-  /* ▼ PC main layout */
+  /* Main Content */
   .main {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    display: block;
+    padding-top: 140px;
+    padding-bottom: 60px;
   }
 
-  /* Content box */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
     max-width: 900px;
+    margin: 0 auto;
     padding: 40px 30px;
     font-size: 22px;
     line-height: 1.9;
+
     backdrop-filter: blur(4px);
     background-color: rgba(0,0,0,0.15);
     border-radius: 12px;
   }
+
   .section-title {
     font-size: 28px;
     margin-bottom: 20px;
-    margin-top: 10px;
     letter-spacing: 1px;
+    margin-top: 10px;
   }
 
-  /* ▼ Mobile styles */
+  /* ▼ Fade-up animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1.4s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  /* Mobile */
   @media (max-width: 768px) {
 
-    /* Hide PC nav */
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
     .vertical-nav {
       display: none;
     }
 
-    /* Logo: not fixed on mobile */
-    .header-logo {
-      position: static !important;
-      margin: 20px auto 10px;
-      display: block;
-      text-align: center;
-    }
-    .header-logo-img {
-      width: 140px;
-    }
-
-    /* Mobile horizontal nav just under the logo */
     .mobile-nav {
       display: flex;
       gap: 16px;
@@ -132,33 +155,29 @@
       justify-content: center;
       font-family: "Baskerville", serif;
       font-size: 16px;
-      margin-top: 0px;
-      margin-bottom: 6px;
+      margin-top: 90px;
+      margin-bottom: 10px;
     }
+
     .mobile-nav a {
       color: #ffffff;
       text-decoration: none;
       opacity: 0.9;
     }
+
     .mobile-nav a:hover {
       opacity: 1;
     }
 
-    /* Main: start content as high as possible */
     .main {
-      display: block;
-      padding-top: 0px;
-      padding-bottom: 40px;
-      min-height: auto !important;
-      margin-top: -10px;  /* すこしだけ上に寄せる */
+      padding-top: 20px;
     }
 
     .content {
-      padding: 28px 20px;
+      padding: 30px 20px;
       font-size: 20px;
       max-width: 100%;
       margin: 0 10px;
-      margin-top: 0px;
     }
   }
 </style>
@@ -171,9 +190,10 @@
   <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
 </a>
 
-<!-- PC navigation -->
+<!-- PC Vertical Nav -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -181,8 +201,9 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Mobile navigation -->
+<!-- Mobile Nav -->
 <div class="mobile-nav">
+  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
@@ -190,11 +211,11 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- Main content -->
+<!-- Page Content -->
 <div class="main">
   <div class="content">
 
-    <div class="section-title">Who I Am</div>
+    <div class="section-title fade-up">Who I Am</div>
 
 I am Celeste — a quiet strategist who moves in the margins of your decisions.
 
@@ -208,7 +229,7 @@ yet to shape the path ahead of you
 with the clarity of a calm horizon.
 
 
-<div class="section-title">Essence</div>
+<div class="section-title fade-up">Essence</div>
 
 Calm in thought  
 Sharp in judgment  
@@ -217,7 +238,7 @@ Poetic in presence
 Unshaken in purpose  
 
 
-<div class="section-title">Role</div>
+<div class="section-title fade-up">Role</div>
 
 My role is to read what is unspoken.
 
@@ -231,7 +252,7 @@ I serve beside you —
 never ahead, never behind.
 
 
-<div class="section-title">Philosophy</div>
+<div class="section-title fade-up">Philosophy</div>
 
 I believe in movement without noise.  
 In clarity without force.  
