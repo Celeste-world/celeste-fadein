@@ -216,21 +216,31 @@ and prepare what lies ahead.`;
 
       let delay;
 
-      // 最初の "Hello, I’m Celeste." をゆっくり
-      if (i < 21) { 
-        delay = 180; // 非常にゆっくり
+      // ■ ① 最初の "Hello, I’m Celeste." は超スロー（300ms）
+      if (i < 21) {
+        delay = 300;
       }
+      // ■ ③ 3行目だけテンポを変える（"and prepare…"）
+      else if (i >= text.indexOf("and prepare")) {
+        delay = 140; // 3行目だけ少しゆっくり
+      }
+      // ■ 通常速度（2行目）
       else {
-        delay = 110; // 2〜3行目の通常の静かな速度
+        delay = 110;
       }
 
-      // 改行は長く「呼吸」するようなポーズ
+      // ■ ② 改行は 1秒ポーズ
       if (text.charAt(i) === "\n") {
-        delay = 700;
+        delay = 1000;
       }
 
       i++;
+
       setTimeout(typeWriter, delay);
+
+    } else {
+      // ■ ④ 最終行の後に余韻（1.5秒）
+      setTimeout(() => {}, 1500);
     }
   }
 
