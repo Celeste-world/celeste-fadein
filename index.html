@@ -10,7 +10,7 @@
     margin: 0;
     height: 100vh;
     overflow-y: auto;
-    background-color: #f5f7fa;   /* ← Celeste Gray */
+    background-color: #eef2f7;   /* ← Celeste Gray 2（より濃い） */
   }
 
   .typewriter {
@@ -38,10 +38,6 @@
 <div class="typewriter" id="text"></div>
 
 <script>
-/* ----------------------------------------------------------
-   English Text Version
-   (Minimal × Mission × Poetic : Hybrid D)
----------------------------------------------------------- */
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
 
@@ -68,9 +64,6 @@ let indexLine = 0;
 let indexChar = 0;
 const textElement = document.getElementById("text");
 
-/* ----------------------------------------------------------
-   Typewriter Animation
----------------------------------------------------------- */
 function typeLine() {
   if (indexLine >= lines.length) return;
 
