@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
 
+<!-- ▼ Cache Breaker（スマホのCSSキャッシュを完全排除） -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -16,7 +21,7 @@
     height: 100%;
   }
 
-  /* ▼ Background（絶対パスに修正済み） */
+  /* ▼ Background（絶対パス） */
   body {
     background-image: url("/images/bg.png");
     background-size: cover;
@@ -47,7 +52,7 @@
     opacity: 1;
   }
 
-  /* ▼ Vertical Navigation（Silent Structure を統合） */
+  /* ▼ Vertical Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -97,8 +102,9 @@
     text-align: left;
   }
 
-  /* ▼ Mobile Optimization（重なり完全解消版） */
+  /* ▼ Mobile — Final Fix (flex解除 + 位置固定) */
   @media (max-width: 768px) {
+
     .header-logo {
       top: 20px;
       left: 20px;
@@ -109,15 +115,15 @@
     }
 
     .vertical-nav {
-      top: 130px;  /* ★ メニューが本文に触れない位置へ */
+      top: 130px;
       left: 20px;
       font-size: 18px;
       line-height: 1.9;
     }
 
     .main {
-      display: block;        /* ★ flex → block に変更（決定打） */
-      padding-top: 240px;    /* ★ 本文開始位置を大幅に下げて衝突回避 */
+      display: block;
+      padding-top: 240px;   /* ★ 本文はここから開始 */
       padding-bottom: 40px;
     }
 
@@ -147,13 +153,12 @@
   <a href="/contact.html">Contact</a>
 </div>
 
-<!-- ▼ Main Content -->
+<!-- ▼ Main -->
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
 
 <script>
-/* ▼ Typing Animation (unchanged) */
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
   { text: "I serve as your quiet strategist.", delay: 45 },
