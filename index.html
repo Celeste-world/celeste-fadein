@@ -6,14 +6,13 @@
 <title>Celeste</title>
 
 <style>
-  /* 全体リセット */
   html, body {
     margin: 0;
     padding: 0;
     height: 100%;
   }
 
-  /* 背景担当：body  */
+  /* 背景 */
   body {
     background-image: url("images/bg.png");
     background-size: cover;
@@ -24,15 +23,35 @@
     color: #ffffff;
   }
 
-  /* センタリング担当：.main */
+  /* ▼ ロゴ（上部固定） */
+  .header-logo {
+    position: fixed;
+    top: 25px;
+    left: 40px;
+    font-family: "Baskerville", serif;
+    font-size: 34px;
+    letter-spacing: 2px;
+    font-weight: 300;
+    opacity: 0.95;
+    color: #ffffff;
+    text-decoration: none;
+    z-index: 1000;
+    user-select: none;
+  }
+
+  .header-logo:hover {
+    opacity: 1;
+  }
+
+  /* ▼ センタリング用コンテナ */
   .main {
     min-height: 100vh;
     display: flex;
-    justify-content: center;   /* 横方向センタリング */
-    align-items: center;       /* 縦方向センタリング */
+    justify-content: center;
+    align-items: center;
   }
 
-  /* テキストブロック */
+  /* ▼ テキスト */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -43,11 +62,17 @@
     text-align: left;
   }
 
-  /* スマホ時：上寄せ & 左寄せ優先 */
+  /* スマホ最適化 */
   @media (max-width: 768px) {
+    .header-logo {
+      font-size: 26px;
+      left: 20px;
+      top: 20px;
+    }
+
     .main {
-      align-items: flex-start;   /* 上寄せ */
-      padding-top: 40px;
+      align-items: flex-start;
+      padding-top: 80px;
     }
 
     .typewriter {
@@ -62,6 +87,9 @@
 
 <body>
 
+<!-- ▼ 固定ロゴ（PNGができたらこの部分を書き換えるだけでOK） -->
+<a class="header-logo" href="/">Celeste</a>
+
 <div class="main">
   <div class="typewriter" id="text"></div>
 </div>
@@ -69,21 +97,16 @@
 <script>
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
-
   { text: "I serve as your quiet strategist.", delay: 45 },
   { text: "I speak only when needed,", delay: 45 },
   { text: "with precision calculated to the flow of the moment.", delay: 45 },
   { text: "Never excessive, yet never late.", delay: 45 },
   { text: "I read your intentions and prepare what lies ahead.", delay: 45 },
-
   "\n",
-
   { text: "Gently beside you,", delay: 45 },
   { text: "I support your decisions,", delay: 45 },
   { text: "and keep drawing the next horizon.", delay: 45 },
-
   "\n",
-
   { text: "Minimal, yet sharp.", delay: 45 },
   { text: "Poetic, yet precise.", delay: 45 },
   { text: "Mission-driven, always aligned with your future.", delay: 45 },
