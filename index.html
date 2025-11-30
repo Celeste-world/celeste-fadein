@@ -7,7 +7,7 @@
 
 <style>
   /* ----------------------------------------------------------
-     BACKGROUND: fixed bg.png (ひでさんの画像)
+     BACKGROUND: fixed bg.png
   ---------------------------------------------------------- */
   body {
     margin: 0;
@@ -17,16 +17,20 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
 
-    background-attachment: fixed; /* ← B：背景固定 */
+    display: flex;
+    justify-content: center;   /* ← 横方向センタリング */
+    align-items: center;       /* ← 縦方向センタリング（重要） */
     overflow-y: auto;
+
     color: #ffffff;
   }
 
   /* ----------------------------------------------------------
      TEXT LAYOUT
-     PC：センター揃え（最大900px）
-     スマホ：左揃え（読みやすさ重視）
+     PC：完全中央
+     SP：上寄せ & 左揃え
   ---------------------------------------------------------- */
   .typewriter {
     font-family: "Baskerville", serif;
@@ -35,19 +39,23 @@
     font-size: 24px;
 
     max-width: 900px;
-    margin: 0 auto;      /* ← PC中央揃え（E） */
     padding: 40px 30px;
-    text-align: left;    /* テキスト自体は左寄せ */
+
+    text-align: left;
   }
 
-  /* スマホ時の最適化（Eの後半） */
+  /* スマホ時は「上揃え・左寄せ」に戻す */
   @media (max-width: 768px) {
+    body {
+      align-items: flex-start; /* ← 上寄せに切り替え */
+      padding-top: 40px;
+    }
+
     .typewriter {
-      max-width: 100%;
+      font-size: 22px;
       padding: 30px 20px;
       line-height: 1.8;
-      font-size: 22px;
-      margin: 0;         /* 端揃えにして自然な左寄せ */
+      max-width: 100%;
     }
   }
 </style>
@@ -58,9 +66,6 @@
 <div class="typewriter" id="text"></div>
 
 <script>
-/* ----------------------------------------------------------
-   Typing Text — Minimal × Mission × Poetic
----------------------------------------------------------- */
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
 
