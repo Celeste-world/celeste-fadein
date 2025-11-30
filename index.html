@@ -83,15 +83,15 @@
     display: none;
   }
 
-  /* Main (PC layout) */
+  /* Main */
   .main {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;       /* ← 垂直方向に積む */
-    justify-content: center;      /* ← 縦中央 */
-    align-items: flex-start;      /* ← 横揃えを左に */
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
     padding: 40px 20px;
-    margin-left: 300px;           /* ← PCでナビと重ならないよう余白 */
+    margin-left: 300px;
   }
 
   /* Center text block */
@@ -101,7 +101,7 @@
     line-height: 1.9;
     font-size: 28px;
     max-width: 900px;
-    text-align: left;             /* ← 左揃え */
+    text-align: left;
   }
 
   /* Learn more link */
@@ -109,7 +109,7 @@
     margin-top: 28px;
     font-family: "Baskerville", serif;
     font-size: 22px;
-    text-align: left;             /* ← 左揃え */
+    text-align: left;
   }
 
   .learn-more a {
@@ -134,7 +134,7 @@
     font-size: 15px;
   }
 
-  /* Mobile optimization */
+  /* Mobile */
   @media (max-width: 768px) {
 
     .vertical-nav {
@@ -176,7 +176,7 @@
       margin-left: 0;
       padding-top: 10px;
       padding-bottom: 40px;
-      align-items: center;    /* ← モバイルは中央寄せが綺麗 */
+      align-items: center;
     }
 
     .typewriter {
@@ -186,7 +186,7 @@
     }
 
     .learn-more {
-      text-align: center;     /* ← モバイルでは中央 */
+      text-align: center;
     }
   }
 </style>
