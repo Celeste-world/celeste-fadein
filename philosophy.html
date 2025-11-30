@@ -19,27 +19,27 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
     color: #ffffff;
   }
 
-  /* 左上ロゴ */
+  /* ▼ SVGロゴ */
   .header-logo {
     position: fixed;
     top: 25px;
     left: 40px;
-    font-family: "Baskerville", serif;
-    font-size: 34px;
-    letter-spacing: 2px;
-    font-weight: 300;
-    color: #ffffff;
-    opacity: 0.95;
-    text-decoration: none;
     z-index: 1000;
+    text-decoration: none;
+  }
+
+  .header-logo-img {
+    width: 180px;
+    height: auto;
+    opacity: 0.94;
+    transition: opacity 0.25s;
     user-select: none;
   }
 
-  .header-logo:hover {
+  .header-logo-img:hover {
     opacity: 1;
   }
 
@@ -83,7 +83,7 @@
     padding-bottom: 40px;
   }
 
-  /* 内容ブロック */
+  /* 内容ボックス */
   .content {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -107,9 +107,12 @@
   /* スマホ最適化 */
   @media (max-width: 768px) {
     .header-logo {
-      font-size: 26px;
-      left: 20px;
       top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
     }
 
     .vertical-nav {
@@ -126,7 +129,6 @@
     .content {
       padding: 30px 20px;
       font-size: 20px;
-      line-height: 1.8;
       max-width: 100%;
       margin: 0 10px;
     }
@@ -136,7 +138,10 @@
 
 <body>
 
-<a class="header-logo" href="/">Celeste</a>
+<!-- ▼ SVGロゴ -->
+<a href="/" class="header-logo">
+  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+</a>
 
 <!-- ▼ 縦ナビ -->
 <div class="vertical-nav">
@@ -145,6 +150,7 @@
   <a href="/philosophy.html">Philosophy</a>
 </div>
 
+<!-- ▼ 本文 -->
 <div class="main">
   <div class="content">
 
