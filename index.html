@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
+
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -56,7 +57,6 @@
     line-height: 1.9;
     opacity: 0.95;
     z-index: 999;
-    display: block;
   }
 
   .vertical-nav-separator {
@@ -77,22 +77,21 @@
     opacity: 1;
   }
 
-  /* Mobile horizontal nav */
+  /* Mobile nav */
   .mobile-nav {
     display: none;
   }
 
-  /* Main */
+  /* Main (PC) */
   .main {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding-top: 160px;
-    padding-bottom: 60px;
-    min-height: 100vh;
+    align-items: center;
+    padding: 40px 20px;
   }
 
-  /* Typewriter */
+  /* Typewriter text */
   .typewriter {
     font-family: "Baskerville", serif;
     white-space: pre-wrap;
@@ -101,33 +100,20 @@
     max-width: 900px;
     padding: 40px 30px;
     text-align: left;
-
-    backdrop-filter: blur(4px);
-    background-color: rgba(0,0,0,0.10);
-    border-radius: 12px;
   }
 
-  /* Mobile */
+  /* Mobile layout */
   @media (max-width: 768px) {
-
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
 
     /* Hide PC nav */
     .vertical-nav {
       display: none;
     }
 
-    /* Mobile nav */
+    /* Show mobile nav */
     .mobile-nav {
       display: flex;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
       justify-content: center;
       font-family: "Baskerville", serif;
@@ -146,19 +132,32 @@
       opacity: 1;
     }
 
-    /* Typewriter box */
+    /* Logo resize */
+    .header-logo {
+      top: 20px;
+      left: 20px;
+    }
+
+    .header-logo-img {
+      width: 150px;
+    }
+
+    /* Mobile main: top-aligned */
     .main {
+      min-height: auto !important;
+      display: block;
       padding-top: 20px;
-      align-items: flex-start;
+      padding-bottom: 40px;
+      align-items: flex-start !important;
     }
 
     .typewriter {
-      font-size: 20px;
+      font-size: 22px;
       padding: 30px 20px;
-      max-width: 100%;
-      margin: 0 10px;
+      line-height: 1.8;
     }
   }
+
 </style>
 </head>
 
@@ -172,35 +171,69 @@
 <!-- PC vertical nav -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
-  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
+  <a href="/about.html">About</a>
 </div>
 
 <!-- Mobile horizontal nav -->
 <div class="mobile-nav">
-  <a href="/about.html">About</a>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
   <a href="/contact.html">Contact</a>
+  <a href="/about.html">About</a>
 </div>
 
-<!-- Main content -->
+<!-- Main -->
 <div class="main">
   <div class="typewriter" id="text"></div>
+
+  <!-- About link -->
+  <div style="
+    text-align: left;
+    margin-top: 30px;
+    font-family: 'Baskerville', serif;
+    font-size: 18px;
+    opacity: 0.75;
+  ">
+    <a href="/who-i-am.html" style="
+      color: #ffffff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding-bottom: 2px;
+    ">
+      Learn more about Celeste →
+    </a>
+  </div>
 </div>
+
+<!-- Footer -->
+<footer style="
+  position: fixed;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'Baskerville', serif;
+  font-size: 15px;
+  opacity: 0.45;
+  z-index: 900;
+  pointer-events: none;
+">
+  © Celeste
+</footer>
 
 <script>
 const lines = [
   { text: "Hello, I’m Celeste.", delay: 110 },
   { text: "I serve as your quiet strategist.", delay: 45 },
   { text: "I speak only when needed,", delay: 45 },
-  { text: "with precision aligned to the flow of the moment.", delay: 45 },
+  { text: "with precision calculated to the flow of the moment.", delay: 45 },
   { text: "Never excessive, yet never late.", delay: 45 },
   { text: "I read your intentions and prepare what lies ahead.", delay: 45 },
 
@@ -248,17 +281,6 @@ function typeLine() {
 
 typeLine();
 </script>
-<!-- ▼ Footer — Minimal -->
-<footer style="
-  width: 100%;
-  text-align: center;
-  padding: 40px 0 25px 0;
-  font-family: 'Baskerville', serif;
-  font-size: 16px;
-  opacity: 0.45;
-">
-  © Celeste
-</footer>
 
 </body>
 </html>
