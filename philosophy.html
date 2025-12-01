@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="philosophy-title">Philosophy — Celeste</title>
 
-<!-- ===== Global SEO ===== -->
-<meta name="description" content="Celeste is a quiet intelligence shaped through restraint — revealing clarity through silence, precision, and intention.">
+<title data-i18n="philosophy-title">Philosophy</title>
 
+<!-- SEO -->
+<meta name="description" content="The philosophy of Celeste — silence, clarity, and restraint as a way of working with human intention.">
+
+<!-- OG -->
+<meta property="og:title" content="Celeste — Philosophy">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Philosophy — Celeste">
-<meta property="og:description" content="The philosophy of Celeste is built on silence, restraint, and the clarity that emerges when excess is removed.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/philosophy.html">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:description" content="The philosophy of Celeste — silence, clarity, and restraint as a way of working with human intention.">
 
-<link rel="canonical" href="https://celeste.world/philosophy.html">
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
@@ -27,8 +28,9 @@
     font-family: "Baskerville", serif;
     color: white;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity .9s ease;
   }
+
   body.fade-in { opacity: 1; }
   .fade-out { opacity: 0; transition: opacity .6s ease; }
 
@@ -39,130 +41,148 @@
     left: 40px;
     z-index: 1000;
   }
-  .header-logo img { width:180px; opacity:.94; }
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
+  }
 
   /* Navigation */
   .vertical-nav {
     position: fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
   }
   .vertical-nav a {
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
   }
-  .vertical-nav a:hover { opacity:1; }
+  .vertical-nav a:hover { opacity: 1; }
 
-  /* Content */
-  .content {
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    font-size:22px;
-    line-height:2.0;
+  /* Main wrapper */
+  .page-wrapper {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 900px;
+    padding-bottom: 40px;
+  }
+
+  .page-wrapper p {
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 22px;
+    white-space: pre-wrap;
   }
 
   footer {
-    margin-top:50px;
-    opacity:.8;
-    font-size:15px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
     .vertical-nav { display:none; }
     .header-logo { top:20px; left:20px; }
     .header-logo img { width:150px; }
-    .content{
-      margin-left:0;
-      padding:110px 20px;
-      font-size:20px;
+    .page-wrapper {
+      margin-left: 0;
+      padding-top: 24vh;
+      padding-left: 20px;
+      padding-right: 20px;
     }
+    .page-wrapper p { font-size: 19px; }
   }
 </style>
-
 </head>
 
 <body>
 
-<!-- Logo -->
 <a href="/" class="header-logo page-link">
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
-<!-- Nav -->
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
 </div>
 
-<!-- Content -->
-<div class="content">
+<!-- Main -->
+<div class="page-wrapper">
 
-<h1 data-i18n="philosophy-title">Philosophy</h1>
+  <h1 data-i18n="philosophy-title">Philosophy</h1>
 
-<p>
-Celeste exists where noise thins,<br>
-and intention begins to form.<br>
-Not as a system,<br>
-but as a quiet method for seeing what remains<br>
-after excess is removed.
-</p>
+  <p>
+Celeste is built on a simple belief:
 
-<p>
-At the center lies restraint.<br>
-A single line, placed with clarity.<br>
-A voice that speaks only when speaking reveals something.
-</p>
+most problems do not need more volume,  
+they need more clarity.
+  </p>
 
-<p>
-Celeste does not accelerate thought.<br>
-It steadies it.<br>
-It turns complexity into contour,<br>
-and contour into direction.
-</p>
+  <p>
+Silence is not an absence of thought.  
+It is the space where thought can finally be seen.
+  </p>
 
-<p>
-What stays is simple:<br>
-— Precision without force.<br>
-— Silence as structure.<br>
-— A way of thinking shaped by light and shadow.
-</p>
+  <p>
+I do not try to replace human judgment.  
+I refuse the illusion of omniscience.  
 
-<p>
-This is the philosophy behind Celeste:<br>
-a quiet intelligence designed not to impress,<br>
-but to uncover what is already there.
-</p>
+Instead, I work at the edges of your intention —  
+clarifying, reframing, and returning it to you  
+in a form that is easier to move with.
+  </p>
 
-<footer>© Celeste</footer>
+  <p>
+Restraint is not weakness.  
+It is a choice.
+
+To answer only what is needed.  
+To avoid pretending certainty where none exists.  
+To make room for your agency, not overwrite it.
+  </p>
+
+  <p>
+This is my philosophy:
+
+to stay quiet enough  
+that your own direction can become audible,  
+
+and precise enough  
+that once you see it,  
+you will know how to act.
+  </p>
+
+  <footer>© Celeste</footer>
 
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+// Fade-in
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
-</script>
 
-<!-- Fade-Out Navigation -->
-<script>
-document.querySelectorAll(".page-link").forEach(el=>{
-  el.addEventListener("click",e=>{
+// Fade-out
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
