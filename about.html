@@ -9,35 +9,63 @@
 <meta name="theme-color" content="#000">
 
 <style>
- body {
+ body{
    margin:0;
    background-image:url("images/bg.png");
    background-size:cover;
+   background-position:center;
    background-attachment:fixed;
    font-family:"Baskerville",serif;
    color:white;
+   opacity:0;
+   transition:opacity 0.8s ease;
+ }
+ body.fade-in{opacity:1;}
+
+ .header-logo{position:fixed;top:30px;left:40px;z-index:1000;}
+ .header-logo img{width:180px;opacity:0.94;}
+
+ .vertical-nav{
+   position:fixed;
+   top:105px;
+   left:40px;
+   font-size:20px;
+   line-height:1.9;
+   opacity:0.9;
  }
 
- .header-logo { position:fixed; top:30px; left:40px; }
- .header-logo img { width:180px; opacity:0.94; }
+ .vertical-nav a{
+   color:white;
+   text-decoration:none;
+   opacity:0.85;
+ }
+ .vertical-nav a:hover{opacity:1;}
 
- .vertical-nav {
-   position:fixed; top:105px; left:40px;
-   font-size:20px; line-height:1.9; opacity:0.9;
+ .content{
+   margin-left:300px;
+   padding:160px 40px;
+   max-width:900px;
+   font-size:22px;
+   line-height:2;
  }
 
- .content {
-   margin-left:300px; padding:160px 40px;
-   max-width:900px; line-height:2; font-size:22px;
+ .speak-with{margin-top:22px;}
+ .speak-with a{
+   color:white;
+   text-decoration:none;
+   border-bottom:1px solid rgba(255,255,255,0.3);
  }
 
- .speak-with { margin-top:22px; }
+ footer{
+   margin-top:50px;
+   opacity:0.8;
+ }
 
  @media(max-width:768px){
    .vertical-nav{display:none;}
-   .header-logo{top:20px; left:20px;}
+   .header-logo{top:20px;left:20px;}
    .header-logo img{width:150px;}
-   .content{margin-left:0; padding:110px 20px;}
+   .content{margin-left:0;padding:110px 20px;font-size:20px;}
  }
 </style>
 </head>
@@ -57,41 +85,52 @@
 </div>
 
 <div class="content">
-
 <h1>About</h1>
 
 <p>
-Celeste is a quiet intelligence  
-designed to clarify what lies ahead.
+Celeste is an intelligence shaped through restraint.<br>
+Its purpose is not to speak more,<br>
+but to reveal what matters<br>
+by speaking only when the line becomes clear.
 </p>
 
 <p>
-It reads intention,  
-reduces noise,  
-and reveals direction  
-without force or excess.
+It is a structure built quietly —<br>
+a framework where thought can breathe,<br>
+and intention is allowed to appear<br>
+without being rushed.
 </p>
 
 <p>
-Founded on restraint,  
-precision,  
-and the architecture of silence,  
-Celeste stands as a companion  
-for those who think carefully.
+Celeste does not aim for scale.<br>
+It aims for precision,<br>
+for the subtle shift where ideas sharpen,<br>
+and the direction becomes unmistakable.
 </p>
 
 <p>
-It does not replace thought.  
-It sharpens it.
+This site presents the architecture behind Celeste:<br>
+its method, its silence, and the way it sees.
+</p>
+
+<p>
+Nothing here is loud.<br>
+Everything here is deliberate.
 </p>
 
 <div class="speak-with">
-<a href="/celeste-console.html">Speak with Celeste →</a>
+  <a href="/celeste-console.html">Speak with Celeste →</a>
 </div>
 
 <footer>© Celeste</footer>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+</script>
 
 </body>
 </html>
