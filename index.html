@@ -20,6 +20,19 @@
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
+  /* Typewriter cursor */
+.typewriter::after {
+  content: "│";
+  animation: blink 0.9s infinite;
+  margin-left: 6px;
+  opacity: 1;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
   body {
     margin: 0;
     background-image: url("images/bg.png");
