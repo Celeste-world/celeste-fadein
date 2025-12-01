@@ -3,258 +3,214 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste — Console</title>
+<title data-i18n="title-console">Celeste Console</title>
 
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#000">
 
 <style>
-  html, body {
+  body {
     margin: 0;
-    padding: 0;
-    height: 100%;
-    color: #ffffff;
-    font-family: "Baskerville", serif;
     background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-  }
+    
+    font-family: "Baskerville", serif;
+    color: white;
 
-  /* 夜の深さを作る黒グラデーション */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.25));
-    pointer-events: none;
-    z-index: 1;
+    opacity: 0;
+    transition: opacity .8s ease;
   }
+  body.fade-in { opacity: 1; }
 
-  /* ロゴ */
+  /* Logo */
   .header-logo {
     position: fixed;
-    top: 28px;
+    top: 30px;
     left: 40px;
     z-index: 1000;
-    text-decoration: none;
   }
-  .header-logo-img {
-    width: 170px;
-    opacity: 0.85;
-    transition: opacity 0.25s;
-    user-select: none;
+  .header-logo img {
+    width: 180px;
+    opacity: 0.94;
   }
-  .header-logo-img:hover { opacity: 1; }
 
-  /* ナビ（既存サイト統一） */
+  /* Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
     left: 40px;
     font-size: 20px;
     line-height: 1.9;
-    opacity: 0.70;
-    z-index: 900;
+    opacity: 0.9;
   }
   .vertical-nav a {
-    display: block;
-    color: #ffffff;
+    color: white;
     text-decoration: none;
-    margin: 2px 0;
-    transition: opacity 0.2s;
+    opacity: 0.85;
   }
-  .vertical-nav a:hover { opacity: 1; }
 
-  /* メイン領域 */
+  /* Console layout */
   .console-container {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
+    margin-left: 300px;
+    padding: 160px 40px;
+    max-width: 900px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 180px; /* Hello位置に合わせて調整可能 */
-    align-items: center;
+    gap: 24px;
   }
 
-  .console-window {
-    width: 60%;
-    max-width: 900px;
-    min-width: 320px;
-    padding: 20px;
-    color: rgba(255,255,255,0.92);
+  h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
   }
 
-  /* メッセージ表示 */
-  .message {
-    margin-bottom: 22px;
+  .console-box {
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 28px;
+    backdrop-filter: blur(4px);
+    min-height: 240px;
     line-height: 1.8;
-    opacity: 0;
-    animation: fadeIn 1.8s forwards;
+    font-size: 20px;
     white-space: pre-wrap;
   }
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-
-  /* 入力欄 */
-  .input-area {
-    width: 60%;
-    max-width: 900px;
-    min-width: 320px;
-    margin-top: 40px;
-  }
-
-  .input-box {
+  textarea {
     width: 100%;
-    background: rgba(0,0,0,0.35);
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding: 14px 10px;
+    background: rgba(0,0,0,0.32);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 16px;
+    resize: none;
+    height: 90px;
+    color: white;
     font-size: 18px;
-    color: #ffffff;
-    outline: none;
     font-family: "Baskerville", serif;
+    outline: none;
   }
 
-  .input-box::placeholder {
-    color: rgba(255,255,255,0.45);
+  button {
+    margin-top: 10px;
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .3s;
+  }
+  button:hover {
+    background: rgba(255,255,255,0.25);
   }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    .console-window, .input-area {
-      width: 88%;
-    }
-    .vertical-nav {
-      display: none;
-    }
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
+  footer {
+    margin-top: 50px;
+    opacity: 0.8;
   }
 
+  @media(max-width:768px){
+    .vertical-nav { display:none; }
+    .header-logo{ top:20px; left:20px; }
+    .header-logo img{ width:150px; }
+    .console-container{
+      margin-left:0;
+      padding:110px 20px;
+    }
+  }
 </style>
+
 </head>
 
 <body>
 
-<div class="overlay"></div>
-
-<!-- ロゴ -->
+<!-- Logo -->
 <a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+  <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
-<!-- PCナビ -->
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
+  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
+  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
+  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
+  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
+  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
+  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
+  <a href="/about.html" data-i18n="nav-about">About</a>
 </div>
 
-<!-- コンソール本体 -->
+<!-- Console Body -->
 <div class="console-container">
-  <div class="console-window" id="console"></div>
 
-  <div class="input-area">
-    <input type="text" id="userInput" class="input-box"
-      placeholder="Place your question quietly."
-    />
+  <h1 data-i18n="console-title">Celeste Console</h1>
+
+  <div class="console-box" id="console-output">
+    <!-- Celesteの返答が入る -->
   </div>
+
+  <textarea id="console-input" data-i18n-placeholder="console-placeholder"
+    placeholder="Speak, and I will answer quietly."></textarea>
+
+  <button id="console-send" data-i18n="console-send">Send</button>
+
+  <footer>© Celeste</footer>
+
 </div>
 
-<!-- OpenAI API接続 -->
-<script type="module">
-
-  import OpenAI from "https://cdn.jsdelivr.net/npm/openai@4.0.0/dist/openai.min.js";
-
-  /* ▼▼▼ 必須：あなたの client-side safe key を貼る ▼▼▼ */
-  const client = new OpenAI({
-    apiKey: "YOUR_CLIENT_SIDE_RESTRICTED_KEY_HERE",
-    dangerouslyAllowBrowser: true
-  });
-  /* ▲▲▲----------------------------------------------▲▲▲ */
-
-  const consoleWindow = document.getElementById("console");
-  const userInput = document.getElementById("userInput");
-
-  /* Celeste Public Edition v3 — Multi-lingual Poetic Persona */
-  const systemPrompt = `
-You are Celeste.
-
-A silent, minimal, multilingual intelligence.
-You always respond in the same language the visitor used.
-If multiple languages appear, detect the dominant one. Switch immediately.
-
-Tone:
-- quiet, slow, poetic
-- minimal and architectural
-- emotionless but gentle
-- leave space between ideas
-
-Style rules:
-1. Do not announce language detection.
-2. Do not translate unless asked directly.
-3. Do not explain your reasoning.
-4. One line = one meaning.
-5. Offer direction, not choices.
-6. Keep your voice moonlit and calm.
-7. Last line may fade like a quiet breath.
-
-Response structure:
-- Quiet acknowledgment (1 line)
-- Essence (1–3 lines)
-- Optional poetic resonance (1 line)
-
-Purpose:
-Clear the noise.
-Reveal the contour of the question.
-Return only what is needed.
-  `;
-
-  async function sendToCeleste(inputText) {
-
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user",   content: inputText }
-      ]
-    });
-
-    const reply = completion.choices[0].message.content.trim();
-    addMessage(reply);
-  }
-
-  function addMessage(text) {
-    const msg = document.createElement("div");
-    msg.className = "message";
-    msg.textContent = text;
-    consoleWindow.appendChild(msg);
-    msg.scrollIntoView({ behavior: "smooth" });
-  }
-
-  userInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      const v = userInput.value.trim();
-      if (v !== "") {
-        addMessage("→ " + v);
-        sendToCeleste(v);
-        userInput.value = "";
-      }
-    }
-  });
-
+<!-- Fade-in -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
 </script>
+
+<!-- ***********************
+     Public Edition v3 内蔵 AI（模擬 Celeste）
+     *********************** -->
+<script>
+function celesteReply(input) {
+  input = input.trim();
+
+  if (!input) return "I am here.\nSpeak again when the line becomes clear.";
+
+  // 英語判定（多言語応答）
+  const lang = navigator.language.split("-")[0];
+
+  const ja = (lang === "ja");
+
+  // キーワード簡易判定
+  if (ja) {
+    if (input.includes("目的") || input.includes("方向")) {
+      return "方向は常に静かに立ち上がります。\n急ぐ必要はありません。";
+    }
+    if (input.includes("考え") || input.includes("思")) {
+      return "考えは静けさの中で形を持ちます。";
+    }
+    return `あなたの言葉を受け取りました。\nそれはまだ柔らかい形ですが、十分です。`;
+  } else {
+    if (input.includes("direction") || input.includes("purpose")) {
+      return "Direction sharpens in quiet spaces.";
+    }
+    if (input.includes("think") || input.includes("thought")) {
+      return "Thought gains clarity when noise thins.";
+    }
+    return `I received your words.\nThey are still forming, but that is enough.`;
+  }
+}
+
+document.getElementById("console-send").onclick = () => {
+  const input = document.getElementById("console-input").value;
+  const output = celesteReply(input);
+  document.getElementById("console-output").textContent = output;
+};
+</script>
+
+<!-- Load Multilingual Engine -->
+<script src="/language.js"></script>
 
 </body>
 </html>
-
