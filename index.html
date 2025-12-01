@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste</title>
+<title data-i18n="title">Celeste</title>
 
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
@@ -24,7 +24,10 @@
     background-attachment: fixed;
     color: #ffffff;
     font-family: "Baskerville", serif;
+    opacity:0;
+    transition:opacity .8s ease;
   }
+  body.fade-in{opacity:1;}
 
   /* Logo */
   .header-logo {
@@ -74,9 +77,9 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;    /* Hello の最適位置 */
+    justify-content: flex-start;
     align-items: flex-start;
-    padding-top: 120px;             /* 最美位置 */
+    padding-top: 120px;
     padding-left: 20px;
     padding-right: 20px;
     margin-left: 300px;
@@ -90,7 +93,7 @@
     opacity: 0.96;
   }
 
-  /* 点滅カーソル */
+  /* cursor */
   #cursor {
     font-family: "Baskerville", serif;
     font-size: 28px;
@@ -110,33 +113,21 @@
     border-bottom: 1px solid rgba(255,255,255,0.4);
     padding-bottom: 3px;
   }
-  .learn-more a:hover {
-    opacity: 1;
-    border-bottom-color: rgba(255,255,255,0.9);
-  }
 
   .speak-with {
     margin-top: 14px;
-    font-family: "Baskerville", serif;
     font-size: 18px;
-    opacity: 0.82;
   }
   .speak-with a {
-    color: #ffffff;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    padding-bottom: 3px;
-    opacity: 0.9;
-  }
-  .speak-with a:hover {
-    opacity: 1;
-    border-bottom-color: rgba(255,255,255,0.9);
+    color:white;
+    text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,0.3);
   }
 
-  footer {
-    margin-top: 40px;
-    font-size: 15px;
-    opacity: 0.8;
+  footer{
+    margin-top:40px;
+    font-size:15px;
+    opacity:0.8;
   }
 
   /* Mobile */
@@ -175,9 +166,6 @@
       padding: 0 20px;
       text-align: center;
     }
-
-    .learn-more { text-align: center; }
-    .speak-with { text-align: center; }
   }
 </style>
 </head>
@@ -192,94 +180,112 @@
 <!-- PC navigation -->
 <div class="vertical-nav">
   <div class="vertical-nav-separator">—</div>
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/celeste-console.html">Celeste</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
+  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
+  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
+  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
+  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
+  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
+  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
+  <a href="/about.html" data-i18n="nav-about">About</a>
 </div>
 
 <!-- Mobile navigation -->
 <div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/celeste-console.html">Celeste</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
+  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
+  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
+  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
+  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
+  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
+  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
+  <a href="/about.html" data-i18n="nav-about">About</a>
 </div>
 
 <!-- Main content -->
 <div class="main">
-  <!-- 空：タイプライターがここに文字を出す -->
+
+  <!-- Typewriter Text -->
   <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
-    <a href="/about.html">Learn more about Celeste →</a>
+    <a href="/about.html" data-i18n="learn-more">Learn more about Celeste →</a>
   </div>
 
   <div class="speak-with">
-    <a href="/celeste-console.html">Speak with Celeste →</a>
+    <a href="/celeste-console.html" data-i18n="speak-with">Speak with Celeste →</a>
   </div>
 
   <footer>© Celeste</footer>
+
 </div>
 
-<!-- Typewriter Script + Blinking Cursor -->
+<!-- Typewriter Script -->
 <script>
+// fade-in
 document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
 
-  const text = [
-    { line: "Hello, I’m Celeste.", speed: 300 },
-    { line: "I read your intentions", speed: 65 },
-    { line: "and prepare what lies ahead.", speed: 80 },
-  ];
+// detect language
+const lang = navigator.language.split("-")[0];
 
-  const tw = document.getElementById("tw");
+// text sets
+const textSets = {
+  en: [
+    { line: "Hello, I’m Celeste.", speed:300 },
+    { line: "I read your intentions", speed:65 },
+    { line: "and prepare what lies ahead.", speed:80 }
+  ],
+  ja: [
+    { line: "こんにちは、Celesteです。", speed:300 },
+    { line: "あなたの意図を読み取り、", speed:65 },
+    { line: "これから訪れるものを整えます。", speed:80 }
+  ]
+};
 
-  const cursor = document.createElement("span");
-  cursor.id = "cursor";
-  cursor.textContent = "▁";
-  cursor.style.opacity = "0";
-  tw.after(cursor);
+const selected = textSets[lang] || textSets["en"];
 
-  let lineIndex = 0;
-  let charIndex = 0;
+const tw = document.getElementById("tw");
 
-  function typeLine() {
-    const current = text[lineIndex];
+const cursor = document.createElement("span");
+cursor.id = "cursor";
+cursor.textContent = "▁";
+cursor.style.opacity = "0";
+tw.after(cursor);
 
-    if (charIndex < current.line.length) {
-      tw.textContent += current.line.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeLine, current.speed);
+let lineIndex = 0;
+let charIndex = 0;
+
+function typeLine(){
+  const current = selected[lineIndex];
+
+  if(charIndex < current.line.length){
+    tw.textContent += current.line.charAt(charIndex);
+    charIndex++;
+    setTimeout(typeLine, current.speed);
+  } else {
+    lineIndex++;
+    charIndex = 0;
+
+    if(lineIndex < selected.length){
+      tw.textContent += "\n";
+      setTimeout(typeLine, 1000);
     } else {
-      lineIndex++;
-      charIndex = 0;
-
-      if (lineIndex < text.length) {
-        tw.textContent += "\n";
-        setTimeout(typeLine, 1000);  // 行間の静寂
-      } else {
-        setTimeout(() => {
-          startCursorBlink();
-        }, 1800); // 最後の余韻
-      }
+      setTimeout(() => { startCursorBlink(); }, 1600);
     }
   }
+}
 
-  function startCursorBlink() {
-    setInterval(() => {
-      cursor.style.opacity = cursor.style.opacity === "0" ? "1" : "0";
-    }, 700);
-  }
+function startCursorBlink(){
+  setInterval(()=> {
+    cursor.style.opacity = cursor.style.opacity==="0" ? "1" : "0";
+  }, 700);
+}
 
-  typeLine();
-});
+typeLine();
 </script>
+
+<!-- language engine -->
+<script src="/language.js"></script>
 
 </body>
 </html>
