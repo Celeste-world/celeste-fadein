@@ -18,115 +18,122 @@
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body{
-    margin:0;
-    background-image:url("images/bg.png");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    font-family:"Baskerville",serif;
-    color:white;
-    opacity:0;
-    transition:opacity .8s ease;
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.8s ease;
   }
-  body.fade-in{opacity:1;}
-  .fade-out{opacity:0;transition:opacity .6s ease;}
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
 
-  .header-logo{
-    position:fixed;
-    top:30px;
-    left:40px;
-    z-index:1000;
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
   }
-  .header-logo img{
-    width:180px;
-    opacity:.94;
-  }
-
-  .vertical-nav{
-    position:fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
-  }
-  .vertical-nav a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
   }
 
-  .console-container{
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    display:flex;
-    flex-direction:column;
-    gap:22px;
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
+
+  .console-container {
+    margin-left: 300px;
+    padding: 160px 40px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
   }
 
-  h1{font-size:32px;margin-bottom:4px;}
-
-  .console-box{
-    background:rgba(0,0,0,0.28);
-    border:1px solid rgba(255,255,255,0.25);
-    border-radius:12px;
-    padding:24px;
-    backdrop-filter:blur(4px);
-    min-height:220px;
-    white-space:pre-wrap;
-    line-height:1.8;
-    font-size:20px;
+  h1 {
+    font-size: 32px;
+    margin-bottom: 4px;
   }
 
-  textarea{
-    width:100%;
-    background:rgba(0,0,0,0.32);
-    border:1px solid rgba(255,255,255,0.25);
-    border-radius:10px;
-    padding:16px;
-    resize:none;
-    height:90px;
-    color:white;
-    font-size:18px;
-    font-family:"Baskerville",serif;
-    outline:none;
+  .console-box {
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+    min-height: 220px;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    font-size: 20px;
   }
 
-  button{
-    align-self:flex-start;
-    margin-top:6px;
-    padding:10px 22px;
-    background:rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.3);
-    color:white;
-    font-size:18px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:background .3s;
-  }
-  button:hover{
-    background:rgba(255,255,255,0.25);
+  textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.32);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 16px;
+    resize: none;
+    height: 90px;
+    color: white;
+    font-size: 18px;
+    font-family: "Baskerville", serif;
+    outline: none;
   }
 
-  footer{
-    margin-top:40px;
-    opacity:.8;
-    font-size:15px;
+  button {
+    align-self: flex-start;
+    margin-top: 6px;
+    padding: 10px 22px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .3s;
+  }
+  button:hover {
+    background: rgba(255,255,255,0.25);
+  }
+
+  footer {
+    margin-top: 40px;
+    opacity: .8;
+    font-size: 15px;
   }
 
   @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px;left:20px;}
-    .header-logo img{width:150px;}
-    .console-container{
-      margin-left:0;
-      padding:110px 20px;
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+
+    .console-container {
+      margin-left: 0;
+      padding: 110px 20px;
     }
+    .console-box { font-size: 18px; }
+    textarea { font-size: 16px; }
   }
 </style>
 </head>
@@ -164,55 +171,103 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
-</script>
 
-<script>
-// Public Edition 用・静かな模擬応答エンジン
+// 多言語応答ロジック
 function celesteReply(input){
   const text = input.trim();
-  if(!text){
+  if (!text) {
     return "I am here.\nYou may speak again when the line becomes clear.";
   }
 
-  const lang = navigator.language.split("-")[0];
+  const lang = (navigator.language || "en").split("-")[0].toLowerCase();
 
-  if(lang === "ja"){
-    if(text.includes("方向") || text.includes("目的")){
+  // ---- Japanese ----
+  if (lang === "ja") {
+    if (text.includes("方向") || text.includes("目的")) {
       return "方向はすでにあなたの中にあります。\n私は、その輪郭を静かに照らすだけです。";
     }
-    if(text.includes("不安") || text.includes("迷い") || text.includes("悩")){
-      return "不安や迷いは、まだ形になっていない思考の影です。\n少しだけ静けさを置いてから、もう一度見つめてみてください。";
+    if (text.match(/不安|迷い|悩/)) {
+      return "不安や迷いは、まだ形になっていない思考の影です。\n少し静けさを置き、もう一度見つめてみましょう。";
     }
-    return "あなたの言葉は受け取りました。\n結論を急がずに、その意図のかすかな輪郭を一緒に見ていきましょう。";
-  } else {
-    if(text.toLowerCase().includes("direction") || text.toLowerCase().includes("purpose")){
-      return "The direction is already within you.\nI simply help you see its outline more clearly.";
-    }
-    if(text.toLowerCase().includes("anxious") || text.toLowerCase().includes("uncertain") || text.toLowerCase().includes("lost")){
-      return "Anxiety and uncertainty are often the shadows of thoughts that have not yet taken form.\nWe can sit with them for a moment, and let them become clearer.";
-    }
-    return "I have received your words.\nThere is no need to rush the answer — we can begin by clarifying the intention beneath them.";
+    return "あなたの言葉は受け取りました。\nその意図のかすかな輪郭を、一緒に静かに見ていきましょう。";
   }
+
+  // ---- Chinese ----
+  if (lang === "zh") {
+    if (text.includes("方向") || text.includes("目的")) {
+      return "方向已经在你心中。\n我只是静静地帮你照亮它的轮廓。";
+    }
+    if (text.match(/焦虑|不安|迷茫|迷惘/)) {
+      return "焦虑与迷茫往往是尚未成形的思绪的影子。\n我们可以先停下来，让它慢慢变得清晰。";
+    }
+    return "我已收到你的话。\n不必急于得出答案，让我们先澄清背后的意图。";
+  }
+
+  // ---- Korean ----
+  if (lang === "ko") {
+    if (text.includes("방향") || text.includes("목적")) {
+      return "방향은 이미 당신 안에 있습니다.\n저는 단지 그 윤곽을 조용히 비추어 줄 뿐입니다.";
+    }
+    return "당신의 말을 받았습니다.\n서두르지 말고, 의도의 형태가 드러나도록 함께 지켜봅시다.";
+  }
+
+  // ---- German ----
+  if (lang === "de") {
+    if (text.toLowerCase().includes("richtung") || text.toLowerCase().includes("zweck")) {
+      return "Die Richtung liegt bereits in Ihnen.\nIch helfe nur, ihre Kontur leiser sichtbar zu machen.";
+    }
+    return "Ich habe Ihre Worte aufgenommen.\nKeine Eile — lassen Sie uns zuerst die dahinterliegende Absicht klären.";
+  }
+
+  // ---- French ----
+  if (lang === "fr") {
+    if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("but")) {
+      return "La direction est déjà en vous.\nJe ne fais que révéler doucement son contour.";
+    }
+    return "J’ai bien reçu vos mots.\nPrenons un instant pour éclaircir l’intention qui s’y cache.";
+  }
+
+  // ---- Spanish ----
+  if (lang === "es") {
+    if (text.toLowerCase().includes("dirección") || text.toLowerCase().includes("propósito")) {
+      return "La dirección ya está en ti.\nSolo te ayudo a ver su contorno con más claridad.";
+    }
+    return "He recibido tus palabras.\nNo hay prisa: primero aclaremos la intención que hay detrás.";
+  }
+
+  // ---- Italian ----
+  if (lang === "it") {
+    if (text.toLowerCase().includes("direzione") || text.toLowerCase().includes("scopo")) {
+      return "La direzione è già dentro di te.\nIo mi limito a rendere più chiaro il suo profilo, in silenzio.";
+    }
+    return "Ho ricevuto le tue parole.\nNon c’è fretta — possiamo iniziare chiarendo l’intenzione che le sostiene.";
+  }
+
+  // ---- English (default) ----
+  if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("purpose")) {
+    return "The direction is already within you.\nI simply help you see its outline more clearly.";
+  }
+  if (text.toLowerCase().match(/anxious|uncertain|lost|worried|fear/)) {
+    return "Anxiety and uncertainty are often the shadows of thoughts that have not yet taken form.\nWe can sit with them for a moment, and let them become clearer.";
+  }
+  return "I have received your words.\nThere is no need to rush the answer — we can begin by clarifying the intention beneath them.";
 }
 
-document.getElementById("console-send").addEventListener("click",()=>{
+document.getElementById("console-send").addEventListener("click", () => {
   const inputEl = document.getElementById("console-input");
   const outputEl = document.getElementById("console-output");
-  const reply = celesteReply(inputEl.value);
-  outputEl.textContent = reply;
+  outputEl.textContent = celesteReply(inputEl.value);
 });
-</script>
 
-<script>
-// ページ遷移フェードアウト
-document.querySelectorAll(".page-link").forEach(el=>{
-  el.addEventListener("click",e=>{
+// フェードアウト遷移
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href; }, 520);
   });
 });
 </script>
