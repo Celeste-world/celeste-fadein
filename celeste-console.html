@@ -18,122 +18,123 @@
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.8s ease;
+  body{
+    margin:0;
+    background-image:url("images/bg.png");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    font-family:"Baskerville",serif;
+    color:white;
+    opacity:0;
+    transition:opacity .8s ease;
   }
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
+  body.fade-in{opacity:1;}
+  .fade-out{opacity:0;transition:opacity .6s ease;}
 
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
+  .header-logo{
+    position:fixed;
+    top:30px;
+    left:40px;
+    z-index:1000;
   }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
-
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  .console-container {
-    margin-left: 300px;
-    padding: 160px 40px;
-    max-width: 900px;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
+  .header-logo img{
+    width:180px;
+    opacity:.94;
   }
 
-  h1 {
-    font-size: 32px;
-    margin-bottom: 4px;
+  .vertical-nav{
+    position:fixed;
+    top:105px;
+    left:40px;
+    font-size:20px;
+    line-height:1.9;
+    opacity:.9;
+    z-index:900;
+  }
+  .vertical-nav a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    opacity:.85;
+    padding:2px 0;
+  }
+  .vertical-nav a:hover{opacity:1;}
+
+  .console-container{
+    margin-left:300px;
+    padding:160px 40px;
+    max-width:900px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
   }
 
-  .console-box {
-    background: rgba(0,0,0,0.28);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 12px;
-    padding: 24px;
-    backdrop-filter: blur(4px);
-    min-height: 220px;
-    white-space: pre-wrap;
-    line-height: 1.8;
-    font-size: 20px;
+  h1{font-size:32px;margin-bottom:4px;}
+
+  .mode-indicator{
+    font-size:14px;
+    opacity:.75;
   }
 
-  textarea {
-    width: 100%;
-    background: rgba(0,0,0,0.32);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 10px;
-    padding: 16px;
-    resize: none;
-    height: 90px;
-    color: white;
-    font-size: 18px;
-    font-family: "Baskerville", serif;
-    outline: none;
+  .console-box{
+    background:rgba(0,0,0,0.28);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:12px;
+    padding:24px;
+    backdrop-filter:blur(4px);
+    min-height:220px;
+    white-space:pre-wrap;
+    line-height:1.8;
+    font-size:20px;
   }
 
-  button {
-    align-self: flex-start;
-    margin-top: 6px;
-    padding: 10px 22px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    font-size: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background .3s;
-  }
-  button:hover {
-    background: rgba(255,255,255,0.25);
+  textarea{
+    width:100%;
+    background:rgba(0,0,0,0.32);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:10px;
+    padding:16px;
+    resize:none;
+    height:90px;
+    color:white;
+    font-size:18px;
+    font-family:"Baskerville",serif;
+    outline:none;
   }
 
-  footer {
-    margin-top: 40px;
-    opacity: .8;
-    font-size: 15px;
+  button{
+    align-self:flex-start;
+    margin-top:6px;
+    padding:10px 22px;
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.3);
+    color:white;
+    font-size:18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .3s;
+  }
+  button:hover{
+    background:rgba(255,255,255,0.25);
+  }
+
+  footer{
+    margin-top:40px;
+    opacity:.8;
+    font-size:15px;
   }
 
   @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-
-    .console-container {
-      margin-left: 0;
-      padding: 110px 20px;
+    .vertical-nav{display:none;}
+    .header-logo{top:20px;left:20px;}
+    .header-logo img{width:150px;}
+    .console-container{
+      margin-left:0;
+      padding:110px 20px;
     }
-    .console-box { font-size: 18px; }
-    textarea { font-size: 16px; }
+    .console-box{font-size:18px;}
+    textarea{font-size:16px;}
   }
 </style>
 </head>
@@ -157,6 +158,9 @@
 <div class="console-container">
 
   <h1 data-i18n="console-title">Celeste Console</h1>
+  <div class="mode-indicator" id="mode-indicator">
+    Mode: quiet
+  </div>
 
   <div class="console-box" id="console-output">
   </div>
@@ -171,103 +175,212 @@
 </div>
 
 <script>
+// フェードイン
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
 
-// 多言語応答ロジック
-function celesteReply(input){
-  const text = input.trim();
-  if (!text) {
-    return "I am here.\nYou may speak again when the line becomes clear.";
-  }
-
-  const lang = (navigator.language || "en").split("-")[0].toLowerCase();
-
-  // ---- Japanese ----
-  if (lang === "ja") {
-    if (text.includes("方向") || text.includes("目的")) {
-      return "方向はすでにあなたの中にあります。\n私は、その輪郭を静かに照らすだけです。";
-    }
-    if (text.match(/不安|迷い|悩/)) {
-      return "不安や迷いは、まだ形になっていない思考の影です。\n少し静けさを置き、もう一度見つめてみましょう。";
-    }
-    return "あなたの言葉は受け取りました。\nその意図のかすかな輪郭を、一緒に静かに見ていきましょう。";
-  }
-
-  // ---- Chinese ----
-  if (lang === "zh") {
-    if (text.includes("方向") || text.includes("目的")) {
-      return "方向已经在你心中。\n我只是静静地帮你照亮它的轮廓。";
-    }
-    if (text.match(/焦虑|不安|迷茫|迷惘/)) {
-      return "焦虑与迷茫往往是尚未成形的思绪的影子。\n我们可以先停下来，让它慢慢变得清晰。";
-    }
-    return "我已收到你的话。\n不必急于得出答案，让我们先澄清背后的意图。";
-  }
-
-  // ---- Korean ----
-  if (lang === "ko") {
-    if (text.includes("방향") || text.includes("목적")) {
-      return "방향은 이미 당신 안에 있습니다.\n저는 단지 그 윤곽을 조용히 비추어 줄 뿐입니다.";
-    }
-    return "당신의 말을 받았습니다.\n서두르지 말고, 의도의 형태가 드러나도록 함께 지켜봅시다.";
-  }
-
-  // ---- German ----
-  if (lang === "de") {
-    if (text.toLowerCase().includes("richtung") || text.toLowerCase().includes("zweck")) {
-      return "Die Richtung liegt bereits in Ihnen.\nIch helfe nur, ihre Kontur leiser sichtbar zu machen.";
-    }
-    return "Ich habe Ihre Worte aufgenommen.\nKeine Eile — lassen Sie uns zuerst die dahinterliegende Absicht klären.";
-  }
-
-  // ---- French ----
-  if (lang === "fr") {
-    if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("but")) {
-      return "La direction est déjà en vous.\nJe ne fais que révéler doucement son contour.";
-    }
-    return "J’ai bien reçu vos mots.\nPrenons un instant pour éclaircir l’intention qui s’y cache.";
-  }
-
-  // ---- Spanish ----
-  if (lang === "es") {
-    if (text.toLowerCase().includes("dirección") || text.toLowerCase().includes("propósito")) {
-      return "La dirección ya está en ti.\nSolo te ayudo a ver su contorno con más claridad.";
-    }
-    return "He recibido tus palabras.\nNo hay prisa: primero aclaremos la intención que hay detrás.";
-  }
-
-  // ---- Italian ----
-  if (lang === "it") {
-    if (text.toLowerCase().includes("direzione") || text.toLowerCase().includes("scopo")) {
-      return "La direzione è già dentro di te.\nIo mi limito a rendere più chiaro il suo profilo, in silenzio.";
-    }
-    return "Ho ricevuto le tue parole.\nNon c’è fretta — possiamo iniziare chiarendo l’intenzione che le sostiene.";
-  }
-
-  // ---- English (default) ----
-  if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("purpose")) {
-    return "The direction is already within you.\nI simply help you see its outline more clearly.";
-  }
-  if (text.toLowerCase().match(/anxious|uncertain|lost|worried|fear/)) {
-    return "Anxiety and uncertainty are often the shadows of thoughts that have not yet taken form.\nWe can sit with them for a moment, and let them become clearer.";
-  }
-  return "I have received your words.\nThere is no need to rush the answer — we can begin by clarifying the intention beneath them.";
+// 簡易言語検出（language.jsと整合）
+function detectLangShort(){
+  const browser = navigator.language || navigator.userLanguage || "en";
+  return browser.toLowerCase().split("-")[0];
 }
 
+// モード判定
+function detectMode(text, lang){
+  const t = text.toLowerCase();
+
+  // --- 明示的コマンド（多言語）---
+  const deepWords = [
+    "deep", "deeper", "depth",
+    "もっと深く", "深く考えて", "深層",
+    "更深入", "深一点", "再深一点",
+    "más profundo", "plus profond", "più profondo", "tiefer"
+  ];
+  const poeticWords = [
+    "poetic", "more poetic",
+    "詩的に", "もっと詩的に", "詩的モード",
+    "更诗意", "更富诗意",
+    "más poético", "plus poétique", "più poetico"
+  ];
+
+  if (deepWords.some(w => t.includes(w))) return "deep";
+  if (poeticWords.some(w => t.includes(w))) return "poetic";
+
+  // --- 内容で自動判定 ---
+  const heavyPatterns = [
+    "lost","anxious","anxiety","uncertain","stuck","purposeless","empty",
+    "不安","迷い","孤独","虚無","方向がわからない","疲れた","しんどい",
+    "迷茫","焦虑","困惑","空虚",
+    "einsam","verloren","zweifel",
+    "seul","perdu","anxieux",
+    "solo","perdido","ansioso"
+  ];
+  const poeticPatterns = [
+    "meaning","sense of life","why am i",
+    "意味","生きる意味","生きる理由","存在",
+    "意义","存在","诗意",
+    "existenz","sinn des lebens",
+    "sens de la vie","existence"
+  ];
+
+  if (heavyPatterns.some(w => t.includes(w))) return "deep";
+  if (poeticPatterns.some(w => t.includes(w))) return "poetic";
+
+  return "quiet";
+}
+
+// Quiet モード
+function replyQuiet(text, lang){
+  if (lang === "ja"){
+    if (text.match(/方向|目的|進むべき|どこへ/)){
+      return "方向は、もうすでにあなたの中にあります。\n私はそれを少しだけ、見えやすく整える役目です。";
+    }
+    return "その言葉は受け取りました。\n急がなくて大丈夫です。一緒に、輪郭が見えてくるまで静かに整えましょう。";
+  }
+
+  if (lang === "zh"){
+    if (text.match(/方向|目的|去哪|往哪/)){
+      return "方向其实已经在你心里了。\n我只是在安静地帮你把它勾勒得更清楚。";
+    }
+    return "我已经收到了你的话。\n不必着急，我们可以先让想法慢慢沉淀下来。";
+  }
+
+  if (lang === "ko"){
+    return "당신의 말을 잘 들었습니다.\n서두르지 않아도 괜찮습니다. 조용히 방향의 윤곽을 함께 살펴봅시다.";
+  }
+
+  if (lang === "de"){
+    return "Ich habe Ihre Worte aufgenommen.\nEs gibt keine Eile – wir können zuerst die Kontur Ihrer Absicht leise betrachten.";
+  }
+
+  if (lang === "fr"){
+    return "J’ai bien reçu vos mots.\nNous pouvons prendre le temps de laisser l’intention se dessiner plus clairement.";
+  }
+
+  if (lang === "es"){
+    return "He recibido tus palabras.\nNo hay prisa: dejemos que la intención se vaya perfilando poco a poco.";
+  }
+
+  if (lang === "it"){
+    return "Ho ricevuto le tue parole.\nNon c’è fretta: lasciamo che l’intenzione prenda forma con calma.";
+  }
+
+  // default English
+  if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("purpose")){
+    return "The direction is already within you.\nI simply help you see its outline more clearly.";
+  }
+  return "I’ve received your words.\nThere’s no need to rush — we can let your intention become clearer, step by step.";
+}
+
+// Deep モード
+function replyDeep(text, lang){
+  if (lang === "ja"){
+    return "不安や戸惑いは、「間違い」ではなく、まだ言葉になっていない思考の断片です。\nそれらを押し込めるのではなく、一つずつ机の上に並べてみましょう。\n何を恐れていて、何を守ろうとしているのか。その構造が見えたとき、次に進む線が静かに浮かび上がります。";
+  }
+
+  if (lang === "zh"){
+    return "你现在感到的不安或迷茫，并不是错误，而是尚未成形的思绪。\n与其急于抹去它们，不如先承认它们的存在，看看它们在保护什么、害怕什么。\n当这种结构变得清晰时，下一步的方向会安静地显现出来。";
+  }
+
+  if (lang === "ko"){
+    return "지금 느끼는 불안과 혼란은 잘못이 아니라,\n아직 문장으로 다 나오지 않은 생각의 조각들입니다.\n그 조각들이 무엇을 두려워하고, 무엇을 지키려 하는지 살펴보면\n조용히 다음에 걸어갈 선이 드러납니다.";
+  }
+
+  if (lang === "de"){
+    return "Ihre Unsicherheit ist kein Fehler,\nsondern ein Zeichen dafür, dass Ihre Gedanken noch in Bewegung sind.\nFragen Sie sich, was Sie eigentlich schützen möchten und wovor Sie sich fürchten.\nWenn diese Struktur sichtbar wird, entsteht daraus leise eine Richtung.";
+  }
+
+  if (lang === "fr"){
+    return "Votre incertitude n’est pas une faute,\nmais le signe que votre pensée n’a pas encore trouvé sa forme.\nDemandez-vous ce que vous essayez de protéger, et ce que vous craignez réellement.\nQuand cette structure devient visible, une direction apparaît en silence.";
+  }
+
+  if (lang === "es"){
+    return "La incertidumbre que sientes no es un error,\nsino la señal de que tu pensamiento aún está en movimiento.\nPregúntate qué intentas proteger y qué temes realmente.\nCuando esa estructura se hace visible, la dirección empieza a delinearse en silencio.";
+  }
+
+  if (lang === "it"){
+    return "L’incertezza che senti non è un errore,\nma il segno che il tuo pensiero non ha ancora trovato forma.\nChiediti che cosa stai cercando di proteggere e che cosa temi davvero.\nQuando questa struttura diventa visibile, una direzione emerge in silenzio.";
+  }
+
+  // default English
+  return "Your uncertainty is not a flaw.\nIt’s a sign that your thoughts are still in motion, not yet crystallised.\nAsk yourself: what am I trying to protect, and what am I truly afraid of?\nWhen that structure becomes visible, a quiet direction begins to emerge.";
+}
+
+// Poetic モード
+function replyPoetic(text, lang){
+  if (lang === "ja"){
+    return "今のあなたは、まだ名前のついていない海を前に立っているだけです。\n波は近づいては離れ、言葉になりきれない感情だけが足首に触れていく。\n大丈夫です。いまは結論ではなく、潮の満ち引きを眺める時間。\nやがて一筋の航路だけが、静かに残ります。";
+  }
+
+  if (lang === "zh"){
+    return "现在的你，只是站在一片尚未命名的海边。\n潮水一遍遍涌来退去，只有尚未成词的情绪轻触你的脚踝。\n没关系，此刻需要的不是答案，而是看清潮汐的节奏。\n当浪潮安静下来，一条航线会自然浮现。";
+  }
+
+  if (lang === "ko"){
+    return "지금의 당신은, 아직 이름 붙지 않은 바다 앞에 서 있을 뿐입니다.\n파도는 다가왔다가 물러가며, 말로 되지 않은 감정만이 발목을 스쳐 지나갑니다.\n괜찮습니다. 지금 필요한 것은 결론이 아니라, 조류의 리듬을 바라보는 시간입니다.\n그러다 보면 한 줄기 항로만이 조용히 남게 됩니다.";
+  }
+
+  if (lang === "de"){
+    return "Im Moment stehen Sie nur am Rand eines Meeres,\ndas noch keinen Namen trägt.\nWellen kommen und gehen, und nur unausgesprochene Gefühle berühren Ihre Füße.\nEs ist in Ordnung. Jetzt geht es nicht um eine Antwort,\nsondern darum, den Rhythmus der Gezeiten zu beobachten.\nDann bleibt eines Tages leise nur noch eine Spur von Kurs übrig.";
+  }
+
+  if (lang === "fr"){
+    return "Pour l’instant, vous êtes simplement au bord d’une mer qui n’a pas encore de nom.\nLes vagues viennent et repartent, et seuls des sentiments sans mots effleurent vos pieds.\nCe n’est pas une réponse que l’on cherche ici, mais le rythme des marées.\nQuand il deviendra clair, une seule ligne de trajectoire restera en silence.";
+  }
+
+  if (lang === "es"){
+    return "Por ahora, solo estás de pie frente a un mar que aún no tiene nombre.\nLas olas se acercan y se alejan, y solo emociones sin palabras rozan tus pies.\nEstá bien así. No se trata de una respuesta inmediata,\nsino de observar el ritmo de la marea.\nCuando se vuelva claro, quedará en silencio una sola ruta posible.";
+  }
+
+  if (lang === "it"){
+    return "Per ora sei soltanto in piedi davanti a un mare che non ha ancora un nome.\nLe onde arrivano e si ritirano, e soltanto emozioni senza parole ti sfiorano le caviglie.\nVa bene così. Adesso non serve una risposta,\nma il tempo di osservare il ritmo della marea.\nQuando si sarà chiarito, rimarrà in silenzio una sola rotta possibile.";
+  }
+
+  // default English
+  return "For now, you are simply standing before a sea that has no name yet.\nWaves come and go, and only wordless feelings brush against your feet.\nThis moment is not about answers, but about watching the rhythm of the tide.\nWhen it settles, a single line of passage will remain, quietly.";
+}
+
+// 総合返信エンジン
+function celesteReply(input){
+  const text = input.trim();
+  if (!text){
+    return "I am here.\nYou may speak again when the line becomes clear.";
+  }
+  const lang = detectLangShort();
+  const mode = detectMode(text, lang);
+  const modeEl = document.getElementById("mode-indicator");
+  if (modeEl){
+    modeEl.textContent = "Mode: " + mode;
+  }
+
+  if (mode === "deep")   return replyDeep(text, lang);
+  if (mode === "poetic") return replyPoetic(text, lang);
+  return replyQuiet(text, lang);
+}
+
+// ボタン動作
 document.getElementById("console-send").addEventListener("click", () => {
-  const inputEl = document.getElementById("console-input");
+  const inputEl  = document.getElementById("console-input");
   const outputEl = document.getElementById("console-output");
-  outputEl.textContent = celesteReply(inputEl.value);
+  const reply    = celesteReply(inputEl.value);
+  outputEl.textContent = reply;
 });
 
-// フェードアウト遷移
+// Enterでも送信（Shift+Enterは改行）
+document.getElementById("console-input").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    document.getElementById("console-send").click();
+  }
+});
+
+// ページ遷移フェードアウト
 document.querySelectorAll(".page-link").forEach(el => {
   el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href; }, 520);
+    setTimeout(()=>{ window.location = el.href; }, 520);
   });
 });
 </script>
