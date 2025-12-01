@@ -5,120 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Celeste</title>
 
-<!-- ===== Global SEO Set ===== -->
+<!-- ===== Global SEO ===== -->
 <meta name="description" content="Celeste is a quiet intelligence shaped through restraint — a place where clarity emerges, noise dissolves, and thought becomes architectural.">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Celeste — Silent Intelligence">
 <meta property="og:description" content="A quiet intelligence designed to uncover clarity through silence, precision, and intention.">
 <meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/">
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Celeste — Silent Intelligence">
 <meta name="twitter:description" content="A quiet intelligence built through restraint and clarity.">
 <meta name="twitter:image" content="https://celeste.world/images/og-image.jpg">
 
-<!-- Canonical -->
 <link rel="canonical" href="https://celeste.world/">
-
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"Celeste",
-  "url":"https://celeste.world/",
-  "description":"Celeste is a quiet intelligence shaped through restraint — a structure where thought becomes clear."
-}
-</script>
-<!-- ===== End SEO Set ===== -->
 
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body{
-    margin:0;
-    background-image:url("images/bg.png");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    font-family:"Baskerville",serif;
-    color:white;
-    opacity:0;
-    transition:opacity .8s ease;
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.8s ease;
   }
-  body.fade-in{opacity:1;}
+  body.fade-in { opacity: 1; }
 
-  .main{
-    margin-left:300px;
-    padding-top:160px;
-    padding-left:40px;
-    max-width:900px;
+  /* -------- Global Page Fade-Out -------- */
+  a { cursor: pointer; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
+
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+  }
+  .header-logo img { width: 180px; opacity: .94; }
+
+  /* Navigation */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
+
+  /* Main */
+  .main {
+    margin-left: 300px;
+    padding-top: 160px;
+    padding-left: 40px;
+    max-width: 900px;
   }
 
-  .typewriter{
-    font-size:28px;
-    line-height:1.9;
-    white-space:pre-wrap;
+  .typewriter {
+    font-size: 28px;
+    line-height: 1.9;
+    white-space: pre-wrap;
   }
 
-  .cursor{
-    display:inline-block;
-    width:10px;
-    background:rgba(255,255,255,0.8);
-    margin-left:4px;
-    animation:blink 1s infinite;
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background: rgba(255,255,255,0.8);
+    margin-left: 4px;
+    animation: blink 1s infinite;
   }
 
-  @keyframes blink{
-    0%,50%{opacity:1;}
-    50.01%,100%{opacity:0;}
+  @keyframes blink {
+    0%,50% {opacity: 1;}
+    50.01%,100% {opacity: 0;}
   }
 
   @media(max-width:768px){
-    .main{
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+    .main {
       margin-left:0;
       padding:110px 20px;
     }
-    .typewriter{font-size:24px;}
+    .typewriter { font-size:24px; }
   }
 </style>
+
 </head>
 
 <body>
 
+<!-- Logo -->
+<a href="/" class="header-logo page-link">
+  <img src="/images/logo.svg" alt="Celeste Logo">
+</a>
+
+<!-- Nav -->
+<div class="vertical-nav">
+  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
+  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
+  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
+  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
+  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
+  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+</div>
+
+<!-- Main -->
 <div class="main">
   <div id="tw" class="typewriter"></div>
   <div class="cursor"></div>
 </div>
 
+<!-- Fade-In + Typewriter -->
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
-  const script=[
-    {text:"Hello,",delay:300},
-    {pause:1000},
-    {text:"I’m Celeste.",delay:55},
-    {pause:1000},
-    {text:"I read your intentions",delay:46},
-    {pause:1000},
-    {text:"and prepare what lies ahead.",delay:60},
-    {pause:1400}
+  const script = [
+    { text:"Hello,", delay:300 },
+    { pause:1000 },
+    { text:"I’m Celeste.", delay:55 },
+    { pause:1000 },
+    { text:"I read your intentions", delay:46 },
+    { pause:1000 },
+    { text:"and prepare what lies ahead.", delay:60 },
+    { pause:1400 }
   ];
 
-  const tw=document.getElementById("tw");
+  const tw = document.getElementById("tw");
 
   async function typeLine(line){
     for(let i=0;i<line.text.length;i++){
-      tw.textContent+=line.text[i];
+      tw.textContent += line.text[i];
       await new Promise(r=>setTimeout(r,line.delay));
     }
-    tw.textContent+="\n";
+    tw.textContent += "\n";
   }
 
   async function run(){
@@ -129,6 +168,17 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   run();
+});
+</script>
+
+<!-- Fade-Out for navigation -->
+<script>
+document.querySelectorAll(".page-link").forEach(el=>{
+  el.addEventListener("click", e=>{
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(()=>{ window.location = el.href; }, 500);
+  });
 });
 </script>
 
