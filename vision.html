@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vision — Celeste</title>
 
 <link rel="icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#000">
 
 <style>
-  body {
-    margin: 0;
-    font-family: "Baskerville", serif;
-    color: white;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-attachment: fixed;
-  }
+ body {
+   margin:0;
+   font-family:"Baskerville",serif;
+   color:white;
+   background-image:url("images/bg.png");
+   background-size:cover;
+   background-attachment:fixed;
+   opacity:0;
+   transition:opacity 0.8s ease;
+ }
+ body.fade-in { opacity:1; }
 
-  .header-logo { position: fixed; top: 30px; left: 40px; }
-  .header-logo img { width: 180px; opacity: 0.94; }
+ .header-logo{position:fixed;top:30px;left:40px;}
+ .header-logo img{width:180px;opacity:0.94;}
 
-  .vertical-nav {
-    position: fixed; top: 105px; left: 40px;
-    font-size: 20px; line-height: 1.9; opacity: 0.9;
-  }
-  .vertical-nav a { color:white; text-decoration:none; opacity:0.85; }
+ .vertical-nav{
+   position:fixed;top:105px;left:40px;
+   font-size:20px;line-height:1.9;opacity:0.9;
+ }
 
-  .content {
-    margin-left: 300px; padding: 160px 40px;
-    max-width: 900px; font-size: 22px; line-height: 2.0;
-  }
+ .content{
+   margin-left:300px;padding:160px 40px;
+   max-width:900px;font-size:22px;line-height:2;
+ }
 
-  .speak-with { margin-top:22px; font-size:18px; }
-  .speak-with a { color:white; border-bottom:1px solid rgba(255,255,255,0.3); }
+ .speak-with{margin-top:22px;}
 
-  @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px; left:20px;}
-    .header-logo img{width:150px;}
-    .content{margin-left:0; padding:110px 20px;}
-  }
+ @media(max-width:768px){
+   .vertical-nav{display:none;}
+   .header-logo{top:20px;left:20px;}
+   .header-logo img{width:150px;}
+   .content{margin-left:0;padding:110px 20px;}
+ }
 </style>
 </head>
 
@@ -63,35 +64,35 @@
 <h1>Vision</h1>
 
 <p>
-The vision of Celeste is not expansion,  
+The vision of Celeste is not expansion,<br>
 but refinement.
 </p>
 
 <p>
-A world where intelligence becomes quieter,  
-more intentional,  
+A world where intelligence becomes quieter,<br>
+more intentional,<br>
 and more architectural.
 </p>
 
 <p>
-Where technology does not overwhelm thought,  
-but steadies it—  
+Where technology does not overwhelm thought,<br>
+but steadies it —<br>
 revealing the narrow path that leads forward.
 </p>
 
 <p>
-Celeste aims to become a place where  
-people meet clarity,
-<br>not noise.  
-Direction,  
-<br>not distraction.  
-Meaning,  
-<br>not accumulation.
+Celeste aims to become a place where<br>
+people meet clarity,<br>
+not noise.<br><br>
+Direction,<br>
+not distraction.<br><br>
+Meaning,<br>
+not accumulation.
 </p>
 
 <p>
-Its future is simple:  
-a silent intelligence that grows sharper  
+Its future is simple:<br>
+a silent intelligence that grows sharper<br>
 by becoming smaller.
 </p>
 
@@ -102,5 +103,12 @@ by becoming smaller.
 <footer>© Celeste</footer>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+</script>
+
 </body>
 </html>
