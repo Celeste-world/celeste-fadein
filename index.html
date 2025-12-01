@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Celeste</title>
 
-<meta name="description" content="Celeste is a quiet intelligence shaped through restraint — a place where clarity emerges, noise dissolves, and thought becomes architectural.">
+<!-- SEO -->
+<meta name="description" content="Celeste — a silent intelligence that reads intentions and prepares what lies ahead.">
+<link rel="canonical" href="https://celeste.world/">
+
+<!-- OG -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Celeste — Silent Intelligence">
-<meta property="og:description" content="A quiet intelligence designed to uncover clarity through silence, precision, and intention.">
+<meta property="og:title" content="Celeste">
+<meta property="og:description" content="A quiet intelligence shaped through silence, clarity, and restraint.">
 <meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Celeste — Silent Intelligence">
-<meta name="twitter:description" content="A quiet intelligence built through restraint and clarity.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.jpg">
-<link rel="canonical" href="https://celeste.world/">
+
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
@@ -28,11 +29,13 @@
     font-family: "Baskerville", serif;
     color: white;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity .8s ease;
   }
+
   body.fade-in { opacity: 1; }
   .fade-out { opacity: 0; transition: opacity .6s ease; }
 
+  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
@@ -62,41 +65,55 @@
   }
   .vertical-nav a:hover { opacity: 1; }
 
+  /* Main */
   .main {
     margin-left: 300px;
-    padding-top: 80px;  /* ← 位置を上に */
+    padding-top: 22vh; /* 上 1/3 → 調整済 */
     padding-left: 40px;
     max-width: 900px;
   }
 
   .typewriter {
-    font-size: 28px;
+    font-size: 30px;
     line-height: 1.9;
     white-space: pre-wrap;
+    opacity: .96;
+    min-height: 200px;
   }
 
-  .cursor {
-    display: inline-block;
-    width: 10px;
-    background: rgba(255,255,255,0.8);
-    margin-left: 4px;
-    animation: blink 1s infinite;
+  .learn-more {
+    margin-top: 32px;
+    font-size: 22px;
+  }
+  .learn-more a {
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    padding-bottom: 3px;
+    text-decoration: none;
+  }
+  .learn-more a:hover {
+    border-bottom-color: rgba(255,255,255,0.9);
   }
 
-  @keyframes blink {
-    0%,50% { opacity: 1; }
-    50.01%,100% { opacity: 0; }
+  footer {
+    margin-top: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
     .vertical-nav { display:none; }
     .header-logo { top:20px; left:20px; }
     .header-logo img { width:150px; }
+
     .main {
-      margin-left:0;
-      padding:110px 20px;
+      margin-left: 0;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 30vh;
     }
-    .typewriter { font-size:24px; }
+
+    .typewriter { font-size: 24px; }
   }
 </style>
 </head>
@@ -107,6 +124,7 @@
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
+<!-- Navigation -->
 <div class="vertical-nav">
   <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
   <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
@@ -117,77 +135,67 @@
   <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
 </div>
 
+<!-- Main -->
 <div class="main">
-  <div id="tw" class="typewriter"></div>
-  <div class="cursor"></div>
+
+  <!-- 空にしてスクリプトで描画 -->
+  <div class="typewriter" id="tw"></div>
+
+  <div class="learn-more">
+    <a href="/about.html" class="page-link" data-i18n="learn-more">
+      Learn more about Celeste →
+    </a>
+  </div>
+
+  <footer>© Celeste</footer>
 </div>
 
+<!-- 演出スクリプト -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
-  // 言語別テキスト
-  const browser = navigator.language || navigator.userLanguage;
-  const lang = (browser || "en").split("-")[0];
-
-  let lines;
-  if (lang === "ja") {
-    lines = [
-      "Hello, I’m Celeste.",
-      "あなたの意図を読み取り、",
-      "これから先の輪郭を用意します。"
-    ];
-  } else if (lang === "zh") {
-    lines = [
-      "Hello，我是 Celeste。",
-      "我读取你的意图，",
-      "并为你准备接下来的路径。"
-    ];
-  } else {
-    lines = [
-      "Hello, I’m Celeste.",
-      "I read your intentions",
-      "and prepare what lies ahead."
-    ];
-  }
-
-  const script = [
-    { text: lines[0], delay: 300 },
-    { pause: 1000 },
-    { text: lines[1], delay: 55 },
-    { pause: 1000 },
-    { text: lines[2], delay: 60 },
-    { pause: 1400 }
-  ];
-
   const tw = document.getElementById("tw");
 
-  async function typeLine(line) {
-    for (let i = 0; i < line.text.length; i++) {
-      tw.textContent += line.text[i];
-      await new Promise(r => setTimeout(r, line.delay));
+  const lines = [
+    "Hello, I’m Celeste.",
+    "I read your intentions.",
+    "And prepare what lies ahead."
+  ];
+
+  let line = 0;
+  let i = 0;
+
+  function typeLine() {
+    if (line >= lines.length) return;
+
+    let speed = 48; // 基本速度
+
+    if (line === 0) speed = 300;  // Helloだけ超スロー
+    if (line === 2) speed = 70;   // 3行目はテンポを変える
+
+    if (i < lines[line].length) {
+      tw.textContent += lines[line].charAt(i);
+      i++;
+      setTimeout(typeLine, speed);
+    } else {
+      // 行の余韻 1秒
+      tw.textContent += "\n";
+      line++;
+      i = 0;
+      setTimeout(typeLine, 1000);
     }
-    tw.textContent += "\n";
   }
 
-  async function run() {
-    for (const line of script) {
-      if (line.text) await typeLine(line);
-      if (line.pause) await new Promise(r => setTimeout(r, line.pause));
-    }
-  }
-
-  run();
+  typeLine();
 });
 
-// ページ遷移フェードアウト
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".page-link").forEach(el => {
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      document.body.classList.add("fade-out");
-      setTimeout(() => { window.location = el.href; }, 500);
-    });
+// フェードアウト遷移
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
