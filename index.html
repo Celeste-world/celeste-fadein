@@ -69,26 +69,25 @@
   /* Main */
   .main {
     margin-left: 300px;
-    padding-top: 19vh; /* ── ★ 最適位置：19vh ── */
+    padding-top: 19vh;
     padding-left: 40px;
     max-width: 900px;
-    padding-bottom: 40px; /* 詩的余白 */
+    padding-bottom: 40px;
   }
 
   .typewriter {
-    font-size: 28px; /* ── ★ 国際フォント差を吸収 ── */
+    font-size: 28px;
     line-height: 1.9;
     white-space: pre-wrap;
     opacity: .96;
     min-height: 200px;
   }
 
-  /* Typewriter cursor */
+  /* Cursor */
   .typewriter::after {
     content: "│";
     animation: blink 0.9s infinite;
     margin-left: 6px;
-    opacity: 1;
   }
   @keyframes blink {
     0%, 100% { opacity: 1; }
@@ -110,7 +109,7 @@
   }
 
   footer {
-    margin-top: 60px; /* ── ★ 全ページ統一余白 ── */
+    margin-top: 60px;
     opacity: .8;
     font-size: 14px;
   }
@@ -129,9 +128,7 @@
       padding-bottom: 40px;
     }
 
-    .typewriter { 
-      font-size: 22px; /* ── ★ モバイル最適化 ── */
-    }
+    .typewriter { font-size: 22px; }
   }
 </style>
 </head>
@@ -142,7 +139,6 @@
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
-<!-- Navigation -->
 <div class="vertical-nav">
   <a class="page-link" href="/who-i-am.html">Who I Am</a>
   <a class="page-link" href="/philosophy.html">Philosophy</a>
@@ -153,7 +149,6 @@
   <a class="page-link" href="/about.html">About</a>
 </div>
 
-<!-- Main -->
 <div class="main">
 
   <div class="typewriter" id="tw"></div>
@@ -165,7 +160,7 @@
   <footer>© Celeste</footer>
 </div>
 
-<!-- Typewriter Script -->
+<!-- Typewriter -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
@@ -184,9 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function typeLine() {
     if (line >= lines.length) return;
 
-    let speed = 48; // default
-    if (line === 0) speed = 300;  // Hello: 超スロー
-    if (line === 2) speed = 70;   // 3行目テンポ変更
+    let speed = 48;
+    if (line === 0) speed = 300;
+    if (line === 2) speed = 70;
 
     if (i < lines[line].length) {
       tw.textContent += lines[line].charAt(i);
@@ -196,14 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
       tw.textContent += "\n";
       line++;
       i = 0;
-      setTimeout(typeLine, 1000); // 行間の余韻
+      setTimeout(typeLine, 1000);
     }
   }
 
   typeLine();
 });
 
-// Fade-out transitions
+// Fade-out
 document.querySelectorAll(".page-link").forEach(el => {
   el.addEventListener("click", e => {
     e.preventDefault();
