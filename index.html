@@ -225,22 +225,42 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const text = `Hello, I’m Celeste.
-I read your intentions
-and prepare what lies ahead.`;
+  const text = [
+    { line: "Hello, I’m Celeste.", speed: 300 },   // ← 超スロー
+    { line: "I read your intentions", speed: 65 },
+    { line: "and prepare what lies ahead.", speed: 80 }, // ← 少しテンポ変化
+  ];
 
   const tw = document.getElementById("tw");
-  let i = 0;
 
-  function typeWriter() {
-    if (i < text.length) {
-      tw.textContent += text.charAt(i);
-      i++;
-      setTimeout(typeWriter, 46);
+  let lineIndex = 0;
+  let charIndex = 0;
+
+  function typeLine() {
+    const current = text[lineIndex];
+
+    if (charIndex < current.line.length) {
+      tw.textContent += current.line.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeLine, current.speed);
+    } else {
+      // 行の終了処理
+      lineIndex++;
+      charIndex = 0;
+
+      if (lineIndex < text.length) {
+        tw.textContent += "\n";     // 改行
+        setTimeout(typeLine, 1000); // ← 行間の「間」
+      } else {
+        // 全文終了後の余韻
+        setTimeout(() => {
+          // ここに何か入れる場合は追加可能（点滅カーソルなど）
+        }, 1800);     // ← 最後の余韻
+      }
     }
   }
 
-  typeWriter();
+  typeLine();
 });
 </script>
 
