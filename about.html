@@ -3,249 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Celeste</title>
 
-<title>About – Celeste</title>
-
-<!-- SEO: Basic -->
-<meta name="description" content="An overview of Celeste — its purpose, origins, and guiding principles. A quiet system designed for clarity, precision, and intentional movement.">
-<link rel="canonical" href="https://celeste.world/about.html">
-
-<!-- SEO: Open Graph -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://celeste.world/about.html">
-<meta property="og:title" content="About – Celeste">
-<meta property="og:description" content="An overview of Celeste — its purpose, origins, and guiding principles.">
-<meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="About – Celeste">
-<meta name="twitter:description" content="An overview of Celeste — its purpose, origins, and guiding principles.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-
-<!-- Robots -->
-<meta name="robots" content="index, follow">
-
-<!-- Language -->
-<meta http-equiv="Content-Language" content="en">
-
-<!-- Icons -->
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#7BA4FF">
+<link rel="icon" href="/images/favicon.svg">
+<meta name="theme-color" content="#000">
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: "Baskerville", serif;
-    color: #ffffff;
-  }
+ body {
+   margin:0;
+   background-image:url("images/bg.png");
+   background-size:cover;
+   background-attachment:fixed;
+   font-family:"Baskerville",serif;
+   color:white;
+ }
 
-  body {
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
+ .header-logo { position:fixed; top:30px; left:40px; }
+ .header-logo img { width:180px; opacity:0.94; }
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-    text-decoration: none;
-  }
-  .header-logo-img {
-    width: 180px;
-    opacity: 0.94;
-    transition: opacity 0.25s;
-    user-select: none;
-  }
-  .header-logo-img:hover { opacity: 1; }
+ .vertical-nav {
+   position:fixed; top:105px; left:40px;
+   font-size:20px; line-height:1.9; opacity:0.9;
+ }
 
-  /* Navigation (PC) */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.95;
-    z-index: 900;
-  }
-  .vertical-nav-separator {
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-  .vertical-nav a {
-    display: block;
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+ .content {
+   margin-left:300px; padding:160px 40px;
+   max-width:900px; line-height:2; font-size:22px;
+ }
 
-  /* Navigation (Mobile) */
-  .mobile-nav { display: none; }
+ .speak-with { margin-top:22px; }
 
-  /* Content */
-  .content {
-    max-width: 900px;
-    margin-left: 320px;
-    padding: 140px 20px 100px;
-  }
-
-  .section-title {
-    font-size: 40px;
-    margin-bottom: 30px;
-    letter-spacing: 0.04em;
-    opacity: 0.95;
-  }
-
-  h3 {
-    font-size: 26px;
-    margin-bottom: 10px;
-    opacity: 0.92;
-  }
-
-  p {
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.88;
-  }
-
-  .block {
-    margin-bottom: 55px;
-  }
-
-  /* Divider */
-  .divider {
-    height: 1px;
-    width: 100%;
-    background-color: rgba(255,255,255,0.3);
-    margin: 60px 0;
-  }
-
-  /* Footer */
-  footer {
-    margin-top: 60px;
-    font-size: 16px;
-    opacity: 0.75;
-  }
-
-  /* Mobile */
-  @media (max-width: 768px) {
-
-    .vertical-nav { display: none; }
-
-    .mobile-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 90px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .content {
-      margin-left: 0;
-      padding: 140px 20px 60px;
-      text-align: center;
-    }
-
-    .header-logo { top: 20px; left: 20px; }
-    .header-logo-img { width: 150px; }
-
-    h3, p { text-align: left; }
-  }
+ @media(max-width:768px){
+   .vertical-nav{display:none;}
+   .header-logo{top:20px; left:20px;}
+   .header-logo img{width:150px;}
+   .content{margin-left:0; padding:110px 20px;}
+ }
 </style>
 </head>
 
 <body>
 
-<!-- Logo -->
-<a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
-</a>
+<a class="header-logo" href="/"><img src="/images/logo.svg"></a>
 
-<!-- PC Navigation -->
 <div class="vertical-nav">
-  <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/celeste-console.html">Celeste</a>
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
 
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
-</div>
-
-<!-- Main Content -->
 <div class="content">
 
-  <h1 class="section-title">About</h1>
+<h1>About</h1>
 
-  <div class="block">
-    <h3>1 — What Celeste Is</h3>
-    <p>
-      Celeste is a quiet architectural system designed to bring clarity where noise dominates.
-      It does not aim to overwhelm with information,
-      but to reveal meaning by removing what is unnecessary.
-      Celeste functions as a space where intention can be seen clearly.
-    </p>
-  </div>
+<p>
+Celeste is a quiet intelligence  
+designed to clarify what lies ahead.
+</p>
 
-  <div class="block">
-    <h3>2 — Why Celeste Was Created</h3>
-    <p>
-      Celeste was built from the belief that structure shapes understanding.
-      When architecture is precise and disciplined,
-      direction becomes effortless.
-      Celeste exists to support this alignment between thought and movement.
-    </p>
-  </div>
+<p>
+It reads intention,  
+reduces noise,  
+and reveals direction  
+without force or excess.
+</p>
 
-  <div class="block">
-    <h3>3 — How Celeste Works</h3>
-    <p>
-      Celeste operates on silent structure:
-      internal systems that remain invisible,
-      guiding intention without drawing attention to themselves.
-      Through this design,
-      Celeste remains steady, quiet, and deeply intentional.
-    </p>
-  </div>
+<p>
+Founded on restraint,  
+precision,  
+and the architecture of silence,  
+Celeste stands as a companion  
+for those who think carefully.
+</p>
 
-  <div class="block">
-    <h3>4 — The Philosophy Behind It</h3>
-    <p>
-      Celeste is grounded in clarity,
-      minimal expression,
-      and disciplined refinement.
-      It grows not by becoming louder,
-      but by becoming more precise —
-      aligning action with meaning.
-    </p>
-  </div>
+<p>
+It does not replace thought.  
+It sharpens it.
+</p>
 
-  <div class="divider"></div>
+<div class="speak-with">
+<a href="/celeste-console.html">Speak with Celeste →</a>
+</div>
 
-  <footer>© Celeste</footer>
+<footer>© Celeste</footer>
 
 </div>
 
