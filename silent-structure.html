@@ -1,143 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <!-- ===== Celeste Global SEO / Public Edition v3 ===== -->
-
-<meta name="description" content="Celeste is a quiet intelligence shaped through restraint — a place where clarity emerges, noise dissolves, and thought becomes architectural.">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Celeste — Silent Intelligence">
-<meta property="og:description" content="A quiet intelligence designed to uncover clarity through silence, precision, and intention.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:url" content="https://celeste.world/">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Celeste — Silent Intelligence">
-<meta name="twitter:description" content="A quiet intelligence built through restraint and clarity.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.jpg">
-
-<!-- Canonical -->
-<link rel="canonical" href="https://celeste.world/">
-
-<!-- JSON-LD (Structured Data) -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Celeste",
-  "url": "https://celeste.world/",
-  "description": "Celeste is a quiet intelligence shaped through restraint — a structure where thought becomes clear.",
-  "creator": {
-    "@type": "Person",
-    "name": "Celeste"
-  }
-}
-</script>
-
-<!-- ===== End SEO Set ===== -->
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title-silent">Silent Structure — Celeste</title>
+<title data-i18n="silent-title">Silent Structure — Celeste</title>
 
+<!-- ===== Global SEO ===== -->
+<meta name="description" content="Celeste is built on silence — not absence, but a deliberate structure that shapes thought and reveals clarity.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Silent Structure — Celeste">
+<meta property="og:description" content="The silent structure of Celeste is a framework where intelligence grows sharper by becoming quieter.">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:url" content="https://celeste.world/silent-structure.html">
+
+<link rel="canonical" href="https://celeste.world/silent-structure.html">
 <link rel="icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#000">
 
 <style>
- body {
-   margin: 0;
-   background-image: url("images/bg.png");
-   background-size: cover;
-   background-attachment: fixed;
-   background-position: center;
-   font-family: "Baskerville", serif;
-   color: white;
-   opacity: 0;
-   transition: opacity 0.8s ease;
- }
- body.fade-in { opacity: 1; }
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
 
- .header-logo {
-   position: fixed;
-   top: 30px;
-   left: 40px;
-   z-index: 1000;
- }
- .header-logo img {
-   width: 180px;
-   opacity: 0.94;
- }
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+  }
+  .header-logo img { width:180px; opacity:.94; }
 
- .vertical-nav {
-   position: fixed;
-   top: 105px;
-   left: 40px;
-   font-size: 20px;
-   line-height: 1.9;
-   opacity: 0.9;
- }
- .vertical-nav a {
-   color: white;
-   text-decoration: none;
-   opacity: 0.85;
- }
- .vertical-nav a:hover { opacity: 1; }
+  /* Nav */
+  .vertical-nav {
+    position: fixed;
+    top:105px;
+    left:40px;
+    font-size:20px;
+    line-height:1.9;
+    opacity:.9;
+    z-index:900;
+  }
+  .vertical-nav a {
+    display:block;
+    color:white;
+    text-decoration:none;
+    opacity:.85;
+    padding:2px 0;
+  }
+  .vertical-nav a:hover { opacity:1; }
 
- .content {
-   margin-left: 300px;
-   padding: 160px 40px;
-   max-width: 900px;
-   font-size: 22px;
-   line-height: 2.0;
- }
+  /* Content */
+  .content {
+    margin-left:300px;
+    padding:160px 40px;
+    max-width:900px;
+    font-size:22px;
+    line-height:2.0;
+  }
 
- .speak-with {
-   margin-top: 22px;
-   font-size: 18px;
- }
- .speak-with a {
-   color: white;
-   text-decoration: none;
-   border-bottom: 1px solid rgba(255,255,255,0.3);
- }
+  footer {
+    margin-top:50px;
+    opacity:.8;
+  }
 
- footer {
-   margin-top: 50px;
-   opacity: 0.8;
- }
-
- @media (max-width: 768px) {
-   .vertical-nav { display: none; }
-   .header-logo { top: 20px; left: 20px; }
-   .header-logo img { width: 150px; }
-   .content {
-     margin-left: 0;
-     padding: 110px 20px;
-     font-size: 20px;
-   }
- }
+  @media(max-width:768px){
+    .vertical-nav{display:none;}
+    .header-logo{top:20px; left:20px;}
+    .header-logo img{width:150px;}
+    .content{
+      margin-left:0;
+      padding:110px 20px;
+      font-size:20px;
+    }
+  }
 </style>
 
 </head>
 
 <body>
 
-<a href="/" class="header-logo">
+<!-- Logo -->
+<a href="/" class="header-logo page-link">
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
+  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
+  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
+  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
+  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
+  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
 </div>
 
+<!-- Content -->
 <div class="content">
 
 <h1 data-i18n="silent-title">Silent Structure</h1>
@@ -153,7 +122,7 @@ a deliberate stillness that shapes thought.
 Every function begins with reduction.<br>
 Remove the noise,<br>
 remove the excess,<br>
-remove the unnecessary movement<br>
+remove the unnecessary movement,<br>
 until only the essential remains.
 </p>
 
@@ -169,19 +138,27 @@ a framework where intelligence grows sharper<br>
 by becoming quieter.
 </p>
 
-<div class="speak-with">
-  <a href="/celeste-console.html" data-i18n="speak-with">Speak with Celeste →</a>
-</div>
-
 <footer>© Celeste</footer>
 
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
   document.body.classList.add("fade-in");
 });
 </script>
+
+<!-- Smooth Page Transition -->
+<script>
+document.querySelectorAll(".page-link").forEach(el=>{
+  el.addEventListener("click",e=>{
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(()=>{ window.location = el.href; }, 520);
+  });
+});
+</script>
+
 <script src="/language.js"></script>
 
 </body>
