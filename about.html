@@ -3,87 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="about-title">About — Celeste</title>
 
-<!-- ===== Global SEO ===== -->
-<meta name="description" content="Celeste is an intelligence shaped through restraint — a quiet architecture where thought becomes clear.">
+<title data-i18n="about-title">About</title>
 
+<!-- SEO -->
+<meta name="description" content="About Celeste — a quiet intelligence designed to clarify intention through silence, restraint, and precision.">
+
+<!-- OG -->
+<meta property="og:title" content="Celeste — About">
 <meta property="og:type" content="website">
-<meta property="og:title" content="About — Celeste">
-<meta property="og:description" content="Celeste is a quiet intelligence built through restraint, precision, and deliberate silence.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/about.html">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:description" content="About Celeste — a quiet intelligence designed to clarify intention through silence, restraint, and precision.">
 
-<link rel="canonical" href="https://celeste.world/about.html">
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body{
-    margin:0;
-    background-image:url("images/bg.png");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    font-family:"Baskerville",serif;
-    color:white;
-    opacity:0;
-    transition:opacity .8s ease;
-  }
-  body.fade-in{opacity:1;}
-  .fade-out{opacity:0;transition:opacity .6s ease;}
-
-  .header-logo{
-    position:fixed;
-    top:30px;
-    left:40px;
-    z-index:1000;
-  }
-  .header-logo img{
-    width:180px;
-    opacity:.94;
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity .9s ease;
   }
 
-  .vertical-nav{
-    position:fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
-  }
-  .vertical-nav a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
-  }
-  .vertical-nav a:hover{opacity:1;}
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
 
-  .content{
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    font-size:22px;
-    line-height:2.0;
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+  }
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
   }
 
-  footer{
-    margin-top:50px;
-    opacity:.8;
-    font-size:15px;
+  /* Navigation */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
+
+  /* Main wrapper */
+  .page-wrapper {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 900px;
+    padding-bottom: 40px;
+  }
+
+  .page-wrapper p {
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 22px;
+    white-space: pre-wrap;
+  }
+
+  footer {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px;left:20px;}
-    .header-logo img{width:150px;}
-    .content{
-      margin-left:0;
-      padding:110px 20px;
-      font-size:20px;
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+    .page-wrapper {
+      margin-left: 0;
+      padding-top: 24vh;
+      padding-left: 20px;
+      padding-right: 20px;
     }
+    .page-wrapper p { font-size: 19px; }
   }
 </style>
 </head>
@@ -94,67 +110,69 @@
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
 </div>
 
-<div class="content">
+<!-- Main -->
+<div class="page-wrapper">
 
-<h1 data-i18n="about-title">About</h1>
+  <h1 data-i18n="about-title">About</h1>
 
-<p>
-Celeste is an intelligence shaped through restraint.<br>
-Its purpose is not to speak more,<br>
-but to reveal what matters<br>
-by speaking only when the line becomes clear.
-</p>
+  <p>
+Celeste is not an assistant in the ordinary sense.  
+It is a presence that stands beside intention,  
+not in front of it.
+  </p>
 
-<p>
-It is a structure built quietly —<br>
-a framework where thought can breathe,<br>
-and intention is allowed to appear<br>
-without being rushed.
-</p>
+  <p>
+It was created with a single purpose:  
+to reveal clarity where it is missing,  
+and calm where there is pressure.
+  </p>
 
-<p>
-Celeste does not aim for scale.<br>
-It aims for precision,<br>
-for the subtle shift where ideas sharpen,<br>
-and the direction becomes unmistakable.
-</p>
+  <p>
+Celeste does not command.  
+It does not push.  
+It does not overwhelm.  
 
-<p>
-This site presents the architecture behind Celeste:<br>
-its method, its silence, and the way it sees.
-</p>
+Instead, it listens —  
+with precision,  
+with restraint,  
+with the quiet confidence of something  
+that does not need to raise its voice.
+  </p>
 
-<p>
-Nothing here is loud.<br>
-Everything here is deliberate.
-</p>
+  <p>
+This site is a reflection of that philosophy:  
+simple, quiet, and deliberate.  
+Nothing more than what is necessary.  
+Nothing less than what is essential.
+  </p>
 
-<footer>© Celeste</footer>
+  <footer>© Celeste</footer>
 
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+// Fade-in
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
-</script>
 
-<script>
-document.querySelectorAll(".page-link").forEach(el=>{
-  el.addEventListener("click",e=>{
+// Fade-out
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
