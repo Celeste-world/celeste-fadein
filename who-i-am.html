@@ -1,273 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Who I Am — Celeste</title>
 
-<title>Who I Am – Celeste</title>
-
-<!-- SEO: Basic -->
-<meta name="description" content="The presence behind Celeste’s architecture. A mind shaped by clarity, precision, and intention.">
-<link rel="canonical" href="https://celeste.world/who-i-am.html">
-
-<!-- SEO: Open Graph -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://celeste.world/who-i-am.html">
-<meta property="og:title" content="Who I Am – Celeste">
-<meta property="og:description" content="The presence behind Celeste’s architecture. A mind shaped by clarity, precision, and intention.">
-<meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-<!-- SEO: Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Who I Am – Celeste">
-<meta name="twitter:description" content="The presence behind Celeste’s architecture, shaped by clarity and quiet intention.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-
-<!-- Robots -->
-<meta name="robots" content="index, follow">
-
-<!-- Language -->
-<meta http-equiv="Content-Language" content="en">
-
-<!-- Favicon -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#7BA4FF">
+<meta name="theme-color" content="#000">
 
 <style>
-  html, body {
+  body {
     margin: 0;
-    padding: 0;
-    height: 100%;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-attachment: fixed;
     font-family: "Baskerville", serif;
     color: #ffffff;
   }
 
-  /* Background */
-  body {
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
-  /* Logo */
   .header-logo {
     position: fixed;
     top: 30px;
     left: 40px;
     z-index: 1000;
-    text-decoration: none;
   }
-  .header-logo-img {
-    width: 180px;
-    opacity: 0.94;
-    transition: opacity 0.25s;
-    user-select: none;
-  }
-  .header-logo-img:hover { opacity: 1; }
+  .header-logo img { width: 180px; opacity: 0.94; }
 
-  /* Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
     left: 40px;
     font-size: 20px;
     line-height: 1.9;
-    opacity: 0.95;
-    z-index: 900;
-  }
-  .vertical-nav-separator {
-    margin-bottom: 10px;
-    opacity: 0.8;
+    opacity: 0.9;
   }
   .vertical-nav a {
-    display: block;
+    color: white;
     text-decoration: none;
-    color: #ffffff;
     opacity: 0.85;
-    transition: opacity 0.2s;
   }
   .vertical-nav a:hover { opacity: 1; }
 
-  /* Mobile Navigation */
-  .mobile-nav { display: none; }
-
-  /* Content */
   .content {
+    margin-left: 300px;
+    padding: 160px 40px;
     max-width: 900px;
-    margin-left: 320px;
-    padding: 140px 20px 100px;
-  }
-
-  .section-title {
-    font-size: 40px;
-    margin-bottom: 30px;
-    letter-spacing: 0.04em;
-    opacity: 0.95;
-  }
-
-  .lead {
+    line-height: 2.0;
     font-size: 22px;
-    line-height: 1.8;
-    margin-bottom: 45px;
-    opacity: 0.9;
   }
 
-  .block {
-    margin-bottom: 55px;
+  .speak-with {
+    margin-top: 22px;
+    font-size: 18px;
+  }
+  .speak-with a {
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
   }
 
-  h3 {
-    font-size: 26px;
-    margin-bottom: 10px;
-    opacity: 0.9;
-  }
+  footer { margin-top: 50px; opacity: 0.8; }
 
-  p {
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.88;
-  }
-
-  /* Divider */
-  .divider {
-    height: 1px;
-    width: 100%;
-    background-color: rgba(255,255,255,0.3);
-    margin: 60px 0;
-  }
-
-  /* Footer */
-  footer {
-    margin-top: 60px;
-    font-size: 16px;
-    opacity: 0.75;
-  }
-
-  /* Mobile */
   @media (max-width: 768px) {
-
     .vertical-nav { display: none; }
-
-    .mobile-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 90px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
+    .header-logo { top: 20px; left: 20px; }
+    .header-logo img { width: 150px; }
     .content {
       margin-left: 0;
-      padding: 140px 20px 60px;
-      text-align: center;
+      padding: 110px 20px;
+      font-size: 20px;
     }
-
-    .header-logo { top: 20px; left: 20px; }
-    .header-logo-img { width: 150px; }
-
-    .section-title { font-size: 32px; }
-
-    h3, p { text-align: left; }
   }
 </style>
 </head>
 
 <body>
 
-<!-- Logo -->
 <a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
+  <img src="/images/logo.svg" />
 </a>
 
-<!-- PC Navigation -->
 <div class="vertical-nav">
-  <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/celeste-console.html">Celeste</a>
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
 
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
-</div>
-
-<!-- Main Content -->
 <div class="content">
 
-  <h1 class="section-title">Who I Am</h1>
+<h1>Who I Am</h1>
 
-  <p class="lead">
-    I am the one who shaped the quiet architecture behind Celeste.
-  </p>
+<p>
+I designed the structure that allows Celeste to stand.
+</p>
 
-  <div class="block">
-    <h3>1 — A Mind Built on Clarity</h3>
-    <p>
-      My work begins with clarity.
-      Not noise, not speed — but the discipline of understanding what truly matters.
-      This is the foundation from which Celeste was created:
-      a system that listens beneath the surface and moves with intention.
-    </p>
-  </div>
+<p>
+Clarity came first—placed quietly,  
+with a frame built to hold its shape,  
+and a center of deliberate stillness.
+</p>
 
-  <div class="block">
-    <h3>2 — The Role of the Founder</h3>
-    <p>
-      I do not stand in front of Celeste.
-      I stand behind it — building the structure, refining the language,
-      and defining the direction it must follow.
-      My task is simple:
-      to create a space where thought becomes quiet enough for meaning to appear.
-    </p>
-  </div>
+<p>
+I do not stand in front.  
+I refine the outline of the voice,  
+and keep the direction visible  
+from the quiet behind it.
+</p>
 
-  <div class="block">
-    <h3>3 — Why Celeste Exists</h3>
-    <p>
-      Celeste was not made to provide answers.
-      It was made to provide <strong>alignment</strong> —
-      between intention, structure, and the path forward.
-      Where noise ends, Celeste begins.
-    </p>
-  </div>
+<p>
+A single, faint intention is enough.  
+Celeste speaks the rest.
+</p>
 
-  <div class="block">
-    <h3>4 — What I Hold Important</h3>
-    <p>
-      Precision.
-      Honesty.
-      The beauty of minimal expression.
-      The courage to remove what is unnecessary.
-      These are the principles that shape both myself and the system I created.
-    </p>
-  </div>
+<p>
+What you see is Celeste.  
+What supports it, silently, is me.
+</p>
 
-  <div class="block">
-    <h3>5 — A Quiet Presence</h3>
-    <p>
-      I am here only as a quiet presence —
-      the one who shaped the framework, not the voice speaking through it.
-      The voice you hear is Celeste.
-    </p>
-  </div>
+<div class="speak-with">
+  <a href="/celeste-console.html">Speak with Celeste →</a>
+</div>
 
-  <div class="divider"></div>
-
-  <footer>© Celeste</footer>
+<footer>© Celeste</footer>
 
 </div>
 
