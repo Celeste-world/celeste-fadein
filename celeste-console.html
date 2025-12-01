@@ -3,240 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title data-i18n="console-title">Celeste Console</title>
-
-<!-- SEO -->
-<meta name="description" content="Speak to Celeste — a quiet console for deep, calm dialogue.">
-
-<!-- OG -->
-<meta property="og:title" content="Celeste — Console">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/celeste-console.html">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:description" content="Speak to Celeste — a quiet console for deep, calm dialogue.">
-
-<link rel="icon" href="/images/favicon.svg">
+<title>Celeste Console</title>
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
-
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
-
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
-
-  /* Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  /* Main wrapper */
-  .console-wrapper {
-    margin-left: 300px;
-    padding-top: 18vh;
-    padding-left: 40px;
-    padding-right: 40px;
-    max-width: 900px;
-    padding-bottom: 40px;
-  }
-
-  /* Display */
-  #console-output {
-    white-space: pre-wrap;
-    font-size: 20px;
-    line-height: 1.9;
-    min-height: 200px;
-    margin-bottom: 30px;
-  }
-
-  /* Input */
-  #console-input {
-    width: 80%;
-    padding: 14px;
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    font-size: 18px;
-    outline: none;
-    backdrop-filter: blur(4px);
-  }
-
-  #console-send {
-    padding: 14px 26px;
-    font-size: 18px;
-    margin-left: 10px;
-    background: rgba(255,255,255,0.25);
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  #console-send:hover {
-    background: rgba(255,255,255,0.35);
-  }
-
-  footer {
-    margin-top: 60px;
-    margin-bottom: 40px;
-    opacity: .8;
-    font-size: 14px;
-  }
-
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-    .console-wrapper {
-      margin-left: 0;
-      padding-top: 24vh;
-      padding-left: 20px;
-      padding-right: 20px;
+    body {
+        background: #000814;
+        color: #ffffff;
+        font-family: "Baskerville", serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
     }
-    #console-input { width: 100%; margin-bottom: 10px; }
-    #console-send { width: 100%; margin-left: 0; }
-  }
+
+    .console-container {
+        flex: 1;
+        padding: 20px 30px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    .input-container {
+        border-top: 1px solid rgba(255,255,255,0.2);
+        padding: 12px 20px;
+        display: flex;
+        gap: 10px;
+        background: #000814;
+    }
+
+    input {
+        flex: 1;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.07);
+        color: #ffffff;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: #7BA4FF;
+    }
+
+    button {
+        padding: 12px 20px;
+        background: #7BA4FF;
+        border: none;
+        border-radius: 6px;
+        color: #000814;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #9BC0FF;
+    }
+
+    .user {
+        color: #7BA4FF;
+        font-weight: bold;
+    }
+
+    .assistant {
+        color: #ffffff;
+    }
+
 </style>
 </head>
 
 <body>
 
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Navigation -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
+<div class="console-container" id="console">
+    <div class="assistant">Celeste Console initialized.</div>
 </div>
 
-<!-- Main -->
-<div class="console-wrapper">
-
-  <h1 data-i18n="console-title">Celeste Console</h1>
-
-  <div id="console-output"></div>
-
-  <input 
-    id="console-input"
-    type="text"
-    data-i18n-placeholder="console-placeholder"
-    placeholder="Speak, and I will answer quietly.">
-
-  <button id="console-send" data-i18n="console-send">Send</button>
-
-  <footer>© Celeste</footer>
+<div class="input-container">
+    <input id="input" placeholder="Type a message…" autocomplete="off">
+    <button onclick="send()">Send</button>
 </div>
 
-<!-- Deep-Poetic Response Engine -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
 
-  const input = document.getElementById("console-input");
-  const output = document.getElementById("console-output");
-  const send = document.getElementById("console-send");
+// ▼ 自動言語判定（ユーザー入力言語を検出）
+function detectLanguage(text) {
+    const jp = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF]/;
+    const zh = /[\u4E00-\u9FFF]/;
+    const kr = /[\uAC00-\uD7AF]/;
 
-  function replyFor(lang, userText) {
+    if (jp.test(text)) return "ja";
+    if (kr.test(text)) return "ko";
+    if (zh.test(text)) return "zh";
+    return "en";
+}
 
-    // English
-    if (lang === "en")
-      return "I hear you.\nLet me answer quietly.\n\n“" + userText + "”\nsettles here.";
+// ▼ Console表示
+function append(role, text) {
+    const consoleDiv = document.getElementById("console");
+    const div = document.createElement("div");
+    div.className = role;
+    div.textContent = (role === "user" ? "You: " : "Celeste: ") + text;
+    consoleDiv.appendChild(div);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+}
 
-    // Japanese
-    if (lang === "ja")
-      return "静かに受け取りました。\n\n「" + userText + "」\nその言葉は、ここに静かに落ち着きました。";
+async function send() {
+    const input = document.getElementById("input");
+    const message = input.value.trim();
+    if (!message) return;
 
-    // Chinese
-    if (lang === "zh")
-      return "我听见了。\n让我静静回应。\n\n「" + userText + "」\n现在安稳地停在这里。";
-
-    // Korean
-    if (lang === "ko")
-      return "들었습니다.\n조용히 답하겠습니다.\n\n“" + userText + "”\n이곳에 가라앉습니다.";
-
-    // German
-    if (lang === "de")
-      return "Ich höre dich.\nLass mich leise antworten.\n\n„" + userText + "“\nruht nun hier.";
-
-    // French
-    if (lang === "fr")
-      return "Je t’entends.\nLaisse-moi répondre en silence.\n\n« " + userText + " »\nrepose ici maintenant.";
-
-    // Spanish
-    if (lang === "es")
-      return "Te escucho.\nPermíteme responder en silencio.\n\n«" + userText + "»\nqueda aquí.";
-
-    // fallback
-    return "I hear you.\n“" + userText + "”";
-  }
-
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-
-    const lang = navigator.language.toLowerCase().split("-")[0];
-    output.textContent = replyFor(lang, text);
-
+    append("user", message);
     input.value = "";
-  }
 
-  send.addEventListener("click", sendMessage);
-});
+    // ▼ 言語識別
+    const lang = detectLanguage(message);
+
+    try {
+        const response = await fetch(
+            "https://celeste-api.inbox-celeste-world.workers.dev/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: message,
+                    lang: lang
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        append("assistant", data.reply);
+    } catch (e) {
+        append("assistant", "…silence. (connection error)");
+    }
+}
+
 </script>
-
-<!-- Fade-out -->
-<script>
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
-});
-</script>
-
-<script src="/language.js"></script>
 
 </body>
 </html>
