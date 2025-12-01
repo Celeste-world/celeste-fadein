@@ -1,9 +1,5 @@
-// ======================================================
-// Celeste Public Edition v3 — Auto Language Engine
-// 30-Language Automatic Detection (No Manual Switch)
-// ======================================================
+// Celeste Public Edition v3 — Auto Language Engine (no manual switch)
 
-// ---- Translation Dictionary --------------------------------------------
 const translations = {
   en: {
     // Navigation
@@ -24,7 +20,7 @@ const translations = {
     "contact-title": "Contact",
     "console-title": "Celeste Console",
 
-    // Other
+    // Others
     "contact-description":
       "If you would like to reach out,\nplease contact Celeste using the address below.\nIt will open directly in your email application.",
 
@@ -74,45 +70,44 @@ const translations = {
     "console-title": "Celeste 控制台",
 
     "contact-description":
-      "如果您想联系 Celeste，\n请通过以下电子邮件地址与我们沟通。\n您的邮件应用将自动打开。",
+      "如果您想联系 Celeste，\n请使用下方的电子邮箱地址。\n您的邮件应用会自动打开。",
 
     "console-placeholder": "请说吧，我会安静地回答。",
     "console-send": "发送",
   },
 
-  // ---- Additional languages included (fallback to English) ----
-  fr: {}, de: {}, es: {}, it: {}, pt: {}, nl: {},
-  ko: {}, ru: {}, ar: {}, vi: {}, th: {}, tr: {}, sv: {}, no: {},
-  fi: {}, da: {}, pl: {}, cs: {}, sk: {}, hu: {}, ro: {}, bg: {},
-  el: {}, he: {}, hi: {}, id: {}, ms: {}, uk: {}, sr: {},
+  // 他言語は英語にフォールバック（キーは空でOK）
+  fr: {}, de: {}, es: {}, it: {}, pt: {}, nl: {}, ko: {}, ru: {}, ar: {},
+  vi: {}, th: {}, tr: {}, sv: {}, no: {}, fi: {}, da: {}, pl: {}, cs: {},
+  sk: {}, hu: {}, ro: {}, bg: {}, el: {}, he: {}, hi: {}, id: {}, ms: {},
+  uk: {}, sr: {},
 };
 
-// ---- Language Detection ---------------------------------------------------
 function detectLanguage() {
   const browser = navigator.language || navigator.userLanguage;
   const lang = browser.split("-")[0];
-
-  // Return lang if supported, else English
   return translations[lang] ? lang : "en";
 }
 
-// ---- Apply Translations ---------------------------------------------------
 function applyTranslations() {
   const lang = detectLanguage();
   const dict = translations[lang];
 
-  // Normal text items
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
+    const value = dict[key];
+    if (value) {
+      el.textContent = value;
+    }
   });
 
-  // Placeholder text items
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     const key = el.getAttribute("data-i18n-placeholder");
-    if (dict[key]) el.placeholder = dict[key];
+    const value = dict[key];
+    if (value) {
+      el.placeholder = value;
+    }
   });
 }
 
-// Start immediately
 document.addEventListener("DOMContentLoaded", applyTranslations);
