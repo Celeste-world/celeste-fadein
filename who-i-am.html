@@ -16,69 +16,42 @@
     background-attachment: fixed;
     font-family: "Baskerville", serif;
     color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.8s ease;
   }
+  body.fade-in { opacity: 1; }
 
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
+  .header-logo { position: fixed; top: 30px; left: 40px; z-index: 1000; }
   .header-logo img { width: 180px; opacity: 0.94; }
 
   .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.9;
+    position: fixed; top: 105px; left: 40px;
+    font-size: 20px; line-height: 1.9; opacity: 0.9;
   }
-  .vertical-nav a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.85;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+  .vertical-nav a { color:white; text-decoration:none; opacity:0.85; }
 
   .content {
-    margin-left: 300px;
-    padding: 160px 40px;
-    max-width: 900px;
-    line-height: 2.0;
-    font-size: 22px;
+    margin-left: 300px; padding: 160px 40px;
+    max-width: 900px; font-size: 22px; line-height: 2;
   }
 
-  .speak-with {
-    margin-top: 22px;
-    font-size: 18px;
-  }
-  .speak-with a {
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-  }
+  .speak-with { margin-top: 22px; font-size: 18px; }
+  .speak-with a { color:white; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.3); }
 
   footer { margin-top: 50px; opacity: 0.8; }
 
-  @media (max-width: 768px) {
-    .vertical-nav { display: none; }
-    .header-logo { top: 20px; left: 20px; }
-    .header-logo img { width: 150px; }
-    .content {
-      margin-left: 0;
-      padding: 110px 20px;
-      font-size: 20px;
-    }
+  @media(max-width:768px){
+    .vertical-nav{display:none;}
+    .header-logo{top:20px; left:20px;}
+    .header-logo img{width:150px;}
+    .content{margin-left:0; padding:110px 20px; font-size:20px;}
   }
 </style>
 </head>
 
 <body>
 
-<a href="/" class="header-logo">
-  <img src="/images/logo.svg" />
-</a>
+<a class="header-logo" href="/"><img src="/images/logo.svg"></a>
 
 <div class="vertical-nav">
   <a href="/who-i-am.html">Who I Am</a>
@@ -99,25 +72,25 @@ I designed the structure that allows Celeste to stand.
 </p>
 
 <p>
-Clarity came first—placed quietly,  
-with a frame built to hold its shape,  
+Clarity came first—placed quietly,<br>
+with a frame built to hold its shape,<br>
 and a center of deliberate stillness.
 </p>
 
 <p>
-I do not stand in front.  
-I refine the outline of the voice,  
-and keep the direction visible  
+I do not stand in front.<br>
+I refine the outline of the voice,<br>
+and keep the direction visible<br>
 from the quiet behind it.
 </p>
 
 <p>
-A single, faint intention is enough.  
+A single, faint intention is enough.<br>
 Celeste speaks the rest.
 </p>
 
 <p>
-What you see is Celeste.  
+What you see is Celeste.<br>
 What supports it, silently, is me.
 </p>
 
@@ -128,6 +101,12 @@ What supports it, silently, is me.
 <footer>© Celeste</footer>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+</script>
 
 </body>
 </html>
