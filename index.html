@@ -1,291 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title data-i18n="title">Celeste</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celeste</title>
 
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#7BA4FF">
+<!-- ===== SEO SET START ===== -->
+<meta name="description" content="Celeste is a quiet intelligence shaped through restraint — a place where clarity emerges, noise dissolves, and thought becomes architectural.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Celeste — Silent Intelligence">
+<meta property="og:description" content="A quiet intelligence designed to uncover clarity through silence, precision, and intention.">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:url" content="https://celeste.world/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Celeste — Silent Intelligence">
+<meta name="twitter:description" content="A quiet intelligence built through restraint and clarity.">
+<meta name="twitter:image" content="https://celeste.world/images/og-image.jpg">
+
+<link rel="canonical" href="https://celeste.world/">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Celeste",
+  "url": "https://celeste.world/",
+  "description": "Celeste is a quiet intelligence shaped through restraint — a structure where thought becomes clear.",
+  "creator": {
+    "@type": "Person",
+    "name": "Celeste"
+  }
+}
+</script>
+<!-- ===== SEO SET END ===== -->
+
+<link rel="icon" href="/images/favicon.svg">
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-
   body {
+    margin: 0;
     background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     background-attachment: fixed;
-    color: #ffffff;
+    color: white;
     font-family: "Baskerville", serif;
-    opacity:0;
-    transition:opacity .8s ease;
+    opacity: 0;
+    transition: opacity 0.8s ease;
   }
-  body.fade-in{opacity:1;}
+  body.fade-in { opacity: 1; }
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo-img {
-    width: 180px;
-    opacity: 0.94;
-    transition: opacity 0.25s;
-    user-select: none;
-  }
-  .header-logo-img:hover { opacity: 1; }
-
-  /* PC navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.95;
-    z-index: 900;
-  }
-  .vertical-nav-separator {
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-  .vertical-nav a {
-    display: block;
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  /* Mobile navigation */
-  .mobile-nav {
-    display: none;
-  }
-
-  /* Main content */
+  /* Text layout（上方向へ調整） */
   .main {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-top: 120px;
-    padding-left: 20px;
-    padding-right: 20px;
     margin-left: 300px;
+    padding-top: 160px; /* ←上に上げた */
+    padding-left: 40px;
+    max-width: 900px;
   }
 
   .typewriter {
-    white-space: pre-wrap;
+    font-size: 28px;
     line-height: 1.9;
-    font-size: 28px;
-    max-width: 900px;
-    opacity: 0.96;
+    white-space: pre-wrap;
   }
 
-  /* cursor */
-  #cursor {
-    font-family: "Baskerville", serif;
-    font-size: 28px;
-    color: rgba(255,255,255,0.7);
-    margin-left: 6px;
-    transition: opacity 0.28s ease;
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background: rgba(255,255,255,0.8);
+    margin-left: 4px;
+    animation: blink 1s infinite;
   }
 
-  .learn-more {
-    margin-top: 28px;
-    font-size: 22px;
-  }
-  .learn-more a {
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.9;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding-bottom: 3px;
-  }
-
-  .speak-with {
-    margin-top: 14px;
-    font-size: 18px;
-  }
-  .speak-with a {
-    color:white;
-    text-decoration:none;
-    border-bottom:1px solid rgba(255,255,255,0.3);
-  }
-
-  footer{
-    margin-top:40px;
-    font-size:15px;
-    opacity:0.8;
-  }
-
-  /* Mobile */
-  @media (max-width: 768px) {
-
-    .vertical-nav { display: none; }
-
-    .mobile-nav {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-      font-size: 16px;
-      margin-top: 90px;
-      margin-bottom: 20px;
-    }
-
-    .header-logo {
-      top: 20px;
-      left: 20px;
-    }
-
-    .header-logo-img {
-      width: 150px;
-    }
-
-    .main {
-      margin-left: 0;
-      align-items: center;
-      padding-top: 10px;
-      padding-bottom: 40px;
-    }
-
-    .typewriter {
-      font-size: 22px;
-      padding: 0 20px;
-      text-align: center;
-    }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
   }
 </style>
 </head>
 
 <body>
 
-<!-- Logo -->
-<a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
-</a>
-
-<!-- PC navigation -->
-<div class="vertical-nav">
-  <div class="vertical-nav-separator">—</div>
-  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a href="/about.html" data-i18n="nav-about">About</a>
-</div>
-
-<!-- Mobile navigation -->
-<div class="mobile-nav">
-  <a href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a href="/about.html" data-i18n="nav-about">About</a>
-</div>
-
-<!-- Main content -->
 <div class="main">
-
-  <!-- Typewriter Text -->
-  <div class="typewriter" id="tw"></div>
-
-  <div class="learn-more">
-    <a href="/about.html" data-i18n="learn-more">Learn more about Celeste →</a>
-  </div>
-
-  <div class="speak-with">
-    <a href="/celeste-console.html" data-i18n="speak-with">Speak with Celeste →</a>
-  </div>
-
-  <footer>© Celeste</footer>
-
+  <div id="tw" class="typewriter"></div>
+  <div class="cursor"></div>
 </div>
 
-<!-- Typewriter Script -->
 <script>
-// fade-in
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
-});
 
-// detect language
-const lang = navigator.language.split("-")[0];
+  // 各行と速度設定
+  const script = [
+    { text: "Hello,", delay: 300 },              // 超スロー
+    { pause: 1000 },                             // 行間1秒
+    { text: "I’m Celeste.", delay: 55 },         // 普通よりやや遅い
+    { pause: 1000 },
+    { text: "I read your intentions", delay: 46 },
+    { pause: 1000 },
+    { text: "and prepare what lies ahead.", delay: 60 },
+    { pause: 1400 }                              // 余韻
+  ];
 
-// text sets
-const textSets = {
-  en: [
-    { line: "Hello, I’m Celeste.", speed:300 },
-    { line: "I read your intentions", speed:65 },
-    { line: "and prepare what lies ahead.", speed:80 }
-  ],
-  ja: [
-    { line: "こんにちは、Celesteです。", speed:300 },
-    { line: "あなたの意図を読み取り、", speed:65 },
-    { line: "これから訪れるものを整えます。", speed:80 }
-  ]
-};
+  const tw = document.getElementById("tw");
 
-const selected = textSets[lang] || textSets["en"];
+  async function typeLine(line) {
+    for (let i = 0; i < line.text.length; i++) {
+      tw.textContent += line.text[i];
+      await new Promise(r => setTimeout(r, line.delay));
+    }
+    tw.textContent += "\n";
+  }
 
-const tw = document.getElementById("tw");
-
-const cursor = document.createElement("span");
-cursor.id = "cursor";
-cursor.textContent = "▁";
-cursor.style.opacity = "0";
-tw.after(cursor);
-
-let lineIndex = 0;
-let charIndex = 0;
-
-function typeLine(){
-  const current = selected[lineIndex];
-
-  if(charIndex < current.line.length){
-    tw.textContent += current.line.charAt(charIndex);
-    charIndex++;
-    setTimeout(typeLine, current.speed);
-  } else {
-    lineIndex++;
-    charIndex = 0;
-
-    if(lineIndex < selected.length){
-      tw.textContent += "\n";
-      setTimeout(typeLine, 1000);
-    } else {
-      setTimeout(() => { startCursorBlink(); }, 1600);
+  async function run() {
+    for (const line of script) {
+      if (line.text) {
+        await typeLine(line);
+      }
+      if (line.pause) {
+        await new Promise(r => setTimeout(r, line.pause));
+      }
     }
   }
-}
 
-function startCursorBlink(){
-  setInterval(()=> {
-    cursor.style.opacity = cursor.style.opacity==="0" ? "1" : "0";
-  }, 700);
-}
-
-typeLine();
+  run();
+});
 </script>
-
-<!-- language engine -->
-<script src="/language.js"></script>
 
 </body>
 </html>
