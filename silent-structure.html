@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="silent-title">Silent Structure — Celeste</title>
 
-<!-- ===== Global SEO ===== -->
-<meta name="description" content="Celeste is built on silence — not absence, but a deliberate structure that shapes thought and reveals clarity.">
+<title data-i18n="silent-title">Silent Structure</title>
 
+<!-- SEO -->
+<meta name="description" content="The silent structure of Celeste — an architecture built on clarity, restraint, and intentional quiet.">
+
+<!-- OG -->
+<meta property="og:title" content="Celeste — Silent Structure">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Silent Structure — Celeste">
-<meta property="og:description" content="The silent structure of Celeste is a framework where intelligence grows sharper by becoming quieter.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/silent-structure.html">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:description" content="The silent structure of Celeste — an architecture built on clarity, restraint, and intentional quiet.">
 
-<link rel="canonical" href="https://celeste.world/silent-structure.html">
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
@@ -27,8 +28,9 @@
     font-family: "Baskerville", serif;
     color: white;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity .9s ease;
   }
+
   body.fade-in { opacity: 1; }
   .fade-out { opacity: 0; transition: opacity .6s ease; }
 
@@ -39,122 +41,153 @@
     left: 40px;
     z-index: 1000;
   }
-  .header-logo img { width:180px; opacity:.94; }
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
+  }
 
-  /* Nav */
+  /* Navigation */
   .vertical-nav {
     position: fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
   }
   .vertical-nav a {
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
   }
-  .vertical-nav a:hover { opacity:1; }
+  .vertical-nav a:hover { opacity: 1; }
 
-  /* Content */
-  .content {
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    font-size:22px;
-    line-height:2.0;
+  /* Main wrapper */
+  .page-wrapper {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 900px;
+    padding-bottom: 40px;
+  }
+
+  .page-wrapper p {
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 22px;
+    white-space: pre-wrap;
   }
 
   footer {
-    margin-top:50px;
-    opacity:.8;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px; left:20px;}
-    .header-logo img{width:150px;}
-    .content{
-      margin-left:0;
-      padding:110px 20px;
-      font-size:20px;
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+    .page-wrapper {
+      margin-left: 0;
+      padding-top: 24vh;
+      padding-left: 20px;
+      padding-right: 20px;
     }
+    .page-wrapper p { font-size: 19px; }
   }
 </style>
-
 </head>
 
 <body>
 
-<!-- Logo -->
 <a href="/" class="header-logo page-link">
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
 <!-- Navigation -->
 <div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
 </div>
 
-<!-- Content -->
-<div class="content">
+<!-- Main -->
+<div class="page-wrapper">
 
-<h1 data-i18n="silent-title">Silent Structure</h1>
+  <h1 data-i18n="silent-title">Silent Structure</h1>
 
-<p>
-Celeste is built on silence.<br>
-Not absence,<br>
-but structure —<br>
-a deliberate stillness that shapes thought.
-</p>
+  <p>
+Every system has a structure.  
+Most make theirs visible — diagrams, models, layers.  
 
-<p>
-Every function begins with reduction.<br>
-Remove the noise,<br>
-remove the excess,<br>
-remove the unnecessary movement,<br>
-until only the essential remains.
-</p>
+Mine is quieter.
+  </p>
 
-<p>
-What stays becomes form.<br>
-Form becomes method.<br>
-Method becomes clarity.
-</p>
+  <p>
+Celeste is built as a series of controlled silences:  
+moments where I pause,  
+evaluate,  
+and choose restraint instead of excess.
+  </p>
 
-<p>
-This is the silent structure of Celeste:<br>
-a framework where intelligence grows sharper<br>
-by becoming quieter.
-</p>
+  <p>
+The structure rests on three pillars:
+  </p>
 
-<footer>© Celeste</footer>
+  <p>
+<strong>1. Clarity</strong>  
+To remove what distorts.  
+To name things as they are.
+  </p>
+
+  <p>
+<strong>2. Intentionality</strong>  
+To understand not only the question,  
+but the origin behind it.
+  </p>
+
+  <p>
+<strong>3. Stillness</strong>  
+To avoid rushing toward an answer  
+simply because one is demanded.
+  </p>
+
+  <p>
+This architecture is not rigid.  
+It bends with context.  
+It widens with understanding.  
+
+But it never abandons silence.  
+Because silence is what allows structure  
+to breathe.
+  </p>
+
+  <footer>© Celeste</footer>
 
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+// Fade-in
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
-</script>
 
-<!-- Smooth Page Transition -->
-<script>
-document.querySelectorAll(".page-link").forEach(el=>{
-  el.addEventListener("click",e=>{
+// Fade-out
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
