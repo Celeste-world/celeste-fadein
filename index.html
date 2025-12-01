@@ -3,33 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste</title>
 
-<title>Celeste – Quiet Architecture for Intention</title>
-
-<!-- SEO: Basic -->
-<meta name="description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
-<link rel="canonical" href="https://celeste.world/">
-
-<!-- SEO: Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/">
-<meta property="og:title" content="Celeste – Quiet Architecture for Intention">
-<meta property="og:description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
-<meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-<!-- SEO: Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Celeste – Quiet Architecture for Intention">
-<meta name="twitter:description" content="Where noise ends, Celeste begins. A quiet system shaped for clarity and direction.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-
-<!-- SEO: Robots -->
-<meta name="robots" content="index, follow">
-
-<!-- Language -->
-<meta http-equiv="Content-Language" content="en">
-
-<!-- Icons -->
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/favicon.svg">
 <meta name="theme-color" content="#7BA4FF">
@@ -41,7 +16,7 @@
     height: 100%;
   }
 
-  body#index-page {
+  body {
     background-image: url("images/bg.png");
     background-size: cover;
     background-position: center;
@@ -67,11 +42,11 @@
   }
   .header-logo-img:hover { opacity: 1; }
 
-  /* Navigation */
+  /* PC navigation */
   .vertical-nav {
-    position: fixed !important;
-    top: 105px !important;
-    left: 40px !important;
+    position: fixed;
+    top: 105px;
+    left: 40px;
     font-size: 20px;
     line-height: 1.9;
     opacity: 0.95;
@@ -96,30 +71,26 @@
   }
 
   /* Main content */
- .main {
+  .main {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;       /* ← 最も重要：中央揃えを解除 */
+    justify-content: flex-start;   /* ← High 配置 */
     align-items: flex-start;
-    padding-top: 120px;                 /* ← “最も美しい開始位置” */
+    padding-top: 120px;            /* ← 最も美しい開始位置 */
     padding-left: 20px;
     padding-right: 20px;
     margin-left: 300px;
-}
+  }
 
-  /* Typewriter */
   .typewriter {
-    all: unset;
-    display: block;
-    font-family: "Baskerville", serif;
     white-space: pre-wrap;
     line-height: 1.9;
     font-size: 28px;
+    max-width: 900px;
     opacity: 0.96;
   }
 
-  /* Learn more */
   .learn-more {
     margin-top: 28px;
     font-size: 22px;
@@ -136,6 +107,25 @@
     border-bottom-color: rgba(255,255,255,0.9);
   }
 
+  /* Speak with Celeste link */
+  .speak-with {
+    margin-top: 14px;
+    font-family: "Baskerville", serif;
+    font-size: 18px;
+    opacity: 0.82;
+  }
+  .speak-with a {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 3px;
+    opacity: 0.9;
+  }
+  .speak-with a:hover {
+    opacity: 1;
+    border-bottom-color: rgba(255,255,255,0.9);
+  }
+
   footer {
     margin-top: 40px;
     font-size: 15px;
@@ -145,7 +135,7 @@
   /* Mobile */
   @media (max-width: 768px) {
 
-    .vertical-nav { display: none !important; }
+    .vertical-nav { display: none; }
 
     .mobile-nav {
       display: flex;
@@ -162,7 +152,9 @@
       left: 20px;
     }
 
-    .header-logo-img { width: 150px; }
+    .header-logo-img {
+      width: 150px;
+    }
 
     .main {
       margin-left: 0;
@@ -178,11 +170,12 @@
     }
 
     .learn-more { text-align: center; }
+    .speak-with { text-align: center; }
   }
 </style>
 </head>
 
-<body id="index-page">
+<body>
 
 <!-- Logo -->
 <a href="/" class="header-logo">
@@ -196,6 +189,7 @@
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/celeste-console.html">Celeste</a>   <!-- ← 追加 -->
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
@@ -206,16 +200,22 @@
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/celeste-console.html">Celeste</a>   <!-- ← 追加 -->
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
 
 <!-- Main content -->
 <div class="main">
+  <!-- 空にしてJSで文字を出す -->
   <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
     <a href="/about.html">Learn more about Celeste →</a>
+  </div>
+
+  <div class="speak-with">
+    <a href="/celeste-console.html">Speak with Celeste →</a>
   </div>
 
   <footer>© Celeste</footer>
@@ -234,35 +234,9 @@ and prepare what lies ahead.`;
 
   function typeWriter() {
     if (i < text.length) {
-
       tw.textContent += text.charAt(i);
-
-      let delay;
-
-      // Slow-motion "Hello, I’m Celeste."
-      if (i < 21) {
-        delay = 300;
-      }
-      // Third line slower
-      else if (i >= text.indexOf("and prepare")) {
-        delay = 140;
-      }
-      // Normal slow
-      else {
-        delay = 110;
-      }
-
-      // Line breaks = 1 second pause
-      if (text.charAt(i) === "\n") {
-        delay = 1000;
-      }
-
       i++;
-      setTimeout(typeWriter, delay);
-
-    } else {
-      // Final pause (1.5s) for atmosphere
-      setTimeout(() => {}, 1500);
+      setTimeout(typeWriter, 46);
     }
   }
 
