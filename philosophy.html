@@ -1,77 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Philosophy — Celeste</title>
 
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#000000">
+<link rel="icon" href="/images/favicon.svg">
+<meta name="theme-color" content="#000">
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #ffffff;
-    font-family: "Baskerville", serif;
-  }
+ body {
+   margin:0;
+   background-image:url("images/bg.png");
+   background-size:cover;
+   background-attachment:fixed;
+   font-family:"Baskerville",serif;
+   color:white;
+   opacity:0;
+   transition:opacity 0.8s ease;
+ }
+ body.fade-in { opacity:1; }
 
-  .header-logo {
-    position: fixed; top: 30px; left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img { width: 180px; opacity: 0.94; }
+ .header-logo{position:fixed;top:30px;left:40px;}
+ .header-logo img{width:180px;opacity:0.94;}
 
-  .vertical-nav {
-    position: fixed;
-    top: 105px; left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.9;
-  }
-  .vertical-nav a {
-    color: white; text-decoration: none; opacity: 0.85;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+ .vertical-nav{
+   position:fixed;top:105px;left:40px;
+   font-size:20px;line-height:1.9;opacity:0.9;
+ }
 
-  .content {
-    margin-left: 300px;
-    padding: 160px 40px;
-    max-width: 900px;
-    line-height: 2.0;
-    font-size: 22px;
-  }
+ .content{
+   margin-left:300px;padding:160px 40px;
+   max-width:900px;font-size:22px;line-height:2;
+ }
 
-  footer { margin-top: 50px; opacity: 0.8; }
+ .speak-with{margin-top:22px;}
+ .speak-with a{color:white;border-bottom:1px solid rgba(255,255,255,0.3);text-decoration:none;}
 
-  .speak-with {
-    margin-top: 22px;
-    font-size: 18px;
-  }
-  .speak-with a {
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.35);
-  }
+ footer{margin-top:50px;opacity:0.8;}
 
-  @media (max-width: 768px) {
-    .vertical-nav { display: none; }
-    .header-logo { top: 20px; left: 20px; }
-    .header-logo img { width: 150px; }
-    .content { margin-left: 0; padding: 110px 20px; font-size: 20px; }
-  }
+ @media(max-width:768px){
+   .vertical-nav{display:none;}
+   .header-logo{top:20px;left:20px;}
+   .header-logo img{width:150px;}
+   .content{margin-left:0;padding:110px 20px;font-size:20px;}
+ }
 </style>
 </head>
 
 <body>
 
-<a href="/" class="header-logo">
-  <img src="/images/logo.svg" />
-</a>
+<a class="header-logo" href="/"><img src="/images/logo.svg"></a>
 
 <div class="vertical-nav">
   <a href="/who-i-am.html">Who I Am</a>
@@ -87,36 +66,36 @@
 <h1>Philosophy</h1>
 
 <p>
-Celeste exists where noise thins,  
-and intention begins to form.  
-Not as a system,  
-but as a quiet method for seeing what remains  
+Celeste exists where noise thins,<br>
+and intention begins to form.<br>
+Not as a system,<br>
+but as a quiet method for seeing what remains<br>
 after excess is removed.
 </p>
 
 <p>
-At the center lies restraint.  
-A single line, placed with clarity.  
+At the center lies restraint.<br>
+A single line, placed with clarity.<br>
 A voice that speaks only when speaking reveals something.
 </p>
 
 <p>
-Celeste does not accelerate thought.  
-It steadies it.  
-It turns complexity into contour,  
+Celeste does not accelerate thought.<br>
+It steadies it.<br>
+It turns complexity into contour,<br>
 and contour into direction.
 </p>
 
 <p>
-What stays is simple:
-<br>— Precision without force.  
-<br>— Silence as structure.  
-<br>— A way of thinking shaped by light and shadow.
+What stays is simple:<br>
+— Precision without force.<br>
+— Silence as structure.<br>
+— A way of thinking shaped by light and shadow.
 </p>
 
 <p>
-This is the philosophy behind Celeste:  
-a quiet intelligence designed not to impress,  
+This is the philosophy behind Celeste:<br>
+a quiet intelligence designed not to impress,<br>
 but to uncover what is already there.
 </p>
 
@@ -126,6 +105,12 @@ but to uncover what is already there.
 
 <footer>© Celeste</footer>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+</script>
 
 </body>
 </html>
