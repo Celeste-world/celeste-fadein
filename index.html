@@ -32,7 +32,6 @@
     top: 30px;
     left: 40px;
     z-index: 1000;
-    text-decoration: none;
   }
   .header-logo-img {
     width: 180px;
@@ -75,9 +74,9 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;   /* ← High 配置 */
+    justify-content: flex-start;    /* Hello の最適位置 */
     align-items: flex-start;
-    padding-top: 120px;            /* ← 最も美しい開始位置 */
+    padding-top: 120px;             /* 最美位置 */
     padding-left: 20px;
     padding-right: 20px;
     margin-left: 300px;
@@ -89,6 +88,15 @@
     font-size: 28px;
     max-width: 900px;
     opacity: 0.96;
+  }
+
+  /* 点滅カーソル */
+  #cursor {
+    font-family: "Baskerville", serif;
+    font-size: 28px;
+    color: rgba(255,255,255,0.7);
+    margin-left: 6px;
+    transition: opacity 0.28s ease;
   }
 
   .learn-more {
@@ -107,7 +115,6 @@
     border-bottom-color: rgba(255,255,255,0.9);
   }
 
-  /* Speak with Celeste link */
   .speak-with {
     margin-top: 14px;
     font-family: "Baskerville", serif;
@@ -189,7 +196,7 @@
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/celeste-console.html">Celeste</a>   <!-- ← 追加 -->
+  <a href="/celeste-console.html">Celeste</a>
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
@@ -200,14 +207,14 @@
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/celeste-console.html">Celeste</a>   <!-- ← 追加 -->
+  <a href="/celeste-console.html">Celeste</a>
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
 
 <!-- Main content -->
 <div class="main">
-  <!-- 空にしてJSで文字を出す -->
+  <!-- 空：タイプライターがここに文字を出す -->
   <div class="typewriter" id="tw"></div>
 
   <div class="learn-more">
@@ -221,17 +228,23 @@
   <footer>© Celeste</footer>
 </div>
 
-<!-- Typewriter Script -->
+<!-- Typewriter Script + Blinking Cursor -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
   const text = [
-    { line: "Hello, I’m Celeste.", speed: 300 },   // ← 超スロー
+    { line: "Hello, I’m Celeste.", speed: 300 },
     { line: "I read your intentions", speed: 65 },
-    { line: "and prepare what lies ahead.", speed: 80 }, // ← 少しテンポ変化
+    { line: "and prepare what lies ahead.", speed: 80 },
   ];
 
   const tw = document.getElementById("tw");
+
+  const cursor = document.createElement("span");
+  cursor.id = "cursor";
+  cursor.textContent = "▁";
+  cursor.style.opacity = "0";
+  tw.after(cursor);
 
   let lineIndex = 0;
   let charIndex = 0;
@@ -244,20 +257,24 @@ document.addEventListener("DOMContentLoaded", () => {
       charIndex++;
       setTimeout(typeLine, current.speed);
     } else {
-      // 行の終了処理
       lineIndex++;
       charIndex = 0;
 
       if (lineIndex < text.length) {
-        tw.textContent += "\n";     // 改行
-        setTimeout(typeLine, 1000); // ← 行間の「間」
+        tw.textContent += "\n";
+        setTimeout(typeLine, 1000);  // 行間の静寂
       } else {
-        // 全文終了後の余韻
         setTimeout(() => {
-          // ここに何か入れる場合は追加可能（点滅カーソルなど）
-        }, 1800);     // ← 最後の余韻
+          startCursorBlink();
+        }, 1800); // 最後の余韻
       }
     }
+  }
+
+  function startCursorBlink() {
+    setInterval(() => {
+      cursor.style.opacity = cursor.style.opacity === "0" ? "1" : "0";
+    }, 700);
   }
 
   typeLine();
