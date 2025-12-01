@@ -3,96 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="contact-title">Contact — Celeste</title>
 
-<!-- ===== Global SEO ===== -->
-<meta name="description" content="Contact Celeste using the address below. Your message will open directly in your email application.">
+<title data-i18n="contact-title">Contact</title>
 
+<!-- SEO -->
+<meta name="description" content="Contact Celeste — a quiet point of communication built on clarity and intention.">
+
+<!-- OG -->
+<meta property="og:title" content="Celeste — Contact">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Contact — Celeste">
-<meta property="og:description" content="If you would like to reach out, you can contact Celeste via email using the address on this page.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/contact.html">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:description" content="Contact Celeste — a quiet point of communication built on clarity and intention.">
 
-<link rel="canonical" href="https://celeste.world/contact.html">
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body{
-    margin:0;
-    background-image:url("images/bg.png");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    font-family:"Baskerville",serif;
-    color:white;
-    opacity:0;
-    transition:opacity .8s ease;
-  }
-  body.fade-in{opacity:1;}
-  .fade-out{opacity:0;transition:opacity .6s ease;}
-
-  .header-logo{
-    position:fixed;
-    top:30px;
-    left:40px;
-    z-index:1000;
-  }
-  .header-logo img{
-    width:180px;
-    opacity:.94;
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity .9s ease;
   }
 
-  .vertical-nav{
-    position:fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
+
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
   }
-  .vertical-nav a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
   }
 
-  .content{
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    font-size:22px;
-    line-height:2.0;
+  /* Navigation */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
+
+  /* Main wrapper */
+  .page-wrapper {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 900px;
+    padding-bottom: 40px;
   }
 
-  .email-box{
-    margin-top:24px;
-    font-size:22px;
-  }
-  .email-box a{
-    color:white;
-    text-decoration:none;
-    border-bottom:1px solid rgba(255,255,255,0.25);
+  .page-wrapper p {
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 22px;
+    white-space: pre-wrap;
   }
 
-  footer{
-    margin-top:60px;
-    opacity:.8;
-    font-size:15px;
+  footer {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px;left:20px;}
-    .header-logo img{width:150px;}
-    .content{
-      margin-left:0;
-      padding:110px 20px;
-      font-size:20px;
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+    .page-wrapper {
+      margin-left: 0;
+      padding-top: 24vh;
+      padding-left: 20px;
+      padding-right: 20px;
     }
+    .page-wrapper p { font-size: 19px; }
   }
 </style>
 </head>
@@ -103,56 +110,54 @@
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
 </div>
 
-<div class="content">
+<!-- Main -->
+<div class="page-wrapper">
 
-<h1 data-i18n="contact-title">Contact</h1>
+  <h1 data-i18n="contact-title">Contact</h1>
 
-<p data-i18n="contact-description">
-If you would like to reach out,<br>
-please contact Celeste using the address below.<br>
-It will open directly in your email application.
-</p>
+  <p data-i18n="contact-description">
+    If you would like to reach out,
+    please contact Celeste using the address below.
+    It will open directly in your email application.
+  </p>
 
-<div class="email-box">
-  <a id="mail-link"></a>
-</div>
+  <!-- Safe email display -->
+  <p id="mail-display">Loading…</p>
 
-<footer>© Celeste</footer>
-
+  <footer>© Celeste</footer>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+// Fade-in
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
+
+  // ---- Safe mail generation (spam protection) ----
+  const local = "contact";
+  const domain = "celeste.world";
+  const address = `${local}@${domain}`;
+
+  const el = document.getElementById("mail-display");
+  el.innerHTML = `<a href="mailto:${address}" style="color:white;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.4);">${address}</a>`;
 });
-</script>
 
-<script>
-// spam 対策つきメール生成
-const user = "contact";
-const domain = "celeste.world";
-const address = `${user}@${domain}`;
-const link = document.getElementById("mail-link");
-link.textContent = address;
-link.href = "mailto:" + address;
-</script>
-
-<script>
-document.querySelectorAll(".page-link").forEach(el=>{
-  el.addEventListener("click",e=>{
+// Fade-out
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
