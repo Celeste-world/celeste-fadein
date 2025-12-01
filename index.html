@@ -5,78 +5,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Celeste</title>
 
-<!-- ===== SEO SET START ===== -->
+<!-- ===== Global SEO Set ===== -->
 <meta name="description" content="Celeste is a quiet intelligence shaped through restraint — a place where clarity emerges, noise dissolves, and thought becomes architectural.">
 
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Celeste — Silent Intelligence">
 <meta property="og:description" content="A quiet intelligence designed to uncover clarity through silence, precision, and intention.">
 <meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/">
 
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Celeste — Silent Intelligence">
 <meta name="twitter:description" content="A quiet intelligence built through restraint and clarity.">
 <meta name="twitter:image" content="https://celeste.world/images/og-image.jpg">
 
+<!-- Canonical -->
 <link rel="canonical" href="https://celeste.world/">
 
+<!-- Structured Data -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Celeste",
-  "url": "https://celeste.world/",
-  "description": "Celeste is a quiet intelligence shaped through restraint — a structure where thought becomes clear.",
-  "creator": {
-    "@type": "Person",
-    "name": "Celeste"
-  }
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"Celeste",
+  "url":"https://celeste.world/",
+  "description":"Celeste is a quiet intelligence shaped through restraint — a structure where thought becomes clear."
 }
 </script>
-<!-- ===== SEO SET END ===== -->
+<!-- ===== End SEO Set ===== -->
 
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    color: white;
-    font-family: "Baskerville", serif;
-    opacity: 0;
-    transition: opacity 0.8s ease;
+  body{
+    margin:0;
+    background-image:url("images/bg.png");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    font-family:"Baskerville",serif;
+    color:white;
+    opacity:0;
+    transition:opacity .8s ease;
   }
-  body.fade-in { opacity: 1; }
+  body.fade-in{opacity:1;}
 
-  /* Text layout（上方向へ調整） */
-  .main {
-    margin-left: 300px;
-    padding-top: 160px; /* ←上に上げた */
-    padding-left: 40px;
-    max-width: 900px;
-  }
-
-  .typewriter {
-    font-size: 28px;
-    line-height: 1.9;
-    white-space: pre-wrap;
+  .main{
+    margin-left:300px;
+    padding-top:160px;
+    padding-left:40px;
+    max-width:900px;
   }
 
-  .cursor {
-    display: inline-block;
-    width: 10px;
-    background: rgba(255,255,255,0.8);
-    margin-left: 4px;
-    animation: blink 1s infinite;
+  .typewriter{
+    font-size:28px;
+    line-height:1.9;
+    white-space:pre-wrap;
   }
 
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    50.01%, 100% { opacity: 0; }
+  .cursor{
+    display:inline-block;
+    width:10px;
+    background:rgba(255,255,255,0.8);
+    margin-left:4px;
+    animation:blink 1s infinite;
+  }
+
+  @keyframes blink{
+    0%,50%{opacity:1;}
+    50.01%,100%{opacity:0;}
+  }
+
+  @media(max-width:768px){
+    .main{
+      margin-left:0;
+      padding:110px 20px;
+    }
+    .typewriter{font-size:24px;}
   }
 </style>
 </head>
@@ -89,45 +96,43 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
+
   document.body.classList.add("fade-in");
 
-  // 各行と速度設定
-  const script = [
-    { text: "Hello,", delay: 300 },              // 超スロー
-    { pause: 1000 },                             // 行間1秒
-    { text: "I’m Celeste.", delay: 55 },         // 普通よりやや遅い
-    { pause: 1000 },
-    { text: "I read your intentions", delay: 46 },
-    { pause: 1000 },
-    { text: "and prepare what lies ahead.", delay: 60 },
-    { pause: 1400 }                              // 余韻
+  const script=[
+    {text:"Hello,",delay:300},
+    {pause:1000},
+    {text:"I’m Celeste.",delay:55},
+    {pause:1000},
+    {text:"I read your intentions",delay:46},
+    {pause:1000},
+    {text:"and prepare what lies ahead.",delay:60},
+    {pause:1400}
   ];
 
-  const tw = document.getElementById("tw");
+  const tw=document.getElementById("tw");
 
-  async function typeLine(line) {
-    for (let i = 0; i < line.text.length; i++) {
-      tw.textContent += line.text[i];
-      await new Promise(r => setTimeout(r, line.delay));
+  async function typeLine(line){
+    for(let i=0;i<line.text.length;i++){
+      tw.textContent+=line.text[i];
+      await new Promise(r=>setTimeout(r,line.delay));
     }
-    tw.textContent += "\n";
+    tw.textContent+="\n";
   }
 
-  async function run() {
-    for (const line of script) {
-      if (line.text) {
-        await typeLine(line);
-      }
-      if (line.pause) {
-        await new Promise(r => setTimeout(r, line.pause));
-      }
+  async function run(){
+    for(const line of script){
+      if(line.text) await typeLine(line);
+      if(line.pause) await new Promise(r=>setTimeout(r,line.pause));
     }
   }
 
   run();
 });
 </script>
+
+<script src="/language.js"></script>
 
 </body>
 </html>
