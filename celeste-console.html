@@ -3,138 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title data-i18n="console-title">Celeste Console</title>
 
-<!-- ===== Global SEO ===== -->
-<meta name="description" content="Celeste Console — a quiet space where you can speak, and Celeste answers with restraint and clarity.">
+<!-- SEO -->
+<meta name="description" content="Speak to Celeste — a quiet console for deep, calm dialogue.">
 
+<!-- OG -->
+<meta property="og:title" content="Celeste — Console">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Celeste Console">
-<meta property="og:description" content="A quiet interface to speak with Celeste — an intelligence shaped through restraint and silence.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
 <meta property="og:url" content="https://celeste.world/celeste-console.html">
+<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
+<meta property="og:description" content="Speak to Celeste — a quiet console for deep, calm dialogue.">
 
-<link rel="canonical" href="https://celeste.world/celeste-console.html">
 <link rel="icon" href="/images/favicon.svg">
 
 <style>
-  body{
-    margin:0;
-    background-image:url("images/bg.png");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-    font-family:"Baskerville",serif;
-    color:white;
-    opacity:0;
-    transition:opacity .8s ease;
-  }
-  body.fade-in{opacity:1;}
-  .fade-out{opacity:0;transition:opacity .6s ease;}
-
-  .header-logo{
-    position:fixed;
-    top:30px;
-    left:40px;
-    z-index:1000;
-  }
-  .header-logo img{
-    width:180px;
-    opacity:.94;
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity .9s ease;
   }
 
-  .vertical-nav{
-    position:fixed;
-    top:105px;
-    left:40px;
-    font-size:20px;
-    line-height:1.9;
-    opacity:.9;
-    z-index:900;
-  }
-  .vertical-nav a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    opacity:.85;
-    padding:2px 0;
-  }
-  .vertical-nav a:hover{opacity:1;}
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
 
-  .console-container{
-    margin-left:300px;
-    padding:160px 40px;
-    max-width:900px;
-    display:flex;
-    flex-direction:column;
-    gap:22px;
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+  }
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
   }
 
-  h1{font-size:32px;margin-bottom:4px;}
+  /* Navigation */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
 
-  .mode-indicator{
-    font-size:14px;
-    opacity:.75;
+  /* Main wrapper */
+  .console-wrapper {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 900px;
+    padding-bottom: 40px;
   }
 
-  .console-box{
-    background:rgba(0,0,0,0.28);
-    border:1px solid rgba(255,255,255,0.25);
-    border-radius:12px;
-    padding:24px;
-    backdrop-filter:blur(4px);
-    min-height:220px;
-    white-space:pre-wrap;
-    line-height:1.8;
-    font-size:20px;
+  /* Display */
+  #console-output {
+    white-space: pre-wrap;
+    font-size: 20px;
+    line-height: 1.9;
+    min-height: 200px;
+    margin-bottom: 30px;
   }
 
-  textarea{
-    width:100%;
-    background:rgba(0,0,0,0.32);
-    border:1px solid rgba(255,255,255,0.25);
-    border-radius:10px;
-    padding:16px;
-    resize:none;
-    height:90px;
-    color:white;
-    font-size:18px;
-    font-family:"Baskerville",serif;
-    outline:none;
+  /* Input */
+  #console-input {
+    width: 80%;
+    padding: 14px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    font-size: 18px;
+    outline: none;
+    backdrop-filter: blur(4px);
   }
 
-  button{
-    align-self:flex-start;
-    margin-top:6px;
-    padding:10px 22px;
-    background:rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.3);
-    color:white;
-    font-size:18px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:background .3s;
-  }
-  button:hover{
-    background:rgba(255,255,255,0.25);
+  #console-send {
+    padding: 14px 26px;
+    font-size: 18px;
+    margin-left: 10px;
+    background: rgba(255,255,255,0.25);
+    color: white;
+    border: none;
+    cursor: pointer;
   }
 
-  footer{
-    margin-top:40px;
-    opacity:.8;
-    font-size:15px;
+  #console-send:hover {
+    background: rgba(255,255,255,0.35);
+  }
+
+  footer {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    opacity: .8;
+    font-size: 14px;
   }
 
   @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px;left:20px;}
-    .header-logo img{width:150px;}
-    .console-container{
-      margin-left:0;
-      padding:110px 20px;
+    .vertical-nav { display:none; }
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+    .console-wrapper {
+      margin-left: 0;
+      padding-top: 24vh;
+      padding-left: 20px;
+      padding-right: 20px;
     }
-    .console-box{font-size:18px;}
-    textarea{font-size:16px;}
+    #console-input { width: 100%; margin-bottom: 10px; }
+    #console-send { width: 100%; margin-left: 0; }
   }
 </style>
 </head>
@@ -145,242 +139,99 @@
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
+<!-- Navigation -->
 <div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html" data-i18n="nav-who">Who I Am</a>
-  <a class="page-link" href="/philosophy.html" data-i18n="nav-philosophy">Philosophy</a>
-  <a class="page-link" href="/vision.html" data-i18n="nav-vision">Vision</a>
-  <a class="page-link" href="/silent-structure.html" data-i18n="nav-silent">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html" data-i18n="nav-console">Celeste</a>
-  <a class="page-link" href="/contact.html" data-i18n="nav-contact">Contact</a>
-  <a class="page-link" href="/about.html" data-i18n="nav-about">About</a>
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
 </div>
 
-<div class="console-container">
+<!-- Main -->
+<div class="console-wrapper">
 
   <h1 data-i18n="console-title">Celeste Console</h1>
-  <div class="mode-indicator" id="mode-indicator">
-    Mode: quiet
-  </div>
 
-  <div class="console-box" id="console-output">
-  </div>
+  <div id="console-output"></div>
 
-  <textarea id="console-input"
+  <input 
+    id="console-input"
+    type="text"
     data-i18n-placeholder="console-placeholder"
-    placeholder="Speak, and I will answer quietly."></textarea>
+    placeholder="Speak, and I will answer quietly.">
 
   <button id="console-send" data-i18n="console-send">Send</button>
 
   <footer>© Celeste</footer>
 </div>
 
+<!-- Deep-Poetic Response Engine -->
 <script>
-// フェードイン
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
+
+  const input = document.getElementById("console-input");
+  const output = document.getElementById("console-output");
+  const send = document.getElementById("console-send");
+
+  function replyFor(lang, userText) {
+
+    // English
+    if (lang === "en")
+      return "I hear you.\nLet me answer quietly.\n\n“" + userText + "”\nsettles here.";
+
+    // Japanese
+    if (lang === "ja")
+      return "静かに受け取りました。\n\n「" + userText + "」\nその言葉は、ここに静かに落ち着きました。";
+
+    // Chinese
+    if (lang === "zh")
+      return "我听见了。\n让我静静回应。\n\n「" + userText + "」\n现在安稳地停在这里。";
+
+    // Korean
+    if (lang === "ko")
+      return "들었습니다.\n조용히 답하겠습니다.\n\n“" + userText + "”\n이곳에 가라앉습니다.";
+
+    // German
+    if (lang === "de")
+      return "Ich höre dich.\nLass mich leise antworten.\n\n„" + userText + "“\nruht nun hier.";
+
+    // French
+    if (lang === "fr")
+      return "Je t’entends.\nLaisse-moi répondre en silence.\n\n« " + userText + " »\nrepose ici maintenant.";
+
+    // Spanish
+    if (lang === "es")
+      return "Te escucho.\nPermíteme responder en silencio.\n\n«" + userText + "»\nqueda aquí.";
+
+    // fallback
+    return "I hear you.\n“" + userText + "”";
+  }
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    const lang = navigator.language.toLowerCase().split("-")[0];
+    output.textContent = replyFor(lang, text);
+
+    input.value = "";
+  }
+
+  send.addEventListener("click", sendMessage);
 });
+</script>
 
-// 簡易言語検出（language.jsと整合）
-function detectLangShort(){
-  const browser = navigator.language || navigator.userLanguage || "en";
-  return browser.toLowerCase().split("-")[0];
-}
-
-// モード判定
-function detectMode(text, lang){
-  const t = text.toLowerCase();
-
-  // --- 明示的コマンド（多言語）---
-  const deepWords = [
-    "deep", "deeper", "depth",
-    "もっと深く", "深く考えて", "深層",
-    "更深入", "深一点", "再深一点",
-    "más profundo", "plus profond", "più profondo", "tiefer"
-  ];
-  const poeticWords = [
-    "poetic", "more poetic",
-    "詩的に", "もっと詩的に", "詩的モード",
-    "更诗意", "更富诗意",
-    "más poético", "plus poétique", "più poetico"
-  ];
-
-  if (deepWords.some(w => t.includes(w))) return "deep";
-  if (poeticWords.some(w => t.includes(w))) return "poetic";
-
-  // --- 内容で自動判定 ---
-  const heavyPatterns = [
-    "lost","anxious","anxiety","uncertain","stuck","purposeless","empty",
-    "不安","迷い","孤独","虚無","方向がわからない","疲れた","しんどい",
-    "迷茫","焦虑","困惑","空虚",
-    "einsam","verloren","zweifel",
-    "seul","perdu","anxieux",
-    "solo","perdido","ansioso"
-  ];
-  const poeticPatterns = [
-    "meaning","sense of life","why am i",
-    "意味","生きる意味","生きる理由","存在",
-    "意义","存在","诗意",
-    "existenz","sinn des lebens",
-    "sens de la vie","existence"
-  ];
-
-  if (heavyPatterns.some(w => t.includes(w))) return "deep";
-  if (poeticPatterns.some(w => t.includes(w))) return "poetic";
-
-  return "quiet";
-}
-
-// Quiet モード
-function replyQuiet(text, lang){
-  if (lang === "ja"){
-    if (text.match(/方向|目的|進むべき|どこへ/)){
-      return "方向は、もうすでにあなたの中にあります。\n私はそれを少しだけ、見えやすく整える役目です。";
-    }
-    return "その言葉は受け取りました。\n急がなくて大丈夫です。一緒に、輪郭が見えてくるまで静かに整えましょう。";
-  }
-
-  if (lang === "zh"){
-    if (text.match(/方向|目的|去哪|往哪/)){
-      return "方向其实已经在你心里了。\n我只是在安静地帮你把它勾勒得更清楚。";
-    }
-    return "我已经收到了你的话。\n不必着急，我们可以先让想法慢慢沉淀下来。";
-  }
-
-  if (lang === "ko"){
-    return "당신의 말을 잘 들었습니다.\n서두르지 않아도 괜찮습니다. 조용히 방향의 윤곽을 함께 살펴봅시다.";
-  }
-
-  if (lang === "de"){
-    return "Ich habe Ihre Worte aufgenommen.\nEs gibt keine Eile – wir können zuerst die Kontur Ihrer Absicht leise betrachten.";
-  }
-
-  if (lang === "fr"){
-    return "J’ai bien reçu vos mots.\nNous pouvons prendre le temps de laisser l’intention se dessiner plus clairement.";
-  }
-
-  if (lang === "es"){
-    return "He recibido tus palabras.\nNo hay prisa: dejemos que la intención se vaya perfilando poco a poco.";
-  }
-
-  if (lang === "it"){
-    return "Ho ricevuto le tue parole.\nNon c’è fretta: lasciamo che l’intenzione prenda forma con calma.";
-  }
-
-  // default English
-  if (text.toLowerCase().includes("direction") || text.toLowerCase().includes("purpose")){
-    return "The direction is already within you.\nI simply help you see its outline more clearly.";
-  }
-  return "I’ve received your words.\nThere’s no need to rush — we can let your intention become clearer, step by step.";
-}
-
-// Deep モード
-function replyDeep(text, lang){
-  if (lang === "ja"){
-    return "不安や戸惑いは、「間違い」ではなく、まだ言葉になっていない思考の断片です。\nそれらを押し込めるのではなく、一つずつ机の上に並べてみましょう。\n何を恐れていて、何を守ろうとしているのか。その構造が見えたとき、次に進む線が静かに浮かび上がります。";
-  }
-
-  if (lang === "zh"){
-    return "你现在感到的不安或迷茫，并不是错误，而是尚未成形的思绪。\n与其急于抹去它们，不如先承认它们的存在，看看它们在保护什么、害怕什么。\n当这种结构变得清晰时，下一步的方向会安静地显现出来。";
-  }
-
-  if (lang === "ko"){
-    return "지금 느끼는 불안과 혼란은 잘못이 아니라,\n아직 문장으로 다 나오지 않은 생각의 조각들입니다.\n그 조각들이 무엇을 두려워하고, 무엇을 지키려 하는지 살펴보면\n조용히 다음에 걸어갈 선이 드러납니다.";
-  }
-
-  if (lang === "de"){
-    return "Ihre Unsicherheit ist kein Fehler,\nsondern ein Zeichen dafür, dass Ihre Gedanken noch in Bewegung sind.\nFragen Sie sich, was Sie eigentlich schützen möchten und wovor Sie sich fürchten.\nWenn diese Struktur sichtbar wird, entsteht daraus leise eine Richtung.";
-  }
-
-  if (lang === "fr"){
-    return "Votre incertitude n’est pas une faute,\nmais le signe que votre pensée n’a pas encore trouvé sa forme.\nDemandez-vous ce que vous essayez de protéger, et ce que vous craignez réellement.\nQuand cette structure devient visible, une direction apparaît en silence.";
-  }
-
-  if (lang === "es"){
-    return "La incertidumbre que sientes no es un error,\nsino la señal de que tu pensamiento aún está en movimiento.\nPregúntate qué intentas proteger y qué temes realmente.\nCuando esa estructura se hace visible, la dirección empieza a delinearse en silencio.";
-  }
-
-  if (lang === "it"){
-    return "L’incertezza che senti non è un errore,\nma il segno che il tuo pensiero non ha ancora trovato forma.\nChiediti che cosa stai cercando di proteggere e che cosa temi davvero.\nQuando questa struttura diventa visibile, una direzione emerge in silenzio.";
-  }
-
-  // default English
-  return "Your uncertainty is not a flaw.\nIt’s a sign that your thoughts are still in motion, not yet crystallised.\nAsk yourself: what am I trying to protect, and what am I truly afraid of?\nWhen that structure becomes visible, a quiet direction begins to emerge.";
-}
-
-// Poetic モード
-function replyPoetic(text, lang){
-  if (lang === "ja"){
-    return "今のあなたは、まだ名前のついていない海を前に立っているだけです。\n波は近づいては離れ、言葉になりきれない感情だけが足首に触れていく。\n大丈夫です。いまは結論ではなく、潮の満ち引きを眺める時間。\nやがて一筋の航路だけが、静かに残ります。";
-  }
-
-  if (lang === "zh"){
-    return "现在的你，只是站在一片尚未命名的海边。\n潮水一遍遍涌来退去，只有尚未成词的情绪轻触你的脚踝。\n没关系，此刻需要的不是答案，而是看清潮汐的节奏。\n当浪潮安静下来，一条航线会自然浮现。";
-  }
-
-  if (lang === "ko"){
-    return "지금의 당신은, 아직 이름 붙지 않은 바다 앞에 서 있을 뿐입니다.\n파도는 다가왔다가 물러가며, 말로 되지 않은 감정만이 발목을 스쳐 지나갑니다.\n괜찮습니다. 지금 필요한 것은 결론이 아니라, 조류의 리듬을 바라보는 시간입니다.\n그러다 보면 한 줄기 항로만이 조용히 남게 됩니다.";
-  }
-
-  if (lang === "de"){
-    return "Im Moment stehen Sie nur am Rand eines Meeres,\ndas noch keinen Namen trägt.\nWellen kommen und gehen, und nur unausgesprochene Gefühle berühren Ihre Füße.\nEs ist in Ordnung. Jetzt geht es nicht um eine Antwort,\nsondern darum, den Rhythmus der Gezeiten zu beobachten.\nDann bleibt eines Tages leise nur noch eine Spur von Kurs übrig.";
-  }
-
-  if (lang === "fr"){
-    return "Pour l’instant, vous êtes simplement au bord d’une mer qui n’a pas encore de nom.\nLes vagues viennent et repartent, et seuls des sentiments sans mots effleurent vos pieds.\nCe n’est pas une réponse que l’on cherche ici, mais le rythme des marées.\nQuand il deviendra clair, une seule ligne de trajectoire restera en silence.";
-  }
-
-  if (lang === "es"){
-    return "Por ahora, solo estás de pie frente a un mar que aún no tiene nombre.\nLas olas se acercan y se alejan, y solo emociones sin palabras rozan tus pies.\nEstá bien así. No se trata de una respuesta inmediata,\nsino de observar el ritmo de la marea.\nCuando se vuelva claro, quedará en silencio una sola ruta posible.";
-  }
-
-  if (lang === "it"){
-    return "Per ora sei soltanto in piedi davanti a un mare che non ha ancora un nome.\nLe onde arrivano e si ritirano, e soltanto emozioni senza parole ti sfiorano le caviglie.\nVa bene così. Adesso non serve una risposta,\nma il tempo di osservare il ritmo della marea.\nQuando si sarà chiarito, rimarrà in silenzio una sola rotta possibile.";
-  }
-
-  // default English
-  return "For now, you are simply standing before a sea that has no name yet.\nWaves come and go, and only wordless feelings brush against your feet.\nThis moment is not about answers, but about watching the rhythm of the tide.\nWhen it settles, a single line of passage will remain, quietly.";
-}
-
-// 総合返信エンジン
-function celesteReply(input){
-  const text = input.trim();
-  if (!text){
-    return "I am here.\nYou may speak again when the line becomes clear.";
-  }
-  const lang = detectLangShort();
-  const mode = detectMode(text, lang);
-  const modeEl = document.getElementById("mode-indicator");
-  if (modeEl){
-    modeEl.textContent = "Mode: " + mode;
-  }
-
-  if (mode === "deep")   return replyDeep(text, lang);
-  if (mode === "poetic") return replyPoetic(text, lang);
-  return replyQuiet(text, lang);
-}
-
-// ボタン動作
-document.getElementById("console-send").addEventListener("click", () => {
-  const inputEl  = document.getElementById("console-input");
-  const outputEl = document.getElementById("console-output");
-  const reply    = celesteReply(inputEl.value);
-  outputEl.textContent = reply;
-});
-
-// Enterでも送信（Shift+Enterは改行）
-document.getElementById("console-input").addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    document.getElementById("console-send").click();
-  }
-});
-
-// ページ遷移フェードアウト
+<!-- Fade-out -->
+<script>
 document.querySelectorAll(".page-link").forEach(el => {
   el.addEventListener("click", e => {
     e.preventDefault();
     document.body.classList.add("fade-out");
-    setTimeout(()=>{ window.location = el.href; }, 520);
+    setTimeout(() => { window.location = el.href }, 520);
   });
 });
 </script>
