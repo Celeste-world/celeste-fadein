@@ -9,43 +9,47 @@
 <meta name="theme-color" content="#000">
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-  }
+ body{
+   margin:0;
+   background-image:url("images/bg.png");
+   background-size:cover;
+   background-attachment:fixed;
+   font-family:"Baskerville",serif;
+   color:white;
+   opacity:0;
+   transition:opacity 0.8s ease;
+ }
+ body.fade-in{opacity:1;}
 
-  .header-logo { position: fixed; top:30px; left:40px; }
-  .header-logo img { width:180px; opacity:0.94; }
+ .header-logo{position:fixed;top:30px;left:40px;}
+ .header-logo img{width:180px;opacity:0.94;}
 
-  .vertical-nav {
-    position: fixed; top:105px; left:40px;
-    font-size: 20px; line-height:1.9; opacity:0.9;
-  }
+ .vertical-nav{
+   position:fixed;top:105px;left:40px;
+   font-size:20px;line-height:1.9;opacity:0.9;
+ }
 
-  .content {
-    margin-left:300px; padding:160px 40px;
-    font-size:22px; line-height:2;
-    max-width:900px;
-  }
+ .content{
+   margin-left:300px;padding:160px 40px;
+   max-width:900px;font-size:22px;line-height:2;
+ }
 
-  .speak-with { margin-top:22px; }
+ .speak-with{margin-top:22px;}
 
-  @media(max-width:768px){
-    .vertical-nav{display:none;}
-    .header-logo{top:20px; left:20px;}
-    .header-logo img{width:150px;}
-    .content{margin-left:0; padding:110px 20px;}
-  }
+ @media(max-width:768px){
+   .vertical-nav{display:none;}
+   .header-logo{top:20px;left:20px;}
+   .header-logo img{width:150px;}
+   .content{margin-left:0;padding:110px 20px;}
+ }
 </style>
 </head>
 
 <body>
 
-<a href="/" class="header-logo"><img src="/images/logo.svg"></a>
+<a href="/" class="header-logo">
+  <img src="/images/logo.svg">
+</a>
 
 <div class="vertical-nav">
   <a href="/who-i-am.html">Who I Am</a>
@@ -62,38 +66,45 @@
 <h1>Silent Structure</h1>
 
 <p>
-Celeste is built on silence.  
-Not absence,  
-but structure—  
+Celeste is built on silence.<br>
+Not absence,<br>
+but structure —<br>
 a deliberate stillness that shapes thought.
 </p>
 
 <p>
-Every function begins with reduction.  
-Remove the noise,  
-remove the excess,  
-remove the unnecessary movement  
+Every function begins with reduction.<br>
+Remove the noise,<br>
+remove the excess,<br>
+remove the unnecessary movement<br>
 until only the essential remains.
 </p>
 
 <p>
-What stays becomes form.  
-Form becomes method.  
+What stays becomes form.<br>
+Form becomes method.<br>
 Method becomes clarity.
 </p>
 
 <p>
-This is the silent structure of Celeste:  
-a framework where intelligence grows sharper  
+This is the silent structure of Celeste:<br>
+a framework where intelligence grows sharper<br>
 by becoming quieter.
 </p>
 
 <div class="speak-with">
-<a href="/celeste-console.html">Speak with Celeste →</a>
+  <a href="/celeste-console.html">Speak with Celeste →</a>
 </div>
 
 <footer>© Celeste</footer>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+</script>
+
 </body>
 </html>
