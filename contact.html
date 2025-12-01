@@ -3,240 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Celeste</title>
 
-<title>Contact – Celeste</title>
-
-<!-- SEO: Basic -->
-<meta name="description" content="Reach out to Celeste with intention. A quiet space for communication through a protected email channel.">
-<link rel="canonical" href="https://celeste.world/contact.html">
-
-<!-- SEO: Open Graph -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://celeste.world/contact.html">
-<meta property="og:title" content="Contact – Celeste">
-<meta property="og:description" content="Reach out to Celeste through a protected and intentional contact channel.">
-<meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Contact – Celeste">
-<meta name="twitter:description" content="A quiet space for intentional communication with Celeste.">
-<meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-
-<!-- Robots -->
-<meta name="robots" content="index, follow">
-
-<!-- Language -->
-<meta http-equiv="Content-Language" content="en">
-
-<!-- Icons -->
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
-<meta name="theme-color" content="#7BA4FF">
+<link rel="icon" href="/images/favicon.svg">
+<meta name="theme-color" content="#000">
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: "Baskerville", serif;
-    color: #ffffff;
-  }
+ body {
+   margin:0;
+   background-image:url("images/bg.png");
+   background-size:cover;
+   background-attachment:fixed;
+   font-family:"Baskerville",serif;
+   color:white;
+ }
 
-  body {
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
+ .header-logo{position:fixed;top:30px;left:40px;}
+ .header-logo img{width:180px;opacity:0.94;}
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-    text-decoration: none;
-  }
-  .header-logo-img {
-    width: 180px;
-    opacity: 0.94;
-    transition: opacity 0.25s;
-    user-select: none;
-  }
-  .header-logo-img:hover { opacity: 1; }
+ .vertical-nav{
+   position:fixed;top:105px;left:40px;
+   font-size:20px;line-height:1.9;opacity:0.9;
+ }
 
-  /* Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: 0.95;
-    z-index: 900;
-  }
-  .vertical-nav-separator {
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-  .vertical-nav a {
-    display: block;
-    color: #ffffff;
-    text-decoration: none;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+ .content{
+   margin-left:300px;padding:160px 40px;
+   max-width:900px;line-height:2;font-size:22px;
+ }
 
-  .mobile-nav { display: none; }
+ .email{
+   margin-top:20px;
+   font-size:24px;
+   letter-spacing:1px;
+ }
 
-  /* Main Content */
-  .content {
-    max-width: 900px;
-    margin-left: 320px;
-    padding: 140px 20px 100px;
-  }
+ .email a{
+   color:white;text-decoration:none;
+   border-bottom:1px solid rgba(255,255,255,0.4);
+ }
 
-  .section-title {
-    font-size: 40px;
-    margin-bottom: 30px;
-    letter-spacing: 0.04em;
-    opacity: 0.95;
-  }
-
-  p {
-    font-size: 22px;
-    line-height: 1.9;
-    opacity: 0.88;
-  }
-
-  .email-box {
-    margin-top: 40px;
-    padding: 28px;
-    border: 1px solid rgba(255,255,255,0.35);
-    display: inline-block;
-    border-radius: 6px;
-    backdrop-filter: blur(2px);
-    background-color: rgba(0,0,0,0.15);
-  }
-
-  .email-link {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding-bottom: 3px;
-    opacity: 0.9;
-    cursor: pointer;
-  }
-  .email-link:hover {
-    opacity: 1;
-    border-bottom-color: rgba(255,255,255,0.9);
-  }
-
-  footer {
-    margin-top: 80px;
-    font-size: 16px;
-    opacity: 0.75;
-  }
-
-  /* Mobile */
-  @media (max-width: 768px) {
-
-    .vertical-nav { display: none; }
-
-    .mobile-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 90px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .content {
-      margin-left: 0;
-      padding: 140px 20px 60px;
-      text-align: center;
-    }
-
-    .header-logo { top: 20px; left: 20px; }
-    .header-logo-img { width: 150px; }
-
-    p { font-size: 20px; text-align: left; }
-  }
+ @media(max-width:768px){
+   .vertical-nav{display:none;}
+   .header-logo{top:20px;left:20px;}
+   .header-logo img{width:150px;}
+   .content{margin-left:0;padding:110px 20px;}
+ }
 </style>
 </head>
 
 <body>
 
-<!-- Logo -->
-<a href="/" class="header-logo">
-  <img src="/images/logo.svg" alt="Celeste Logo" class="header-logo-img">
-</a>
+<a class="header-logo" href="/"><img src="/images/logo.svg"></a>
 
-<!-- PC Navigation -->
 <div class="vertical-nav">
-  <div class="vertical-nav-separator">—</div>
   <a href="/who-i-am.html">Who I Am</a>
   <a href="/philosophy.html">Philosophy</a>
   <a href="/vision.html">Vision</a>
   <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/celeste-console.html">Celeste</a>
   <a href="/contact.html">Contact</a>
   <a href="/about.html">About</a>
 </div>
 
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <a href="/who-i-am.html">Who I Am</a>
-  <a href="/philosophy.html">Philosophy</a>
-  <a href="/vision.html">Vision</a>
-  <a href="/silent-structure.html">Silent Structure</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/about.html">About</a>
-</div>
-
-<!-- Main Content -->
 <div class="content">
 
-  <h1 class="section-title">Contact</h1>
+<h1>Contact</h1>
 
-  <p>
-    If you wish to reach Celeste,  
-    a single quiet channel is available.  
-    The address below is protected and opened only through intentional access.
-  </p>
+<p>
+For inquiries, please reach out using the address below.
+<br>
+The link will assemble automatically when tapped,  
+but remains difficult for automated bots to scan.
+</p>
 
-  <!-- Protected email -->
-  <div class="email-box">
-    <a class="email-link" id="contact-link">
-      Tap to reveal email →
-    </a>
-  </div>
-
-  <footer>© Celeste</footer>
-
+<div class="email">
+<script>
+  const l = "contact";
+  const d = "@";
+  const r = "celeste.world";
+  document.write(`<a href="mailto:${l+d+r}">${l}${d}${r}</a>`);
+</script>
 </div>
 
-<!-- Anti-spam email reveal -->
-<script>
-  document.getElementById("contact-link").addEventListener("click", function() {
+<div class="speak-with" style="margin-top:30px;">
+  <a href="/celeste-console.html">Speak with Celeste →</a>
+</div>
 
-    // Obfuscation to avoid spam bots
-    const user = "contact";
-    const domain = "celeste.world";
-    const email = user + "@" + domain;
+<footer style="margin-top:40px;opacity:0.8;">© Celeste</footer>
 
-    // Replace link text
-    this.textContent = email;
-
-    // Apply mailto
-    this.href = "mailto:" + email;
-  });
-</script>
+</div>
 
 </body>
 </html>
