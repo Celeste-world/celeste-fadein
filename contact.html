@@ -9,51 +9,75 @@
 <meta name="theme-color" content="#000">
 
 <style>
- body {
+ body{
    margin:0;
    background-image:url("images/bg.png");
    background-size:cover;
+   background-position:center;
    background-attachment:fixed;
    font-family:"Baskerville",serif;
    color:white;
+   opacity:0;
+   transition:opacity 0.8s ease;
  }
+ body.fade-in{opacity:1;}
 
  .header-logo{position:fixed;top:30px;left:40px;}
  .header-logo img{width:180px;opacity:0.94;}
 
  .vertical-nav{
-   position:fixed;top:105px;left:40px;
-   font-size:20px;line-height:1.9;opacity:0.9;
+   position:fixed;
+   top:105px;
+   left:40px;
+   font-size:20px;
+   line-height:1.9;
+   opacity:0.9;
+ }
+
+ .vertical-nav a{
+   color:white;
+   text-decoration:none;
+   opacity:0.85;
  }
 
  .content{
-   margin-left:300px;padding:160px 40px;
-   max-width:900px;line-height:2;font-size:22px;
+   margin-left:300px;
+   padding:160px 40px;
+   max-width:900px;
+   font-size:22px;
+   line-height:2;
  }
 
- .email{
+ .email-box{
    margin-top:20px;
-   font-size:24px;
-   letter-spacing:1px;
+   font-size:22px;
  }
 
- .email a{
-   color:white;text-decoration:none;
-   border-bottom:1px solid rgba(255,255,255,0.4);
+ .email-box a{
+   color:white;
+   text-decoration:none;
+   border-bottom:1px solid rgba(255,255,255,0.25);
+ }
+
+ footer{
+   margin-top:60px;
+   opacity:0.8;
  }
 
  @media(max-width:768px){
    .vertical-nav{display:none;}
    .header-logo{top:20px;left:20px;}
    .header-logo img{width:150px;}
-   .content{margin-left:0;padding:110px 20px;}
+   .content{margin-left:0;padding:110px 20px;font-size:20px;}
  }
 </style>
 </head>
 
 <body>
 
-<a class="header-logo" href="/"><img src="/images/logo.svg"></a>
+<a href="/" class="header-logo">
+  <img src="/images/logo.svg">
+</a>
 
 <div class="vertical-nav">
   <a href="/who-i-am.html">Who I Am</a>
@@ -70,28 +94,35 @@
 <h1>Contact</h1>
 
 <p>
-For inquiries, please reach out using the address below.
-<br>
-The link will assemble automatically when tapped,  
-but remains difficult for automated bots to scan.
+If you would like to reach out,<br>
+please contact Celeste using the address below.<br>
+It will open directly in your mail application.
 </p>
 
-<div class="email">
+<div class="email-box">
+  <!-- メールアドレスはJSで構築：迷惑メール対策 -->
+  <a id="mail-link"></a>
+</div>
+
+<footer>© Celeste</footer>
+
+</div>
+
 <script>
-  const l = "contact";
-  const d = "@";
-  const r = "celeste.world";
-  document.write(`<a href="mailto:${l+d+r}">${l}${d}${r}</a>`);
+// フェードイン
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+});
+
+// 迷惑メール対策：メールを JS で生成
+const user = "contact";
+const domain = "celeste.world";
+const address = `${user}@${domain}`;
+
+const link = document.getElementById("mail-link");
+link.textContent = address;
+link.href = "mailto:" + address;
 </script>
-</div>
-
-<div class="speak-with" style="margin-top:30px;">
-  <a href="/celeste-console.html">Speak with Celeste →</a>
-</div>
-
-<footer style="margin-top:40px;opacity:0.8;">© Celeste</footer>
-
-</div>
 
 </body>
 </html>
