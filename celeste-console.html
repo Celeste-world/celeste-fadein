@@ -78,65 +78,113 @@
 <script>
 const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev";
 
-/* --- 会話履歴（重要）--- */
+/* --- 会話履歴 --- */
 let messages = [];
 
-/* Consoleにログを追加 */
+/* Consoleにログを追加（行単位） */
 function log(text, cssClass = "") {
     const c = document.getElementById("console");
-    const span = cssClass ? `<span class="${cssClass}">${text}</span>` : text;
-    c.innerHTML += span + "\n";
+    const span = document.createElement("span");
+    if (cssClass) span.className = cssClass;
+    span.textContent = text;
+    c.appendChild(span);
+    c.appendChild(document.createTextNode("\n"));
     c.scrollTop = c.scrollHeight;
 }
 
-/* Responses API の output から text を抽出 */
-function extractText(result) {
-    try {
-        return result.output[0].content[0].text;
-    } catch {
-        return "(No response received)";
-    }
+/* 最後の Celeste 行（span）を取得 */
+function getLastCelesteSpan() {
+    const c = document.getElementById("console");
+    const spans = c.getElementsByClassName("celeste");
+    if (!spans.length) return null;
+    return spans[spans.length - 1];
 }
 
-/* メッセージ送信 */
+/* メッセージ送信（ストリーミング対応） */
 async function send() {
-    const message = document.getElementById("msg").value;
+    const inputEl = document.getElementById("msg");
+    const message = inputEl.value;
     if (!message) return;
-    document.getElementById("msg").value = "";
+    inputEl.value = "";
 
-    /* --- ユーザー発話を履歴に追加 --- */
+    // --- 履歴に追加（user） ---
     messages.push({ role: "user", content: message });
 
+    // ユーザ側ログ
     log(`> You: ${message}`, "you");
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-
-            /* --- 履歴全体を送る --- */
             body: JSON.stringify({
                 model: "gpt-4o-mini",
                 messages: messages
             })
         });
 
-        const data = await response.json();
-
-        if (data.error) {
-            log("> Celeste: " + JSON.stringify(data.error), "celeste");
+        if (!response.body) {
+            log("> Celeste: (No response body)", "celeste");
             return;
         }
 
-        const aiResponse = extractText(data);
+        // Celeste 行を先に作っておく
+        log("> Celeste: ", "celeste");
+        const celesteSpan = getLastCelesteSpan();
+        let fullText = "";
 
-        /* --- AI の返答を履歴に追加 --- */
-        messages.push({
-            role: "assistant",
-            content: aiResponse
-        });
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
 
-        log(`> Celeste: ${aiResponse}`, "celeste");
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+
+            // SSE の行単位で処理
+            let lines = buffer.split("\n");
+            buffer = lines.pop(); // 最後の不完全行は buffer に残す
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed.startsWith("data: ")) continue;
+
+                const jsonStr = trimmed.substring(6).trim();
+                if (!jsonStr || jsonStr === "[DONE]") continue;
+
+                let event;
+                try {
+                    event = JSON.parse(jsonStr);
+                } catch {
+                    continue;
+                }
+
+                // テキスト差分イベント
+                if (event.type === "response.output_text.delta") {
+                    const delta = event.delta || "";
+                    fullText += delta;
+                    if (celesteSpan) {
+                        celesteSpan.textContent += delta;
+                    }
+                }
+
+                // エラーイベント
+                if (event.type === "error") {
+                    const msg = event.error?.message || "Unknown error";
+                    if (celesteSpan) celesteSpan.textContent += ` [ERROR: ${msg}]`;
+                }
+            }
+
+            const c = document.getElementById("console");
+            c.scrollTop = c.scrollHeight;
+        }
+
+        // --- 最終テキストを会話履歴に追加（assistant） ---
+        if (fullText) {
+            messages.push({ role: "assistant", content: fullText });
+        }
 
     } catch (err) {
         log(`> Celeste: ERROR: ${err}`, "celeste");
@@ -150,6 +198,7 @@ document.getElementById("msg").addEventListener("keydown", (e) => {
     }
 });
 </script>
+
 
 
 </body>
