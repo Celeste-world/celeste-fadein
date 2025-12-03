@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Celeste Console</title>
+
     <style>
         body {
             background-color: #000814;
@@ -11,53 +12,81 @@
             margin: 0;
             padding: 20px;
         }
+
         #console {
             width: 100%;
             height: 80vh;
-            background-color: #001d3d;
+            background-color: #00101f;
             color: #e0e0e0;
-            padding: 10px;
+            padding: 16px;
             overflow-y: scroll;
             white-space: pre-wrap;
-            border: 1px solid #003566;
+            border: 1px solid #0a1a2f;
+            line-height: 1.45;
         }
+
+        /* メッセージ色 */
+        .you {
+            color: #ffffff;
+        }
+
+        .celeste {
+            color: #7cc9ff;
+        }
+
+        /* 入力バー */
         #inputBar {
             margin-top: 10px;
+            display: flex;
+            gap: 10px;
         }
+
         input {
-            width: 70%;
-            padding: 8px;
-            background: #000;
+            flex: 1;
+            padding: 10px;
+            background: #000814;
             color: #fff;
-            border: 1px solid #444;
+            border: 1px solid #08304f;
+            font-family: Consolas, monospace;
         }
+
         button {
-            padding: 8px 16px;
-            margin-left: 5px;
+            padding: 10px 18px;
             cursor: pointer;
+            background: #001f36;
+            border: 1px solid #08304f;
+            color: #7cc9ff;
+            font-family: Consolas, monospace;
+        }
+
+        button:hover {
+            background: #003355;
         }
     </style>
 </head>
 <body>
 
-<div id="console">Celeste Console initialized.\nYou: Hello</div>
+<div id="console">
+> Celeste Console initialized.
+</div>
 
 <div id="inputBar">
-    <input id="msg" placeholder="Type a message..." />
+    <input id="msg" placeholder="Type a message…" />
     <button onclick="send()">Send</button>
 </div>
 
 <script>
 const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev";
 
-/* 出力ログ */
-function log(text) {
+/* Consoleにログを追加 */
+function log(text, cssClass = "") {
     const c = document.getElementById("console");
-    c.textContent += text + "\n";
+    const span = cssClass ? `<span class="${cssClass}">${text}</span>` : text;
+    c.innerHTML += span + "\n";
     c.scrollTop = c.scrollHeight;
 }
 
-/* Responses API の output から text を抽出する関数 */
+/* Responses API の output から text を抽出 */
 function extractText(result) {
     try {
         return result.output[0].content[0].text;
@@ -70,9 +99,9 @@ function extractText(result) {
 async function send() {
     const message = document.getElementById("msg").value;
     if (!message) return;
-
-    log("You: " + message);
     document.getElementById("msg").value = "";
+
+    log(`> You: ${message}`, "you");
 
     try {
         const response = await fetch(API_URL, {
@@ -80,32 +109,32 @@ async function send() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
-
-                // Responses API に正しく適合
-                messages: [
-                    { role: "user", content: message }
-                ]
+                messages: [{ role: "user", content: message }]
             })
         });
 
         const data = await response.json();
 
         if (data.error) {
-            log("Celeste: API ERROR: " + JSON.stringify(data, null, 2));
+            log("> Celeste: " + JSON.stringify(data.error), "celeste");
             return;
         }
 
-        // 🔵 Responses API の読み取り
         const aiResponse = extractText(data);
-
-        log("Celeste: " + aiResponse);
+        log(`> Celeste: ${aiResponse}`, "celeste");
 
     } catch (err) {
-        log("Celeste: Fetch ERROR: " + err);
+        log(`> Celeste: ERROR: ${err}`, "celeste");
     }
 }
-</script>
 
+/* Enter キーで送信 */
+document.getElementById("msg").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        send();
+    }
+});
+</script>
 
 </body>
 </html>
