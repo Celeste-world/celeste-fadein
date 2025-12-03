@@ -57,6 +57,15 @@ function log(text) {
     c.scrollTop = c.scrollHeight;
 }
 
+/* Responses API の output から text を抽出する関数 */
+function extractText(result) {
+    try {
+        return result.output[0].content[0].text;
+    } catch {
+        return "(No response received)";
+    }
+}
+
 /* メッセージ送信 */
 async function send() {
     const message = document.getElementById("msg").value;
@@ -71,6 +80,8 @@ async function send() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
+
+                // Responses API に正しく適合
                 messages: [
                     { role: "user", content: message }
                 ]
@@ -84,9 +95,8 @@ async function send() {
             return;
         }
 
-        const aiResponse =
-            data.choices?.[0]?.message?.content ||
-            "(No response received)";
+        // 🔵 Responses API の読み取り
+        const aiResponse = extractText(data);
 
         log("Celeste: " + aiResponse);
 
@@ -95,6 +105,7 @@ async function send() {
     }
 }
 </script>
+
 
 </body>
 </html>
