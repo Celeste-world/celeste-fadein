@@ -25,16 +25,9 @@
             line-height: 1.45;
         }
 
-        /* メッセージ色 */
-        .you {
-            color: #ffffff;
-        }
+        .you { color: #ffffff; }
+        .celeste { color: #7cc9ff; }
 
-        .celeste {
-            color: #7cc9ff;
-        }
-
-        /* 入力バー */
         #inputBar {
             margin-top: 10px;
             display: flex;
@@ -78,151 +71,58 @@
 <script>
 const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev/";
 
-/* --- 会話履歴 --- */
+/* 会話履歴 */
 let messages = [];
 
-/* Consoleにログを追加（行単位 DOM版） */
-function log(text, cssClass = "") {
+/* Console 表示 */
+function log(text, css = "") {
     const c = document.getElementById("console");
     const span = document.createElement("span");
-    if (cssClass) span.className = cssClass;
+    if (css) span.className = css;
     span.textContent = text;
     c.appendChild(span);
     c.appendChild(document.createTextNode("\n"));
     c.scrollTop = c.scrollHeight;
 }
 
-/* 最後の Celeste 行（span）を取得 */
-function getLastCelesteSpan() {
-    const c = document.getElementById("console");
-    const spans = c.getElementsByClassName("celeste");
-    if (!spans.length) return null;
-    return spans[spans.length - 1];
-}
-
-/* タイピング風ディレイ */
-function sleep(ms) {
-    return new Promise(res => setTimeout(res, ms));
-}
-
-/* メッセージ送信（SSEストリーミング対応 + ゆっくり表示） */
+/* メッセージ送信（ストリーミングなしの安定版） */
 async function send() {
-    const inputEl = document.getElementById("msg");
-    const message = inputEl.value;
-    if (!message) return;
-    inputEl.value = "";
+    const input = document.getElementById("msg");
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
 
-    // --- 履歴に追加（user） ---
-    messages.push({ role: "user", content: message });
+    log(`> You: ${text}`, "you");
 
-    // ユーザ側ログ出力
-    log(`> You: ${message}`, "you");
+    messages.push({ role: "user", content: text });
 
     try {
-        const response = await fetch(API_URL, {
+        const res = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: messages
+                userText: text,
+                systemPrompt: "You are Celeste."
             })
         });
 
-        if (!response.body) {
-            log("> Celeste: (No response body)", "celeste");
-            return;
-        }
+        const data = await res.json();
 
-        // Celeste 行を先に作る
-        log("> Celeste: ", "celeste");
-        const celesteSpan = getLastCelesteSpan();
-        let fullText = "";
+        const reply = data.message ?? "(no response)";
+        log(`> Celeste: ${reply}`, "celeste");
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let buffer = "";
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-
-            // 行ごとに分割（SSE）
-            let lines = buffer.split("\n");
-            buffer = lines.pop(); // 最後の未完行は次に回す
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-
-                // event: 行は無視
-                if (trimmed.startsWith("event:")) {
-                    continue;
-                }
-
-                // data: 行を処理
-                if (trimmed.startsWith("data:")) {
-                    let jsonStr = trimmed.substring(5).trim();
-                    if (jsonStr === "" || jsonStr === "[DONE]") continue;
-
-                    let evt;
-                    try {
-                        evt = JSON.parse(jsonStr);
-                    } catch {
-                        continue; // JSONでなければ無視
-                    }
-
-                    // --- 差分テキスト（delta） ---
-                    if (evt.type === "response.output_text.delta") {
-                        const delta = evt.delta || "";
-
-                        // ★ ゆっくり表示：1文字ずつ追加
-                        for (let char of delta) {
-                            fullText += char;
-
-                            if (celesteSpan) {
-                                celesteSpan.textContent += char;
-                            }
-
-                            // 速度調整（ms）
-                            await sleep(100); 
-                            // ↑ ここを 30 / 50 / 80 / 120 に調整可能
-                        }
-                    }
-
-                    // response.completed → 最終段階
-                }
-            }
-
-            // スクロール追従
-            const c = document.getElementById("console");
-            c.scrollTop = c.scrollHeight;
-        }
-
-        // --- assistant の返答を会話履歴に保存 ---
-        if (fullText) {
-            messages.push({
-                role: "assistant",
-                content: fullText
-            });
-        }
+        messages.push({ role: "assistant", content: reply });
 
     } catch (err) {
-        log(`> Celeste: ERROR: ${err}`, "celeste");
+        log(`> Celeste ERROR: ${err}`, "celeste");
     }
 }
 
-/* Enter キーで送信可能 */
+/* Enter キー送信 */
 document.getElementById("msg").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        send();
-    }
+    if (e.key === "Enter") send();
 });
 </script>
-
-
-
-
 
 </body>
 </html>
