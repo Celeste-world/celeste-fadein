@@ -25,8 +25,13 @@
             line-height: 1.45;
         }
 
-        .you { color: #ffffff; }
-        .celeste { color: #7cc9ff; }
+        .you {
+            color: #ffffff;
+        }
+
+        .celeste {
+            color: #7cc9ff;
+        }
 
         #inputBar {
             margin-top: 10px;
@@ -71,54 +76,50 @@
 <script>
 const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev/";
 
-/* 会話履歴 */
-let messages = [];
-
-/* Console 表示 */
-function log(text, css = "") {
+/* Consoleログ（DOM版） */
+function log(text, cssClass = "") {
     const c = document.getElementById("console");
     const span = document.createElement("span");
-    if (css) span.className = css;
+    if (cssClass) span.className = cssClass;
     span.textContent = text;
     c.appendChild(span);
     c.appendChild(document.createTextNode("\n"));
     c.scrollTop = c.scrollHeight;
 }
 
-/* メッセージ送信（ストリーミングなしの安定版） */
 async function send() {
-    const input = document.getElementById("msg");
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
+    const inputEl = document.getElementById("msg");
+    const message = inputEl.value.trim();
+    if (!message) return;
+    inputEl.value = "";
 
-    log(`> You: ${text}`, "you");
-
-    messages.push({ role: "user", content: text });
+    log(`> You: ${message}`, "you");
 
     try {
         const res = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userText: text,
+                userText: message,
                 systemPrompt: "You are Celeste."
             })
         });
 
         const data = await res.json();
 
-        const reply = data.message ?? "(no response)";
-        log(`> Celeste: ${reply}`, "celeste");
+        if (!data.ok) {
+            log(`> Celeste ERROR: ${data.error}`, "celeste");
+            return;
+        }
 
-        messages.push({ role: "assistant", content: reply });
+        log(`> Celeste: ${data.message}`, "celeste");
 
-    } catch (err) {
-        log(`> Celeste ERROR: ${err}`, "celeste");
+    } catch (e) {
+        log(`> Celeste ERROR: ${e.message}`, "celeste");
     }
 }
 
-/* Enter キー送信 */
+/* Enterキー送信 */
 document.getElementById("msg").addEventListener("keydown", (e) => {
     if (e.key === "Enter") send();
 });
