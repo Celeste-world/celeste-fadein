@@ -78,6 +78,9 @@
 <script>
 const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev";
 
+/* --- 会話履歴（重要）--- */
+let messages = [];
+
 /* Consoleにログを追加 */
 function log(text, cssClass = "") {
     const c = document.getElementById("console");
@@ -101,15 +104,20 @@ async function send() {
     if (!message) return;
     document.getElementById("msg").value = "";
 
+    /* --- ユーザー発話を履歴に追加 --- */
+    messages.push({ role: "user", content: message });
+
     log(`> You: ${message}`, "you");
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+
+            /* --- 履歴全体を送る --- */
             body: JSON.stringify({
                 model: "gpt-4o-mini",
-                messages: [{ role: "user", content: message }]
+                messages: messages
             })
         });
 
@@ -121,6 +129,13 @@ async function send() {
         }
 
         const aiResponse = extractText(data);
+
+        /* --- AI の返答を履歴に追加 --- */
+        messages.push({
+            role: "assistant",
+            content: aiResponse
+        });
+
         log(`> Celeste: ${aiResponse}`, "celeste");
 
     } catch (err) {
@@ -135,6 +150,7 @@ document.getElementById("msg").addEventListener("keydown", (e) => {
     }
 });
 </script>
+
 
 </body>
 </html>
