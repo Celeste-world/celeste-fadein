@@ -81,7 +81,7 @@ const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev";
 /* --- 会話履歴 --- */
 let messages = [];
 
-/* Consoleにログを追加（行単位） */
+/* Consoleにログを追加（行単位 DOM版） */
 function log(text, cssClass = "") {
     const c = document.getElementById("console");
     const span = document.createElement("span");
@@ -100,7 +100,12 @@ function getLastCelesteSpan() {
     return spans[spans.length - 1];
 }
 
-/* メッセージ送信（SSEストリーミング対応） */
+/* タイピング風ディレイ */
+function sleep(ms) {
+    return new Promise(res => setTimeout(res, ms));
+}
+
+/* メッセージ送信（SSEストリーミング対応 + ゆっくり表示） */
 async function send() {
     const inputEl = document.getElementById("msg");
     const message = inputEl.value;
@@ -110,7 +115,7 @@ async function send() {
     // --- 履歴に追加（user） ---
     messages.push({ role: "user", content: message });
 
-    // ユーザ側ログ
+    // ユーザ側ログ出力
     log(`> You: ${message}`, "you");
 
     try {
@@ -128,7 +133,7 @@ async function send() {
             return;
         }
 
-        // Celeste 行を先に作っておく
+        // Celeste 行を先に作る
         log("> Celeste: ", "celeste");
         const celesteSpan = getLastCelesteSpan();
         let fullText = "";
@@ -143,47 +148,49 @@ async function send() {
 
             buffer += decoder.decode(value, { stream: true });
 
-            // 行ごとに分割（SSE形式）
+            // 行ごとに分割（SSE）
             let lines = buffer.split("\n");
-            buffer = lines.pop(); // 最後の不完全行は残す
+            buffer = lines.pop(); // 最後の未完行は次に回す
 
             for (const line of lines) {
                 const trimmed = line.trim();
 
-                // ★ event: 行は無視
+                // event: 行は無視
                 if (trimmed.startsWith("event:")) {
                     continue;
                 }
 
-                // ★ data: 行から JSON を取り出す
+                // data: 行を処理
                 if (trimmed.startsWith("data:")) {
                     let jsonStr = trimmed.substring(5).trim();
-
-                    // [DONE] は無視
-                    if (jsonStr === "[DONE]") continue;
+                    if (jsonStr === "" || jsonStr === "[DONE]") continue;
 
                     let evt;
                     try {
                         evt = JSON.parse(jsonStr);
                     } catch {
-                        // JSONでなければスキップ
-                        continue;
+                        continue; // JSONでなければ無視
                     }
 
-                    // ★ テキスト差分を受信
+                    // --- 差分テキスト（delta） ---
                     if (evt.type === "response.output_text.delta") {
                         const delta = evt.delta || "";
-                        fullText += delta;
 
-                        if (celesteSpan) {
-                            celesteSpan.textContent += delta;
+                        // ★ ゆっくり表示：1文字ずつ追加
+                        for (let char of delta) {
+                            fullText += char;
+
+                            if (celesteSpan) {
+                                celesteSpan.textContent += char;
+                            }
+
+                            // 速度調整（ms）
+                            await sleep(50); 
+                            // ↑ ここを 30 / 50 / 80 / 120 に調整可能
                         }
                     }
 
-                    // ★ 完了イベント（最終まとめ）
-                    if (evt.type === "response.completed") {
-                        // ここで全体が完成
-                    }
+                    // response.completed → 最終段階
                 }
             }
 
@@ -192,7 +199,7 @@ async function send() {
             c.scrollTop = c.scrollHeight;
         }
 
-        // --- 履歴に追加（assistant） ---
+        // --- assistant の返答を会話履歴に保存 ---
         if (fullText) {
             messages.push({
                 role: "assistant",
@@ -205,13 +212,14 @@ async function send() {
     }
 }
 
-/* Enter キーで送信 */
+/* Enter キーで送信可能 */
 document.getElementById("msg").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         send();
     }
 });
 </script>
+
 
 
 
