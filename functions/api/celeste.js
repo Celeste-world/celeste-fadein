@@ -28,4 +28,3 @@ export async function onRequest(context) {
     reply: completion.choices[0].message.content
   });
 }
-
