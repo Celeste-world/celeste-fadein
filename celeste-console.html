@@ -1,129 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Celeste Console</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            background-color: #000814;
-            color: #e0e0e0;
-            font-family: Consolas, monospace;
-            margin: 0;
-            padding: 20px;
-        }
+<title>Celeste Console</title>
 
-        #console {
-            width: 100%;
-            height: 80vh;
-            background-color: #00101f;
-            color: #e0e0e0;
-            padding: 16px;
-            overflow-y: scroll;
-            white-space: pre-wrap;
-            border: 1px solid #0a1a2f;
-            line-height: 1.45;
-        }
+<meta name="description" content="Celeste Console — a quiet terminal for intention and preparation.">
+<link rel="canonical" href="https://celeste.world/celeste-console.html">
 
-        .you {
-            color: #ffffff;
-        }
+<link rel="icon" href="/images/favicon.svg">
 
-        .celeste {
-            color: #7cc9ff;
-        }
+<style>
+  body {
+    margin: 0;
+    background-image: url("images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Baskerville", serif;
+    color: white;
+    opacity: 0;
+    transition: opacity .9s ease;
+  }
 
-        #inputBar {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
+  body.fade-in { opacity: 1; }
+  .fade-out { opacity: 0; transition: opacity .6s ease; }
 
-        input {
-            flex: 1;
-            padding: 10px;
-            background: #000814;
-            color: #fff;
-            border: 1px solid #08304f;
-            font-family: Consolas, monospace;
-        }
+  /* Logo */
+  .header-logo {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    z-index: 1000;
+  }
+  .header-logo img {
+    width: 180px;
+    opacity: .94;
+  }
 
-        button {
-            padding: 10px 18px;
-            cursor: pointer;
-            background: #001f36;
-            border: 1px solid #08304f;
-            color: #7cc9ff;
-            font-family: Consolas, monospace;
-        }
+  /* PC Navigation */
+  .vertical-nav {
+    position: fixed;
+    top: 105px;
+    left: 40px;
+    font-size: 20px;
+    line-height: 1.9;
+    opacity: .9;
+    z-index: 900;
+  }
+  .vertical-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    padding: 2px 0;
+  }
+  .vertical-nav a:hover { opacity: 1; }
 
-        button:hover {
-            background: #003355;
-        }
-    </style>
+  /* Mobile Navigation (2 rows) */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 80px;
+    width: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+    padding: 10px 0 14px;
+    z-index: 950;
+    text-align: center;
+  }
+
+  .mobile-nav-row {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+  .mobile-nav-row a {
+    margin: 0 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    opacity: .85;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-row a:hover {
+    opacity: 1;
+  }
+
+  /* Main Area */
+  .main {
+    margin-left: 300px;
+    padding-top: 18vh;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 60px;
+    max-width: 900px;
+  }
+
+  h1 {
+    font-size: 42px;
+    margin-bottom: 28px;
+    font-weight: normal;
+  }
+
+  /* Console Window */
+  .console-window {
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 6px;
+    padding: 22px;
+    min-height: 360px;
+    max-height: 70vh;
+    overflow-y: auto;
+    line-height: 1.7;
+    font-size: 18px;
+  }
+
+  .console-line {
+    margin-bottom: 12px;
+    opacity: .92;
+  }
+
+  /* Input Box */
+  .input-area {
+    margin-top: 26px;
+    display: flex;
+    width: 100%;
+  }
+
+  .console-input {
+    flex: 1;
+    padding: 14px 18px;
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    color: white;
+    font-size: 18px;
+    font-family: "Baskerville", serif;
+    outline: none;
+  }
+
+  .console-input::placeholder {
+    color: rgba(255,255,255,0.45);
+    font-style: italic;
+  }
+
+  /* Mobile */
+  @media(max-width:768px){
+    .vertical-nav { display:none; }
+
+    .header-logo { top:20px; left:20px; }
+    .header-logo img { width:150px; }
+
+    .mobile-nav { display:block; }
+
+    .main {
+      margin-left: 0;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 32vh;
+    }
+
+    h1 { font-size: 34px; }
+    .console-window { font-size: 16px; min-height: 300px; }
+    .console-input { font-size: 16px; }
+  }
+</style>
 </head>
+
 <body>
 
-<div id="console">
-> Celeste Console initialized.
+<!-- Logo -->
+<a href="/" class="header-logo page-link">
+  <img src="/images/logo.svg" alt="Celeste Logo">
+</a>
+
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/who-i-am.html">Who I Am</a>
+    <a class="page-link" href="/philosophy.html">Philosophy</a>
+    <a class="page-link" href="/vision.html">Vision</a>
+    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  </div>
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/celeste-console.html">Celeste</a>
+    <a class="page-link" href="/contact.html">Contact</a>
+    <a class="page-link" href="/about.html">About</a>
+  </div>
 </div>
 
-<div id="inputBar">
-    <input id="msg" placeholder="Type a message…" />
-    <button onclick="send()">Send</button>
+<!-- PC Navigation -->
+<div class="vertical-nav">
+  <a class="page-link" href="/who-i-am.html">Who I Am</a>
+  <a class="page-link" href="/philosophy.html">Philosophy</a>
+  <a class="page-link" href="/vision.html">Vision</a>
+  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  <a class="page-link" href="/celeste-console.html">Celeste</a>
+  <a class="page-link" href="/contact.html">Contact</a>
+  <a class="page-link" href="/about.html">About</a>
+</div>
+
+<div class="main">
+
+  <h1>Celeste Console</h1>
+
+  <div class="console-window" id="consoleOutput"></div>
+
+  <div class="input-area">
+    <input
+      type="text"
+      id="consoleInput"
+      class="console-input"
+      placeholder="Type your intention…"
+    />
+  </div>
+
 </div>
 
 <script>
-const API_URL = "https://celeste-api.inbox-celeste-world.workers.dev/";
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
 
-/* Consoleログ（DOM版） */
-function log(text, cssClass = "") {
-    const c = document.getElementById("console");
-    const span = document.createElement("span");
-    if (cssClass) span.className = cssClass;
-    span.textContent = text;
-    c.appendChild(span);
-    c.appendChild(document.createTextNode("\n"));
-    c.scrollTop = c.scrollHeight;
-}
+  const input = document.getElementById("consoleInput");
+  const output = document.getElementById("consoleOutput");
 
-async function send() {
-    const inputEl = document.getElementById("msg");
-    const message = inputEl.value.trim();
-    if (!message) return;
-    inputEl.value = "";
+  function addLine(text) {
+    const line = document.createElement("div");
+    line.className = "console-line";
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+  }
 
-    log(`> You: ${message}`, "you");
+  input.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      const userText = input.value.trim();
+      addLine("> " + userText);
+      input.value = "";
 
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userText: message,
-                systemPrompt: "You are Celeste."
-            })
-        });
-
-        const data = await res.json();
-
-        if (!data.ok) {
-            log(`> Celeste ERROR: ${data.error}`, "celeste");
-            return;
-        }
-
-        log(`> Celeste: ${data.message}`, "celeste");
-
-    } catch (e) {
-        log(`> Celeste ERROR: ${e.message}`, "celeste");
+      // ★ Celeste 返信ダミー（必要に応じてAPI連携）
+      setTimeout(() => {
+        addLine("…preparing response…");
+      }, 300);
     }
-}
+  });
+});
 
-/* Enterキー送信 */
-document.getElementById("msg").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") send();
+// Fade-out on navigation
+document.querySelectorAll(".page-link").forEach(el => {
+  el.addEventListener("click", e => {
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location = el.href }, 520);
+  });
 });
 </script>
+
+<script src="/language.js"></script>
 
 </body>
 </html>
