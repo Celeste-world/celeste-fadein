@@ -70,16 +70,22 @@
   .mobile-nav {
     display: none;
     position: fixed;
-    top: 80px; /* ← ロゴの下に移動 */
+    top: 80px; /* ロゴの下 */
     width: 100%;
     overflow-x: auto;
     white-space: nowrap;
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(6px);
-    padding: 12px 10px;
+    padding: 12px 20px; /* 余白拡張で見切れ防止 */
     z-index: 950;
   }
-  .mobile-nav a {
+
+  .mobile-nav-inner {
+    display: inline-flex;  /* 内容に合わせて横幅が伸びる */
+    width: max-content;   /* 見切れ防止の決め手 */
+  }
+
+  .mobile-nav-inner a {
     display: inline-block;
     margin: 0 14px;
     color: white;
@@ -87,12 +93,12 @@
     font-size: 17px;
     opacity: .85;
   }
-  .mobile-nav a:hover { opacity: 1; }
+  .mobile-nav-inner a:hover { opacity: 1; }
 
   /* Main */
   .main {
     margin-left: 300px;
-    padding-top: 23vh; /* ← Hello 3行を少し下げた */
+    padding-top: 23vh; /* Hello 3行を少し下へ */
     padding-left: 40px;
     max-width: 900px;
     padding-bottom: 40px;
@@ -117,7 +123,7 @@
     50% { opacity: 0; }
   }
 
-  /* Learn More (さらに下へ) */
+  /* Learn More - 下に配置 */
   .learn-more {
     margin-top: 120px;
     font-size: 22px;
@@ -150,7 +156,7 @@
       margin-left: 0;
       padding-left: 20px;
       padding-right: 20px;
-      padding-top: 32vh; /* ← スマホも文字列を下げた */
+      padding-top: 32vh; /* スマホでも下へ */
       padding-bottom: 40px;
     }
 
@@ -168,13 +174,15 @@
 
 <!-- Mobile Nav -->
 <div class="mobile-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
+  <div class="mobile-nav-inner">
+    <a class="page-link" href="/who-i-am.html">Who I Am</a>
+    <a class="page-link" href="/philosophy.html">Philosophy</a>
+    <a class="page-link" href="/vision.html">Vision</a>
+    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+    <a class="page-link" href="/celeste-console.html">Celeste</a>
+    <a class="page-link" href="/contact.html">Contact</a>
+    <a class="page-link" href="/about.html">About</a>
+  </div>
 </div>
 
 <!-- PC Nav -->
