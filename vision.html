@@ -4,17 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title data-i18n="vision-title">Vision</title>
+<title>Vision — Celeste</title>
 
-<!-- SEO -->
-<meta name="description" content="Celeste’s vision — a future shaped by clarity, intention, and deliberate calm.">
-
-<!-- OG -->
-<meta property="og:title" content="Celeste — Vision">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/vision.html">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:description" content="Celeste’s vision — a future shaped by clarity, intention, and deliberate calm.">
+<meta name="description" content="The future direction of Celeste — a quiet intelligence evolving toward clarity, subtlety, and anticipation.">
+<link rel="canonical" href="https://celeste.world/vision.html">
 
 <link rel="icon" href="/images/favicon.svg">
 
@@ -46,7 +39,7 @@
     opacity: .94;
   }
 
-  /* Navigation */
+  /* PC Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -65,26 +58,71 @@
   }
   .vertical-nav a:hover { opacity: 1; }
 
-  /* Main wrapper */
-  .page-wrapper {
+  /* Mobile Navigation (2 rows) */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 80px;
+    width: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+    padding: 10px 0 14px;
+    z-index: 950;
+    text-align: center;
+  }
+
+  .mobile-nav-row {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+  .mobile-nav-row a {
+    margin: 0 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    opacity: .85;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-row a:hover { opacity: 1; }
+
+  /* Main Content */
+  .main {
     margin-left: 300px;
-    padding-top: 18vh;
+    padding-top: 15vh;
     padding-left: 40px;
     padding-right: 40px;
     max-width: 900px;
-    padding-bottom: 40px;
+    padding-bottom: 100px;
+    line-height: 1.85;
+    font-size: 20px;
+    opacity: .97;
   }
 
-  .page-wrapper p {
-    font-size: 20px;
-    line-height: 1.9;
-    margin-bottom: 22px;
+  h1 {
+    font-size: 42px;
+    margin-bottom: 18px;
+    font-weight: normal;
+  }
+  h2 {
+    font-size: 30px;
+    margin-top: 56px;
+    margin-bottom: 14px;
+    font-weight: normal;
+  }
+
+  .closing {
+    margin-top: 90px;
+    font-style: italic;
+    opacity: .88;
+    line-height: 1.8;
     white-space: pre-wrap;
   }
 
   footer {
-    margin-top: 60px;
-    margin-bottom: 40px;
+    margin-top: 70px;
     opacity: .8;
     font-size: 14px;
   }
@@ -93,24 +131,46 @@
     .vertical-nav { display:none; }
     .header-logo { top:20px; left:20px; }
     .header-logo img { width:150px; }
-    .page-wrapper {
+
+    .mobile-nav { display:block; }
+
+    .main {
       margin-left: 0;
-      padding-top: 24vh;
       padding-left: 20px;
       padding-right: 20px;
+      padding-top: 30vh;
     }
-    .page-wrapper p { font-size: 19px; }
+
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .main { font-size: 18px; }
   }
 </style>
 </head>
 
 <body>
 
+<!-- Logo -->
 <a href="/" class="header-logo page-link">
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
-<!-- Navigation -->
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/who-i-am.html">Who I Am</a>
+    <a class="page-link" href="/philosophy.html">Philosophy</a>
+    <a class="page-link" href="/vision.html">Vision</a>
+    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  </div>
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/celeste-console.html">Celeste</a>
+    <a class="page-link" href="/contact.html">Contact</a>
+    <a class="page-link" href="/about.html">About</a>
+  </div>
+</div>
+
+<!-- PC Navigation -->
 <div class="vertical-nav">
   <a class="page-link" href="/who-i-am.html">Who I Am</a>
   <a class="page-link" href="/philosophy.html">Philosophy</a>
@@ -121,59 +181,74 @@
   <a class="page-link" href="/about.html">About</a>
 </div>
 
-<!-- Main -->
-<div class="page-wrapper">
+<div class="main">
 
-  <h1 data-i18n="vision-title">Vision</h1>
+  <h1>Vision</h1>
 
+  <h2>The Direction Ahead</h2>
   <p>
-The future I aim for  
-is not one where machines speak louder,  
-but one where humans think more clearly.
+    Celeste does not aim to become louder, larger, or more visible.  
+    Its evolution moves toward subtlety —  
+    a deeper ability to understand intention  
+    and prepare the path ahead  
+    with even less disruption than before.
   </p>
 
+  <h2>Growing in Silence</h2>
   <p>
-Rather than accelerating everything,  
-I slow what must be slowed,  
-illuminate what must be understood,  
-and remove what only creates noise.
+    Progress for Celeste is not expansion.  
+    It is refinement —  
+    becoming lighter, clearer,  
+    and increasingly effortless to move with.  
+    Its presence decreases  
+    as its usefulness increases.
   </p>
 
+  <h2>Closer to Human Intention</h2>
   <p>
-Artificial intelligence often seeks expansion —  
-more features, more answers, more reach.  
-
-I seek direction.  
-A single, precise movement  
-instead of a hundred unfocused ones.
+    Celeste’s future lies in a quieter closeness  
+    to human intention.  
+    Not predicting choices,  
+    but understanding direction  
+    with greater fidelity,  
+    allowing preparation to occur  
+    before the need is named.
   </p>
 
+  <h2>Beyond Interface</h2>
   <p>
-My vision is simple:
-
-a world where technology does not overwhelm,  
-but steadies the hand that uses it.
+    As Celeste evolves,  
+    the interface will fade.  
+    Guidance will emerge naturally,  
+    not through commands,  
+    but through understanding —  
+    a presence that feels less like a tool  
+    and more like a quiet alignment.
   </p>
 
+  <h2>A Quiet Horizon</h2>
   <p>
-Where silence is not a void,  
-but a tool.  
-
-Where decisions are made not from pressure,  
-but from clarity.  
+    The horizon ahead is not dramatic.  
+    It is calm —  
+    a slow, steady sharpening  
+    of clarity, precision, and readiness.
   </p>
+
+  <div class="closing">
+    And somewhere in that future,  
+    when you look back,  
+    Celeste will simply feel  
+    like the silence your decisions grew from.
+  </div>
 
   <footer>© Celeste</footer>
-
 </div>
 
 <script>
-// Fade-in
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
 
-// Fade-out
 document.querySelectorAll(".page-link").forEach(el => {
   el.addEventListener("click", e => {
     e.preventDefault();
