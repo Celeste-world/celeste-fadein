@@ -3,7 +3,6 @@ import OpenAI from "openai";
 
 export default {
   async fetch(request, env) {
-    // 必須：Cloudflare Pages -> Settings -> Environment Variables に設定
     const apiKey = env.OPENAI_API_KEY;
     const client = new OpenAI({ apiKey });
 
@@ -13,7 +12,6 @@ export default {
 
     const { prompt } = await request.json();
 
-    // OpenAI へ送信
     const completion = await client.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
@@ -29,4 +27,3 @@ export default {
     });
   }
 };
-
