@@ -1,1 +1,8 @@
+{
+  "functions": {
+    "/api/celeste": {
+      "path": "/functions/celeste.js"
+    }
+  }
+}
 
