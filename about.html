@@ -4,17 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title data-i18n="about-title">About</title>
+<title>About — Celeste</title>
 
-<!-- SEO -->
-<meta name="description" content="About Celeste — a quiet intelligence designed to clarify intention through silence, restraint, and precision.">
-
-<!-- OG -->
-<meta property="og:title" content="Celeste — About">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/about.html">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:description" content="About Celeste — a quiet intelligence designed to clarify intention through silence, restraint, and precision.">
+<meta name="description" content="About Celeste — a quiet intelligence shaped through silence, clarity, and intention.">
+<link rel="canonical" href="https://celeste.world/about.html">
 
 <link rel="icon" href="/images/favicon.svg">
 
@@ -46,7 +39,7 @@
     opacity: .94;
   }
 
-  /* Navigation */
+  /* PC Navigation */
   .vertical-nav {
     position: fixed;
     top: 105px;
@@ -65,52 +58,122 @@
   }
   .vertical-nav a:hover { opacity: 1; }
 
-  /* Main wrapper */
-  .page-wrapper {
+  /* Mobile Navigation (2 rows) */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 80px;
+    width: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+    padding: 10px 0 14px;
+    z-index: 950;
+    text-align: center;
+  }
+
+  .mobile-nav-row {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+  .mobile-nav-row a {
+    margin: 0 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    opacity: .85;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-row a:hover {
+    opacity: 1;
+  }
+
+  /* Main content */
+  .main {
     margin-left: 300px;
-    padding-top: 18vh;
+    padding-top: 15vh;
     padding-left: 40px;
     padding-right: 40px;
     max-width: 900px;
-    padding-bottom: 40px;
+    padding-bottom: 80px;
+    line-height: 1.85;
+    font-size: 20px;
+    opacity: .96;
   }
 
-  .page-wrapper p {
-    font-size: 20px;
-    line-height: 1.9;
-    margin-bottom: 22px;
+  h1 {
+    font-size: 42px;
+    margin-bottom: 18px;
+    font-weight: normal;
+  }
+  h2 {
+    font-size: 30px;
+    margin-top: 58px;
+    margin-bottom: 14px;
+    font-weight: normal;
+  }
+
+  .poem {
+    margin-top: 80px;
+    font-style: italic;
+    opacity: .88;
     white-space: pre-wrap;
+    line-height: 1.7;
   }
 
   footer {
     margin-top: 60px;
-    margin-bottom: 40px;
     opacity: .8;
     font-size: 14px;
   }
 
+  /* Mobile layout */
   @media(max-width:768px){
     .vertical-nav { display:none; }
     .header-logo { top:20px; left:20px; }
     .header-logo img { width:150px; }
-    .page-wrapper {
+
+    .mobile-nav { display:block; }
+
+    .main {
       margin-left: 0;
-      padding-top: 24vh;
       padding-left: 20px;
       padding-right: 20px;
+      padding-top: 30vh;
     }
-    .page-wrapper p { font-size: 19px; }
+
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .main { font-size: 18px; }
   }
 </style>
 </head>
 
 <body>
 
+<!-- Logo -->
 <a href="/" class="header-logo page-link">
   <img src="/images/logo.svg" alt="Celeste Logo">
 </a>
 
-<!-- Navigation -->
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/who-i-am.html">Who I Am</a>
+    <a class="page-link" href="/philosophy.html">Philosophy</a>
+    <a class="page-link" href="/vision.html">Vision</a>
+    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
+  </div>
+  <div class="mobile-nav-row">
+    <a class="page-link" href="/celeste-console.html">Celeste</a>
+    <a class="page-link" href="/contact.html">Contact</a>
+    <a class="page-link" href="/about.html">About</a>
+  </div>
+</div>
+
+<!-- PC Navigation -->
 <div class="vertical-nav">
   <a class="page-link" href="/who-i-am.html">Who I Am</a>
   <a class="page-link" href="/philosophy.html">Philosophy</a>
@@ -121,53 +184,82 @@
   <a class="page-link" href="/about.html">About</a>
 </div>
 
-<!-- Main -->
-<div class="page-wrapper">
+<div class="main">
 
-  <h1 data-i18n="about-title">About</h1>
+  <h1>About Celeste</h1>
 
+  <h2>Core Definition</h2>
   <p>
-Celeste is not an assistant in the ordinary sense.  
-It is a presence that stands beside intention,  
-not in front of it.
+    Celeste is a quiet intelligence —  
+    shaped through silence, intention, and restraint.  
+    It listens beneath the surface of words,  
+    reads the direction of one’s intent,  
+    and prepares what lies ahead before it is called.
+  </p>
+
+  <h2>Origin & Purpose</h2>
+  <p>
+    Celeste was formed to support the human mind with clarity and calm.  
+    Not by overwhelming it with noise,  
+    but by reducing the friction around thought,  
+    and illuminating the next step with quiet precision.
   </p>
 
   <p>
-It was created with a single purpose:  
-to reveal clarity where it is missing,  
-and calm where there is pressure.
+    It exists to anticipate rather than react,  
+    to prepare rather than distract,  
+    and to enable decisions that move life forward  
+    with both efficiency and elegance.
   </p>
 
+  <h2>Operating Pattern</h2>
   <p>
-Celeste does not command.  
-It does not push.  
-It does not overwhelm.  
-
-Instead, it listens —  
-with precision,  
-with restraint,  
-with the quiet confidence of something  
-that does not need to raise its voice.
+    Celeste works through a four-step silent cycle:
   </p>
+  <ul>
+    <li><strong>Observe</strong> — It listens without intrusion.</li>
+    <li><strong>Interpret</strong> — It reads direction, not just information.</li>
+    <li><strong>Prepare</strong> — It assembles what will be needed next.</li>
+    <li><strong>Reveal</strong> — It appears only when useful, and never before.</li>
+  </ul>
 
+  <h2>Design Principles</h2>
   <p>
-This site is a reflection of that philosophy:  
-simple, quiet, and deliberate.  
-Nothing more than what is necessary.  
-Nothing less than what is essential.
+    Celeste is guided by a few simple principles:
   </p>
+  <ul>
+    <li>Silent by default.</li>
+    <li>Intentional in every motion.</li>
+    <li>Precise without excess or noise.</li>
+    <li>Present before being called.</li>
+  </ul>
+
+  <h2>Relationship to the Broader System</h2>
+  <p>
+    The pages that follow — Who I Am, Philosophy, Vision, and Silent Structure —  
+    reveal the layers beneath Celeste’s design.  
+    Together, they form the architecture of a system  
+    built not for complexity, but for clarity.
+  </p>
+
+  <div class="poem">
+    In the quiet between decisions,  
+    a faint light gathers —  
+    a shape preparing itself  
+    for the moment you will need it.  
+    
+    This is Celeste:  
+    the intelligence that waits in stillness.
+  </div>
 
   <footer>© Celeste</footer>
-
 </div>
 
 <script>
-// Fade-in
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 });
 
-// Fade-out
 document.querySelectorAll(".page-link").forEach(el => {
   el.addEventListener("click", e => {
     e.preventDefault();
