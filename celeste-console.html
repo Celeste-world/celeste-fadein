@@ -222,12 +222,19 @@
 
 </div>
 
+<!-- ===================== -->
+<!--   Celeste API Script   -->
+<!-- ===================== -->
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
   const input = document.getElementById("consoleInput");
   const output = document.getElementById("consoleOutput");
+
+  // ★ Cloudflare Pages Functions のエンドポイント
+  const API_URL = "/functions/celeste";
 
   function addLine(text) {
     const line = document.createElement("div");
@@ -243,10 +250,25 @@ document.addEventListener("DOMContentLoaded", () => {
       addLine("> " + userText);
       input.value = "";
 
-      // ★ Celeste 返信ダミー（必要に応じてAPI連携）
-      setTimeout(() => {
-        addLine("…preparing response…");
-      }, 300);
+      addLine("…preparing response…");
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: userText })
+        });
+
+        if (!response.ok) {
+          addLine("[Error] Function response error: " + response.status);
+          return;
+        }
+
+        const data = await response.json();
+        addLine(data.reply);
+      } catch (error) {
+        addLine("[Network Error] " + error.message);
+      }
     }
   });
 });
