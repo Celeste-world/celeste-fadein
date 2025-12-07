@@ -35,8 +35,27 @@ p{
 .muted{
   color:var(--muted);
 }
+
+/* links */
+.links{
+  margin-top:56px;
+  padding-top:32px;
+  border-top:1px solid var(--line);
+}
+.links a{
+  display:block;
+  margin:12px 0;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+}
+.links a:hover{
+  text-decoration:underline;
+}
+
+/* footer */
 footer{
-  margin-top:64px;
+  margin-top:48px;
   padding-top:18px;
   border-top:1px solid var(--line);
   font-size:12px;
@@ -108,12 +127,21 @@ Celeste は、一般的なチャットボットではありません。
 言語は情報ではなく、そこにある気配として扱われます。
 </p>
 
+<!-- Hub links -->
+<div class="links">
+  <a href="/philosophy.html">Philosophy</a>
+  <a href="/silent-structure.html">Silent Structure</a>
+  <a href="/vision.html">Vision</a>
+  <a href="/who-i-am.html">Who I Am</a>
+  <a href="/celeste-console.html">Console</a>
+</div>
+
 <footer>
   <div>
-    <a href="/celeste-console.html">Go to Console</a>
+    Celeste v4.1
   </div>
   <div>
-    Celeste v4.1
+    <a href="/celeste-console.html">Open Console</a>
   </div>
 </footer>
 
