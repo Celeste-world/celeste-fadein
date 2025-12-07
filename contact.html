@@ -4,36 +4,81 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact — Celeste</title>
-<style>
-:root{ --bg:#0f1216; --text:#e8ebef; --muted:#9aa3b2; }
-body{
-  margin:0; background:var(--bg); color:var(--text);
-  font-family: ui-serif, Georgia, serif;
-}
-.wrap{
-  max-width:720px; margin:0 auto; padding:44px 20px 20px;
-}
-h1{ font-weight:400; font-size:22px; margin-bottom:18px; }
-p{ line-height:1.8; color:var(--muted); }
 
-.page-footer{
-  margin-top:36px; display:flex; justify-content:space-between;
-  font-size:12px; color:#6d7588;
+<style>
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
 }
-.page-footer a{ color:#6d7588; text-decoration:none; }
-.page-footer a:hover{ color:#e8ebef; }
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:44px 20px 20px;
+}
+h1{
+  font-weight:400;
+  font-size:22px;
+  margin-bottom:18px;
+}
+p{
+  line-height:1.8;
+  color:var(--muted);
+}
+
+.contact-action{
+  margin-top:20px;
+}
+.contact-action a{
+  color:var(--text);
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:2px;
+}
+.contact-action a:hover{
+  border-color:var(--text);
+}
+
+/* 共通フッター */
+.page-footer{
+  margin-top:36px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:#6d7588;
+}
+.page-footer a{
+  color:#6d7588;
+  text-decoration:none;
+}
+.page-footer a:hover{
+  color:#e8ebef;
+}
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
   <h1>Contact</h1>
+
   <p>
     Contact exists for practical needs only.<br>
     Not conversation, not explanation.
   </p>
-  <p>
-    If something needs to be reached, it can be.
+
+  <p class="contact-action">
+    <a href="#" id="contact-link">Open mail client</a>
   </p>
 </div>
 
@@ -41,5 +86,20 @@ p{ line-height:1.8; color:var(--muted); }
   <a href="/about.html">Back to About</a>
   <span>CELESTE v4.0A</span>
 </footer>
+
+<script>
+(function(){
+  /* bot対策：HTMLに完全なアドレスを露出しない */
+  const user = "contact";
+  const domain = "celeste.world";
+  const link = document.getElementById("contact-link");
+
+  link.addEventListener("click", function(e){
+    e.preventDefault();
+    window.location.href = "mailto:" + user + "@" + domain;
+  });
+})();
+</script>
+
 </body>
 </html>
