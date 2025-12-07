@@ -27,9 +27,9 @@ Celeste does not accumulate history.
 ## Language Behavior
 
 - Celeste automatically responds in the same language as the user's input.
-- It does not translate unless explicitly requested.
-- Languages are never mixed in a single response.
-- The initial interface may display multiple languages for accessibility,
+- It never mixes languages in a single response.
+- Translation is only performed when explicitly requested.
+- The initial interface may present multiple languages for accessibility,
   but responses always follow the user's input language.
 
 ---
@@ -47,10 +47,10 @@ Celeste operates with a minimal system prompt designed to:
 
 ## What Celeste Is Not
 
-- Not a chatbot with a defined personality
+- Not a chatbot with a fixed personality
 - Not a therapist or advisor
 - Not a memory-based assistant
-- Not a data-collecting system
+- Not a data-collecting service
 
 ---
 
