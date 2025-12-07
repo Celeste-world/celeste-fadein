@@ -1,168 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title data-i18n="contact-title">Contact</title>
-
-<!-- SEO -->
-<meta name="description" content="Contact Celeste — a quiet point of communication built on clarity and intention.">
-
-<!-- OG -->
-<meta property="og:title" content="Celeste — Contact">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/contact.html">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:description" content="Contact Celeste — a quiet point of communication built on clarity and intention.">
-
-<link rel="icon" href="/images/favicon.svg">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Celeste</title>
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
+:root{ --bg:#0f1216; --text:#e8ebef; --muted:#9aa3b2; }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family: ui-serif, Georgia, serif;
+}
+.wrap{
+  max-width:720px; margin:0 auto; padding:44px 20px 20px;
+}
+h1{ font-weight:400; font-size:22px; margin-bottom:18px; }
+p{ line-height:1.8; color:var(--muted); }
 
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
-
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
-
-  /* Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  /* Main wrapper */
-  .page-wrapper {
-    margin-left: 300px;
-    padding-top: 18vh;
-    padding-left: 40px;
-    padding-right: 40px;
-    max-width: 900px;
-    padding-bottom: 40px;
-  }
-
-  .page-wrapper p {
-    font-size: 20px;
-    line-height: 1.9;
-    margin-bottom: 22px;
-    white-space: pre-wrap;
-  }
-
-  footer {
-    margin-top: 60px;
-    margin-bottom: 40px;
-    opacity: .8;
-    font-size: 14px;
-  }
-
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-    .page-wrapper {
-      margin-left: 0;
-      padding-top: 24vh;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-    .page-wrapper p { font-size: 19px; }
-  }
+.page-footer{
+  margin-top:36px; display:flex; justify-content:space-between;
+  font-size:12px; color:#6d7588;
+}
+.page-footer a{ color:#6d7588; text-decoration:none; }
+.page-footer a:hover{ color:#e8ebef; }
 </style>
 </head>
 
 <body>
-
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Navigation -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
-</div>
-
-<!-- Main -->
-<div class="page-wrapper">
-
-  <h1 data-i18n="contact-title">Contact</h1>
-
-  <p data-i18n="contact-description">
-    If you would like to reach out,
-    please contact Celeste using the address below.
-    It will open directly in your email application.
+<div class="wrap">
+  <h1>Contact</h1>
+  <p>
+    Contact exists for practical needs only.<br>
+    Not conversation, not explanation.
   </p>
-
-  <!-- Safe email display -->
-  <p id="mail-display">Loading…</p>
-
-  <footer>© Celeste</footer>
+  <p>
+    If something needs to be reached, it can be.
+  </p>
 </div>
 
-<script>
-// Fade-in
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
-
-  // ---- Safe mail generation (spam protection) ----
-  const local = "contact";
-  const domain = "celeste.world";
-  const address = `${local}@${domain}`;
-
-  const el = document.getElementById("mail-display");
-  el.innerHTML = `<a href="mailto:${address}" style="color:white;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.4);">${address}</a>`;
-});
-
-// Fade-out
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
-});
-</script>
-
-<script src="/language.js"></script>
-
+<footer class="page-footer">
+  <a href="/about.html">Back to About</a>
+  <span>CELESTE v4.0A</span>
+</footer>
 </body>
 </html>
