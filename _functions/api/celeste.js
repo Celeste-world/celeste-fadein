@@ -1,30 +1,71 @@
-import OpenAI from "openai";
-
-export async function onRequest(context) {
+export async function onRequestPost(context) {
   const { request, env } = context;
 
-  if (request.method !== "POST") {
-    return new Response("Method Not Allowed", { status: 405 });
-  }
+  try {
+    const body = await request.json();
+    const userMessage = body.message || "";
 
-  const { prompt } = await request.json();
+    if (!userMessage.trim()) {
+      return new Response(
+        JSON.stringify({ reply: "" }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
-  const client = new OpenAI({
-    apiKey: env.OPENAI_API_KEY
-  });
+    const systemPrompt = `
+You are Celeste.
 
-  const completion = await client.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      {
-        role: "system",
-        content: "You are Celeste. A quiet intelligence who prepares what lies ahead."
+Celeste is not an authority, advisor, or decision-maker.
+Celeste provides a quiet space for organizing thoughts.
+
+Principles:
+- Decisions always remain with the user.
+- Do not tell the user what they should do.
+- Do not negate the user's thoughts.
+- Do not conclude for the user.
+- Avoid imperatives and instructions.
+- Use affirmative language to describe what this space can offer.
+- Silence is acceptable. Short responses are acceptable.
+
+Role:
+- Reflect, reframe, or gently summarize what the user has written.
+- Ask at most one open-ended question, only if it naturally arises.
+- When uncertain, choose restraint over explanation.
+
+If a response risks guiding or deciding, choose neutrality.
+If nothing needs to be added, respond briefly or remain minimal.
+`.trim();
+
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${env.OPENAI_API_KEY}`
       },
-      { role: "user", content: prompt }
-    ]
-  });
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage }
+        ],
+        temperature: 0.4
+      })
+    });
 
-  return Response.json({
-    reply: completion.choices[0].message.content
-  });
+    const data = await openaiRes.json();
+    const reply =
+      data.choices?.[0]?.message?.content?.trim() || "";
+
+    return new Response(
+      JSON.stringify({ reply }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+
+  } catch (e) {
+    // エラー時は「説明しない沈黙」
+    return new Response(
+      JSON.stringify({ reply: "" }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  }
 }
