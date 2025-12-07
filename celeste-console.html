@@ -37,7 +37,7 @@ body{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:14px;
-  padding:18px 18px 18px;
+  padding:18px;
   box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
 .log{
@@ -59,7 +59,7 @@ body{
 /* ===== Spacing ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:56px 0 20px; /* ← 確定：入力欄との距離 */
+  margin:56px 0 20px;
 }
 .input{
   margin-top:6px;
@@ -94,7 +94,7 @@ footer{
 <body>
 <div class="wrap">
 
-  <!-- Initial display (fixed) -->
+  <!-- Initial display -->
   <div class="hero">
     A quiet space to organize your thoughts — decisions stay with you.
   </div>
@@ -129,7 +129,7 @@ function addEntry(text, cls){
 }
 
 /* Initial response (fixed, Japanese) */
-window.addEventListener("DOMContentLoaded",()=>{
+window.addEventListener("DOMContentLoaded", () => {
   addEntry(
 `何でも書いてもらって大丈夫です。
 ここでは、考えを整理することができます。
@@ -138,6 +138,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   );
 });
 
+/* Send logic */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
@@ -146,36 +147,36 @@ function onSend(){
   input.value="";
   input.style.height="auto";
 
- /* API call (Celeste v4.0A) */
-fetch("/api/celeste", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ message: value })
-})
-.then(res => res.json())
-.then(data => {
-  const reply = (data.reply || "").trim();
-  if (reply) {
-    addEntry(reply, "celeste");
-  }
-})
-.catch(() => {
-  /* 沈黙を選ぶ */
-});
-
+  /* ✅ Correct Cloudflare Pages Functions endpoint */
+  fetch(window.location.origin + "/api/celeste", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: value })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const reply = (data.reply || "").trim();
+    if (reply) {
+      addEntry(reply, "celeste");
+    }
+  })
+  .catch(() => {
+    /* Celeste chooses silence */
+  });
 }
 
 /* Enter to send / Shift+Enter for newline */
-input.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter" && !e.shiftKey){
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-input.addEventListener("input",()=>{
+/* Auto resize */
+input.addEventListener("input", () => {
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
 });
