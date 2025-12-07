@@ -7,68 +7,81 @@
 
 <style>
 :root{
-  --bg:#0f1216;
+  --bg:#0f1216;          /* CelesteBlue */
   --panel:#141922;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
 }
 *{box-sizing:border-box;}
+
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
+
 .wrap{
   max-width:860px;
   margin:0 auto;
   padding:44px 20px 30px;
 }
+
 h1{
   font-size:22px;
   font-weight:400;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
+
 p{
   line-height:1.9;
   color:var(--muted);
   margin-bottom:22px;
 }
 
-/* リンクカード */
+/* section links */
 .card{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:14px;
   padding:18px 18px 14px;
-  margin-top:32px;
+  margin-top:36px;
 }
+
 .list{
   list-style:none;
   padding:0;
   margin:0;
 }
-.list li{ border-top:1px solid var(--line); }
-.list li:first-child{ border-top:none; }
+
+.list li{
+  border-top:1px solid var(--line);
+}
+.list li:first-child{
+  border-top:none;
+}
+
 .list a{
   display:block;
   padding:14px 6px;
   color:var(--text);
   text-decoration:none;
 }
+
 .list a span{
   color:var(--muted);
   margin-left:6px;
 }
 
-/* フッター（横並び） */
+/* footer (horizontal) */
 .footer{
-  margin-top:48px;
+  margin-top:56px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
+
 .footer a{
   font-size:13px;
   color:#6d7588;
@@ -77,9 +90,19 @@ p{
 .footer a:hover{
   color:var(--text);
 }
+
 .footer .version{
   font-size:12px;
   color:#6d7588;
+}
+
+/* small screens */
+@media (max-width:640px){
+  .footer{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
 }
 </style>
 </head>
@@ -90,27 +113,64 @@ p{
 <h1>About</h1>
 
 <p>
-Celeste is a deliberately quiet space designed to hold thoughts
-without directing them toward conclusions.
+Celeste is not a product, a character, or a guide.  
+It is a quiet space, intentionally left open,  
+where thoughts can be placed without being led toward a conclusion.
 </p>
 
 <p>
-Rather than accelerating clarity or suggesting actions,
-Celeste allows ideas to remain open,
-unfinished, and personally owned.
+Many interactive systems rush toward clarity.  
+They narrow paths, suggest actions,  
+and shape conversations into decisions.  
+Celeste chooses a different posture.
 </p>
 
 <p>
-This site documents the structure and intent behind that decision.
+Here, thoughts may remain unfinished.  
+Questions do not need to resolve themselves.  
+Judgment stays with the person who holds it.
+</p>
+
+<p>
+This site describes the structure behind that choice.  
+Each section examines how restraint, silence,  
+and non-intervention are maintained  
+without rendering the space unusable.
+</p>
+
+<p>
+Celeste does not think in your place.  
+It stays close enough to listen,  
+and far enough to let your thinking remain your own.
 </p>
 
 <div class="card">
   <ul class="list">
-    <li><a href="philosophy.html">Philosophy <span>— guiding principles</span></a></li>
-    <li><a href="silent-structure.html">Silent Structure <span>— designed restraint</span></a></li>
-    <li><a href="vision.html">Vision <span>— long-term direction</span></a></li>
-    <li><a href="who-i-am.html">Who I Am <span>— position, not persona</span></a></li>
-    <li><a href="contact.html">Contact <span>— only when necessary</span></a></li>
+    <li>
+      <a href="philosophy.html">
+        Philosophy <span>— the principles behind the space</span>
+      </a>
+    </li>
+    <li>
+      <a href="silent-structure.html">
+        Silent Structure <span>— how restraint is implemented</span>
+      </a>
+    </li>
+    <li>
+      <a href="vision.html">
+        Vision <span>— direction without expansion</span>
+      </a>
+    </li>
+    <li>
+      <a href="who-i-am.html">
+        Who I Am <span>— position without persona</span>
+      </a>
+    </li>
+    <li>
+      <a href="contact.html">
+        Contact <span>— a quiet point of access</span>
+      </a>
+    </li>
   </ul>
 </div>
 
