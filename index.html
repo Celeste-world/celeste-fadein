@@ -6,7 +6,6 @@
 <title>Celeste</title>
 
 <style>
-/* ========= Base ========= */
 :root{
   --bg:#0f1216;
   --panel:#141922;
@@ -23,7 +22,6 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-/* ========= Layout ========= */
 .wrap{
   max-width:900px;
   margin:0 auto;
@@ -38,17 +36,16 @@ body{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:14px;
-  padding:18px 18px 14px;
+  padding:18px 18px 16px;
   box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
 .log{
   min-height:320px;
-  max-height:540px;
+  max-height:520px;
   overflow-y:auto;
   padding-right:6px;
 }
 
-/* ========= Messages ========= */
 .entry{
   margin:12px 0;
   line-height:1.75;
@@ -57,40 +54,28 @@ body{
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
-/* ========= Input ========= */
+/* ▼ 入力欄を下げるための余白 */
 .divider{
   border-top:1px solid var(--line);
-  margin:14px 0 10px;
+  margin:28px 0 14px; /* ← ここが効いてる */
 }
 .input{
-  display:flex;
-  gap:10px;
+  margin-top:10px;
 }
 textarea{
-  flex:1;
+  width:100%;
   background:transparent;
   border:1px solid var(--line);
-  border-radius:10px;
-  padding:10px 12px;
+  border-radius:12px;
+  padding:12px 14px;
   color:var(--text);
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:44px;
+  min-height:48px;
 }
 textarea::placeholder{
   color:#6d7588;
-}
-button{
-  background:transparent;
-  color:var(--accent);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:8px 14px;
-  cursor:pointer;
-}
-button:hover{
-  border-color:var(--accent);
 }
 
 footer{
@@ -105,7 +90,7 @@ footer{
 <body>
 <div class="wrap">
 
-  <!-- ✅ 初期表示（英・確定） -->
+  <!-- 初期表示（確定） -->
   <div class="hero">
     A quiet space to organize your thoughts — decisions stay with you.
   </div>
@@ -115,22 +100,20 @@ footer{
 
     <div class="divider"></div>
 
+    <!-- ★ Sendボタン削除 -->
     <div class="input">
       <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-      <button id="send">Send</button>
     </div>
   </div>
 
+  <!-- 表示はこのままでOK -->
   <footer>CELESTE v4.0A</footer>
 </div>
 
 <script>
-/* ========= Elements ========= */
 const log   = document.getElementById("log");
 const input = document.getElementById("input");
-const send  = document.getElementById("send");
 
-/* ========= Helpers ========= */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -139,7 +122,6 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* ========= Initial Response（日・確定） ========= */
 window.addEventListener("DOMContentLoaded",()=>{
 addEntry(
 `何でも書いてもらって大丈夫です。
@@ -149,16 +131,15 @@ addEntry(
 );
 });
 
-/* ========= Send ========= */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
   addEntry(value,"user");
-  input.value = "";
-  input.style.height = "auto";
+  input.value="";
+  input.style.height="auto";
 
-  // ダミー応答（※後で API に差し替える）
+  // ダミー応答（APIに差し替え予定）
   setTimeout(()=>{
     addEntry(
 "書き出した内容を、そのまま眺めてみても良さそうですね。\n気になったところから整理できます。",
@@ -167,13 +148,14 @@ function onSend(){
   },400);
 }
 
-send.addEventListener("click",onSend);
+/* Enter で送信（Shift+Enterは改行） */
 input.addEventListener("keydown",(e)=>{
   if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
+
 input.addEventListener("input",()=>{
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
