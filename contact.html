@@ -2,36 +2,79 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Contact — Celeste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Celeste</title>
+
 <style>
 :root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;--line:#242a3d;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
-.wrap{max-width:720px;margin:0 auto;padding:44px 20px;}
-h1{font-weight:400;font-size:22px;margin-bottom:22px;}
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:ui-serif,Georgia,serif;
+}
+.wrap{max-width:720px;margin:0 auto;padding:44px 20px 30px;}
+h1{font-size:22px;font-weight:400;margin-bottom:24px;}
 p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
-.contact-action a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);}
-.footer{margin-top:48px;}
+.contact a{
+  color:var(--text);text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:2px;
+}
+.footer{
+  margin-top:56px;display:flex;justify-content:space-between;align-items:center;
+}
 .footer a{font-size:13px;color:#6d7588;text-decoration:none;}
-.version-fixed{position:fixed;right:16px;bottom:14px;font-size:12px;color:#6d7588;pointer-events:none;}
+.footer .version{font-size:12px;color:#6d7588;}
+@media(max-width:640px){
+  .footer{flex-direction:column;align-items:flex-start;gap:6px;}
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
+
 <h1>Contact</h1>
-<p>Contact is provided for necessary communication only.</p>
-<p>A deliberate action is required to initiate contact.</p>
-<p class="contact-action"><a href="#" id="contact-link">Open mail client</a></p>
-<div class="footer"><a href="/about.html">Back to About</a></div>
+
+<p>
+Contact is available when necessary,  
+and only then.
+</p>
+
+<p>
+This space is not meant for conversation,  
+ongoing exchange, or regular correspondence.  
+Its purpose is practical, not expressive.
+</p>
+
+<p>
+If a message is sent,  
+it will be read by a person.  
+Celeste may support the process,  
+but judgment and reply remain human.
+</p>
+
+<p class="contact">
+  <a href="#" id="contact-link">Open mail client</a>
+</p>
+
+<div class="footer">
+  <a href="/about.html">Back to About</a>
+  <div class="version">CELESTE v4.0A</div>
 </div>
-<div class="version-fixed">CELESTE v4.0A</div>
+
+</div>
+
 <script>
 (function(){
-  const user="contact", domain="celeste.world";
+  const user="contact";
+  const domain="celeste.world";
   document.getElementById("contact-link").addEventListener("click",function(e){
-    e.preventDefault(); location.href="mailto:"+user+"@"+domain;
+    e.preventDefault();
+    window.location.href="mailto:"+user+"@"+domain;
   });
 })();
 </script>
+
 </body>
 </html>
