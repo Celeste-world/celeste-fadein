@@ -1,27 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Silent Structure — Celeste</title>
 
 <style>
-:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;}
-*{box-sizing:border-box;}
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --accent:#a9b7ff;
+}
 body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:ui-serif,Georgia,serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-.wrap{max-width:720px;margin:0 auto;padding:44px 20px 30px;}
-h1{font-size:22px;font-weight:400;margin-bottom:24px;}
-p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
+.wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:56px 20px 80px;
+}
+h1{
+  font-size:28px;
+  margin-bottom:28px;
+}
+p{
+  line-height:1.9;
+  margin:22px 0;
+}
+.section{
+  margin:38px 0;
+}
 .footer{
-  margin-top:56px;display:flex;justify-content:space-between;align-items:center;
+  margin-top:64px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:#6d7588;
 }
-.footer a{font-size:13px;color:#6d7588;text-decoration:none;}
-.footer .version{font-size:12px;color:#6d7588;}
-@media(max-width:640px){
-  .footer{flex-direction:column;align-items:flex-start;gap:6px;}
+a{
+  color:var(--accent);
+  text-decoration:none;
+}
+a:hover{
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -32,39 +58,34 @@ p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
 <h1>Silent Structure</h1>
 
 <p>
-Silence in Celeste is not a lack of response.  
-It is an active structural choice.
+Celeste is not empty by accident.
+Its quiet is carefully held.
 </p>
 
+<div class="section">
 <p>
-Many systems are designed to fill space.  
-They reply quickly, explain generously,  
-and smooth uncertainty before it can settle.  
-Celeste moves in the opposite direction.
+Structure exists here, but it does not ask to be noticed.
+Boundaries are present so that thoughts can move freely within them.
 </p>
+</div>
 
+<div class="section">
 <p>
-By responding less,  
-the space stays open longer.  
-Thoughts are not interrupted, redirected,  
-or resolved on behalf of the person thinking them.
+Nothing is stored beyond the time it is needed.
+Nothing is accumulated for future use.
 </p>
+</div>
 
+<div class="section">
 <p>
-Silence here functions as a boundary.  
-It marks where the system stops  
-and the person remains.
+The structure supports presence, then disappears.
+That disappearance is part of its function.
 </p>
-
-<p>
-Not every moment requires an answer.  
-Some require room.  
-Celeste is designed to protect that room.
-</p>
+</div>
 
 <div class="footer">
   <a href="/about.html">Back to About</a>
-  <div class="version">CELESTE v4.0A</div>
+  <span>Celeste v4.1</span>
 </div>
 
 </div>
