@@ -4,102 +4,34 @@
 <meta charset="UTF-8" />
 <title>Contact — Celeste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <style>
-:root{
-  --bg:#0f1216;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-}
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, serif;
-}
-.wrap{
-  max-width:720px;
-  margin:0 auto;
-  padding:44px 20px;
-}
-h1{
-  font-weight:400;
-  font-size:22px;
-  margin-bottom:22px;
-}
-p{
-  line-height:1.9;
-  color:var(--muted);
-  margin-bottom:22px;
-}
-.contact-action a{
-  font-size:15px;
-  color:var(--text);
-  text-decoration:none;
-  border-bottom:1px solid var(--line);
-  padding-bottom:2px;
-}
-.contact-action a:hover{
-  border-color:var(--text);
-}
-.footer{
-  margin-top:48px;
-}
-.footer a{
-  font-size:13px;
-  color:#6d7588;
-  text-decoration:none;
-}
-.footer .version{
-  margin-top:6px;
-  font-size:12px;
-  color:#6d7588;
-}
+:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;--line:#242a3d;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
+.wrap{max-width:720px;margin:0 auto;padding:44px 20px;}
+h1{font-weight:400;font-size:22px;margin-bottom:22px;}
+p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
+.contact-action a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);}
+.footer{margin-top:48px;}
+.footer a{font-size:13px;color:#6d7588;text-decoration:none;}
+.version-fixed{position:fixed;right:16px;bottom:14px;font-size:12px;color:#6d7588;pointer-events:none;}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
 <h1>Contact</h1>
-
-<p>
-Contact is provided for necessary communication only.
-This channel is not intended for conversation,
-feedback cycles, or open correspondence.
-</p>
-
-<p>
-A deliberate action is required to initiate contact,
-preserving the quiet nature of this space
-and reducing automated or unintended messages.
-</p>
-
-<p class="contact-action">
-  <a href="#" id="contact-link">Open mail client</a>
-</p>
-
-<div class="footer">
-  <a href="/about.html">Back to About</a>
-  <div class="version">CELESTE v4.0A</div>
+<p>Contact is provided for necessary communication only.</p>
+<p>A deliberate action is required to initiate contact.</p>
+<p class="contact-action"><a href="#" id="contact-link">Open mail client</a></p>
+<div class="footer"><a href="/about.html">Back to About</a></div>
 </div>
-
-</div>
-
+<div class="version-fixed">CELESTE v4.0A</div>
 <script>
 (function(){
-  const user = "contact";
-  const domain = "celeste.world";
-  const link = document.getElementById("contact-link");
-
-  link.addEventListener("click", function(e){
-    e.preventDefault();
-    window.location.href = "mailto:" + user + "@" + domain;
+  const user="contact", domain="celeste.world";
+  document.getElementById("contact-link").addEventListener("click",function(e){
+    e.preventDefault(); location.href="mailto:"+user+"@"+domain;
   });
 })();
 </script>
-
 </body>
 </html>
