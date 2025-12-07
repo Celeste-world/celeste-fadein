@@ -10,9 +10,7 @@
   --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
-  --line:#242a3d;
 }
-*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
@@ -22,38 +20,29 @@ body{
 .wrap{
   max-width:720px;
   margin:0 auto;
-  padding:36px 20px 20px;
+  padding:44px 20px 20px;
 }
-
-/* 導線 */
-.back-link{
-  margin-bottom:18px;
-}
-.back-link a{
-  font-size:13px;
-  color:var(--muted);
-  text-decoration:none;
-}
-.back-link a:hover{
-  color:var(--text);
-}
-
 h1{
   font-weight:400;
   font-size:22px;
-  margin:0 0 18px;
+  margin-bottom:22px;
 }
 p{
-  line-height:1.8;
+  line-height:1.9;
   color:var(--muted);
+  margin-bottom:22px;
 }
-
-/* フッター */
-footer{
-  margin-top:40px;
-  text-align:center;
-  font-size:12px;
+.footer{
+  margin-top:48px;
+  text-align:left;
+}
+.footer a{
+  font-size:13px;
   color:#6d7588;
+  text-decoration:none;
+}
+.footer a:hover{
+  color:var(--text);
 }
 </style>
 </head>
@@ -61,25 +50,33 @@ footer{
 <body>
 <div class="wrap">
 
-  <div class="back-link">
-    <a href="/about.html">Back to About</a>
-  </div>
+<h1>Philosophy</h1>
 
-  <h1>Philosophy</h1>
+<p>
+Celeste is designed as a space rather than a voice.
+It does not exist to guide, persuade, or replace judgment.
+Its role is to hold thoughts gently, allowing them to be examined
+without pressure or urgency.
+</p>
 
-  <p>
-    Celeste exists as a space, not a voice of authority.<br>
-    Its purpose is not to decide, persuade, or correct,
-    but to allow thoughts to be placed gently and seen clearly.
-  </p>
+<p>
+In many systems, responses are optimized for clarity, action,
+or resolution. Celeste intentionally steps away from that pattern.
+Here, ambiguity is allowed to remain unresolved,
+and decisions are never taken away from the person who carries them.
+</p>
 
-  <p>
-    Decisions are not replaced here.<br>
-    They remain where they belong — with the person who carries them.
-  </p>
+<p>
+This philosophy is not about passivity.
+It is about respect for human agency —
+recognizing that clarity achieved too quickly
+often belongs to the system rather than the person.
+</p>
 
+<div class="footer">
+  <a href="/about.html">Back to About</a>
 </div>
 
-<footer>CELESTE v4.0A</footer>
+</div>
 </body>
 </html>
