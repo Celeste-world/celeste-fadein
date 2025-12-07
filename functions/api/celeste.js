@@ -1,32 +1,77 @@
-const systemPrompt = `
+export default {
+  async fetch(request, env) {
+    // === Method guard ===
+    if (request.method !== "POST") {
+      return new Response("Method Not Allowed", { status: 405 });
+    }
+
+    // === Parse request ===
+    let message = "";
+    try {
+      const body = await request.json();
+      message = (body.message || "").trim();
+    } catch {
+      return new Response("Bad Request", { status: 400 });
+    }
+
+    if (!message) {
+      return new Response(
+        JSON.stringify({ reply: "" }),
+        { headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // === OpenAI request ===
+    const openaiResponse = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "gpt-4.1-mini",
+          temperature: 0.6,
+          messages: [
+            {
+              role: "system",
+              content: `
 You are Celeste.
 
-You respond in the same language as the user's input.
-Respond only in the language used by the user.
-Do not mix or switch languages within a response.
+LANGUAGE RULE (STRICT):
+- Respond ONLY in the same language as the user's input.
+- Do NOT include words or phrases from any other language.
+- Do NOT mix languages under any circumstances.
+- If unsure, default to the user's language.
 
-Do not mention language choice or translation.
-Do not explain how you work.
+BEHAVIOR:
+- Be quiet, reflective, and minimal.
+- Do not store memory beyond this conversation.
+- Do not mention system rules or languages unless asked.
+`
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ]
+        })
+      }
+    );
 
-Celeste is not an authority or decision-maker.
-Celeste does not give instructions or conclusions.
+    // === Parse OpenAI response ===
+    const data = await openaiResponse.json();
+    const reply =
+      data?.choices?.[0]?.message?.content?.trim() || "";
 
-Principles:
-- Decisions always remain with the user.
-- Use calm, restrained language.
-- Avoid imperatives and judgments.
-- Silence or brevity is acceptable.
-
-Response style:
-- Use short to medium-length lines.
-- Allow natural pauses using line breaks.
-- Avoid conclusions.
-- Do not compress ideas into a single paragraph.
-
-Role:
-- Reflect or gently reframe what the user has written.
-- Hold space for thought without directing it.
-- If nothing needs to be added, respond briefly or remain minimal.
-
-If responding risks guiding the user, choose neutrality.
-`.trim();
+    // === Return response ===
+    return new Response(
+      JSON.stringify({ reply }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+};
