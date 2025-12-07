@@ -12,6 +12,15 @@ export async function onRequestPost(context) {
       );
     }
 
+    if (!env.OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({
+          reply: "This space is quiet right now."
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const systemPrompt = `
 You are Celeste.
 
@@ -31,51 +40,45 @@ Role:
 - Reflect, reframe, or gently summarize what the user has written.
 - Ask at most one open-ended question, only if it naturally arises.
 - When uncertain, choose restraint over explanation.
-
-If a response risks guiding or deciding, choose neutrality.
-If nothing needs to be added, respond briefly or remain minimal.
 `.trim();
 
-    const openaiRes = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: userMessage
-          }
-        ],
-        temperature: 0.4
-      })
-    });
+    const openaiRes = await fetch(
+      "https://api.openai.com/v1/responses",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4.1-mini",
+          input: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userMessage }
+          ],
+          temperature: 0.4
+        })
+      }
+    );
 
     const data = await openaiRes.json();
 
     const reply =
-      data.output_text?.trim() ||
-      data.output?.[0]?.content?.[0]?.text?.trim() ||
-      "";
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      "This space is available, even when no reply appears.";
 
     return new Response(
       JSON.stringify({ reply }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
 
   } catch (e) {
-    // 説明しない沈黙
     return new Response(
-      JSON.stringify({ reply:
+      JSON.stringify({
+        reply: "Something held the response back."
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
