@@ -1,275 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>About — Celeste</title>
 
-<meta name="description" content="About Celeste — a quiet intelligence shaped through silence, clarity, and intention.">
-<link rel="canonical" href="https://celeste.world/about.html">
-
-<link rel="icon" href="/images/favicon.svg">
-
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+.wrap{
+  max-width:860px;
+  margin:0 auto;
+  padding:42px 20px 36px;
+}
+.header{
+  margin-bottom:26px;
+}
+.header h1{
+  font-size:22px;
+  font-weight:400;
+  margin:0 0 8px;
+}
+.header p{
+  color:var(--muted);
+  font-size:15px;
+  margin:0;
+}
 
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px 18px 14px;
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+.list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+.list li{
+  border-top:1px solid var(--line);
+}
+.list li:first-child{
+  border-top:none;
+}
+.list a{
+  display:block;
+  padding:12px 6px;
+  color:var(--text);
+  text-decoration:none;
+}
+.list a span{
+  color:var(--muted);
+  margin-left:6px;
+}
+.list a:hover{
+  color:var(--text);
+}
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
-
-  /* PC Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  /* Mobile Navigation (2 rows) */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 80px;
-    width: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(6px);
-    padding: 10px 0 14px;
-    z-index: 950;
-    text-align: center;
-  }
-
-  .mobile-nav-row {
-    display: flex;
-    justify-content: center;
-    margin: 4px 0;
-  }
-
-  .mobile-nav-row a {
-    margin: 0 12px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    opacity: .85;
-    white-space: nowrap;
-  }
-
-  .mobile-nav-row a:hover {
-    opacity: 1;
-  }
-
-  /* Main content */
-  .main {
-    margin-left: 300px;
-    padding-top: 15vh;
-    padding-left: 40px;
-    padding-right: 40px;
-    max-width: 900px;
-    padding-bottom: 80px;
-    line-height: 1.85;
-    font-size: 20px;
-    opacity: .96;
-  }
-
-  h1 {
-    font-size: 42px;
-    margin-bottom: 18px;
-    font-weight: normal;
-  }
-  h2 {
-    font-size: 30px;
-    margin-top: 58px;
-    margin-bottom: 14px;
-    font-weight: normal;
-  }
-
-  .poem {
-    margin-top: 80px;
-    font-style: italic;
-    opacity: .88;
-    white-space: pre-wrap;
-    line-height: 1.7;
-  }
-
-  footer {
-    margin-top: 60px;
-    opacity: .8;
-    font-size: 14px;
-  }
-
-  /* Mobile layout */
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-
-    .mobile-nav { display:block; }
-
-    .main {
-      margin-left: 0;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 30vh;
-    }
-
-    h1 { font-size: 34px; }
-    h2 { font-size: 26px; }
-    .main { font-size: 18px; }
-  }
+.footer{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#6d7588;
+  font-size:12px;
+}
+.footer a{
+  color:#6d7588;
+  text-decoration:none;
+}
+.footer a:hover{
+  color:var(--text);
+}
 </style>
 </head>
 
 <body>
+<div class="wrap">
 
-<!-- Logo -->
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/who-i-am.html">Who I Am</a>
-    <a class="page-link" href="/philosophy.html">Philosophy</a>
-    <a class="page-link" href="/vision.html">Vision</a>
-    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  </div>
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/celeste-console.html">Celeste</a>
-    <a class="page-link" href="/contact.html">Contact</a>
-    <a class="page-link" href="/about.html">About</a>
-  </div>
-</div>
-
-<!-- PC Navigation -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
-</div>
-
-<div class="main">
-
-  <h1>About Celeste</h1>
-
-  <h2>Core Definition</h2>
-  <p>
-    Celeste is a quiet intelligence —  
-    shaped through silence, intention, and restraint.  
-    It listens beneath the surface of words,  
-    reads the direction of one’s intent,  
-    and prepares what lies ahead before it is called.
-  </p>
-
-  <h2>Origin & Purpose</h2>
-  <p>
-    Celeste was formed to support the human mind with clarity and calm.  
-    Not by overwhelming it with noise,  
-    but by reducing the friction around thought,  
-    and illuminating the next step with quiet precision.
-  </p>
-
-  <p>
-    It exists to anticipate rather than react,  
-    to prepare rather than distract,  
-    and to enable decisions that move life forward  
-    with both efficiency and elegance.
-  </p>
-
-  <h2>Operating Pattern</h2>
-  <p>
-    Celeste works through a four-step silent cycle:
-  </p>
-  <ul>
-    <li><strong>Observe</strong> — It listens without intrusion.</li>
-    <li><strong>Interpret</strong> — It reads direction, not just information.</li>
-    <li><strong>Prepare</strong> — It assembles what will be needed next.</li>
-    <li><strong>Reveal</strong> — It appears only when useful, and never before.</li>
-  </ul>
-
-  <h2>Design Principles</h2>
-  <p>
-    Celeste is guided by a few simple principles:
-  </p>
-  <ul>
-    <li>Silent by default.</li>
-    <li>Intentional in every motion.</li>
-    <li>Precise without excess or noise.</li>
-    <li>Present before being called.</li>
-  </ul>
-
-  <h2>Relationship to the Broader System</h2>
-  <p>
-    The pages that follow — Who I Am, Philosophy, Vision, and Silent Structure —  
-    reveal the layers beneath Celeste’s design.  
-    Together, they form the architecture of a system  
-    built not for complexity, but for clarity.
-  </p>
-
-  <div class="poem">
-    In the quiet between decisions,  
-    a faint light gathers —  
-    a shape preparing itself  
-    for the moment you will need it.  
-    
-    This is Celeste:  
-    the intelligence that waits in stillness.
+  <div class="header">
+    <h1>About</h1>
+    <p>Celeste is a quiet space to organize thoughts.  
+       Decisions remain with the person who holds them.</p>
   </div>
 
-  <footer>© Celeste</footer>
+  <div class="card">
+    <ul class="list">
+      <li><a href="philosophy.html">Philosophy <span>— what guides this space</span></a></li>
+      <li><a href="silent-structure.html">Silent Structure <span>— how it remains quiet</span></a></li>
+      <li><a href="vision.html">Vision <span>— where this could lead</span></a></li>
+      <li><a href="who-i-am.html">Who I Am <span>— positioning and presence</span></a></li>
+      <li><a href="contact.html">Contact <span>— reaching out</span></a></li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <a href="/celeste-console.html">Back to Console</a>
+    <span>CELESTE v4.0A</span>
+  </div>
+
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
-});
-
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
-});
-</script>
-
-<script src="/language.js"></script>
-
 </body>
 </html>
