@@ -2,27 +2,71 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Silent Structure — Celeste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Silent Structure — Celeste</title>
+
 <style>
 :root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
-.wrap{max-width:720px;margin:0 auto;padding:44px 20px;}
-h1{font-weight:400;font-size:22px;margin-bottom:22px;}
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:ui-serif,Georgia,serif;
+}
+.wrap{max-width:720px;margin:0 auto;padding:44px 20px 30px;}
+h1{font-size:22px;font-weight:400;margin-bottom:24px;}
 p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
-.footer{margin-top:48px;}
+.footer{
+  margin-top:56px;display:flex;justify-content:space-between;align-items:center;
+}
 .footer a{font-size:13px;color:#6d7588;text-decoration:none;}
-.version-fixed{position:fixed;right:16px;bottom:14px;font-size:12px;color:#6d7588;pointer-events:none;}
+.footer .version{font-size:12px;color:#6d7588;}
+@media(max-width:640px){
+  .footer{flex-direction:column;align-items:flex-start;gap:6px;}
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
+
 <h1>Silent Structure</h1>
-<p>Silence is a deliberate structural choice, not an absence.</p>
-<p>Brief replies or no reply at all protect the user’s ownership of thought.</p>
-<p>Restraint preserves space for reflection without interference.</p>
-<div class="footer"><a href="/about.html">Back to About</a></div>
+
+<p>
+Silence in Celeste is not a lack of response.  
+It is an active structural choice.
+</p>
+
+<p>
+Many systems are designed to fill space.  
+They reply quickly, explain generously,  
+and smooth uncertainty before it can settle.  
+Celeste moves in the opposite direction.
+</p>
+
+<p>
+By responding less,  
+the space stays open longer.  
+Thoughts are not interrupted, redirected,  
+or resolved on behalf of the person thinking them.
+</p>
+
+<p>
+Silence here functions as a boundary.  
+It marks where the system stops  
+and the person remains.
+</p>
+
+<p>
+Not every moment requires an answer.  
+Some require room.  
+Celeste is designed to protect that room.
+</p>
+
+<div class="footer">
+  <a href="/about.html">Back to About</a>
+  <div class="version">CELESTE v4.0A</div>
 </div>
-<div class="version-fixed">CELESTE v4.0A</div>
+
+</div>
 </body>
 </html>
