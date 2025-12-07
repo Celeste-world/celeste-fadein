@@ -61,7 +61,7 @@ body{
 /* ===== Spacing ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:56px 0 20px; /* 入力欄との距離：56px */
+  margin:56px 0 20px;
 }
 .input{
   margin-top:6px;
@@ -84,11 +84,31 @@ textarea::placeholder{
   color:#6d7588;
 }
 
-footer{
-  margin-top:14px;
-  text-align:right;
+/* ===== Footer ===== */
+.footer-wrap{
+  margin-top:36px;
+}
+.console-nav{
+  margin-top:18px;
   font-size:12px;
-  color:#6d7588;
+}
+.console-nav a{
+  color:var(--muted);
+  text-decoration:none;
+}
+.site-footer{
+  margin-top:40px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.site-footer a{
+  color:var(--muted);
+  text-decoration:none;
 }
 </style>
 </head>
@@ -96,7 +116,7 @@ footer{
 <body>
 <div class="wrap">
 
-  <!-- Initial display (EN / JP併記) -->
+  <!-- Initial display -->
   <div class="hero">
 A quiet space to organize your thoughts — decisions stay with you.
 静かに考えを整えるための、小さな余白です。選ぶのは、いつもあなたです。
@@ -116,7 +136,21 @@ A quiet space to organize your thoughts — decisions stay with you.
     </div>
   </div>
 
-  <footer>CELESTE v4.0A</footer>
+  <!-- Console → About導線 -->
+  <div class="console-nav">
+    <a href="/about.html">About Celeste</a>
+  </div>
+
+  <!-- Common footer -->
+  <footer class="site-footer">
+    <div>
+      <a href="/about.html">Back to About</a>
+    </div>
+    <div>
+      Celeste v4.1
+    </div>
+  </footer>
+
 </div>
 
 <script>
@@ -131,7 +165,7 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Initial response (fixed, Japanese) */
+/* Initial response */
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
 `何でも書いてもらって大丈夫です。
@@ -150,7 +184,6 @@ function onSend(){
   input.value="";
   input.style.height="auto";
 
-  /* Cloudflare Pages Functions endpoint */
   fetch(window.location.origin + "/api/celeste", {
     method: "POST",
     headers: {
@@ -165,14 +198,12 @@ function onSend(){
       addEntry(reply, "celeste");
     }
   })
-  .catch(() => {
-    /* Celeste chooses silence */
-  });
+  .catch(() => {});
 }
 
 /* Enter to send / Shift+Enter for newline */
 input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey){
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
@@ -180,8 +211,8 @@ input.addEventListener("keydown", (e) => {
 
 /* Auto resize */
 input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 </body>
