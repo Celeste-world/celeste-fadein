@@ -4,12 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Philosophy — Celeste</title>
+
 <style>
 :root{
   --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
+  --line:#242a3d;
 }
+*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
@@ -19,46 +22,64 @@ body{
 .wrap{
   max-width:720px;
   margin:0 auto;
-  padding:44px 20px 20px;
+  padding:36px 20px 20px;
 }
+
+/* 導線 */
+.back-link{
+  margin-bottom:18px;
+}
+.back-link a{
+  font-size:13px;
+  color:var(--muted);
+  text-decoration:none;
+}
+.back-link a:hover{
+  color:var(--text);
+}
+
 h1{
   font-weight:400;
   font-size:22px;
-  margin-bottom:18px;
+  margin:0 0 18px;
 }
 p{
   line-height:1.8;
   color:var(--muted);
 }
-.page-footer{
-  margin-top:36px;
-  display:flex;
-  justify-content:space-between;
+
+/* フッター */
+footer{
+  margin-top:40px;
+  text-align:center;
   font-size:12px;
   color:#6d7588;
 }
-.page-footer a{ color:#6d7588; text-decoration:none; }
-.page-footer a:hover{ color:#e8ebef; }
 </style>
 </head>
 
 <body>
 <div class="wrap">
+
+  <div class="back-link">
+    <a href="/about.html">Back to About</a>
+  </div>
+
   <h1>Philosophy</h1>
+
   <p>
     Celeste exists as a space, not a voice of authority.<br>
     Its purpose is not to decide, persuade, or correct,
     but to allow thoughts to be placed gently and seen clearly.
   </p>
+
   <p>
     Decisions are not replaced here.<br>
     They remain where they belong — with the person who carries them.
   </p>
+
 </div>
 
-<footer class="page-footer">
-  <a href="/about.html">Back to About</a>
-  <span>CELESTE v4.0A</span>
-</footer>
+<footer>CELESTE v4.0A</footer>
 </body>
 </html>
