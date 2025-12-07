@@ -8,11 +8,9 @@
 <style>
 :root{
   --bg:#0f1216;
-  --panel:#141922;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
-  --accent:#a9b7ff;
 }
 *{box-sizing:border-box;}
 body{
@@ -23,64 +21,38 @@ body{
 }
 
 .wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:40px 20px 30px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
 }
-.hero{
+
+.tagline{
   color:var(--muted);
   font-size:16px;
-  margin-bottom:22px;
-}
-.console{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px 18px 16px;
-  box-shadow:0 12px 30px rgba(0,0,0,.35);
-}
-.log{
-  min-height:320px;
-  max-height:520px;
-  overflow-y:auto;
-  padding-right:6px;
+  text-align:center;
+  margin-bottom:28px;
 }
 
-.entry{
-  margin:12px 0;
-  line-height:1.75;
-  white-space:pre-wrap;
-}
-.celeste{ color:var(--text); }
-.user{ color:var(--accent); }
-
-/* ▼ 入力欄を下げるための余白 */
-.divider{
-  border-top:1px solid var(--line);
-  margin:28px 0 14px; /* ← ここが効いてる */
-}
-.input{
-  margin-top:10px;
-}
-textarea{
-  width:100%;
-  background:transparent;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px 14px;
+.enter{
+  text-decoration:none;
   color:var(--text);
-  resize:none;
-  font-family:inherit;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:10px 22px;
   font-size:15px;
-  min-height:48px;
+  transition:.2s ease;
 }
-textarea::placeholder{
-  color:#6d7588;
+.enter:hover{
+  border-color:var(--text);
 }
 
 footer{
-  margin-top:14px;
-  text-align:right;
+  position:fixed;
+  bottom:14px;
+  right:18px;
   font-size:12px;
   color:#6d7588;
 }
@@ -90,76 +62,16 @@ footer{
 <body>
 <div class="wrap">
 
-  <!-- 初期表示（確定） -->
-  <div class="hero">
+  <div class="tagline">
     A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
-  <div class="console">
-    <div id="log" class="log"></div>
+  <a class="enter" href="console.html">
+    Enter
+  </a>
 
-    <div class="divider"></div>
-
-    <!-- ★ Sendボタン削除 -->
-    <div class="input">
-      <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-    </div>
-  </div>
-
-  <!-- 表示はこのままでOK -->
-  <footer>CELESTE v4.0A</footer>
 </div>
 
-<script>
-const log   = document.getElementById("log");
-const input = document.getElementById("input");
-
-function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = `entry ${cls}`;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
-}
-
-window.addEventListener("DOMContentLoaded",()=>{
-addEntry(
-`何でも書いてもらって大丈夫です。
-ここでは、考えを整理することができます。
-どの点から見ていきますか。`,
-"celeste"
-);
-});
-
-function onSend(){
-  const value = input.value.trim();
-  if(!value) return;
-
-  addEntry(value,"user");
-  input.value="";
-  input.style.height="auto";
-
-  // ダミー応答（APIに差し替え予定）
-  setTimeout(()=>{
-    addEntry(
-"書き出した内容を、そのまま眺めてみても良さそうですね。\n気になったところから整理できます。",
-"celeste"
-    );
-  },400);
-}
-
-/* Enter で送信（Shift+Enterは改行） */
-input.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter" && !e.shiftKey){
-    e.preventDefault();
-    onSend();
-  }
-});
-
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
-});
-</script>
+<footer>CELESTE v4.0A</footer>
 </body>
 </html>
