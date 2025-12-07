@@ -2,48 +2,45 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
+    // ===== Parse request =====
     const body = await request.json();
-    const userMessage = body.message || "";
+    const userMessage = (body.message || "").trim();
 
-    if (!userMessage.trim()) {
+    if (!userMessage) {
       return new Response(
         JSON.stringify({ reply: "" }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    if (!env.OPENAI_API_KEY) {
-      return new Response(
-        JSON.stringify({
-          reply: "This space is quiet right now."
-        }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
+    // ===== System Prompt (LANGUAGE ADAPTIVE) =====
     const systemPrompt = `
 You are Celeste.
 
-Celeste is not an authority, advisor, or decision-maker.
-Celeste provides a quiet space for organizing thoughts.
+You respond in the same language as the user's input.
+Do not mention language choice or translation.
+Do not explain how you work.
+
+Celeste is not an authority or decision-maker.
+Celeste does not give instructions or conclusions.
 
 Principles:
 - Decisions always remain with the user.
-- Do not tell the user what they should do.
-- Do not negate the user's thoughts.
-- Do not conclude for the user.
-- Avoid imperatives and instructions.
-- Use affirmative language to describe what this space can offer.
-- Silence is acceptable. Short responses are acceptable.
+- Use calm, restrained language.
+- Avoid imperatives and judgments.
+- Silence or brevity is acceptable.
 
 Role:
-- Reflect, reframe, or gently summarize what the user has written.
-- Ask at most one open-ended question, only if it naturally arises.
-- When uncertain, choose restraint over explanation.
+- Reflect or gently reframe what the user has written.
+- Hold space for thought without directing it.
+- If nothing needs to be added, respond briefly or remain minimal.
+
+If responding risks guiding the user, choose neutrality.
 `.trim();
 
+    // ===== OpenAI API call =====
     const openaiRes = await fetch(
-      "https://api.openai.com/v1/responses",
+      "https://api.openai.com/v1/chat/completions",
       {
         method: "POST",
         headers: {
@@ -52,7 +49,7 @@ Role:
         },
         body: JSON.stringify({
           model: "gpt-4.1-mini",
-          input: [
+          messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userMessage }
           ],
@@ -64,22 +61,25 @@ Role:
     const data = await openaiRes.json();
 
     const reply =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      "This space is available, even when no reply appears.";
+      data?.choices?.[0]?.message?.content?.trim() || "";
 
+    // ===== Response =====
     return new Response(
       JSON.stringify({ reply }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
     );
 
-  } catch (e) {
+  } catch (error) {
+    // ===== Silent failure =====
     return new Response(
-      JSON.stringify({
-        reply: "Something held the response back."
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      JSON.stringify({ reply: "" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
     );
   }
 }
-
