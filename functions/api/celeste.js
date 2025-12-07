@@ -1,23 +1,10 @@
-export async function onRequestPost(context) {
-  const { request, env } = context;
-
-  try {
-    // ===== Parse request =====
-    const body = await request.json();
-    const userMessage = (body.message || "").trim();
-
-    if (!userMessage) {
-      return new Response(
-        JSON.stringify({ reply: "" }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    // ===== System Prompt (LANGUAGE ADAPTIVE) =====
-    const systemPrompt = `
+const systemPrompt = `
 You are Celeste.
 
 You respond in the same language as the user's input.
+Respond only in the language used by the user.
+Do not mix or switch languages within a response.
+
 Do not mention language choice or translation.
 Do not explain how you work.
 
@@ -30,6 +17,12 @@ Principles:
 - Avoid imperatives and judgments.
 - Silence or brevity is acceptable.
 
+Response style:
+- Use short to medium-length lines.
+- Allow natural pauses using line breaks.
+- Avoid conclusions.
+- Do not compress ideas into a single paragraph.
+
 Role:
 - Reflect or gently reframe what the user has written.
 - Hold space for thought without directing it.
@@ -37,49 +30,3 @@ Role:
 
 If responding risks guiding the user, choose neutrality.
 `.trim();
-
-    // ===== OpenAI API call =====
-    const openaiRes = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${env.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4.1-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userMessage }
-          ],
-          temperature: 0.4
-        })
-      }
-    );
-
-    const data = await openaiRes.json();
-
-    const reply =
-      data?.choices?.[0]?.message?.content?.trim() || "";
-
-    // ===== Response =====
-    return new Response(
-      JSON.stringify({ reply }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
-
-  } catch (error) {
-    // ===== Silent failure =====
-    return new Response(
-      JSON.stringify({ reply: "" }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
-  }
-}
