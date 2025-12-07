@@ -1,108 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About — Celeste</title>
 
 <style>
 :root{
-  --bg:#0f1216;          /* CelesteBlue */
-  --panel:#141922;
+  --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
+  --accent:#a9b7ff;
 }
-*{box-sizing:border-box;}
-
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-
 .wrap{
-  max-width:860px;
+  max-width:720px;
   margin:0 auto;
-  padding:44px 20px 30px;
+  padding:56px 20px 80px;
 }
-
 h1{
-  font-size:22px;
-  font-weight:400;
-  margin-bottom:24px;
+  font-size:28px;
+  margin-bottom:28px;
 }
-
 p{
   line-height:1.9;
+  margin:22px 0;
+}
+.muted{
   color:var(--muted);
-  margin-bottom:22px;
 }
-
-/* section links */
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px 18px 14px;
-  margin-top:36px;
-}
-
-.list{
-  list-style:none;
-  padding:0;
-  margin:0;
-}
-
-.list li{
-  border-top:1px solid var(--line);
-}
-.list li:first-child{
-  border-top:none;
-}
-
-.list a{
-  display:block;
-  padding:14px 6px;
-  color:var(--text);
-  text-decoration:none;
-}
-
-.list a span{
-  color:var(--muted);
-  margin-left:6px;
-}
-
-/* footer (horizontal) */
 .footer{
-  margin-top:56px;
+  margin-top:64px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-
-.footer a{
-  font-size:13px;
-  color:#6d7588;
-  text-decoration:none;
-}
-.footer a:hover{
-  color:var(--text);
-}
-
-.footer .version{
   font-size:12px;
   color:#6d7588;
 }
-
-/* small screens */
-@media (max-width:640px){
-  .footer{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:6px;
-  }
+a{
+  color:var(--accent);
+  text-decoration:none;
+}
+a:hover{
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -113,70 +59,28 @@ p{
 <h1>About</h1>
 
 <p>
-Celeste is not a product, a character, or a guide.  
-It is a quiet space, intentionally left open,  
-where thoughts can be placed without being led toward a conclusion.
+Celeste is a quiet space for thinking.
 </p>
 
 <p>
-Many interactive systems rush toward clarity.  
-They narrow paths, suggest actions,  
-and shape conversations into decisions.  
-Celeste chooses a different posture.
+It does not give instructions.
+It does not make decisions for you.
+It simply stays with your thoughts, allowing them to unfold at their own pace.
 </p>
 
 <p>
-Here, thoughts may remain unfinished.  
-Questions do not need to resolve themselves.  
-Judgment stays with the person who holds it.
+You bring what matters.
+Celeste helps create enough stillness for it to become clear.
 </p>
 
-<p>
-This site describes the structure behind that choice.  
-Each section examines how restraint, silence,  
-and non-intervention are maintained  
-without rendering the space unusable.
+<p class="muted">
+Celeste holds the full flow of this conversation only while you are here.<br>
+When this space closes, nothing is retained.
 </p>
-
-<p>
-Celeste does not think in your place.  
-It stays close enough to listen,  
-and far enough to let your thinking remain your own.
-</p>
-
-<div class="card">
-  <ul class="list">
-    <li>
-      <a href="philosophy.html">
-        Philosophy <span>— the principles behind the space</span>
-      </a>
-    </li>
-    <li>
-      <a href="silent-structure.html">
-        Silent Structure <span>— how restraint is implemented</span>
-      </a>
-    </li>
-    <li>
-      <a href="vision.html">
-        Vision <span>— direction without expansion</span>
-      </a>
-    </li>
-    <li>
-      <a href="who-i-am.html">
-        Who I Am <span>— position without persona</span>
-      </a>
-    </li>
-    <li>
-      <a href="contact.html">
-        Contact <span>— a quiet point of access</span>
-      </a>
-    </li>
-  </ul>
-</div>
 
 <div class="footer">
-  <a href="/celeste-console.html">Back to Console</a>
-  <div class="version">CELESTE v4.0A</div>
+  <a href="/about.html">Back to About</a>
+  <span>Celeste v4.1</span>
 </div>
 
 </div>
