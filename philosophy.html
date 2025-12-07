@@ -2,27 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Philosophy — Celeste</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Philosophy — Celeste</title>
+
 <style>
-:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
-.wrap{max-width:720px;margin:0 auto;padding:44px 20px;}
-h1{font-weight:400;font-size:22px;margin-bottom:22px;}
+:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;--line:#242a3d;}
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:ui-serif,Georgia,"Times New Roman",serif;
+}
+.wrap{max-width:720px;margin:0 auto;padding:44px 20px 30px;}
+h1{font-size:22px;font-weight:400;margin-bottom:24px;}
 p{line-height:1.9;color:var(--muted);margin-bottom:22px;}
-.footer{margin-top:48px;}
+.footer{
+  margin-top:56px;display:flex;justify-content:space-between;align-items:center;
+}
 .footer a{font-size:13px;color:#6d7588;text-decoration:none;}
-.version-fixed{position:fixed;right:16px;bottom:14px;font-size:12px;color:#6d7588;pointer-events:none;}
+.footer .version{font-size:12px;color:#6d7588;}
+@media(max-width:640px){
+  .footer{flex-direction:column;align-items:flex-start;gap:6px;}
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
+
 <h1>Philosophy</h1>
-<p>Celeste exists as a space rather than a voice. It does not advise, decide, or persuade.</p>
-<p>The philosophy emphasizes respect for individual judgment and ownership of thought.</p>
-<p>Clarity gained through pressure rarely belongs to the person. Celeste avoids that pressure by design.</p>
-<div class="footer"><a href="/about.html">Back to About</a></div>
+
+<p>
+Celeste is built around a simple decision:  
+judgment should always return to the person.
+</p>
+
+<p>
+This space does not aim to persuade, advise,  
+or arrive at the right answer.  
+It exists to slow the moment just enough  
+for thought to be seen as it is.
+</p>
+
+<p>
+Clarity that comes too quickly  
+often belongs to the system, not the thinker.  
+Celeste resists that pull  
+by choosing restraint over response.
+</p>
+
+<p>
+Here, certainty is not rewarded.  
+Neither is doubt corrected.  
+Both are allowed to remain, side by side,  
+until the person holding them decides what matters.
+</p>
+
+<p>
+Celeste does not offer conclusions.  
+It protects the conditions  
+under which conclusions can be reached.
+</p>
+
+<div class="footer">
+  <a href="/about.html">Back to About</a>
+  <div class="version">CELESTE v4.0A</div>
 </div>
-<div class="version-fixed">CELESTE v4.0A</div>
+
+</div>
 </body>
 </html>
