@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Silent Structure — Celeste</title>
 
 <style>
-:root{
+:root {
   --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
-  --accent:#a9b7ff;
+  --line:#242a3d;
 }
 body{
   margin:0;
@@ -19,35 +19,26 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 .wrap{
-  max-width:720px;
+  max-width:760px;
   margin:0 auto;
-  padding:56px 20px 80px;
+  padding:64px 20px;
 }
 h1{
   font-size:28px;
-  margin-bottom:28px;
+  font-weight:normal;
+  margin-bottom:32px;
 }
 p{
   line-height:1.9;
   margin:22px 0;
 }
-.section{
-  margin:38px 0;
+.muted{
+  color:var(--muted);
 }
-.footer{
-  margin-top:64px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-  color:#6d7588;
-}
-a{
-  color:var(--accent);
-  text-decoration:none;
-}
-a:hover{
-  text-decoration:underline;
+hr{
+  border:none;
+  border-top:1px solid var(--line);
+  margin:48px 0;
 }
 </style>
 </head>
@@ -58,35 +49,52 @@ a:hover{
 <h1>Silent Structure</h1>
 
 <p>
-Celeste is not empty by accident.
-Its quiet is carefully held.
+Celeste is built on absence.
 </p>
 
-<div class="section">
 <p>
-Structure exists here, but it does not ask to be noticed.
-Boundaries are present so that thoughts can move freely within them.
+There is no accumulation of history.
+No hidden continuity.
+No internal memory.
 </p>
-</div>
 
-<div class="section">
 <p>
-Nothing is stored beyond the time it is needed.
-Nothing is accumulated for future use.
+Each interaction stands alone.
+When it ends, nothing remains behind it.
 </p>
-</div>
 
-<div class="section">
+<hr>
+
+<p class="muted">
+What makes this space usable is not what it keeps,
+but what it releases.
+</p>
+
+<p class="muted">
+Nothing is carried forward from one visit to the next.
+What appears here exists only while you are present.
+</p>
+
+<hr>
+
 <p>
-The structure supports presence, then disappears.
-That disappearance is part of its function.
+セレステは、残さない構造の上に成り立っています。
 </p>
-</div>
 
-<div class="footer">
-  <a href="/about.html">Back to About</a>
-  <span>Celeste v4.1</span>
-</div>
+<p>
+履歴は蓄積されず、
+内部に持ち越されるものもありません。
+</p>
+
+<p>
+やり取りは、ひとつひとつが独立しています。
+終われば、何も残りません。
+</p>
+
+<p class="muted">
+ここにあるものは、保たれるためではなく、
+手放されるために存在します。
+</p>
 
 </div>
 </body>
