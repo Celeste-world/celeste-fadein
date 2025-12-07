@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact — Celeste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
-  --bg:#0f1216;          /* CelesteBlue */
+  --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
@@ -17,12 +17,12 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
 .wrap{
   max-width:720px;
   margin:0 auto;
-  padding:44px 20px 20px;
+  padding:44px 20px;
 }
 h1{
   font-weight:400;
@@ -34,8 +34,6 @@ p{
   color:var(--muted);
   margin-bottom:22px;
 }
-
-/* アクションリンク */
 .contact-action a{
   font-size:15px;
   color:var(--text);
@@ -46,8 +44,6 @@ p{
 .contact-action a:hover{
   border-color:var(--text);
 }
-
-/* 下部導線 */
 .footer{
   margin-top:48px;
 }
@@ -56,8 +52,10 @@ p{
   color:#6d7588;
   text-decoration:none;
 }
-.footer a:hover{
-  color:var(--text);
+.footer .version{
+  margin-top:6px;
+  font-size:12px;
+  color:#6d7588;
 }
 </style>
 </head>
@@ -68,14 +66,15 @@ p{
 <h1>Contact</h1>
 
 <p>
-Contact is available only when necessary.  
-This space does not invite ongoing conversation,  
-feedback loops, or unsolicited messages.
+Contact is provided for necessary communication only.
+This channel is not intended for conversation,
+feedback cycles, or open correspondence.
 </p>
 
 <p>
-If reaching out is required, a deliberate action  
-will open your mail client.
+A deliberate action is required to initiate contact,
+preserving the quiet nature of this space
+and reducing automated or unintended messages.
 </p>
 
 <p class="contact-action">
@@ -84,13 +83,13 @@ will open your mail client.
 
 <div class="footer">
   <a href="/about.html">Back to About</a>
+  <div class="version">CELESTE v4.0A</div>
 </div>
 
 </div>
 
 <script>
 (function(){
-  /* bot対策：アドレスは組み立てのみ */
   const user = "contact";
   const domain = "celeste.world";
   const link = document.getElementById("contact-link");
