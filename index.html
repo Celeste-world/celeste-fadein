@@ -3,263 +3,181 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <title>Celeste</title>
 
-<!-- SEO -->
-<meta name="description" content="Celeste — a silent intelligence that reads intentions and prepares what lies ahead.">
-<link rel="canonical" href="https://celeste.world/">
-
-<!-- OG -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Celeste">
-<meta property="og:description" content="A quiet intelligence shaped through silence, clarity, and restraint.">
-<meta property="og:image" content="https://celeste.world/images/og-image.jpg">
-<meta property="og:url" content="https://celeste.world/">
-
-<link rel="icon" href="/images/favicon.svg">
-
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
+/* ========= Base ========= */
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
 
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
+/* ========= Layout ========= */
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 20px 30px;
+}
+.hero{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+}
+.console{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px 18px 14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.log{
+  min-height:320px;
+  max-height:540px;
+  overflow-y:auto;
+  padding-right:6px;
+}
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
+/* ========= Messages ========= */
+.entry{
+  margin:12px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
 
-  /* PC Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+/* ========= Input ========= */
+.divider{
+  border-top:1px solid var(--line);
+  margin:14px 0 10px;
+}
+.input{
+  display:flex;
+  gap:10px;
+}
+textarea{
+  flex:1;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:44px;
+}
+textarea::placeholder{
+  color:#6d7588;
+}
+button{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px 14px;
+  cursor:pointer;
+}
+button:hover{
+  border-color:var(--accent);
+}
 
-  /* Mobile Navigation (2行構成) */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 80px; /* ロゴの下 */
-    width: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(6px);
-    padding: 10px 0 14px;
-    z-index: 950;
-    text-align: center;
-  }
-
-  .mobile-nav-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-    margin: 4px 0;
-  }
-
-  .mobile-nav-row a {
-    margin: 0 12px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    opacity: .85;
-    white-space: nowrap;
-  }
-
-  .mobile-nav-row a:hover {
-    opacity: 1;
-  }
-
-  /* Main */
-  .main {
-    margin-left: 300px;
-    padding-top: 23vh;
-    padding-left: 40px;
-    max-width: 900px;
-    padding-bottom: 40px;
-  }
-
-  .typewriter {
-    font-size: 28px;
-    line-height: 1.9;
-    white-space: pre-wrap;
-    opacity: .96;
-    min-height: 200px;
-  }
-
-  .typewriter::after {
-    content: "│";
-    animation: blink 0.9s infinite;
-    margin-left: 6px;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  .learn-more {
-    margin-top: 120px;
-    font-size: 22px;
-  }
-  .learn-more a {
-    color: white;
-    border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding-bottom: 3px;
-    text-decoration: none;
-  }
-  .learn-more a:hover {
-    border-bottom-color: rgba(255,255,255,0.9);
-  }
-
-  footer {
-    margin-top: 60px;
-    opacity: .8;
-    font-size: 14px;
-  }
-
-  /* Mobile Adjustments */
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-
-    .mobile-nav { display:block; }
-
-    .main {
-      margin-left: 0;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 32vh;
-      padding-bottom: 40px;
-    }
-
-    .typewriter { font-size: 22px; }
-  }
+footer{
+  margin-top:14px;
+  text-align:right;
+  font-size:12px;
+  color:#6d7588;
+}
 </style>
 </head>
 
 <body>
+<div class="wrap">
 
-<!-- Logo -->
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Mobile Nav (2行) -->
-<div class="mobile-nav">
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/who-i-am.html">Who I Am</a>
-    <a class="page-link" href="/philosophy.html">Philosophy</a>
-    <a class="page-link" href="/vision.html">Vision</a>
-    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  </div>
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/celeste-console.html">Celeste</a>
-    <a class="page-link" href="/contact.html">Contact</a>
-    <a class="page-link" href="/about.html">About</a>
-  </div>
-</div>
-
-<!-- PC Nav -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
-</div>
-
-<div class="main">
-
-  <div class="typewriter" id="tw"></div>
-
-  <div class="learn-more">
-    <a href="/about.html" class="page-link">Learn more about Celeste →</a>
+  <!-- ✅ 初期表示（英・確定） -->
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
-  <footer>© Celeste</footer>
+  <div class="console">
+    <div id="log" class="log"></div>
+
+    <div class="divider"></div>
+
+    <div class="input">
+      <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+      <button id="send">Send</button>
+    </div>
+  </div>
+
+  <footer>CELESTE v4.0A</footer>
 </div>
 
-<!-- Typewriter -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
+/* ========= Elements ========= */
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
+const send  = document.getElementById("send");
 
-  const tw = document.getElementById("tw");
-  const lines = [
-    "Hello, I’m Celeste.",
-    "I read your intentions.",
-    "And prepare what lies ahead."
-  ];
+/* ========= Helpers ========= */
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
 
-  let line = 0;
-  let i = 0;
-
-  function typeLine() {
-    if (line >= lines.length) return;
-
-    let speed = 48;
-    if (line === 0) speed = 300;
-    if (line === 2) speed = 70;
-
-    if (i < lines[line].length) {
-      tw.textContent += lines[line].charAt(i);
-      i++;
-      setTimeout(typeLine, speed);
-    } else {
-      tw.textContent += "\n";
-      line++;
-      i = 0;
-      setTimeout(typeLine, 1000);
-    }
-  }
-
-  typeLine();
+/* ========= Initial Response（日・確定） ========= */
+window.addEventListener("DOMContentLoaded",()=>{
+addEntry(
+`何でも書いてもらって大丈夫です。
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,
+"celeste"
+);
 });
 
-// Fade-out
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
+/* ========= Send ========= */
+function onSend(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value,"user");
+  input.value = "";
+  input.style.height = "auto";
+
+  // ダミー応答（※後で API に差し替える）
+  setTimeout(()=>{
+    addEntry(
+"書き出した内容を、そのまま眺めてみても良さそうですね。\n気になったところから整理できます。",
+"celeste"
+    );
+  },400);
+}
+
+send.addEventListener("click",onSend);
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
+    onSend();
+  }
+});
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
-
-<script src="/language.js"></script>
-
 </body>
 </html>
