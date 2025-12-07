@@ -146,13 +146,25 @@ function onSend(){
   input.value="";
   input.style.height="auto";
 
-  /* Dummy response – will be replaced by API */
-  setTimeout(()=>{
-    addEntry(
-"書き出した内容を、そのまま眺めてみても良さそうですね。\n気になったところから整理できます。",
-    "celeste"
-    );
-  },400);
+ /* API call (Celeste v4.0A) */
+fetch("/api/celeste", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ message: value })
+})
+.then(res => res.json())
+.then(data => {
+  const reply = (data.reply || "").trim();
+  if (reply) {
+    addEntry(reply, "celeste");
+  }
+})
+.catch(() => {
+  /* 沈黙を選ぶ */
+});
+
 }
 
 /* Enter to send / Shift+Enter for newline */
