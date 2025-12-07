@@ -22,7 +22,7 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-/* ===== Layout ===== */
+/* Layout */
 .wrap{
   max-width:900px;
   margin:0 auto;
@@ -32,8 +32,6 @@ body{
   color:var(--muted);
   font-size:16px;
   margin-bottom:22px;
-  line-height:1.7;
-  white-space:pre-wrap;
 }
 .console{
   background:var(--panel);
@@ -49,7 +47,7 @@ body{
   padding-right:6px;
 }
 
-/* ===== Messages ===== */
+/* Messages */
 .entry{
   margin:12px 0;
   line-height:1.75;
@@ -58,16 +56,14 @@ body{
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
-/* ===== Spacing ===== */
+/* Spacing */
 .divider{
   border-top:1px solid var(--line);
   margin:56px 0 20px;
 }
-.input{
-  margin-top:6px;
-}
+.input{ margin-top:6px; }
 
-/* ===== Input ===== */
+/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -84,21 +80,10 @@ textarea::placeholder{
   color:#6d7588;
 }
 
-/* ===== Footer ===== */
-.footer-wrap{
-  margin-top:36px;
-}
-.console-nav{
-  margin-top:18px;
-  font-size:12px;
-}
-.console-nav a{
-  color:var(--muted);
-  text-decoration:none;
-}
-.site-footer{
-  margin-top:40px;
-  padding-top:18px;
+/* Footer */
+footer{
+  margin-top:22px;
+  padding-top:14px;
   border-top:1px solid var(--line);
   font-size:12px;
   color:var(--muted);
@@ -106,7 +91,7 @@ textarea::placeholder{
   justify-content:space-between;
   align-items:center;
 }
-.site-footer a{
+footer a{
   color:var(--muted);
   text-decoration:none;
 }
@@ -116,40 +101,28 @@ textarea::placeholder{
 <body>
 <div class="wrap">
 
-  <!-- Initial display -->
-  <div class="hero">
-A quiet space to organize your thoughts — decisions stay with you.
-静かに考えを整えるための、小さな余白です。選ぶのは、いつもあなたです。
+<div class="hero">
+  A quiet space to organize your thoughts — decisions stay with you.
+</div>
+
+<div class="console">
+  <div id="log" class="log"></div>
+
+  <div class="divider"></div>
+
+  <div class="input">
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
+</div>
 
-  <div class="console">
-    <div id="log" class="log"></div>
-
-    <div class="divider"></div>
-
-    <div class="input">
-      <textarea
-        id="input"
-        rows="1"
-        placeholder="Write freely."
-      ></textarea>
-    </div>
+<footer>
+  <div>
+    <a href="/about.html">Back to About</a>
   </div>
-
-  <!-- Console → About導線 -->
-  <div class="console-nav">
-    <a href="/about.html">About Celeste</a>
+  <div>
+    Celeste v4.1A
   </div>
-
-  <!-- Common footer -->
-  <footer class="site-footer">
-    <div>
-      <a href="/about.html">Back to About</a>
-    </div>
-    <div>
-      Celeste v4.1A
-    </div>
-  </footer>
+</footer>
 
 </div>
 
@@ -165,22 +138,15 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Initial response */
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
-`You can write anything here.
-This space is for organizing your thoughts.
-Where would you like to begin.
-
-何でも書いてもらって大丈夫です。
+`何でも書いてもらって大丈夫です。
 ここでは、考えを整理することができます。
 どの点から見ていきますか。`,
   "celeste"
   );
 });
 
-
-/* Send logic */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
@@ -191,30 +157,24 @@ function onSend(){
 
   fetch(window.location.origin + "/api/celeste", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message: value })
   })
   .then(res => res.json())
   .then(data => {
     const reply = (data.reply || "").trim();
-    if (reply) {
-      addEntry(reply, "celeste");
-    }
+    if(reply) addEntry(reply,"celeste");
   })
-  .catch(() => {});
+  .catch(()=>{});
 }
 
-/* Enter to send / Shift+Enter for newline */
-input.addEventListener("keydown", (e) => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown", e => {
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-/* Auto resize */
 input.addEventListener("input", () => {
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
