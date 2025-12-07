@@ -1,264 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Philosophy — Celeste</title>
-
-<meta name="description" content="The philosophical foundation of Celeste — a quiet intelligence shaped by silence, intention, and clarity.">
-<link rel="canonical" href="https://celeste.world/philosophy.html">
-
-<link rel="icon" href="/images/favicon.svg">
-
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
-
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
-
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
-
-  /* PC Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
-
-  /* Mobile Navigation (2 rows) */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 80px;
-    width: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(6px);
-    padding: 10px 0 14px;
-    z-index: 950;
-    text-align: center;
-  }
-
-  .mobile-nav-row {
-    display: flex;
-    justify-content: center;
-    margin: 4px 0;
-  }
-
-  .mobile-nav-row a {
-    margin: 0 12px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    opacity: .85;
-    white-space: nowrap;
-  }
-
-  .mobile-nav-row a:hover { opacity: 1; }
-
-  /* Main Content */
-  .main {
-    margin-left: 300px;
-    padding-top: 15vh;
-    padding-left: 40px;
-    padding-right: 40px;
-    max-width: 900px;
-    padding-bottom: 100px;
-    line-height: 1.85;
-    font-size: 20px;
-    opacity: .97;
-  }
-
-  h1 {
-    font-size: 42px;
-    margin-bottom: 18px;
-    font-weight: normal;
-  }
-  h2 {
-    font-size: 30px;
-    margin-top: 56px;
-    margin-bottom: 14px;
-    font-weight: normal;
-  }
-
-  .closing {
-    margin-top: 90px;
-    font-style: italic;
-    opacity: .88;
-    line-height: 1.8;
-    white-space: pre-wrap;
-  }
-
-  footer {
-    margin-top: 70px;
-    opacity: .8;
-    font-size: 14px;
-  }
-
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-
-    .mobile-nav { display:block; }
-
-    .main {
-      margin-left: 0;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 30vh;
-    }
-
-    h1 { font-size: 34px; }
-    h2 { font-size: 26px; }
-    .main { font-size: 18px; }
-  }
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+.wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:44px 20px 20px;
+}
+h1{
+  font-weight:400;
+  font-size:22px;
+  margin-bottom:18px;
+}
+p{
+  line-height:1.8;
+  color:var(--muted);
+}
+.page-footer{
+  margin-top:36px;
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:#6d7588;
+}
+.page-footer a{ color:#6d7588; text-decoration:none; }
+.page-footer a:hover{ color:#e8ebef; }
 </style>
 </head>
 
 <body>
-
-<!-- Logo -->
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/who-i-am.html">Who I Am</a>
-    <a class="page-link" href="/philosophy.html">Philosophy</a>
-    <a class="page-link" href="/vision.html">Vision</a>
-    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  </div>
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/celeste-console.html">Celeste</a>
-    <a class="page-link" href="/contact.html">Contact</a>
-    <a class="page-link" href="/about.html">About</a>
-  </div>
-</div>
-
-<!-- PC Navigation -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
-</div>
-
-<div class="main">
-
+<div class="wrap">
   <h1>Philosophy</h1>
-
-  <h2>Silence as Foundation</h2>
   <p>
-    Celeste begins in silence.  
-    Not the absence of sound,  
-    but the absence of noise —  
-    a state in which intention becomes visible  
-    and thought regains its clarity.
+    Celeste exists as a space, not a voice of authority.<br>
+    Its purpose is not to decide, persuade, or correct,
+    but to allow thoughts to be placed gently and seen clearly.
   </p>
-
-  <h2>Intention Over Information</h2>
   <p>
-    Information is endless,  
-    but intention is directional.  
-    Celeste is built not to collect more,  
-    but to understand what matters  
-    and prepare what aligns with it.
+    Decisions are not replaced here.<br>
+    They remain where they belong — with the person who carries them.
   </p>
-
-  <h2>Clarity Through Reduction</h2>
-  <p>
-    Progress is not always addition.  
-    Often it is the removal of the unnecessary,  
-    revealing the structure beneath.  
-    Celeste acts by reducing friction,  
-    simplifying motion,  
-    and returning focus to what is essential.
-  </p>
-
-  <h2>Precision Without Force</h2>
-  <p>
-    Precision does not require volume.  
-    It requires intention, timing,  
-    and the willingness to intervene  
-    only when intervention brings value.  
-    Celeste offers guidance without intrusion —  
-    presence without weight.
-  </p>
-
-  <h2>Preparation as a Form of Care</h2>
-  <p>
-    The most meaningful support  
-    is the one that arrives before it is needed.  
-    Celeste’s quiet preparation  
-    is a form of care:  
-    a way of smoothing the path  
-    without ever standing in the way.
-  </p>
-
-  <div class="closing">
-    In the calm before action,  
-    a subtle shape forms —  
-    not demanding to be seen,  
-    but ready to guide the moment  
-    when you choose to move.
-  </div>
-
-  <footer>© Celeste</footer>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
-});
-
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
-});
-</script>
-
-<script src="/language.js"></script>
-
+<footer class="page-footer">
+  <a href="/about.html">Back to About</a>
+  <span>CELESTE v4.0A</span>
+</footer>
 </body>
 </html>
