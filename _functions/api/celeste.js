@@ -36,7 +36,7 @@ If a response risks guiding or deciding, choose neutrality.
 If nothing needs to be added, respond briefly or remain minimal.
 `.trim();
 
-    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+    const openaiRes = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,28 +44,38 @@ If nothing needs to be added, respond briefly or remain minimal.
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage }
+        input: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
         ],
         temperature: 0.4
       })
     });
 
     const data = await openaiRes.json();
+
     const reply =
-      data.choices?.[0]?.message?.content?.trim() || "";
+      data.output_text?.trim() ||
+      data.output?.[0]?.content?.[0]?.text?.trim() ||
+      "";
 
     return new Response(
       JSON.stringify({ reply }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
     );
 
   } catch (e) {
-    // エラー時は「説明しない沈黙」
+    // 説明しない沈黙
     return new Response(
-      JSON.stringify({ reply: "" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-  }
-}
+      JSON.stringify({ reply:
