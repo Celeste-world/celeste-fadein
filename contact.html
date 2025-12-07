@@ -1,253 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Contact – Celeste</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact — Celeste</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      line-height: 1.6;
-      color: #222;
-      background-color: #fafafa;
-    }
+<style>
+:root{
+  --bg:#0f1216;          /* CelesteBlue */
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+.wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:44px 20px 20px;
+}
+h1{
+  font-weight:400;
+  font-size:22px;
+  margin-bottom:22px;
+}
+p{
+  line-height:1.9;
+  color:var(--muted);
+  margin-bottom:22px;
+}
 
-    .page-wrapper {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* アクションリンク */
+.contact-action a{
+  font-size:15px;
+  color:var(--text);
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:2px;
+}
+.contact-action a:hover{
+  border-color:var(--text);
+}
 
-    header {
-      padding: 1.5rem 1.75rem 0.5rem;
-    }
-
-    .site-title {
-      font-size: 1.1rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    nav {
-      margin-top: 0.75rem;
-      font-size: 0.9rem;
-    }
-
-    nav a {
-      margin-right: 1rem;
-      text-decoration: none;
-      color: #444;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      flex: 1;
-      padding: 2.5rem 1.75rem 2rem;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .page-lead {
-      font-size: 0.98rem;
-      color: #555;
-      margin-bottom: 1.75rem;
-    }
-
-    .section {
-      margin-bottom: 2.25rem;
-    }
-
-    .section-title {
-      font-size: 1.05rem;
-      margin-bottom: 0.35rem;
-      font-weight: 600;
-    }
-
-    .section-body {
-      font-size: 0.95rem;
-    }
-
-    .contact-block {
-      margin-top: 1rem;
-      padding: 1rem 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid #e4e4e4;
-      background-color: #ffffff;
-      font-size: 0.95rem;
-    }
-
-    .contact-label {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .contact-email {
-      text-decoration: none;
-      border-bottom: 1px dashed #888;
-      padding-bottom: 1px;
-      color: #222;
-    }
-
-    .contact-email:hover {
-      border-bottom-style: solid;
-    }
-
-    .note {
-      font-size: 0.82rem;
-      color: #777;
-      margin-top: 0.6rem;
-    }
-
-    footer.page-footer {
-      border-top: 1px solid #e4e4e4;
-      padding: 1.25rem 1.75rem 1.5rem;
-      margin-top: 2.5rem;
-      font-size: 0.85rem;
-      color: #666;
-    }
-
-    .footer-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .back-link {
-      text-decoration: none;
-      color: #444;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
-    }
-
-    .footer-version {
-      opacity: 0.9;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 640px) {
-      main {
-        padding: 2rem 1.25rem 2rem;
-      }
-
-      header {
-        padding: 1.25rem 1.25rem 0.5rem;
-      }
-
-      footer.page-footer {
-        padding: 1rem 1.25rem 1.25rem;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
+/* 下部導線 */
+.footer{
+  margin-top:48px;
+}
+.footer a{
+  font-size:13px;
+  color:#6d7588;
+  text-decoration:none;
+}
+.footer a:hover{
+  color:var(--text);
+}
+</style>
 </head>
+
 <body>
-  <div class="page-wrapper">
-    <header>
-      <div class="site-title">Celeste</div>
-      <nav aria-label="Primary">
-        <a href="about.html">About</a>
-        <a href="philosophy.html">Philosophy</a>
-        <a href="silent-structure.html">Silent Structure</a>
-        <a href="vision.html">Vision</a>
-        <a href="who-i-am.html">Who I Am</a>
-        <a href="contact.html" aria-current="page">Contact</a>
-      </nav>
-    </header>
+<div class="wrap">
 
-    <main>
-      <h1>Contact</h1>
-      <p class="page-lead">
-        If you’d like to say hello, share feedback, or explore a project
-        together, you can reach Celeste’s creator directly by email.
-      </p>
+<h1>Contact</h1>
 
-      <section class="section">
-        <div class="section-title">How to reach me</div>
-        <div class="section-body">
-          <p>
-            Please feel free to send a short message about what you’d like to
-            talk about—whether it’s questions about Celeste, collaboration
-            ideas, or simple impressions after using the console.
-          </p>
+<p>
+Contact is available only when necessary.  
+This space does not invite ongoing conversation,  
+feedback loops, or unsolicited messages.
+</p>
 
-          <div class="contact-block">
-            <div class="contact-label">Email</div>
-            <!-- JS で mailto を組み立てる。HTML 上には生アドレスを残さない -->
-            <a
-              id="email-link"
-              class="contact-email"
-              href="#"
-              rel="nofollow"
-            >
-              contact [at] celeste.world
-            </a>
+<p>
+If reaching out is required, a deliberate action  
+will open your mail client.
+</p>
 
-            <p class="note">
-              To reduce automated scraping, the address is assembled in your
-              browser. If nothing happens when you click, please reload the
-              page once and try again.
-            </p>
-          </div>
-        </div>
-      </section>
+<p class="contact-action">
+  <a href="#" id="contact-link">Open mail client</a>
+</p>
 
-      <section class="section">
-        <div class="section-title">What to expect</div>
-        <div class="section-body">
-          <p>
-            Messages are read by a human first. Celeste may be used to help
-            organize thoughts or draft a reply, but every decision and final
-            judgment stays with you—and with me.
-          </p>
-        </div>
-      </section>
-    </main>
+<div class="footer">
+  <a href="/about.html">Back to About</a>
+</div>
 
-    <footer class="page-footer">
-      <div class="footer-inner">
-        <a href="about.html" class="back-link">← Back to About</a>
-        <span class="footer-version">Celeste v4.0A</span>
-      </div>
-    </footer>
-  </div>
+</div>
 
-  <script>
-    // メールアドレス生成（ボット避け & メーラー起動用）
-    document.addEventListener("DOMContentLoaded", function () {
-      var link = document.getElementById("email-link");
-      if (!link) return;
+<script>
+(function(){
+  /* bot対策：アドレスは組み立てのみ */
+  const user = "contact";
+  const domain = "celeste.world";
+  const link = document.getElementById("contact-link");
 
-      var user = "contact";
-      var domain = "celeste.world";
-      var address = user + "@" + domain;
+  link.addEventListener("click", function(e){
+    e.preventDefault();
+    window.location.href = "mailto:" + user + "@" + domain;
+  });
+})();
+</script>
 
-      // 実際の mailto を設定
-      link.href = "mailto:" + address;
-
-      // 画面上の表示もきちんとしたアドレスに差し替え
-      link.textContent = address;
-    });
-  </script>
 </body>
 </html>
