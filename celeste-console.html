@@ -32,6 +32,8 @@ body{
   color:var(--muted);
   font-size:16px;
   margin-bottom:22px;
+  line-height:1.7;
+  white-space:pre-wrap;
 }
 .console{
   background:var(--panel);
@@ -50,7 +52,7 @@ body{
 /* ===== Messages ===== */
 .entry{
   margin:12px 0;
-  line-height:1.85;
+  line-height:1.75;
   white-space:pre-wrap;
 }
 .celeste{ color:var(--text); }
@@ -59,7 +61,7 @@ body{
 /* ===== Spacing ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:56px 0 20px;
+  margin:56px 0 20px; /* 入力欄との距離：56px */
 }
 .input{
   margin-top:6px;
@@ -94,13 +96,17 @@ footer{
 <body>
 <div class="wrap">
 
+  <!-- Initial display (EN / JP併記) -->
   <div class="hero">
-    A quiet space for thinking — decisions remain with you.
+A quiet space to organize your thoughts — decisions stay with you.
+静かに考えを整えるための、小さな余白です。選ぶのは、いつもあなたです。
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
+
     <div class="input">
       <textarea
         id="input"
@@ -110,19 +116,13 @@ footer{
     </div>
   </div>
 
-  <footer>CELESTE v4.1</footer>
+  <footer>CELESTE v4.0A</footer>
 </div>
 
 <script>
-/* ===== Session Memory (Ephemeral) ===== */
-const HISTORY_KEY = "celeste_history";
-const LAST_ACTIVE_KEY = "celeste_last_active";
-const SESSION_TIMEOUT = 20 * 60 * 1000; // 20 minutes
-
 const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== UI helpers ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -131,82 +131,31 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* ===== Memory helpers ===== */
-function saveEntry(text, role){
-  const history = JSON.parse(sessionStorage.getItem(HISTORY_KEY) || "[]");
-  history.push({ text, role });
-  sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  sessionStorage.setItem(LAST_ACTIVE_KEY, Date.now().toString());
-}
-
-function loadHistory(){
-  const saved = sessionStorage.getItem(HISTORY_KEY);
-  if (!saved) return false;
-  try {
-    JSON.parse(saved).forEach(item => {
-      addEntry(item.text, item.role);
-    });
-    return true;
-  } catch {
-    resetSession();
-    return false;
-  }
-}
-
-function resetSession(){
-  sessionStorage.removeItem(HISTORY_KEY);
-  sessionStorage.removeItem(LAST_ACTIVE_KEY);
-  log.innerHTML = "";
-  addInitialMessage();
-}
-
-/* ===== Timeout checker ===== */
-setInterval(() => {
-  const last = Number(sessionStorage.getItem(LAST_ACTIVE_KEY));
-  if (!last) return;
-  if (Date.now() - last > SESSION_TIMEOUT) {
-    resetSession();
-  }
-}, 60 * 1000);
-
-/* ===== Initial message (EN / JP synced) ===== */
-function addInitialMessage(){
-  const text =
-`A quiet space for thinking.
-Decisions remain with you.
-
-静かに考えるための場所です。
-判断は、ここではあなたに委ねられています。
-
-Write anything that comes to mind.
-This space will hold it quietly.
-
-何でも書いてもらって大丈夫です。
-この空間が、静かに受け止めます。`;
-  addEntry(text, "celeste");
-  saveEntry(text, "celeste");
-}
-
-/* ===== On load ===== */
+/* Initial response (fixed, Japanese) */
 window.addEventListener("DOMContentLoaded", () => {
-  const restored = loadHistory();
-  if (!restored) addInitialMessage();
+  addEntry(
+`何でも書いてもらって大丈夫です。
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,
+  "celeste"
+  );
 });
 
-/* ===== Send logic ===== */
+/* Send logic */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
   addEntry(value,"user");
-  saveEntry(value,"user");
-
   input.value="";
   input.style.height="auto";
 
+  /* Cloudflare Pages Functions endpoint */
   fetch(window.location.origin + "/api/celeste", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ message: value })
   })
   .then(res => res.json())
@@ -214,23 +163,25 @@ function onSend(){
     const reply = (data.reply || "").trim();
     if (reply) {
       addEntry(reply, "celeste");
-      saveEntry(reply, "celeste");
     }
   })
-  .catch(() => {});
+  .catch(() => {
+    /* Celeste chooses silence */
+  });
 }
 
-/* ===== Input handling ===== */
-input.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter" && !e.shiftKey){
+/* Enter to send / Shift+Enter for newline */
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+/* Auto resize */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
 </body>
