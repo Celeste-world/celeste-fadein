@@ -1,289 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Celeste Console</title>
-
-<meta name="description" content="Celeste Console — a quiet terminal for intention and preparation.">
-<link rel="canonical" href="https://celeste.world/celeste-console.html">
-
-<link rel="icon" href="/images/favicon.svg">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste</title>
 
 <style>
-  body {
-    margin: 0;
-    background-image: url("images/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: "Baskerville", serif;
-    color: white;
-    opacity: 0;
-    transition: opacity .9s ease;
-  }
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
 
-  body.fade-in { opacity: 1; }
-  .fade-out { opacity: 0; transition: opacity .6s ease; }
+/* ===== Layout ===== */
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 20px 30px;
+}
+.hero{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+}
+.console{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px 18px 18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.log{
+  min-height:320px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
 
-  /* Logo */
-  .header-logo {
-    position: fixed;
-    top: 30px;
-    left: 40px;
-    z-index: 1000;
-  }
-  .header-logo img {
-    width: 180px;
-    opacity: .94;
-  }
+/* ===== Messages ===== */
+.entry{
+  margin:12px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
 
-  /* PC Navigation */
-  .vertical-nav {
-    position: fixed;
-    top: 105px;
-    left: 40px;
-    font-size: 20px;
-    line-height: 1.9;
-    opacity: .9;
-    z-index: 900;
-  }
-  .vertical-nav a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    opacity: .85;
-    padding: 2px 0;
-  }
-  .vertical-nav a:hover { opacity: 1; }
+/* ===== Spacing ===== */
+.divider{
+  border-top:1px solid var(--line);
+  margin:56px 0 20px; /* ← 確定：入力欄との距離 */
+}
+.input{
+  margin-top:6px;
+}
 
-  /* Mobile Navigation (2 rows) */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 80px;
-    width: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(6px);
-    padding: 10px 0 14px;
-    z-index: 950;
-    text-align: center;
-  }
+/* ===== Input ===== */
+textarea{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
+}
+textarea::placeholder{
+  color:#6d7588;
+}
 
-  .mobile-nav-row {
-    display: flex;
-    justify-content: center;
-    margin: 4px 0;
-  }
-
-  .mobile-nav-row a {
-    margin: 0 12px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    opacity: .85;
-    white-space: nowrap;
-  }
-
-  .mobile-nav-row a:hover {
-    opacity: 1;
-  }
-
-  /* Main Area */
-  .main {
-    margin-left: 300px;
-    padding-top: 18vh;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 60px;
-    max-width: 900px;
-  }
-
-  h1 {
-    font-size: 42px;
-    margin-bottom: 28px;
-    font-weight: normal;
-  }
-
-  /* Console Window */
-  .console-window {
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.22);
-    border-radius: 6px;
-    padding: 22px;
-    min-height: 360px;
-    max-height: 70vh;
-    overflow-y: auto;
-    line-height: 1.7;
-    font-size: 18px;
-  }
-
-  .console-line {
-    margin-bottom: 12px;
-    opacity: .92;
-  }
-
-  /* Input Box */
-  .input-area {
-    margin-top: 26px;
-    display: flex;
-    width: 100%;
-  }
-
-  .console-input {
-    flex: 1;
-    padding: 14px 18px;
-    background: rgba(0,0,0,0.28);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 6px;
-    color: white;
-    font-size: 18px;
-    font-family: "Baskerville", serif;
-    outline: none;
-  }
-
-  .console-input::placeholder {
-    color: rgba(255,255,255,0.45);
-    font-style: italic;
-  }
-
-  /* Mobile */
-  @media(max-width:768px){
-    .vertical-nav { display:none; }
-
-    .header-logo { top:20px; left:20px; }
-    .header-logo img { width:150px; }
-
-    .mobile-nav { display:block; }
-
-    .main {
-      margin-left: 0;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 32vh;
-    }
-
-    h1 { font-size: 34px; }
-    .console-window { font-size: 16px; min-height: 300px; }
-    .console-input { font-size: 16px; }
-  }
+footer{
+  margin-top:14px;
+  text-align:right;
+  font-size:12px;
+  color:#6d7588;
+}
 </style>
 </head>
 
 <body>
+<div class="wrap">
 
-<!-- Logo -->
-<a href="/" class="header-logo page-link">
-  <img src="/images/logo.svg" alt="Celeste Logo">
-</a>
-
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/who-i-am.html">Who I Am</a>
-    <a class="page-link" href="/philosophy.html">Philosophy</a>
-    <a class="page-link" href="/vision.html">Vision</a>
-    <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  </div>
-  <div class="mobile-nav-row">
-    <a class="page-link" href="/celeste-console.html">Celeste</a>
-    <a class="page-link" href="/contact.html">Contact</a>
-    <a class="page-link" href="/about.html">About</a>
-  </div>
-</div>
-
-<!-- PC Navigation -->
-<div class="vertical-nav">
-  <a class="page-link" href="/who-i-am.html">Who I Am</a>
-  <a class="page-link" href="/philosophy.html">Philosophy</a>
-  <a class="page-link" href="/vision.html">Vision</a>
-  <a class="page-link" href="/silent-structure.html">Silent Structure</a>
-  <a class="page-link" href="/celeste-console.html">Celeste</a>
-  <a class="page-link" href="/contact.html">Contact</a>
-  <a class="page-link" href="/about.html">About</a>
-</div>
-
-<div class="main">
-
-  <h1>Celeste Console</h1>
-
-  <div class="console-window" id="consoleOutput"></div>
-
-  <div class="input-area">
-    <input
-      type="text"
-      id="consoleInput"
-      class="console-input"
-      placeholder="Type your intention…"
-    />
+  <!-- Initial display (fixed) -->
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
-</div>
+  <div class="console">
+    <div id="log" class="log"></div>
 
-<!-- ===================== -->
-<!--   Celeste API Script   -->
-<!-- ===================== -->
+    <div class="divider"></div>
+
+    <div class="input">
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Write freely."
+      ></textarea>
+    </div>
+  </div>
+
+  <footer>CELESTE v4.0A</footer>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
 
-  const input = document.getElementById("consoleInput");
-  const output = document.getElementById("consoleOutput");
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
 
-  // ★ Cloudflare Pages Functions のエンドポイント
-  const API_URL = "/functions/celeste";
-
-  function addLine(text) {
-    const line = document.createElement("div");
-    line.className = "console-line";
-    line.textContent = text;
-    output.appendChild(line);
-    output.scrollTop = output.scrollHeight;
-  }
-
-  input.addEventListener("keydown", async (e) => {
-    if (e.key === "Enter" && input.value.trim() !== "") {
-      const userText = input.value.trim();
-      addLine("> " + userText);
-      input.value = "";
-
-      addLine("…preparing response…");
-
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: userText })
-        });
-
-        if (!response.ok) {
-          addLine("[Error] Function response error: " + response.status);
-          return;
-        }
-
-        const data = await response.json();
-        addLine(data.reply);
-      } catch (error) {
-        addLine("[Network Error] " + error.message);
-      }
-    }
-  });
+/* Initial response (fixed, Japanese) */
+window.addEventListener("DOMContentLoaded",()=>{
+  addEntry(
+`何でも書いてもらって大丈夫です。
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,
+  "celeste"
+  );
 });
 
-// Fade-out on navigation
-document.querySelectorAll(".page-link").forEach(el => {
-  el.addEventListener("click", e => {
+function onSend(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value,"user");
+  input.value="";
+  input.style.height="auto";
+
+  /* Dummy response – will be replaced by API */
+  setTimeout(()=>{
+    addEntry(
+"書き出した内容を、そのまま眺めてみても良さそうですね。\n気になったところから整理できます。",
+    "celeste"
+    );
+  },400);
+}
+
+/* Enter to send / Shift+Enter for newline */
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => { window.location = el.href }, 520);
-  });
+    onSend();
+  }
+});
+
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
-
-<script src="/language.js"></script>
-
 </body>
 </html>
