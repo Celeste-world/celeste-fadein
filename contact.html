@@ -21,64 +21,64 @@ body{
 .wrap{
   max-width:720px;
   margin:0 auto;
-  padding:36px 20px 20px;
+  padding:44px 20px 20px;
 }
-.back-link{ margin-bottom:18px; }
-.back-link a{
-  font-size:13px;
-  color:var(--muted);
-  text-decoration:none;
-}
-.back-link a:hover{ color:var(--text); }
-
 h1{
   font-weight:400;
   font-size:22px;
-  margin:0 0 18px;
+  margin-bottom:22px;
 }
 p{
-  line-height:1.8;
+  line-height:1.9;
   color:var(--muted);
+  margin-bottom:22px;
 }
-
-.contact-action{ margin-top:22px; }
 .contact-action a{
   color:var(--text);
   text-decoration:none;
   border-bottom:1px solid var(--line);
 }
-.contact-action a:hover{ border-color:var(--text); }
-
-footer{
-  margin-top:40px;
-  text-align:center;
-  font-size:12px;
-  color:#6d7588;
+.contact-action a:hover{
+  border-color:var(--text);
 }
+.footer{
+  margin-top:48px;
+}
+.footer a{
+  font-size:13px;
+  color:#6d7588;
+  text-decoration:none;
+}
+.footer a:hover{ color:var(--text); }
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="back-link">
-    <a href="/about.html">Back to About</a>
-  </div>
+<h1>Contact</h1>
 
-  <h1>Contact</h1>
+<p>
+Contact is provided for practical or necessary matters only.
+This channel is not intended for conversation,
+feedback loops, or ongoing dialogue.
+</p>
 
-  <p>
-    Contact exists for practical needs only.<br>
-    Not conversation, not explanation.
-  </p>
+<p>
+If reaching out is necessary, a manual action is required.
+This design choice helps preserve the quiet nature of the space
+and limits unintended automated contact.
+</p>
 
-  <p class="contact-action">
-    <a href="#" id="contact-link">Open mail client</a>
-  </p>
+<p class="contact-action">
+  <a href="#" id="contact-link">Open mail client</a>
+</p>
 
+<div class="footer">
+  <a href="/about.html">Back to About</a>
 </div>
 
-<footer>CELESTE v4.0A</footer>
+</div>
 
 <script>
 (function(){
