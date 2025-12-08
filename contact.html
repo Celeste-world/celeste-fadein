@@ -1,31 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>Contact | Celeste.world</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Celeste.world に関する問い合わせ・不具合報告・改善提案の窓口ページです。" />
+  <meta name="keywords" content="Celeste, セレステ, Contact, お問い合わせ" />
 
-<title>Contact – Celeste</title>
-<meta name="description" content="Contact the creator of Celeste for quiet inquiries or collaboration." />
+  <meta property="og:title" content="Contact | Celeste.world" />
+  <meta property="og:description" content="Celeste.world に関する問い合わせや改善の提案はこちらから。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://celeste.world/contact.html" />
 
-<link rel="canonical" href="https://celeste.world/contact.html" />
-<meta name="robots" content="index,follow" />
-</head>
+  <style>
+    :root {
+      --celeste-blue: #0a2440;
+      --background: #f5f5f7;
+      --text-main: #111111;
+      --text-sub: #555555;
+      --border-soft: #dddddd;
+    }
 
-<body>
-<div class="wrap">
-  <h1>Contact</h1>
+    * {
+      box-sizing: border-box;
+    }
 
-  <p>
-    For quiet questions or collaboration,
-    you may reach out directly.
-  </p>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--background);
+      color: var(--text-main);
+      line-height: 1.7;
+    }
 
-  <p>
-    <a href="mailto:contact@celeste.world">Open your mail client</a>
-  </p>
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  <a href="/about.html">Back to About</a>
-  <div class="footer">CELESTE v4.2A</div>
-</div>
-</body>
-</html>
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10, 36, 64, 0.96);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+    }
+
+    .nav-inner {
+      max-width: 960px;
