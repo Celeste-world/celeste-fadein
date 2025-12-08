@@ -1,46 +1,40 @@
 export async function onRequest({ request }) {
   const text = await request.text();
+  const t = text.trim();
 
-  // --- 圧力判定（言語非依存） ---
-  const trimmed = text.trim();
+  // --- 圧力判定（言語・意味 非依存） ---
   let pressure = 0;
-
-  if (trimmed.length === 0) {
+  if (t.length === 0) {
     pressure = 0;
-  } else if (trimmed.length < 12) {
-    pressure = 1;
-  } else if (trimmed.length < 60) {
-    pressure = 2;
+  } else if (t.length < 12) {
+    pressure = 1;   // 短語・名詞・挨拶
+  } else if (t.length < 60) {
+    pressure = 2;   // 短文
   } else {
-    pressure = 3;
+    pressure = 3;   // 展開・複文
   }
 
-  // --- 応答生成（干渉しない） ---
+  // --- 応答生成 ---
   let response = "";
 
   switch (pressure) {
     case 0:
+    case 1:
+      // 完全沈黙（これが正解）
       response = "";
       break;
-    case 1:
-      response = pick([
-        "ここに置かれました。",
-        "受け取っています。",
-        "そのままで大丈夫です。"
-      ]);
-      break;
+
     case 2:
       response = pick([
         "今の言葉は、ここにあります。",
-        "続けても、止めても構いません。",
-        "急がなくて大丈夫です。"
+        "少し間を置いても構いません。"
       ]);
       break;
+
     case 3:
       response = pick([
-        "もう十分に書かれています。",
-        "少し置いておいてもいいですね。",
-        "ここで区切っても大丈夫です。"
+        "ここで一度、区切れそうです。",
+        "もう十分に書かれています。"
       ]);
       break;
   }
@@ -50,7 +44,6 @@ export async function onRequest({ request }) {
   });
 }
 
-// --- ランダム選択 ---
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
