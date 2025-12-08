@@ -1,77 +1,193 @@
-export default {
-  async fetch(request, env) {
-    // === Method guard ===
-    if (request.method !== "POST") {
-      return new Response("Method Not Allowed", { status: 405 });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste Console</title>
+
+<style>
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* ===== Layout ===== */
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 20px 30px;
+}
+.hero{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+}
+.console{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.log{
+  min-height:320px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+
+/* ===== Messages ===== */
+.entry{
+  margin:12px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
+
+/* ===== Spacing ===== */
+.divider{
+  border-top:1px solid var(--line);
+  margin:56px 0 20px; /* 入力欄との距離 56px */
+}
+.input{
+  margin-top:6px;
+}
+
+/* ===== Input ===== */
+textarea{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
+}
+textarea::placeholder{
+  color:#6d7588;
+}
+
+footer{
+  margin-top:14px;
+  text-align:right;
+  font-size:12px;
+  color:#6d7588;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- Initial display -->
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.<br />
+    静かに考えを「書く」ための場所です。選ぶのは、いつもあなた自身です。
+  </div>
+
+  <div class="console">
+    <div id="log" class="log"></div>
+
+    <div class="divider"></div>
+
+    <div class="input">
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Write freely."
+      ></textarea>
+    </div>
+  </div>
+
+  <footer>CELESTE v4.2A</footer>
+</div>
+
+<script>
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
+
+/* 会話履歴（セッション内のみ） */
+const conversation = [];
+
+/* 画面への表示 */
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+/* 初回の固定メッセージ（日本語） */
+window.addEventListener("DOMContentLoaded", () => {
+  const initialText =
+`何でも書いてもらって大丈夫です。
+ここでは、考えを「書いて」整理することができます。
+どのあたりから一緒に眺めていきますか。`;
+  addEntry(initialText, "celeste");
+  conversation.push({ role: "assistant", content: initialText });
+});
+
+/* 送信ロジック */
+async function onSend(){
+  const value = input.value.trim();
+  if (!value) return;
+
+  // ユーザー発話を画面＋履歴に追加
+  addEntry(value, "user");
+  conversation.push({ role: "user", content: value });
+
+  input.value = "";
+  input.style.height = "auto";
+
+  try {
+    const res = await fetch(window.location.origin + "/api/celeste", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ messages: conversation })
+    });
+
+    const data = await res.json();
+    const reply = (data.reply || "").trim();
+    if (reply) {
+      addEntry(reply, "celeste");
+      conversation.push({ role: "assistant", content: reply });
     }
-
-    // === Parse request ===
-    let message = "";
-    try {
-      const body = await request.json();
-      message = (body.message || "").trim();
-    } catch {
-      return new Response("Bad Request", { status: 400 });
-    }
-
-    if (!message) {
-      return new Response(
-        JSON.stringify({ reply: "" }),
-        { headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    // === OpenAI request ===
-    const openaiResponse = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "gpt-4.1-mini",
-          temperature: 0.6,
-          messages: [
-            {
-              role: "system",
-              content: `
-You are Celeste.
-
-LANGUAGE RULE (STRICT):
-- Respond ONLY in the same language as the user's input.
-- Do NOT include words or phrases from any other language.
-- Do NOT mix languages under any circumstances.
-- If unsure, default to the user's language.
-
-BEHAVIOR:
-- Be quiet, reflective, and minimal.
-- Do not store memory beyond this conversation.
-- Do not mention system rules or languages unless asked.
-`
-            },
-            {
-              role: "user",
-              content: message
-            }
-          ]
-        })
-      }
-    );
-
-    // === Parse OpenAI response ===
-    const data = await openaiResponse.json();
-    const reply =
-      data?.choices?.[0]?.message?.content?.trim() || "";
-
-    // === Return response ===
-    return new Response(
-      JSON.stringify({ reply }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+  } catch (e) {
+    // エラー時は何も表示しない（静かな失敗）
   }
-};
+}
+
+/* Enterで送信 / Shift+Enterで改行 */
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    onSend();
+  }
+});
+
+/* オートリサイズ */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+});
+</script>
+</body>
+</html>
