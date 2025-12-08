@@ -3,51 +3,54 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste</title>
+
+<title>Celeste – A Quiet Console for Writing and Thinking</title>
+<meta name="description" content="Celeste is a quiet place to write, reflect, and organize your thoughts—without giving advice or taking decisions away from you." />
+
+<link rel="canonical" href="https://celeste.world/" />
+<meta name="robots" content="index,follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Celeste" />
+<meta property="og:title" content="Celeste – A Quiet Console for Writing and Thinking" />
+<meta property="og:description" content="A calm, minimal space to write and think while keeping every decision in your own hands." />
+<meta property="og:url" content="https://celeste.world/" />
+<meta property="og:image" content="https://celeste.world/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
 
 <style>
-:root{
-  --bg:#0f1216;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-}
-*{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
+  background:#0f1216;
+  color:#e8ebef;
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 .wrap{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
+  max-width:900px;
+  margin:0 auto;
+  padding:80px 20px;
 }
-.tagline{
-  color:var(--muted);
-  font-size:16px;
-  text-align:center;
-  margin-bottom:28px;
+h1{
+  font-size:32px;
+  font-weight:normal;
+  margin-bottom:24px;
 }
-.enter{
+p{
+  color:#9aa3b2;
+  line-height:1.8;
+  max-width:640px;
+}
+.nav{
+  margin-top:40px;
+}
+.nav a{
+  display:block;
+  margin:10px 0;
+  color:#a9b7ff;
   text-decoration:none;
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:30px;
-  padding:10px 22px;
-  font-size:15px;
 }
-.enter:hover{
-  border-color:var(--text);
-}
-footer{
-  position:fixed;
-  bottom:14px;
-  right:18px;
+.footer{
+  margin-top:80px;
   font-size:12px;
   color:#6d7588;
 }
@@ -56,17 +59,20 @@ footer{
 
 <body>
 <div class="wrap">
+  <h1>Celeste</h1>
 
-  <div class="tagline">
-    A quiet space to organize your thoughts — decisions stay with you.
+  <p>
+    Celeste is a quiet place where you can write freely and see your thoughts
+    more clearly. It does not advise, decide, or direct—every judgment
+    stays with you.
+  </p>
+
+  <div class="nav">
+    <a href="/about.html">About Celeste</a>
+    <a href="/celeste-console.html">Open Console</a>
   </div>
 
-  <a class="enter" href="/celeste-console.html">
-    Enter
-  </a>
-
+  <div class="footer">CELESTE v4.2A</div>
 </div>
-
-<footer>CELESTE v4.1A</footer>
 </body>
 </html>
