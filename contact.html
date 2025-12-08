@@ -1,281 +1,79 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>Contact | Celeste.world</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Celeste.world に関する問い合わせ・不具合報告・改善提案の窓口ページです。" />
-  <meta name="keywords" content="Celeste, セレステ, Contact, お問い合わせ" />
+<meta charset="UTF-8">
+<title>Contact | Celeste.world</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Celeste.world に関するお問い合わせページ。">
 
-  <meta property="og:title" content="Contact | Celeste.world" />
-  <meta property="og:description" content="Celeste.world に関する問い合わせや改善の提案はこちらから。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://celeste.world/contact.html" />
-
-  <style>
-    :root {
-      --celeste-blue: #0a2440;
-      --background: #f5f5f7;
-      --text-main: #111111;
-      --text-sub: #555555;
-      --border-soft: #dddddd;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: var(--background);
-      color: var(--text-main);
-      line-height: 1.7;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(10, 36, 64, 0.96);
-      backdrop-filter: blur(8px);
-      color: #ffffff;
-    }
-
-    .nav-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.25rem;
-      font-size: 0.9rem;
-    }
-
-    .nav-links a {
-      opacity: 0.85;
-    }
-
-    .nav-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    .nav-toggle {
-      display: none;
-      border: none;
-      background: transparent;
-      color: #ffffff;
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .nav-links-mobile {
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem 1rem;
-      background: rgba(10, 36, 64, 0.98);
-    }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 3rem;
-    }
-
-    .page-title {
-      margin-top: 1.5rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
-
-    .page-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-sub);
-      margin-bottom: 1.5rem;
-    }
-
-    .block {
-      background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid var(--border-soft);
-      padding: 1.5rem 1.6rem;
-      margin-top: 1.3rem;
-      font-size: 0.92rem;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
-    }
-
-    .block h2 {
-      font-size: 1.05rem;
-      margin-top: 0;
-      margin-bottom: 0.6rem;
-    }
-
-    .contact-item {
-      margin-bottom: 0.8rem;
-    }
-
-    .label {
-      font-size: 0.82rem;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 0.15rem;
-    }
-
-    .email-link {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.9rem;
-      padding: 0.2rem 0.4rem;
-      border-radius: 6px;
-      background: #f3f4f6;
-      border: 1px solid #e5e7eb;
-      display: inline-block;
-    }
-
-    .email-link:hover {
-      background: #e5e7eb;
-    }
-
-    .note {
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      margin-top: 0.4rem;
-    }
-
-    footer {
-      border-top: 1px solid #e2e2e2;
-      padding: 1rem 1rem 2rem;
-      font-size: 0.78rem;
-      color: #777777;
-      margin-top: 2rem;
-    }
-
-    footer .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-
-    @media (max-width: 720px) {
-      .nav-links {
-        display: none;
-      }
-      .nav-toggle {
-        display: block;
-      }
-      .nav-links-mobile.show {
-        display: flex;
-      }
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:#f5f5f7;
+  color:#111;
+}
+header{background:#0a2440;color:#fff;}
+.header-inner{
+  max-width:960px;
+  margin:0 auto;
+  padding:14px 20px;
+  display:flex;
+  justify-content:space-between;
+}
+nav a{
+  color:#fff;
+  margin-left:16px;
+  text-decoration:none;
+  font-size:14px;
+}
+main{
+  max-width:960px;
+  margin:0 auto;
+  padding:60px 20px;
+}
+footer{
+  border-top:1px solid #ddd;
+  padding:20px;
+  font-size:12px;
+  color:#666;
+}
+.email{
+  font-family:monospace;
+  background:#eee;
+  padding:4px 8px;
+  border-radius:6px;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <div class="nav-inner">
-      <div class="logo">Celeste.world</div>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="console.html">Console</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">☰</button>
-    </div>
-    <nav id="mobileNav" class="nav-links-mobile">
+<header>
+  <div class="header-inner">
+    <strong>Celeste.world</strong>
+    <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="console.html">Console</a>
+      <a href="celeste-console.html">Console</a>
       <a href="contact.html">Contact</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <h1 class="page-title">Contact</h1>
-    <p class="page-subtitle">
-      Celeste.world に関するご意見・不具合報告・改善の提案などがあれば、下記の窓口をご利用ください。
-    </p>
+<main>
+  <h1>Contact</h1>
+  <p>ご意見・不具合・改善提案は下記までお願いします。</p>
 
-    <section class="block">
-      <h2>お問い合わせ窓口</h2>
+  <p class="email">inbox.celeste.world@gmail.com</p>
+  <p class="email">contact@celeste.world</p>
+  <p class="email">drunken.cats.toyama@gmail.com</p>
 
-      <div class="contact-item">
-        <div class="label">PRIMARY CONTACT</div>
-        <a class="email-link" href="mailto:inbox.celeste.world@gmail.com">
-          inbox.celeste.world@gmail.com
-        </a>
-        <p class="note">
-          サイト上からの問い合わせ窓口として使用しているメールアドレスです。<br />
-          不具合報告や改善アイデアをこちらにお送りください。
-        </p>
-      </div>
+  <p>
+    ※ 個別の人生相談への返信は行っていません。<br>
+    ※ 専門判断が必要な内容は、必ず専門機関へご相談ください。
+  </p>
+</main>
 
-      <div class="contact-item">
-        <div class="label">FORWARDING ADDRESS</div>
-        <a class="email-link" href="mailto:contact@celeste.world">
-          contact@celeste.world
-        </a>
-        <p class="note">
-          上記の inbox 宛メールが転送されるアドレスです。<br />
-          名刺やプロフィールに記載する場合はこちらのアドレスを推奨します。
-        </p>
-      </div>
-
-      <div class="contact-item">
-        <div class="label">BUSINESS / VENDORS</div>
-        <a class="email-link" href="mailto:drunken.cats.toyama@gmail.com">
-          drunken.cats.toyama@gmail.com
-        </a>
-        <p class="note">
-          業者さま・ビジネス関連の連絡専用アドレスです。<br />
-          印刷・デザイン・開発などのご相談はこちらをご利用ください。
-        </p>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2>お問い合わせ前にご確認ください</h2>
-      <ul>
-        <li>個別の人生相談へのメール回答は行っていません。</li>
-        <li>医療・法律・投資などの判断は、必ず専門家にご相談ください。</li>
-        <li>不具合報告の際は、「いつ・どのページで・どのような操作をしたか」を書いていただけると助かります。</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-      <div>© Celeste.world</div>
-      <div>Contact · inquiries &amp; improvement ideas are welcome.</div>
-    </div>
-  </footer>
-
-  <script>
-    function toggleNav() {
-      const mobileNav = document.getElementById('mobileNav');
-      mobileNav.classList.toggle('show');
-    }
-  </script>
+<footer>© Celeste.world</footer>
 </body>
 </html>
