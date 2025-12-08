@@ -1,225 +1,188 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>Console | Celeste.world</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Celeste と静かに対話するためのコンソール画面。優しいトーンを保ちつつ、依存を生みすぎないためのメッセージ設計になっています。" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste Console | celeste.world</title>
 
-  <meta property="og:title" content="Console | Celeste.world" />
-  <meta property="og:description" content="Celeste と対話するための専用コンソール。v4.2A: 優しさを取り戻しつつ、依存を封じるための距離感を維持。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://celeste.world/console.html" />
+<meta name="description" content="Celeste Console は、静かに考えを書き出し、思考を整理するための場所です。決断はあなた自身に委ねられています。" />
 
-  <style>
-    :root {
-      --celeste-blue: #0a2440;
-      --celeste-blue-soft: #102b4f;
-      --background: #020815;
-      --console-border: #273a63;
-      --console-text: #e8ecff;
-      --console-sub: #9faad0;
-      --accent: #f2b441;
+<meta property="og:title" content="Celeste Console | celeste.world" />
+<meta property="og:description" content="A quiet space to organize your thoughts. Decisions stay with you." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://celeste.world/celeste-console.html" />
+
+<style>
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* ===== Layout ===== */
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 20px 30px;
+}
+.hero{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+}
+.console{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.log{
+  min-height:320px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+
+/* ===== Messages ===== */
+.entry{
+  margin:12px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
+
+/* ===== Spacing ===== */
+.divider{
+  border-top:1px solid var(--line);
+  margin:56px 0 20px;
+}
+.input{
+  margin-top:6px;
+}
+
+/* ===== Input ===== */
+textarea{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
+}
+textarea::placeholder{
+  color:#6d7588;
+}
+
+footer{
+  margin-top:14px;
+  text-align:right;
+  font-size:12px;
+  color:#6d7588;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.<br />
+    静かに考えを「書く」ための場所です。選ぶのは、いつもあなた自身です。
+  </div>
+
+  <div class="console">
+    <div id="log" class="log"></div>
+
+    <div class="divider"></div>
+
+    <div class="input">
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Write freely."
+      ></textarea>
+    </div>
+  </div>
+
+  <footer>CELESTE v4.2A</footer>
+</div>
+
+<script>
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
+
+const conversation = [];
+
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const initialText =
+`何でも書いてもらって大丈夫です。
+ここでは、考えを「書いて」整理することができます。
+どのあたりから眺めていきますか。`;
+  addEntry(initialText, "celeste");
+  conversation.push({ role: "assistant", content: initialText });
+});
+
+async function onSend(){
+  const value = input.value.trim();
+  if (!value) return;
+
+  addEntry(value, "user");
+  conversation.push({ role: "user", content: value });
+
+  input.value = "";
+  input.style.height = "auto";
+
+  try {
+    const res = await fetch(window.location.origin + "/api/celeste", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: conversation })
+    });
+
+    const data = await res.json();
+    const reply = (data.reply || "").trim();
+    if (reply) {
+      addEntry(reply, "celeste");
+      conversation.push({ role: "assistant", content: reply });
     }
+  } catch (e) {}
+}
 
-    * {
-      box-sizing: border-box;
-    }
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    onSend();
+  }
+});
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: radial-gradient(circle at top, #12244a, #020815 56%, #01030a);
-      color: var(--console-text);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(2, 8, 21, 0.96);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: #ffffff;
-    }
-
-    .nav-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.25rem;
-      font-size: 0.9rem;
-    }
-
-    .nav-links a {
-      opacity: 0.85;
-    }
-
-    .nav-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    .nav-toggle {
-      display: none;
-      border: none;
-      background: transparent;
-      color: #ffffff;
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .nav-links-mobile {
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem 1rem;
-      background: rgba(2, 8, 21, 0.98);
-    }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 1.4rem 1rem 2.2rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .console-wrapper {
-      margin-top: 1rem;
-      background: radial-gradient(circle at top left, #1a2d57, #060a16);
-      border-radius: 18px;
-      border: 1px solid rgba(119, 145, 214, 0.4);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
-      padding: 1.2rem 1.3rem;
-      display: flex;
-      flex-direction: column;
-      min-height: 60vh;
-    }
-
-    .console-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.6rem;
-      font-size: 0.8rem;
-      color: var(--console-sub);
-    }
-
-    .console-title {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-    }
-
-    .console-status {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #4ade80;
-      box-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
-    }
-
-    .console-body {
-      flex: 1;
-      border-radius: 12px;
-      border: 1px solid rgba(120, 141, 214, 0.65);
-      background: rgba(3, 6, 24, 0.78);
-      padding: 0.9rem 1rem;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .console-messages {
-      flex: 1;
-      overflow-y: auto;
-      font-size: 0.87rem;
-      padding-right: 0.3rem;
-    }
-
-    .msg-row {
-      margin-bottom: 0.6rem;
-    }
-
-    .msg-meta {
-      font-size: 0.7rem;
-      color: var(--console-sub);
-      margin-bottom: 0.1rem;
-    }
-
-    .msg-meta span {
-      opacity: 0.9;
-    }
-
-    .msg-text {
-      white-space: pre-wrap;
-    }
-
-    .msg-celeste {
-      color: #e4ebff;
-    }
-
-    .msg-user {
-      color: #f5e3b2;
-    }
-
-    .msg-system {
-      color: #9fb6ff;
-      font-style: italic;
-    }
-
-    .console-input-area {
-      border-top: 1px solid rgba(120, 141, 214, 0.6);
-      margin-top: 0.65rem;
-      padding-top: 0.65rem;
-    }
-
-    .console-guide {
-      font-size: 0.75rem;
-      color: var(--console-sub);
-      margin-bottom: 0.5rem;
-    }
-
-    .console-form {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-end;
-    }
-
-    .console-input {
-      flex: 1;
-      min-height: 2.3rem;
-      max-height: 6rem;
-      resize: vertical;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+});
+</script>
+</body>
+</html>
