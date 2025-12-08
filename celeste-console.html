@@ -1,78 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste Console</title>
-
-<meta name="description" content="A quiet space to write and organize your thoughts. Decisions stay with you." />
+<title>Celeste</title>
 
 <style>
 :root{
   --bg:#0f1216;
-  --panel:#141922;
   --text:#e8ebef;
-  --muted:#9aa3b2;
+  --muted:#7f8899;
   --line:#242a3d;
-  --accent:#a9b7ff;
 }
+
 *{box-sizing:border-box;}
+
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
+
+/* ===== Layout ===== */
 .wrap{
-  max-width:900px;
+  max-width:720px;
   margin:0 auto;
-  padding:40px 20px 30px;
+  padding:64px 20px 80px;
 }
-.hero{
-  color:var(--muted);
-  font-size:16px;
-  margin-bottom:22px;
-}
-.console{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,.35);
-}
-.log{
-  min-height:320px;
-  max-height:520px;
-  overflow-y:auto;
-  padding-right:6px;
-}
-.entry{
-  margin:12px 0;
-  line-height:1.75;
+
+/* ===== Output ===== */
+.output{
+  min-height:120px;
+  margin-bottom:40px;
   white-space:pre-wrap;
+  line-height:1.9;
+  font-size:16px;
+  color:var(--muted);
 }
-.celeste{ color:var(--text); }
-.user{ color:var(--accent); }
-.divider{ border-top:1px solid var(--line); margin:56px 0 20px; }
-.input{ margin-top:6px; }
+
+/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px 14px;
+  border:none;
+  border-bottom:1px solid var(--line);
   color:var(--text);
+  padding:12px 2px;
   resize:none;
-  font-family:inherit;
-  font-size:15px;
-  min-height:48px;
+  font-size:17px;
+  line-height:1.8;
+  outline:none;
 }
-textarea::placeholder{ color:#6d7588; }
+
+textarea::placeholder{
+  color:#5f687a;
+}
+
+/* ===== Footer ===== */
 footer{
-  margin-top:14px;
-  text-align:right;
+  position:fixed;
+  bottom:18px;
+  right:20px;
   font-size:12px;
-  color:#6d7588;
+  color:#5f687a;
 }
 </style>
 </head>
@@ -80,68 +71,60 @@ footer{
 <body>
 <div class="wrap">
 
-<div class="hero">
-A quiet space to organize your thoughts — decisions stay with you.<br />
-静かに考えを「書く」ための場所です。選ぶのは、いつもあなた自身です。
-</div>
+  <!-- 応答表示（空でも成立） -->
+  <div id="output" class="output"></div>
 
-<div class="console">
-  <div id="log" class="log"></div>
-  <div class="divider"></div>
-  <div class="input">
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-  </div>
+  <!-- 入力欄 -->
+  <textarea
+    id="input"
+    rows="1"
+    placeholder="書いても、書かなくても。"
+  ></textarea>
+
 </div>
 
 <footer>CELESTE v4.2A</footer>
-</div>
 
 <script>
-const log=document.getElementById("log");
-const input=document.getElementById("input");
-const conversation=[];
-function addEntry(text,cls){
-  const div=document.createElement("div");
-  div.className=`entry ${cls}`;
-  div.textContent=text;
-  log.appendChild(div);
-  log.scrollTop=log.scrollHeight;
+const input  = document.getElementById("input");
+const output = document.getElementById("output");
+
+async function send(){
+  const text = input.value;
+  if (!text.trim()) return;
+
+  input.value = "";
+  autoResize();
+
+  const res = await fetch("/api/celeste",{
+    method:"POST",
+    body:text
+  });
+
+  const reply = await res.text();
+
+  // 返答が「空」の場合、何もしない
+  if (!reply.trim()) return;
+
+  output.textContent = reply;
 }
-window.addEventListener("DOMContentLoaded",()=>{
-  const initialText=`何でも書いてもらって大丈夫です。
-ここでは、考えを「書いて」整理することができます。
-どのあたりから眺めていきますか。`;
-  addEntry(initialText,"celeste");
-  conversation.push({role:"assistant",content:initialText});
-});
-async function onSend(){
-  const value=input.value.trim();
-  if(!value)return;
-  addEntry(value,"user");
-  conversation.push({role:"user",content:value});
-  input.value="";
-  input.style.height="auto";
-  try{
-    const res=await fetch(window.location.origin+"/api/celeste",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json"},
-      body:JSON.stringify({messages:conversation})
-    });
-    const data=await res.json();
-    const reply=(data.reply||"").trim();
-    if(reply){
-      addEntry(reply,"celeste");
-      conversation.push({role:"assistant",content:reply});
-    }
-  }catch(e){}
-}
+
+// Enter送信（Shift+Enterで改行）
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSend();}
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
 });
-input.addEventListener("input",()=>{
+
+// オートリサイズ
+function autoResize(){
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
-});
+}
+input.addEventListener("input",autoResize);
+autoResize();
 </script>
+
 </body>
 </html>
