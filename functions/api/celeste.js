@@ -1,12 +1,6 @@
-export async function onRequest(context) {
+export async function onRequest() {
   return new Response(
-    JSON.stringify({
-      reply: "✅ CELESTE API CONNECTED"
-    }),
-    {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
+    "CELESTE API OK",
+    { headers: { "Content-Type": "text/plain" } }
   );
 }
