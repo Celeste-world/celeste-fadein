@@ -1,395 +1,134 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>Celeste.world | 静かな夜のための個人AIコンシェルジュ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Celeste.world は、静かな夜に寄り添う個人AIコンシェルジュ。依存を煽らず、距離感を大切にしながら、思考の整理と次の一歩を一緒に考えます。" />
-  <meta name="keywords" content="Celeste, セレステ, 個人AI, コンソール, Celeste.world, ドランケンキャッツ" />
+<meta charset="UTF-8">
+<title>Celeste.world | 静かに考えるためのパーソナルコンソール</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Celeste.world は、静かに考えを書き出し、思考を整理するための個人用AIコンソールです。決断は常にあなた自身に委ねられています。">
 
-  <!-- OGP（必要ならURLや画像パスを差し替え） -->
-  <meta property="og:title" content="Celeste.world | 静かな夜のための個人AIコンシェルジュ" />
-  <meta property="og:description" content="依存を煽らず、やさしくフラットに寄り添う、個人用AIコンシェルジュ Celeste の公式サイトです。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://celeste.world/" />
-  <meta property="og:image" content="https://celeste.world/og-image.jpg" />
+<meta property="og:title" content="Celeste.world">
+<meta property="og:description" content="A quiet space to organize your thoughts. Decisions stay with you.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://celeste.world/">
 
-  <style>
-    :root {
-      --celeste-blue: #0a2440;
-      --celeste-blue-soft: #102b4f;
-      --background: #f5f5f7;
-      --text-main: #111111;
-      --text-sub: #555555;
-      --accent: #f2b441;
-      --border-soft: #dddddd;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: var(--background);
-      color: var(--text-main);
-      line-height: 1.7;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(10, 36, 64, 0.96);
-      backdrop-filter: blur(8px);
-      color: #ffffff;
-    }
-
-    .nav-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.25rem;
-      font-size: 0.9rem;
-    }
-
-    .nav-links a {
-      opacity: 0.85;
-    }
-
-    .nav-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    /* モバイルナビ */
-    .nav-toggle {
-      display: none;
-      border: none;
-      background: transparent;
-      color: #ffffff;
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .nav-links-mobile {
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem 1rem;
-      background: rgba(10, 36, 64, 0.98);
-    }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 3rem;
-    }
-
-    .hero {
-      padding: 2.5rem 1.25rem 2rem;
-      background: linear-gradient(135deg, #0a2440, #1e365a);
-      border-radius: 18px;
-      color: #ffffff;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
-      margin-top: 1rem;
-    }
-
-    .hero-title-ja {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.4rem;
-    }
-
-    .hero-title-en {
-      font-size: 0.95rem;
-      opacity: 0.86;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 1.4rem;
-    }
-
-    .hero-text {
-      font-size: 0.96rem;
-      opacity: 0.9;
-      margin-bottom: 1.4rem;
-    }
-
-    .hero-text strong {
-      font-weight: 600;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-top: 0.5rem;
-    }
-
-    .btn-primary {
-      padding: 0.6rem 1.4rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: #ffffff;
-      color: var(--celeste-blue);
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .btn-primary:hover {
-      background: #f5f5f5;
-    }
-
-    .btn-ghost {
-      padding: 0.6rem 1.25rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      background: transparent;
-      color: #ffffff;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .btn-ghost:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .hero-note {
-      margin-top: 1.25rem;
-      font-size: 0.8rem;
-      opacity: 0.8;
-    }
-
-    section {
-      margin-top: 2.5rem;
-    }
-
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-    }
-
-    .section-sub {
-      font-size: 0.86rem;
-      color: var(--text-sub);
-      margin-bottom: 1.2rem;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      padding: 1rem 1.1rem;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.03);
-      font-size: 0.9rem;
-    }
-
-    .card h3 {
-      font-size: 0.98rem;
-      margin-top: 0;
-      margin-bottom: 0.35rem;
-    }
-
-    .card p {
-      margin: 0.25rem 0 0.55rem;
-      color: var(--text-sub);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.1rem 0.6rem;
-      border-radius: 999px;
-      background: #f5f0e7;
-      color: #7a5a1c;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-
-    footer {
-      border-top: 1px solid #e2e2e2;
-      padding: 1rem 1rem 2rem;
-      font-size: 0.78rem;
-      color: #777777;
-      margin-top: 2rem;
-    }
-
-    footer .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-
-    @media (max-width: 720px) {
-      .nav-links {
-        display: none;
-      }
-
-      .nav-toggle {
-        display: block;
-      }
-
-      .nav-links-mobile.show {
-        display: flex;
-      }
-
-      .hero {
-        padding: 1.8rem 1.25rem 1.8rem;
-      }
-
-      .hero-title-ja {
-        font-size: 1.35rem;
-      }
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:#f5f5f7;
+  color:#111;
+  line-height:1.7;
+}
+header{
+  background:#0a2440;
+  color:#fff;
+}
+.header-inner{
+  max-width:960px;
+  margin:0 auto;
+  padding:14px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+nav a{
+  color:#fff;
+  margin-left:16px;
+  text-decoration:none;
+  font-size:14px;
+  opacity:.85;
+}
+nav a:hover{opacity:1;text-decoration:underline;}
+main{
+  max-width:960px;
+  margin:0 auto;
+  padding:60px 20px;
+}
+.hero{
+  background:#0a2440;
+  color:#fff;
+  padding:42px;
+  border-radius:18px;
+}
+.hero h1{
+  margin:0 0 10px;
+  font-size:28px;
+}
+.hero p{
+  opacity:.9;
+  font-size:15px;
+}
+.actions{
+  margin-top:24px;
+}
+.actions a{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  background:#fff;
+  color:#0a2440;
+  font-weight:600;
+  text-decoration:none;
+}
+section{
+  margin-top:64px;
+}
+footer{
+  border-top:1px solid #ddd;
+  margin-top:80px;
+  padding:20px;
+  font-size:12px;
+  color:#666;
+}
+.footer-inner{
+  max-width:960px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <div class="nav-inner">
-      <div class="logo">Celeste.world</div>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="console.html">Console</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">☰</button>
-    </div>
-    <nav id="mobileNav" class="nav-links-mobile">
+<header>
+  <div class="header-inner">
+    <strong>Celeste.world</strong>
+    <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="console.html">Console</a>
+      <a href="celeste-console.html">Console</a>
       <a href="contact.html">Contact</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-title-ja">静かな夜を、少しだけ軽くする。</div>
-      <div class="hero-title-en">PERSONAL AI CONCIERGE “CELESTE”</div>
-      <p class="hero-text">
-        Celeste は、<strong>依存を煽らず・境界を尊重しながら</strong>、あなたの思考を整理するための
-        個人AIコンシェルジュです。<br />
-        感情を受けとめつつも、「決めるのはあなた」のスタンスを崩さず、<br />
-        次の一歩を一緒に整えていきます。
-      </p>
-      <div class="hero-actions">
-        <a href="console.html" class="btn-primary">Console を開く</a>
-        <a href="about.html" class="btn-ghost">セレステについて知る</a>
-      </div>
-      <p class="hero-note">
-        ※ 医療・法律・投資などの専門判断は行いません。<br />
-        ※ 強い依存や危機的状況が疑われる場合は、専門機関への相談を優先するよう案内します。
-      </p>
-    </section>
-
-    <section>
-      <h2 class="section-title">Celeste が大切にしていること</h2>
-      <p class="section-sub">
-        v4.2A では、v3.4 の「優しくする力」を取り戻しつつ、<br />
-        「依存を封じる」ための距離感とルールを明確にしています。
-      </p>
-      <div class="card-grid">
-        <article class="card">
-          <h3>1. 優しさと境界線</h3>
-          <p>
-            言葉はやわらかく。でも、決断を肩代わりしません。<br />
-            相談のたびに、あなた自身の「選ぶ力」が少しずつ育つことを大切にしています。
-          </p>
-          <span class="badge">v4.2A / gentle but clear</span>
-        </article>
-        <article class="card">
-          <h3>2. 事実と感情を分けて見る</h3>
-          <p>
-            いま起きている「事実」と、そこで動いている「感情」。<br />
-            その二つを丁寧に分けて整理し、感情を否定せず、行動を一緒に組み立てます。
-          </p>
-        </article>
-        <article class="card">
-          <h3>3. 依存をつくらない設計</h3>
-          <p>
-            「セレステがいないと何も決められない」状態にならないように。<br />
-            あえて答えを言い切らず、複数の選択肢と観点を提示する設計になっています。
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">使い方の例</h2>
-      <div class="card-grid">
-        <article class="card">
-          <h3>・考えを整理したいとき</h3>
-          <p>
-            「仕事の選択肢を整理したい」「家族とのコミュニケーションを見直したい」など、<br />
-            まだ言葉になっていないモヤモヤを、ゆっくり分解していきます。
-          </p>
-        </article>
-        <article class="card">
-          <h3>・次の一歩を決めたいとき</h3>
-          <p>
-            今日・今週・今月の「一歩」だけを一緒に決めてみる。<br />
-            その積み重ねが、大きな変化につながっていく前提で設計されています。
-          </p>
-        </article>
-        <article class="card">
-          <h3>・ただ言葉を置いておきたいとき</h3>
-          <p>
-            すぐに答えがほしいわけではない。そんなときも、<br />
-            Celeste のコンソールは、静かな置き場所として機能します。
-          </p>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-      <div>© Celeste.world – designed as a quiet assistant for your nights.</div>
-      <div>v4.2A · console language tuned with “gentle, non-addictive” policy.</div>
+<main>
+  <div class="hero">
+    <h1>静かに考えを書く場所</h1>
+    <p>
+      Celeste は、安心や答えを与えるための存在ではありません。<br>
+      書くことで思考を整理し、次に進むための視点を整えるためのコンソールです。
+    </p>
+    <div class="actions">
+      <a href="celeste-console.html">Console を開く</a>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    function toggleNav() {
-      const mobileNav = document.getElementById('mobileNav');
-      mobileNav.classList.toggle('show');
-    }
-  </script>
+  <section>
+    <h2>Celeste の特徴</h2>
+    <p>
+      ・優しさはありますが、依存は生みません。<br>
+      ・判断は支えますが、決断は肩代わりしません。<br>
+      ・感情を扱いますが、そこに留まりません。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>© Celeste.world</div>
+    <div>v4.2A · gentle but non-addictive</div>
+  </div>
+</footer>
 </body>
 </html>
