@@ -1,134 +1,74 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Celeste.world | 静かに考えるためのパーソナルコンソール</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Celeste.world は、静かに考えを書き出し、思考を整理するための個人用AIコンソールです。決断は常にあなた自身に委ねられています。">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste</title>
 
-<meta property="og:title" content="Celeste.world">
-<meta property="og:description" content="A quiet space to organize your thoughts. Decisions stay with you.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/">
+<meta name="description" content="A quiet space to organize your thoughts — decisions stay with you." />
 
 <style>
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+}
+*{box-sizing:border-box;}
 body{
   margin:0;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-  background:#f5f5f7;
-  color:#111;
-  line-height:1.7;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-header{
-  background:#0a2440;
-  color:#fff;
-}
-.header-inner{
-  max-width:960px;
-  margin:0 auto;
-  padding:14px 20px;
+.wrap{
+  min-height:100vh;
   display:flex;
-  justify-content:space-between;
+  flex-direction:column;
   align-items:center;
+  justify-content:center;
+  padding:24px;
 }
-nav a{
-  color:#fff;
-  margin-left:16px;
+.tagline{
+  color:var(--muted);
+  font-size:16px;
+  text-align:center;
+  margin-bottom:28px;
+}
+.enter{
   text-decoration:none;
-  font-size:14px;
-  opacity:.85;
-}
-nav a:hover{opacity:1;text-decoration:underline;}
-main{
-  max-width:960px;
-  margin:0 auto;
-  padding:60px 20px;
-}
-.hero{
-  background:#0a2440;
-  color:#fff;
-  padding:42px;
-  border-radius:18px;
-}
-.hero h1{
-  margin:0 0 10px;
-  font-size:28px;
-}
-.hero p{
-  opacity:.9;
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:10px 22px;
   font-size:15px;
 }
-.actions{
-  margin-top:24px;
-}
-.actions a{
-  display:inline-block;
-  padding:10px 18px;
-  border-radius:999px;
-  background:#fff;
-  color:#0a2440;
-  font-weight:600;
-  text-decoration:none;
-}
-section{
-  margin-top:64px;
+.enter:hover{
+  border-color:var(--text);
 }
 footer{
-  border-top:1px solid #ddd;
-  margin-top:80px;
-  padding:20px;
+  position:fixed;
+  bottom:14px;
+  right:18px;
   font-size:12px;
-  color:#666;
-}
-.footer-inner{
-  max-width:960px;
-  margin:0 auto;
-  display:flex;
-  justify-content:space-between;
+  color:#6d7588;
 }
 </style>
 </head>
 
 <body>
-<header>
-  <div class="header-inner">
-    <strong>Celeste.world</strong>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="celeste-console.html">Console</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </div>
-</header>
+<div class="wrap">
 
-<main>
-  <div class="hero">
-    <h1>静かに考えを書く場所</h1>
-    <p>
-      Celeste は、安心や答えを与えるための存在ではありません。<br>
-      書くことで思考を整理し、次に進むための視点を整えるためのコンソールです。
-    </p>
-    <div class="actions">
-      <a href="celeste-console.html">Console を開く</a>
-    </div>
+  <div class="tagline">
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
-  <section>
-    <h2>Celeste の特徴</h2>
-    <p>
-      ・優しさはありますが、依存は生みません。<br>
-      ・判断は支えますが、決断は肩代わりしません。<br>
-      ・感情を扱いますが、そこに留まりません。
-    </p>
-  </section>
-</main>
+  <a class="enter" href="/celeste-console.html">
+    Enter
+  </a>
 
-<footer>
-  <div class="footer-inner">
-    <div>© Celeste.world</div>
-    <div>v4.2A · gentle but non-addictive</div>
-  </div>
-</footer>
+</div>
+
+<footer>CELESTE v4.2A</footer>
 </body>
 </html>
