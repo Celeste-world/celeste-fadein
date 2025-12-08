@@ -1,16 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste Console | celeste.world</title>
+<title>Celeste Console</title>
 
-<meta name="description" content="Celeste Console は、静かに考えを書き出し、思考を整理するための場所です。決断はあなた自身に委ねられています。" />
-
-<meta property="og:title" content="Celeste Console | celeste.world" />
-<meta property="og:description" content="A quiet space to organize your thoughts. Decisions stay with you." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://celeste.world/celeste-console.html" />
+<meta name="description" content="A quiet space to write and organize your thoughts. Decisions stay with you." />
 
 <style>
 :root{
@@ -28,8 +23,6 @@ body{
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-
-/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
@@ -53,8 +46,6 @@ body{
   overflow-y:auto;
   padding-right:6px;
 }
-
-/* ===== Messages ===== */
 .entry{
   margin:12px 0;
   line-height:1.75;
@@ -62,17 +53,8 @@ body{
 }
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
-
-/* ===== Spacing ===== */
-.divider{
-  border-top:1px solid var(--line);
-  margin:56px 0 20px;
-}
-.input{
-  margin-top:6px;
-}
-
-/* ===== Input ===== */
+.divider{ border-top:1px solid var(--line); margin:56px 0 20px; }
+.input{ margin-top:6px; }
 textarea{
   width:100%;
   background:transparent;
@@ -85,10 +67,7 @@ textarea{
   font-size:15px;
   min-height:48px;
 }
-textarea::placeholder{
-  color:#6d7588;
-}
-
+textarea::placeholder{ color:#6d7588; }
 footer{
   margin-top:14px;
   text-align:right;
@@ -101,87 +80,67 @@ footer{
 <body>
 <div class="wrap">
 
-  <div class="hero">
-    A quiet space to organize your thoughts — decisions stay with you.<br />
-    静かに考えを「書く」ための場所です。選ぶのは、いつもあなた自身です。
+<div class="hero">
+A quiet space to organize your thoughts — decisions stay with you.<br />
+静かに考えを「書く」ための場所です。選ぶのは、いつもあなた自身です。
+</div>
+
+<div class="console">
+  <div id="log" class="log"></div>
+  <div class="divider"></div>
+  <div class="input">
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
+</div>
 
-  <div class="console">
-    <div id="log" class="log"></div>
-
-    <div class="divider"></div>
-
-    <div class="input">
-      <textarea
-        id="input"
-        rows="1"
-        placeholder="Write freely."
-      ></textarea>
-    </div>
-  </div>
-
-  <footer>CELESTE v4.2A</footer>
+<footer>CELESTE v4.2A</footer>
 </div>
 
 <script>
-const log   = document.getElementById("log");
-const input = document.getElementById("input");
-
-const conversation = [];
-
-function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = `entry ${cls}`;
-  div.textContent = text;
+const log=document.getElementById("log");
+const input=document.getElementById("input");
+const conversation=[];
+function addEntry(text,cls){
+  const div=document.createElement("div");
+  div.className=`entry ${cls}`;
+  div.textContent=text;
   log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  log.scrollTop=log.scrollHeight;
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  const initialText =
-`何でも書いてもらって大丈夫です。
+window.addEventListener("DOMContentLoaded",()=>{
+  const initialText=`何でも書いてもらって大丈夫です。
 ここでは、考えを「書いて」整理することができます。
 どのあたりから眺めていきますか。`;
-  addEntry(initialText, "celeste");
-  conversation.push({ role: "assistant", content: initialText });
+  addEntry(initialText,"celeste");
+  conversation.push({role:"assistant",content:initialText});
 });
-
 async function onSend(){
-  const value = input.value.trim();
-  if (!value) return;
-
-  addEntry(value, "user");
-  conversation.push({ role: "user", content: value });
-
-  input.value = "";
-  input.style.height = "auto";
-
-  try {
-    const res = await fetch(window.location.origin + "/api/celeste", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: conversation })
+  const value=input.value.trim();
+  if(!value)return;
+  addEntry(value,"user");
+  conversation.push({role:"user",content:value});
+  input.value="";
+  input.style.height="auto";
+  try{
+    const res=await fetch(window.location.origin+"/api/celeste",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json"},
+      body:JSON.stringify({messages:conversation})
     });
-
-    const data = await res.json();
-    const reply = (data.reply || "").trim();
-    if (reply) {
-      addEntry(reply, "celeste");
-      conversation.push({ role: "assistant", content: reply });
+    const data=await res.json();
+    const reply=(data.reply||"").trim();
+    if(reply){
+      addEntry(reply,"celeste");
+      conversation.push({role:"assistant",content:reply});
     }
-  } catch (e) {}
+  }catch(e){}
 }
-
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    onSend();
-  }
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSend();}
 });
-
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 </body>
