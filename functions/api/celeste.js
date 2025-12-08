@@ -1,12 +1,6 @@
-export async function onRequestPost(context) {
+export async function onRequestPost() {
   return new Response(
-    JSON.stringify({
-      reply: "受け取りました。どの部分から整理しますか。"
-    }),
-    {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
+    "HELLO FROM CELESTE API",
+    { headers: { "Content-Type": "text/plain" } }
   );
 }
