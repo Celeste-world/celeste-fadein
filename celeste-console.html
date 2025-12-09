@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste Console</title>
+<title>Celeste</title>
 
 <style>
 :root{
@@ -30,7 +30,6 @@ body{
   color:var(--muted);
   font-size:16px;
   margin-bottom:22px;
-  line-height:1.6;
 }
 .console{
   background:var(--panel);
@@ -68,19 +67,15 @@ textarea{
   font-size:15px;
   min-height:48px;
 }
-textarea::placeholder{ color:#6d7588; }
-.bottom{
-  display:flex;
-  justify-content:space-between;
-  margin-top:10px;
+textarea::placeholder{
+  color:#6d7588;
+}
+footer{
+  margin-top:14px;
+  text-align:right;
   font-size:12px;
   color:#6d7588;
 }
-.bottom a{
-  color:#6d7588;
-  text-decoration:none;
-}
-.bottom a:hover{ text-decoration:underline; }
 </style>
 </head>
 
@@ -88,59 +83,97 @@ textarea::placeholder{ color:#6d7588; }
 <div class="wrap">
 
   <div class="hero">
-    A quiet space to organize your thoughts — decisions stay with you.<br>
-    静かに考えを整理するための場所です。決めるのは、あなた自身です。
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
     <div class="divider"></div>
     <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-    <div class="bottom">
-      <a href="/index.html">Back to About</a>
-      <span>CELESTE v4.1A</span>
-    </div>
   </div>
 
+  <footer>CELESTE v4.3A</footer>
 </div>
 
 <script>
-const log=document.getElementById("log");
-const input=document.getElementById("input");
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
 
-function add(text,cls){
-  const d=document.createElement("div");
-  d.className="entry "+cls;
-  d.textContent=text;
-  log.appendChild(d);
-  log.scrollTop=log.scrollHeight;
+const STORAGE_KEY = "celeste_session";
+const NORMAL_LIMIT = 5;
+const MAX_LIMIT = 10;
+
+/* ===== Session Context ===== */
+function loadSession(){
+  return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
+}
+function saveSession(arr){
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(arr.slice(-MAX_LIMIT)));
 }
 
-window.addEventListener("DOMContentLoaded",()=>{
-  add(`何でも書いてもらって大丈夫です。
+/* ===== UI ===== */
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+/* ===== Initial Message ===== */
+window.addEventListener("DOMContentLoaded", () => {
+  addEntry(
+`何でも書いてもらって大丈夫です。
 ここでは、考えを整理することができます。
-どの点から見ていきますか。`,"celeste");
+どの点から見ていきますか。`,
+  "celeste"
+  );
 });
 
-function send(){
-  const v=input.value.trim();
-  if(!v)return;
-  add(v,"user");
+/* ===== Send ===== */
+function onSend(){
+  const raw = input.value.trim();
+  if(!raw) return;
+
+  addEntry(raw,"user");
   input.value="";
-  fetch("/api/celeste",{
+  input.style.height="auto";
+
+  let session = loadSession();
+  session.push({ role:"user", content: raw });
+
+  const payload = session.slice(-NORMAL_LIMIT);
+
+  fetch(window.location.origin + "/api/celeste",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:v })
+    body:JSON.stringify({
+      message: raw,
+      context: payload
+    })
   })
-  .then(r=>r.json())
-  .then(d=>d.reply && add(d.reply,"celeste"))
+  .then(res=>res.json())
+  .then(data=>{
+    const reply = (data.reply||"").trim();
+    if(reply){
+      addEntry(reply,"celeste");
+      session.push({ role:"assistant", content: reply });
+      saveSession(session);
+    }
+  })
   .catch(()=>{});
 }
 
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault(); send();
+/* ===== Input Handling ===== */
+input.addEventListener("keydown", e=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    onSend();
   }
+});
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 </body>
