@@ -1,130 +1,147 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste</title>
+<title>Celeste Console</title>
 
 <style>
 :root{
   --bg:#0f1216;
+  --panel:#141922;
   --text:#e8ebef;
-  --muted:#7f8899;
+  --muted:#9aa3b2;
   --line:#242a3d;
+  --accent:#a9b7ff;
 }
-
 *{box-sizing:border-box;}
-
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-
-/* ===== Layout ===== */
 .wrap{
-  max-width:720px;
+  max-width:900px;
   margin:0 auto;
-  padding:64px 20px 80px;
+  padding:40px 20px 30px;
 }
-
-/* ===== Output ===== */
-.output{
-  min-height:120px;
-  margin-bottom:40px;
-  white-space:pre-wrap;
-  line-height:1.9;
-  font-size:16px;
+.hero{
   color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+  line-height:1.6;
 }
-
-/* ===== Input ===== */
+.console{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.log{
+  min-height:320px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+.entry{
+  margin:12px 0;
+  line-height:1.75;
+  white-space:pre-wrap;
+}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
+.divider{
+  border-top:1px solid var(--line);
+  margin:56px 0 20px;
+}
 textarea{
   width:100%;
   background:transparent;
-  border:none;
-  border-bottom:1px solid var(--line);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
   color:var(--text);
-  padding:12px 2px;
   resize:none;
-  font-size:17px;
-  line-height:1.8;
-  outline:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
 }
-
-textarea::placeholder{
-  color:#5f687a;
-}
-
-/* ===== Footer ===== */
-footer{
-  position:fixed;
-  bottom:18px;
-  right:20px;
+textarea::placeholder{ color:#6d7588; }
+.bottom{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
   font-size:12px;
-  color:#5f687a;
+  color:#6d7588;
 }
+.bottom a{
+  color:#6d7588;
+  text-decoration:none;
+}
+.bottom a:hover{ text-decoration:underline; }
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <!-- 応答表示（空でも成立） -->
-  <div id="output" class="output"></div>
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    静かに考えを整理するための場所です。決めるのは、あなた自身です。
+  </div>
 
-  <!-- 入力欄 -->
-  <textarea
-    id="input"
-    rows="1"
-    placeholder="書いても、書かなくても。"
-  ></textarea>
+  <div class="console">
+    <div id="log" class="log"></div>
+    <div class="divider"></div>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+    <div class="bottom">
+      <a href="/index.html">Back to About</a>
+      <span>CELESTE v4.1A</span>
+    </div>
+  </div>
 
 </div>
 
-<footer>CELESTE v4.2A</footer>
-
 <script>
-const input  = document.getElementById("input");
-const output = document.getElementById("output");
+const log=document.getElementById("log");
+const input=document.getElementById("input");
 
-async function send(){
-  const text = input.value;
-  if (!text.trim()) return;
-
-  input.value = "";
-  autoResize();
-
-  const res = await fetch("/api/celeste",{
-    method:"POST",
-    body:text
-  });
-
-  const reply = await res.text();
-
-  // 返答が「空」の場合、何もしない
-  if (!reply.trim()) return;
-
-  output.textContent = reply;
+function add(text,cls){
+  const d=document.createElement("div");
+  d.className="entry "+cls;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
-// Enter送信（Shift+Enterで改行）
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
-    e.preventDefault();
-    send();
-  }
+window.addEventListener("DOMContentLoaded",()=>{
+  add(`何でも書いてもらって大丈夫です。
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,"celeste");
 });
 
-// オートリサイズ
-function autoResize(){
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+function send(){
+  const v=input.value.trim();
+  if(!v)return;
+  add(v,"user");
+  input.value="";
+  fetch("/api/celeste",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:v })
+  })
+  .then(r=>r.json())
+  .then(d=>d.reply && add(d.reply,"celeste"))
+  .catch(()=>{});
 }
-input.addEventListener("input",autoResize);
-autoResize();
-</script>
 
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){
+    e.preventDefault(); send();
+  }
+});
+</script>
 </body>
 </html>
