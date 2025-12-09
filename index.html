@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste</title>
 
-<meta name="description" content="A quiet space to organize your thoughts — decisions stay with you." />
-
 <style>
 :root{
   --bg:#0f1216;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
+  --accent:#a9b7ff;
 }
 *{box-sizing:border-box;}
 body{
@@ -22,36 +21,39 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 .wrap{
-  min-height:100vh;
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 20px;
+}
+nav{
   display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
+  justify-content:space-between;
+  margin-bottom:32px;
+  font-size:14px;
 }
-.tagline{
+nav a{
   color:var(--muted);
-  font-size:16px;
-  text-align:center;
-  margin-bottom:28px;
-}
-.enter{
   text-decoration:none;
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:30px;
-  padding:10px 22px;
-  font-size:15px;
+  margin-left:20px;
 }
-.enter:hover{
-  border-color:var(--text);
+nav a:hover{ color:var(--accent); }
+h1{ font-size:28px; margin-bottom:10px; }
+.sub{ color:var(--muted); margin-bottom:28px; }
+.section{ line-height:1.8; margin-bottom:26px; }
+.open{
+  display:inline-block;
+  border:1px solid var(--line);
+  padding:10px 18px;
+  border-radius:999px;
+  color:var(--accent);
+  text-decoration:none;
 }
 footer{
-  position:fixed;
-  bottom:14px;
-  right:18px;
+  margin-top:40px;
+  display:flex;
+  justify-content:space-between;
   font-size:12px;
-  color:#6d7588;
+  color:var(--muted);
 }
 </style>
 </head>
@@ -59,16 +61,39 @@ footer{
 <body>
 <div class="wrap">
 
-  <div class="tagline">
-    A quiet space to organize your thoughts — decisions stay with you.
+<nav>
+  <div>CELESTE</div>
+  <div>
+    <a href="/philosophy.html">Philosophy</a>
+    <a href="/silent-structure.html">Silent Structure</a>
+    <a href="/vision.html">Vision</a>
+    <a href="/who-i-am.html">Who I Am</a>
+    <a href="/contact.html">Contact</a>
   </div>
+</nav>
 
-  <a class="enter" href="/celeste-console.html">
-    Enter
-  </a>
+<h1>About Celeste</h1>
+<p class="sub">A quiet space to organize your thoughts.</p>
 
+<div class="section">
+Celeste is not an authority or advisor.  
+It does not direct, decide, or judge.  
+It offers a calm place where your words can rest.
 </div>
 
-<footer>CELESTE v4.2A</footer>
+<div class="section">
+Conversations live only within the session.  
+Nothing is carried forward.  
+Each visit begins empty, and ends quietly.
+</div>
+
+<a class="open" href="/celeste-console.html">Open Console</a>
+
+<footer>
+  <span>CELESTE v4.1A</span>
+  <a href="/celeste-console.html">Console</a>
+</footer>
+
+</div>
 </body>
 </html>
