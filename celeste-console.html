@@ -12,7 +12,7 @@
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
-  --accent:#a9b7ff;
+  --accent:#9fb4ff;
 }
 *{box-sizing:border-box;}
 body{
@@ -49,18 +49,20 @@ body{
 
 /* ===== Messages ===== */
 .entry{
-  margin:12px 0;
-  line-height:1.75;
+  margin:14px 0;
+  line-height:1.8;
   white-space:pre-wrap;
 }
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
+/* ===== Divider ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:56px 0 20px;
+  margin:32px 0 18px;
 }
 
+/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -71,25 +73,25 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:48px;
+  min-height:52px;
 }
 textarea::placeholder{
   color:#6d7588;
 }
 
-.footer{
+footer{
+  margin-top:18px;
   display:flex;
   justify-content:space-between;
-  margin-top:14px;
   font-size:12px;
   color:#6d7588;
 }
-.footer a{
+footer a{
   color:#6d7588;
   text-decoration:none;
 }
-.footer a:hover{
-  color:var(--accent);
+footer a:hover{
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -99,37 +101,34 @@ textarea::placeholder{
 
   <div class="hero">
     A quiet space to organize your thoughts — decisions stay with you.
+    <br>
+    静かに考えを整理するための場所です。判断は、あなた自身のものです。
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
     <div class="divider"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
-  <div class="footer">
-    <a href="about.html">Back to About</a>
+  <footer>
+    <a href="/about.html">Back to About</a>
     <span>CELESTE v4.3A</span>
-  </div>
-
+  </footer>
 </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== Session Context Buffer ===== */
-const MAX_TURNS = 8;
-const sessionBuffer = []; // { role: "user" | "assistant", content: string }
+/* ===== Conversation History ===== */
+let conversationHistory = [];
 
-function pushContext(role, content){
-  sessionBuffer.push({ role, content });
-  if(sessionBuffer.length > MAX_TURNS * 2){
-    sessionBuffer.splice(0, sessionBuffer.length - MAX_TURNS * 2);
-  }
-}
-
-/* ===== UI ===== */
+/* ===== UI Helpers ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -138,16 +137,17 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Initial message (bilingual, gentle) */
+/* ===== Initial Message ===== */
 window.addEventListener("DOMContentLoaded", () => {
-  const message =
-`何でも書いてもらって大丈夫です。
-ここは、考えを整理したり、言葉をそのまま置いておける場所です。
-今日は、どんな気分でしょうか。
+  const opening = `ここに来てくれて、ありがとう。
 
-Write anything that comes to mind.
-This space will listen quietly.`;
-  addEntry(message, "celeste");
+この場所では、言葉を急いでまとめなくて大丈夫です。
+途中で止まっても、考えが揺れても構いません。
+
+今日は、どんな流れの一日でしたか。`;
+
+  addEntry(opening, "celeste");
+  conversationHistory.push({ role: "assistant", content: opening });
 });
 
 /* ===== Send Logic ===== */
@@ -155,8 +155,9 @@ async function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
+  // User entry
   addEntry(value,"user");
-  pushContext("user", value);
+  conversationHistory.push({ role: "user", content: value });
 
   input.value="";
   input.style.height="auto";
@@ -167,7 +168,7 @@ async function onSend(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: value,
-        history: sessionBuffer
+        history: conversationHistory
       })
     });
 
@@ -176,14 +177,20 @@ async function onSend(){
 
     if(reply){
       addEntry(reply, "celeste");
-      pushContext("assistant", reply);
+      conversationHistory.push({ role: "assistant", content: reply });
     }
+
+    // keep history at max 10 turns (20 messages)
+    if(conversationHistory.length > 20){
+      conversationHistory = conversationHistory.slice(-20);
+    }
+
   }catch(e){
     // silence by design
   }
 }
 
-/* Enter to send */
+/* ===== Enter Handling ===== */
 input.addEventListener("keydown", (e) => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
@@ -191,7 +198,7 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
-/* Auto resize */
+/* ===== Auto Resize ===== */
 input.addEventListener("input", () => {
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
