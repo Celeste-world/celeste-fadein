@@ -1,89 +1,71 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console</title>
 
-<!-- === SEO === -->
-<meta name="description" content="A quiet space with Celeste — a calm companion who helps you reflect and settle your thoughts.">
-<meta name="keywords" content="Celeste, console, reflection, quiet space, thought organizing">
-<meta name="author" content="Celeste Project">
-
 <style>
 :root{
-  --bg:#0b0f17;          /* CelesteBlue Deep */
+  --bg:#0f1216;
   --panel:#141922;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
-  --accent:#c4d3ff;
+  --accent:#a9b7ff;
 }
 
-*{box-sizing:border-box;}
+*{ box-sizing:border-box; }
 
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
-  line-height:1.75;
 }
 
-/* ===== Layout ===== */
+/* Layout */
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:48px 20px 60px;
-}
-
-.hero{
-  color:var(--muted);
-  font-size:17px;
-  margin-bottom:28px;
-  text-align:left;
+  padding:40px 20px 30px;
 }
 
 .console{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:14px;
-  padding:22px;
-  box-shadow:0 12px 32px rgba(0,0,0,.30);
+  padding:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
 
 .log{
   min-height:340px;
   max-height:540px;
   overflow-y:auto;
-  padding-right:8px;
+  padding-right:6px;
 }
 
 .entry{
   margin:14px 0;
+  line-height:1.75;
   white-space:pre-wrap;
 }
 
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
-/* ===== Input ===== */
-.divider{
-  border-top:1px solid var(--line);
-  margin:52px 0 20px;
-}
-
 textarea{
   width:100%;
   background:transparent;
   border:1px solid var(--line);
   border-radius:12px;
-  padding:14px;
+  padding:12px 14px;
   color:var(--text);
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:52px;
+  min-height:48px;
 }
 
 textarea::placeholder{
@@ -96,38 +78,49 @@ footer{
   font-size:12px;
   color:#6d7588;
 }
+
+/* Back to About Link */
+.back-about{
+  margin-top:22px;
+  text-align:left;
+  font-size:13px;
+}
+
+.back-about a{
+  color:var(--muted);
+  text-decoration:none;
+}
+.back-about a:hover{
+  text-decoration:underline;
+}
+
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="hero">
-    A quiet space to organize your thoughts — decisions stay with you.<br>
-    静かに考えを整えるための、小さな余白です。選ぶのは、いつもあなたです。
-  </div>
-
   <div class="console">
     <div id="log" class="log"></div>
 
-    <div class="divider"></div>
-
     <div class="input">
-      <textarea id="input" rows="1" placeholder="Write freely. / ご自由にどうぞ。"></textarea>
+      <textarea id="input" rows="1" placeholder="Write freely."></textarea>
     </div>
   </div>
 
-  <footer>CELESTE v4.3A</footer>
-  <div style="margin-top:16px;">
-    <a href="/about.html" style="color:#7f8ca8; text-decoration:none;">Back to About</a>
+  <!-- Back to About is ABOVE version number -->
+  <div class="back-about">
+    <a href="about.html">← Back to About</a>
   </div>
+
+  <footer>CELESTE v4.3A</footer>
 </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* === Add message to log === */
+/* Append message */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -136,56 +129,49 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* === Initial greeting (gentle, non-intrusive) === */
+/* Initial message */
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
 `ここに来てくれて、ありがとう。
 この場所では、言葉を急いでまとめなくても大丈夫です。
-途中で止まっても、考えが揺れても構いません。
-
-今日は、どんな流れの一日でしたか。`,
-    "celeste"
+途中で止まっても、考えが揺れても構いません。`,
+  "celeste"
   );
 });
 
-/* === Send logic === */
+/* Send */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
-  addEntry(value, "user");
+  addEntry(value,"user");
   input.value="";
   input.style.height="auto";
 
-  fetch(window.location.origin + "/api/celeste", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({ message:value })
+  fetch("/api/celeste", {
+    method: "POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ message:value })
   })
   .then(res => res.json())
   .then(data => {
     const reply = (data.reply || "").trim();
-    if(reply){
-      addEntry(reply, "celeste");
-    }
-  })
-  .catch(()=>{ /* fail silent */ });
+    if(reply){ addEntry(reply,"celeste"); }
+  });
 }
 
-/* === Enter key behavior === */
+/* Enter to send */
 input.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter" && !e.shiftKey){
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-/* === Auto resize === */
+/* Auto resize */
 input.addEventListener("input", ()=>{
   input.style.height="auto";
-  input.style.height = input.scrollHeight + "px";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
