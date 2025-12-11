@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,32 +7,33 @@
 
 <style>
 :root{
-  --bg:#0f1216;
-  --panel:#141922;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-  --accent:#9fb4ff;
+  --bg:#0e1015;
+  --panel:#141821;
+  --text:#e6e8eb;
+  --muted:#9aa2b1;
+  --line:#242a33;
+  --accent:#b5c7ff;
 }
-*{box-sizing:border-box;}
+
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, "Hiragino Mincho ProN", Georgia, serif;
 }
 
-/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
   padding:40px 20px 30px;
 }
+
 .hero{
-  color:var(--muted);
   font-size:16px;
+  color:var(--muted);
   margin-bottom:22px;
 }
+
 .console{
   background:var(--panel);
   border:1px solid var(--line);
@@ -40,6 +41,7 @@ body{
   padding:18px;
   box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
+
 .log{
   min-height:320px;
   max-height:520px;
@@ -47,22 +49,20 @@ body{
   padding-right:6px;
 }
 
-/* ===== Messages ===== */
 .entry{
-  margin:14px 0;
-  line-height:1.8;
+  margin:12px 0;
   white-space:pre-wrap;
+  line-height:1.75;
 }
+
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
-/* ===== Divider ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:32px 0 18px;
+  margin:50px 0 16px;
 }
 
-/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -71,27 +71,19 @@ textarea{
   padding:12px 14px;
   color:var(--text);
   resize:none;
-  font-family:inherit;
   font-size:15px;
-  min-height:52px;
+  min-height:48px;
 }
+
 textarea::placeholder{
-  color:#6d7588;
+  color:#7c8598;
 }
 
 footer{
-  margin-top:18px;
-  display:flex;
-  justify-content:space-between;
+  margin-top:12px;
+  text-align:right;
   font-size:12px;
   color:#6d7588;
-}
-footer a{
-  color:#6d7588;
-  text-decoration:none;
-}
-footer a:hover{
-  text-decoration:underline;
 }
 </style>
 </head>
@@ -101,34 +93,23 @@ footer a:hover{
 
   <div class="hero">
     A quiet space to organize your thoughts — decisions stay with you.
-    <br>
-    静かに考えを整理するための場所です。判断は、あなた自身のものです。
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+
+    <textarea id="input" placeholder="Write freely."></textarea>
   </div>
 
-  <footer>
-    <a href="/about.html">Back to About</a>
-    <span>CELESTE v4.3A</span>
-  </footer>
+  <footer>CELESTE v4.3A</footer>
 </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== Conversation History ===== */
-let conversationHistory = [];
-
-/* ===== UI Helpers ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -137,72 +118,61 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* ===== Initial Message ===== */
+/* ---- 初期メッセージ（v4.3A版） ---- */
 window.addEventListener("DOMContentLoaded", () => {
-  const opening = `ここに来てくれて、ありがとう。
+  addEntry(
+`ここに来てくれて、ありがとう。
 
-この場所では、言葉を急いでまとめなくて大丈夫です。
-途中で止まっても、考えが揺れても構いません。
+この場所では、言葉を急いでまとめなくても大丈夫です。
+途中で言葉が止まってしまっても、静かなままでいて大丈夫。
 
-今日は、どんな流れの一日でしたか。`;
-
-  addEntry(opening, "celeste");
-  conversationHistory.push({ role: "assistant", content: opening });
+今日は、どんな流れの一日でしたか。`,
+  "celeste"
+  );
 });
 
-/* ===== Send Logic ===== */
+/* ---- 送信処理 ---- */
 async function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
-  // User entry
-  addEntry(value,"user");
-  conversationHistory.push({ role: "user", content: value });
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
 
-  input.value="";
-  input.style.height="auto";
-
-  try{
+  try {
     const res = await fetch("/api/celeste", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: value,
-        history: conversationHistory
-      })
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ message:value })
     });
 
     const data = await res.json();
-    const reply = (data.reply || "").trim();
-
-    if(reply){
-      addEntry(reply, "celeste");
-      conversationHistory.push({ role: "assistant", content: reply });
+    if(data.reply){
+      addEntry(data.reply.trim(), "celeste");
+    } else {
+      addEntry("(No response)", "celeste");
     }
 
-    // keep history at max 10 turns (20 messages)
-    if(conversationHistory.length > 20){
-      conversationHistory = conversationHistory.slice(-20);
-    }
-
-  }catch(e){
-    // silence by design
+  } catch(err){
+    addEntry("…少し静かにさせてください。", "celeste");
   }
 }
 
-/* ===== Enter Handling ===== */
-input.addEventListener("keydown", (e) => {
+/* Enter = 送信、Shift+Enter = 改行 */
+input.addEventListener("keydown", e => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-/* ===== Auto Resize ===== */
+/* 自動リサイズ */
 input.addEventListener("input", () => {
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
+
 </body>
 </html>
