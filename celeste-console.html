@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,33 +7,32 @@
 
 <style>
 :root{
-  --bg:#0e1015;
-  --panel:#141821;
-  --text:#e6e8eb;
-  --muted:#9aa2b1;
-  --line:#242a33;
-  --accent:#b5c7ff;
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
 }
-
+*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, "Hiragino Mincho ProN", Georgia, serif;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
+/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
   padding:40px 20px 30px;
 }
-
 .hero{
-  font-size:16px;
   color:var(--muted);
+  font-size:16px;
   margin-bottom:22px;
 }
-
 .console{
   background:var(--panel);
   border:1px solid var(--line);
@@ -41,7 +40,6 @@ body{
   padding:18px;
   box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
-
 .log{
   min-height:320px;
   max-height:520px;
@@ -49,20 +47,25 @@ body{
   padding-right:6px;
 }
 
+/* ===== Messages ===== */
 .entry{
   margin:12px 0;
-  white-space:pre-wrap;
   line-height:1.75;
+  white-space:pre-wrap;
 }
-
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
+/* ===== Spacing ===== */
 .divider{
   border-top:1px solid var(--line);
-  margin:50px 0 16px;
+  margin:56px 0 20px;
+}
+.input{
+  margin-top:6px;
 }
 
+/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -71,16 +74,16 @@ textarea{
   padding:12px 14px;
   color:var(--text);
   resize:none;
+  font-family:inherit;
   font-size:15px;
   min-height:48px;
 }
-
 textarea::placeholder{
-  color:#7c8598;
+  color:#6d7588;
 }
 
 footer{
-  margin-top:12px;
+  margin-top:14px;
   text-align:right;
   font-size:12px;
   color:#6d7588;
@@ -91,8 +94,9 @@ footer{
 <body>
 <div class="wrap">
 
+  <!-- Initial display -->
   <div class="hero">
-    A quiet space to organize your thoughts — decisions stay with you.
+    A quiet place to return to — your thoughts are welcome here.
   </div>
 
   <div class="console">
@@ -100,16 +104,47 @@ footer{
 
     <div class="divider"></div>
 
-    <textarea id="input" placeholder="Write freely."></textarea>
+    <div class="input">
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Write freely."
+      ></textarea>
+    </div>
   </div>
 
   <footer>CELESTE v4.3A</footer>
 </div>
 
 <script>
-const log = document.getElementById("log");
+const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
+/* Detect language for the initial greeting */
+function detectLang(text){
+  const ja = /[\u3040-\u30ff\u4e00-\u9faf]/;
+  if(ja.test(text)) return "ja";
+  return "en";
+}
+
+/* Initial greeting (multi-language ready) */
+function initialMessage(lang){
+  if(lang === "ja"){
+    return `ここは、少し呼吸を整えられる場所です。
+どんな言葉も、そのまま置いて大丈夫です。
+今はどんなあたりに心が向いていますか。`;
+  }
+  return `This is a place to settle for a moment.
+Anything you want to write can remain as it is.
+What part of your thoughts feels closest right now?`;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const lang = navigator.language.startsWith("ja") ? "ja" : "en";
+  addEntry(initialMessage(lang), "celeste");
+});
+
+/* Append message to log */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -118,61 +153,43 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* ---- 初期メッセージ（v4.3A版） ---- */
-window.addEventListener("DOMContentLoaded", () => {
-  addEntry(
-`ここに来てくれて、ありがとう。
-
-この場所では、言葉を急いでまとめなくても大丈夫です。
-途中で言葉が止まってしまっても、静かなままでいて大丈夫。
-
-今日は、どんな流れの一日でしたか。`,
-  "celeste"
-  );
-});
-
-/* ---- 送信処理 ---- */
-async function onSend(){
+/* Send logic */
+function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
+  addEntry(value,"user");
+  input.value="";
+  input.style.height="auto";
 
-  try {
-    const res = await fetch("/api/celeste", {
-      method: "POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ message:value })
-    });
-
-    const data = await res.json();
-    if(data.reply){
-      addEntry(data.reply.trim(), "celeste");
-    } else {
-      addEntry("(No response)", "celeste");
-    }
-
-  } catch(err){
-    addEntry("…少し静かにさせてください。", "celeste");
-  }
+  fetch(window.location.origin + "/api/celeste", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: value })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const reply = (data.reply || "").trim();
+    if (reply) addEntry(reply, "celeste");
+  })
+  .catch(() => {});
 }
 
-/* Enter = 送信、Shift+Enter = 改行 */
-input.addEventListener("keydown", e => {
+/* Enter to send / Shift+Enter for newline */
+input.addEventListener("keydown", (e) => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
-/* 自動リサイズ */
+/* Auto resize */
 input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
-
 </body>
 </html>
