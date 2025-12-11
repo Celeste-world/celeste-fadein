@@ -53,19 +53,14 @@ body{
   line-height:1.75;
   white-space:pre-wrap;
 }
-.celeste{ color:var(--text); }
-.user{ color:var(--accent); }
+.celeste { color:var(--text); }
+.user     { color:var(--accent); }
 
-/* ===== Spacing ===== */
+/* ===== Input & spacing ===== */
 .divider{
   border-top:1px solid var(--line);
   margin:56px 0 20px;
 }
-.input{
-  margin-top:6px;
-}
-
-/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -96,7 +91,7 @@ footer{
 
   <!-- Initial display -->
   <div class="hero">
-    A quiet place to return to — your thoughts are welcome here.
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
   <div class="console">
@@ -104,13 +99,11 @@ footer{
 
     <div class="divider"></div>
 
-    <div class="input">
-      <textarea
-        id="input"
-        rows="1"
-        placeholder="Write freely."
-      ></textarea>
-    </div>
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
   <footer>CELESTE v4.3A</footer>
@@ -120,31 +113,7 @@ footer{
 const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* Detect language for the initial greeting */
-function detectLang(text){
-  const ja = /[\u3040-\u30ff\u4e00-\u9faf]/;
-  if(ja.test(text)) return "ja";
-  return "en";
-}
-
-/* Initial greeting (multi-language ready) */
-function initialMessage(lang){
-  if(lang === "ja"){
-    return `ここは、少し呼吸を整えられる場所です。
-どんな言葉も、そのまま置いて大丈夫です。
-今はどんなあたりに心が向いていますか。`;
-  }
-  return `This is a place to settle for a moment.
-Anything you want to write can remain as it is.
-What part of your thoughts feels closest right now?`;
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  const lang = navigator.language.startsWith("ja") ? "ja" : "en";
-  addEntry(initialMessage(lang), "celeste");
-});
-
-/* Append message to log */
+/* ===== Add message to log ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -153,8 +122,18 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Send logic */
-function onSend(){
+/* ===== Initial gentle message ===== */
+window.addEventListener("DOMContentLoaded", () => {
+  addEntry(
+`書きたいことがあれば、いつでもここに置いてください。
+言葉にすることで、少しだけ整理が進むことがあります。
+どんなふうに感じていますか。`,
+  "celeste"
+  );
+});
+
+/* ===== Send logic ===== */
+async function onSend(){
   const value = input.value.trim();
   if(!value) return;
 
@@ -162,19 +141,21 @@ function onSend(){
   input.value="";
   input.style.height="auto";
 
-  fetch(window.location.origin + "/api/celeste", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message: value })
-  })
-  .then(res => res.json())
-  .then(data => {
+  try{
+    const res = await fetch(window.location.origin + "/api/celeste", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: value })
+    });
+
+    const data = await res.json();
     const reply = (data.reply || "").trim();
-    if (reply) addEntry(reply, "celeste");
-  })
-  .catch(() => {});
+    if (reply){
+      addEntry(reply,"celeste");
+    }
+  } catch {
+    /* silence on failure */
+  }
 }
 
 /* Enter to send / Shift+Enter for newline */
