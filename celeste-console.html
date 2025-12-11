@@ -14,9 +14,7 @@
   --line:#242a3d;
   --accent:#a9b7ff;
 }
-
-*{ box-sizing:border-box; }
-
+*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
@@ -24,37 +22,50 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-/* Layout */
+/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
   padding:40px 20px 30px;
 }
-
+.hero{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:22px;
+}
 .console{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:14px;
-  padding:20px;
+  padding:18px;
   box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
-
 .log{
-  min-height:340px;
-  max-height:540px;
+  min-height:320px;
+  max-height:520px;
   overflow-y:auto;
   padding-right:6px;
 }
 
+/* ===== Messages ===== */
 .entry{
-  margin:14px 0;
+  margin:12px 0;
   line-height:1.75;
   white-space:pre-wrap;
 }
-
 .celeste{ color:var(--text); }
 .user{ color:var(--accent); }
 
+/* ===== Spacing ===== */
+.divider{
+  border-top:1px solid var(--line);
+  margin:56px 0 20px;
+}
+.input{
+  margin-top:6px;
+}
+
+/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -67,60 +78,65 @@ textarea{
   font-size:15px;
   min-height:48px;
 }
-
 textarea::placeholder{
   color:#6d7588;
 }
 
-footer{
-  margin-top:18px;
-  text-align:right;
-  font-size:12px;
-  color:#6d7588;
+/* ===== Footer ===== */
+.footer-bar {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* Back to About Link */
-.back-about{
-  margin-top:22px;
-  text-align:left;
-  font-size:13px;
+.footer-bar a {
+  color: var(--accent);
+  text-decoration: none;
 }
 
-.back-about a{
-  color:var(--muted);
-  text-decoration:none;
+.footer-bar a:hover {
+  text-decoration: underline;
 }
-.back-about a:hover{
-  text-decoration:underline;
-}
-
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
+  <div class="hero">
+    A quiet space to organize your thoughts — decisions stay with you.
+  </div>
+
   <div class="console">
     <div id="log" class="log"></div>
+    <div class="divider"></div>
 
     <div class="input">
-      <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Write freely."
+      ></textarea>
     </div>
   </div>
 
-  <!-- Back to About is ABOVE version number -->
-  <div class="back-about">
-    <a href="about.html">← Back to About</a>
-  </div>
+  <!-- ★ 統一フッター（Back to About と Version を横並びで） -->
+  <footer class="footer-bar">
+    <a href="/about.html" class="back-link">Back to About</a>
+    <span class="version">CELESTE v4.3A</span>
+  </footer>
 
-  <footer>CELESTE v4.3A</footer>
 </div>
 
 <script>
-const log = document.getElementById("log");
+const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* Append message */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = `entry ${cls}`;
@@ -129,17 +145,17 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Initial message */
+/* Initial response */
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
-`ここに来てくれて、ありがとう。
-この場所では、言葉を急いでまとめなくても大丈夫です。
-途中で止まっても、考えが揺れても構いません。`,
+`何でも書いてもらって大丈夫です。
+ここでは、考えをゆっくり整えられます。
+今は、どのあたりに心が触れていますか。`,
   "celeste"
   );
 });
 
-/* Send */
+/* Send logic */
 function onSend(){
   const value = input.value.trim();
   if(!value) return;
@@ -150,30 +166,30 @@ function onSend(){
 
   fetch("/api/celeste", {
     method: "POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ message:value })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: value })
   })
   .then(res => res.json())
   .then(data => {
     const reply = (data.reply || "").trim();
-    if(reply){ addEntry(reply,"celeste"); }
-  });
+    if (reply) addEntry(reply, "celeste");
+  })
+  .catch(() => {});
 }
 
-/* Enter to send */
-input.addEventListener("keydown", (e)=>{
-  if(e.key==="Enter" && !e.shiftKey){
+/* Enter to send / Shift+Enter for newline */
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     onSend();
   }
 });
 
 /* Auto resize */
-input.addEventListener("input", ()=>{
+input.addEventListener("input", () => {
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
 });
 </script>
-
 </body>
 </html>
