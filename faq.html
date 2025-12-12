@@ -4,18 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>FAQ — Celeste</title>
+<title>FAQ — Celeste v4.3A</title>
 
-<meta name="description" content="Frequently asked questions about Celeste — a quiet console for organizing thoughts without pressure or persuasion." />
-<meta name="robots" content="index, follow" />
+<meta name="description" content="Frequently asked questions about Celeste — a small, quiet console for thinking. Learn what Celeste is, what it is not, and how it is designed." />
 
 <!-- Open Graph -->
-<meta property="og:title" content="FAQ — Celeste" />
-<meta property="og:description" content="Clear answers about what Celeste is, what it is not, and how it is designed to stay gentle and limited." />
+<meta property="og:title" content="FAQ — Celeste v4.3A" />
+<meta property="og:description" content="Clear answers about what Celeste does, how it works, and where its boundaries are." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://celeste.world/faq.html" />
 
-<!-- FAQ Structured Data -->
+<!-- FAQ structured data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +25,7 @@
       "name": "What is Celeste?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do."
+        "text": "Celeste is a small, quiet console for thinking. It offers space to write and see thoughts more clearly, without giving instructions or decisions."
       }
     },
     {
@@ -42,15 +41,15 @@
       "name": "Does Celeste remember me?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary."
+        "text": "No. Celeste does not keep long-term memory or build user profiles. Each session is temporary."
       }
     },
     {
       "@type": "Question",
-      "name": "Can Celeste give advice or make decisions for me?",
+      "name": "Can Celeste give advice or make decisions?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you."
+        "text": "No. Celeste avoids giving direct advice or making decisions. All decisions remain with the user."
       }
     },
     {
@@ -58,20 +57,20 @@
       "name": "Is Celeste a therapist or coach?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Celeste is not a therapist, coach, or professional service. It cannot replace human support."
+        "text": "No. Celeste is not a therapist, coach, or professional service, and cannot replace human support."
       }
     },
     {
       "@type": "Question",
-      "name": "What happens if I talk about something serious or urgent?",
+      "name": "What happens with serious or urgent topics?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations."
+        "text": "When a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations."
       }
     },
     {
       "@type": "Question",
-      "name": "Why are the responses so short?",
+      "name": "Why are responses short?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Short replies leave room for your own thinking. Silence is treated as part of the conversation."
@@ -82,7 +81,7 @@
       "name": "Is my data stored?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No accounts, no tracking, no long-term storage. Celeste is designed to be temporary."
+        "text": "No accounts, no tracking, and no long-term storage. Celeste is designed to be temporary."
       }
     },
     {
@@ -90,7 +89,7 @@
       "name": "What languages does Celeste support?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You can write in any language. Celeste will respond in the same language when possible."
+        "text": "You can write in any language. Celeste responds in the same language when possible."
       }
     },
     {
@@ -108,13 +107,14 @@
 <style>
 :root{
   --bg:#0f1216;
+  --panel:#141922;
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
   --accent:#a9b7ff;
 }
 
-*{ box-sizing:border-box; }
+*{box-sizing:border-box;}
 
 body{
   margin:0;
@@ -124,15 +124,40 @@ body{
 }
 
 .wrap{
-  max-width:860px;
+  max-width:900px;
   margin:0 auto;
-  padding:48px 20px 32px;
+  padding:40px 20px 60px;
 }
 
+/* Top right navigation */
+.top-nav{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:18px;
+  margin-bottom:36px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.top-nav a{
+  color:var(--muted);
+  text-decoration:none;
+}
+
+.top-nav a:hover{
+  text-decoration:underline;
+}
+
+.version{
+  color:#6d7588;
+}
+
+/* Content */
 h1{
-  font-size:26px;
-  font-weight:400;
-  margin-bottom:28px;
+  font-size:28px;
+  margin-bottom:30px;
+  font-weight:normal;
 }
 
 .faq{
@@ -146,32 +171,14 @@ h1{
 
 .item h2{
   font-size:18px;
-  font-weight:400;
+  font-weight:normal;
   margin:0 0 10px;
 }
 
 .item p{
   margin:0;
-  line-height:1.7;
+  line-height:1.75;
   color:var(--muted);
-}
-
-.footer{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:18px;
-  margin-top:32px;
-  font-size:13px;
-}
-
-.footer a{
-  color:var(--accent);
-  text-decoration:none;
-}
-
-.footer span{
-  color:#6d7588;
 }
 </style>
 </head>
@@ -179,9 +186,14 @@ h1{
 <body>
 <div class="wrap">
 
+  <div class="top-nav">
+    <a href="/about.html">Back to About</a>
+    <span class="version">CELESTE v4.3A</span>
+  </div>
+
   <h1>Frequently Asked Questions</h1>
 
-  <section class="faq">
+  <div class="faq">
 
     <div class="item">
       <h2>What is Celeste?</h2>
@@ -195,37 +207,37 @@ h1{
 
     <div class="item">
       <h2>Does Celeste remember me?</h2>
-      <p>No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</p>
+      <p>No. Celeste does not keep long-term memory or build profiles. Each session is temporary.</p>
     </div>
 
     <div class="item">
-      <h2>Can Celeste give advice or make decisions for me?</h2>
-      <p>No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</p>
+      <h2>Can Celeste give advice or make decisions?</h2>
+      <p>No. Celeste avoids direct advice or decisions. Decisions always remain with you.</p>
     </div>
 
     <div class="item">
       <h2>Is Celeste a therapist or coach?</h2>
-      <p>No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</p>
+      <p>No. Celeste is not a therapist, coach, or professional service, and cannot replace human support.</p>
     </div>
 
     <div class="item">
-      <h2>What happens if I talk about something serious or urgent?</h2>
-      <p>If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</p>
+      <h2>What happens with serious or urgent topics?</h2>
+      <p>If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those moments.</p>
     </div>
 
     <div class="item">
-      <h2>Why are the responses so short?</h2>
+      <h2>Why are responses short?</h2>
       <p>Short replies leave room for your own thinking. Silence is treated as part of the conversation.</p>
     </div>
 
     <div class="item">
       <h2>Is my data stored?</h2>
-      <p>No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</p>
+      <p>No accounts, no tracking, and no long-term storage. Celeste is designed to be temporary.</p>
     </div>
 
     <div class="item">
       <h2>What languages does Celeste support?</h2>
-      <p>You can write in any language. Celeste will respond in the same language when possible.</p>
+      <p>You can write in any language. Celeste responds in the same language when possible.</p>
     </div>
 
     <div class="item">
@@ -233,11 +245,6 @@ h1{
       <p>Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</p>
     </div>
 
-  </section>
-
-  <div class="footer">
-    <a href="about.html">Back to About</a>
-    <span>CELESTE v4.3A</span>
   </div>
 
 </div>
