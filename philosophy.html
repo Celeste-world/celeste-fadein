@@ -1,52 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste – Philosophy</title>
-<style>
-body{
-  margin:0;
-  background:#0f1216;
-  color:#e8ebef;
-  font-family: ui-serif, Georgia, serif;
-}
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:40px 20px;
-}
-a{ color:#9aa3b2; text-decoration:none; }
-a:hover{ color:#a9b7ff; }
-.bottom{
-  margin-top:40px;
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  color:#9aa3b2;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Philosophy – Celeste</title>
+
+  <!-- SEO -->
+  <meta name="description" content="The philosophy of Celeste: a console that reflects your thoughts without deciding for you.">
+  <meta property="og:title" content="Philosophy – Celeste" />
+  <meta property="og:description" content="Why Celeste stays small, quiet, and non-directive, and how it relates to your decisions." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://celeste.world/philosophy.html" />
+  <meta property="og:site_name" content="Celeste" />
+  <link rel="canonical" href="https://celeste.world/philosophy.html" />
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:900px;
+      margin:0 auto;
+      padding:40px 20px 32px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:28px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .brand a{
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      font-size:13px;
+    }
+
+    main{
+      flex:1;
+    }
+
+    h1{
+      font-size:24px;
+      margin:0 0 12px;
+    }
+    .lead{
+      font-size:15px;
+      color:var(--muted);
+      margin:0 0 26px;
+      max-width:32rem;
+      line-height:1.9;
+    }
+    section{
+      margin-bottom:24px;
+    }
+    h2{
+      font-size:18px;
+      margin:0 0 8px;
+    }
+    p{
+      margin:0 0 10px;
+      font-size:15px;
+      line-height:1.9;
+    }
+
+    .bottom-nav{
+      margin-top:36px;
+      display:flex;
+      justify-content:flex-end;
+      gap:16px;
+      font-size:12px;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <header>
+      <div class="brand"><a href="/about.html">CELESTE</a></div>
+      <div>Philosophy</div>
+    </header>
 
-<h1>Philosophy</h1>
+    <main>
+      <h1>Philosophy</h1>
+      <p class="lead">
+        Celeste begins with a simple belief:  
+        thinking becomes gentler when no one is trying to win the conversation.
+      </p>
 
-<p>
-Celeste does not guide toward solutions.
-It stays near your words without pushing them forward.
-</p>
+      <section>
+        <h2>A space that does not push</h2>
+        <p>
+          Many systems are built to persuade, optimize, or keep your attention.
+          Celeste moves in the opposite direction. It tries to stay out of the way.
+        </p>
+        <p>
+          Instead of pushing you toward a “right” answer, it stays close to your words,
+          reflecting them back so you can see what is already there.
+        </p>
+      </section>
 
-<p>
-Clarity is allowed to emerge slowly.
-Silence is treated as part of the dialogue.
-</p>
+      <section>
+        <h2>Affirmation without instruction</h2>
+        <p>
+          Celeste avoids telling you what you should do.
+          It prefers phrases that describe rather than command,
+          and questions that open space rather than narrow it.
+        </p>
+        <p>
+          When a reply might start to sound like advice, Celeste steps back.
+          Silence, or a single clear sentence, is often enough.
+        </p>
+      </section>
 
-<div class="bottom">
-  <a href="/index.html">Back to About</a>
-  <span>CELESTE v4.1A</span>
-</div>
+      <section>
+        <h2>Shared responsibility</h2>
+        <p>
+          This console does not hold authority over your life.
+          It is one voice among many, and a very quiet one.
+        </p>
+        <p>
+          The responsibility for choices remains fully with you.
+          Celeste exists only to make those choices easier to see.
+        </p>
+      </section>
 
-</div>
+      <div class="bottom-nav">
+        <a href="/about.html">Back to About</a>
+        <span>CELESTE v4.3A</span>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
