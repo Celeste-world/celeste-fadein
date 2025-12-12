@@ -82,38 +82,38 @@ textarea::placeholder{
   color:#6d7588;
 }
 
-/* ===== Footer ===== */
-.footer-bar {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--muted);
-  font-size: 14px;
+/* ===== Bottom navigation (Back to About + Version) ===== */
+.nav-bottom{
+  margin-top:22px;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+}
+.nav-bottom a{
+  color:var(--accent);
+  text-decoration:none;
+}
+.nav-bottom a:hover{
+  text-decoration:underline;
+}
+.version{
+  color:var(--muted);
 }
 
-.footer-bar a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.footer-bar a:hover {
-  text-decoration: underline;
-}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
+  <!-- Initial display -->
   <div class="hero">
     A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
 
     <div class="input">
@@ -125,11 +125,11 @@ textarea::placeholder{
     </div>
   </div>
 
-  <!-- ★ 統一フッター（Back to About と Version を横並びで） -->
-  <footer class="footer-bar">
-    <a href="/about.html" class="back-link">Back to About</a>
-    <span class="version">CELESTE v4.3A</span>
-  </footer>
+  <!-- Bottom navigation -->
+  <div class="nav-bottom">
+    <a href="/about.html">← Back to About</a>
+    <div class="version">CELESTE v4.3A</div>
+  </div>
 
 </div>
 
@@ -149,8 +149,8 @@ function addEntry(text, cls){
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
 `何でも書いてもらって大丈夫です。
-ここでは、考えをゆっくり整えられます。
-今は、どのあたりに心が触れていますか。`,
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,
   "celeste"
   );
 });
@@ -164,20 +164,27 @@ function onSend(){
   input.value="";
   input.style.height="auto";
 
+  /* API endpoint */
   fetch("/api/celeste", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ message: value })
   })
   .then(res => res.json())
   .then(data => {
     const reply = (data.reply || "").trim();
-    if (reply) addEntry(reply, "celeste");
+    if (reply) {
+      addEntry(reply, "celeste");
+    }
   })
-  .catch(() => {});
+  .catch(() => {
+    /* silence */
+  });
 }
 
-/* Enter to send / Shift+Enter for newline */
+/* Enter to send */
 input.addEventListener("keydown", (e) => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
@@ -191,5 +198,6 @@ input.addEventListener("input", () => {
   input.style.height=input.scrollHeight+"px";
 });
 </script>
+
 </body>
 </html>
