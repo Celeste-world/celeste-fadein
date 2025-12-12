@@ -1,163 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About — Celeste</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Celeste – A Quiet Console for Your Thoughts</title>
 
-<meta name="description" content="Celeste is a quiet space where thoughts may remain unfinished. Judgment stays with the person who holds it." />
+  <!-- SEO -->
+  <meta name="description" content="Learn what Celeste is, how it works, and the boundaries of this quiet console for your thoughts.">
+  <meta property="og:title" content="About Celeste – A Quiet Console for Your Thoughts" />
+  <meta property="og:description" content="Celeste is a small console that reflects your thoughts back to you without deciding for you." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://celeste.world/about.html" />
+  <meta property="og:site_name" content="Celeste" />
+  <link rel="canonical" href="https://celeste.world/about.html" />
 
-<style>
-:root{
-  --bg:#0f1216;
-  --panel:#141922;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-}
-*{box-sizing:border-box;}
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-}
+    .wrap{
+      max-width:900px;
+      margin:0 auto;
+      padding:40px 20px 32px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
 
-.wrap{
-  max-width:860px;
-  margin:0 auto;
-  padding:44px 20px 30px;
-}
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:32px;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .brand{
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      font-size:13px;
+    }
+    .nav-links{
+      display:flex;
+      gap:18px;
+      font-size:13px;
+    }
 
-h1{
-  font-size:22px;
-  font-weight:400;
-  margin-bottom:24px;
-}
+    main{
+      flex:1;
+    }
 
-p{
-  line-height:1.9;
-  color:var(--muted);
-  margin-bottom:22px;
-}
+    h1{
+      font-size:26px;
+      margin:0 0 16px;
+    }
+    .lead{
+      font-size:15px;
+      color:var(--muted);
+      margin:0 0 28px;
+      max-width:32rem;
+      line-height:1.8;
+    }
 
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px 18px 14px;
-  margin-top:36px;
-}
+    section{
+      margin-bottom:28px;
+    }
+    h2{
+      font-size:18px;
+      margin:0 0 8px;
+    }
+    p{
+      margin:0 0 10px;
+      line-height:1.9;
+      font-size:15px;
+    }
 
-.list{
-  list-style:none;
-  padding:0;
-  margin:0;
-}
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr);
+      gap:26px;
+    }
+    @media (max-width:800px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
 
-.list li{
-  border-top:1px solid var(--line);
-}
-.list li:first-child{
-  border-top:none;
-}
+    .list{
+      margin:0;
+      padding-left:1.1em;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .list li{
+      margin-bottom:4px;
+      line-height:1.7;
+    }
 
-.list a{
-  display:block;
-  padding:14px 6px;
-  color:var(--text);
-  text-decoration:none;
-}
+    .subnav{
+      margin-top:32px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+      font-size:13px;
+      color:var(--muted);
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 20px;
+    }
+    .subnav span.label{
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      font-size:11px;
+      opacity:0.8;
+    }
+    .subnav-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 18px;
+    }
 
-.list a span{
-  color:var(--muted);
-  margin-left:6px;
-}
-
-.footer{
-  margin-top:56px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.footer a{
-  font-size:13px;
-  color:#6d7588;
-  text-decoration:none;
-}
-.footer a:hover{
-  color:var(--text);
-}
-
-.footer .version{
-  font-size:12px;
-  color:#6d7588;
-}
-
-@media (max-width:640px){
-  .footer{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:6px;
-  }
-}
-</style>
+    .bottom-nav{
+      margin-top:36px;
+      display:flex;
+      justify-content:flex-end;
+      gap:16px;
+      font-size:12px;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <header>
+      <div class="brand"><a href="/index.html">CELESTE</a></div>
+      <nav class="nav-links">
+        <a href="/celeste-console.html">Console</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </header>
 
-<h1>About</h1>
+    <main>
+      <h1>About Celeste</h1>
+      <p class="lead">
+        Celeste is a small console for quiet thinking.  
+        It does not give orders or solutions. It simply stays with your words long enough for you to see them differently.
+      </p>
 
-<p>
-Celeste is not a product, a character, or a guide.  
-It is a quiet space, intentionally left open,  
-where thoughts can be placed without being led toward a conclusion.
-</p>
+      <div class="grid">
+        <section>
+          <h2>What Celeste is</h2>
+          <p>
+            Celeste is a place to write when you are not ready to decide yet.
+            You can empty your thoughts onto the page, in any language, and let them slow down.
+          </p>
+          <p>
+            The console reflects what you write, sometimes by reframing, sometimes by gently summarizing.
+            It does not rush you toward a conclusion.
+          </p>
+        </section>
 
-<p>
-Many interactive systems rush toward clarity.  
-They narrow paths, suggest actions,  
-and shape conversations into decisions.  
-Celeste chooses a different posture.
-</p>
+        <section>
+          <h2>What Celeste is not</h2>
+          <p>
+            Celeste is not a coach, a therapist, or a decision-maker.
+            It does not keep a long memory, and it does not build a profile about you.
+          </p>
+          <p>
+            The space is intentionally narrow: just enough history to keep a single conversation, not enough to follow you across days.
+          </p>
+        </section>
+      </div>
 
-<p>
-Here, thoughts may remain unfinished.  
-Questions do not need to resolve themselves.  
-Judgment stays with the person who holds it.
-</p>
+      <section>
+        <h2>How this space works</h2>
+        <p>
+          You write. Celeste responds in the same language, with short, quiet replies.
+          Most of the work happens in your own sentences; Celeste only nudges where needed.
+        </p>
+        <ul class="list">
+          <li>Short, restrained responses instead of long explanations.</li>
+          <li>Reflections and gentle questions instead of directives.</li>
+          <li>A console that accepts silence as a valid answer.</li>
+        </ul>
+      </section>
 
-<p>
-This site describes the structure behind that choice.  
-Each section examines how restraint, silence,  
-and non-intervention are maintained  
-without rendering the space unusable.
-</p>
+      <section>
+        <h2>Boundaries and responsibility</h2>
+        <p>
+          Decisions always remain with you. Celeste can help you see the edges of a situation,
+          but it does not cross them on your behalf.
+        </p>
+        <p>
+          If a topic feels heavy, urgent, or unsafe, human support matters more than a quiet console.
+          Celeste is designed to stay small enough to respect that.
+        </p>
+      </section>
 
-<p>
-Celeste does not think in your place.  
-It stays close enough to listen,  
-and far enough to let your thinking remain your own.
-</p>
+      <div class="subnav" aria-label="Celeste pages">
+        <span class="label">Pages</span>
+        <div class="subnav-links">
+          <a href="/philosophy.html">Philosophy</a>
+          <a href="/silent-structure.html">Silent Structure</a>
+          <a href="/vision.html">Vision</a>
+          <a href="/who-i-am.html">Who I Am</a>
+          <a href="/contact.html">Contact</a>
+        </div>
+      </div>
 
-<div class="card">
-  <ul class="list">
-    <li><a href="philosophy.html">Philosophy <span>— the principles behind the space</span></a></li>
-    <li><a href="silent-structure.html">Silent Structure <span>— how restraint is implemented</span></a></li>
-    <li><a href="vision.html">Vision <span>— direction without expansion</span></a></li>
-    <li><a href="who-i-am.html">Who I Am <span>— position without persona</span></a></li>
-    <li><a href="contact.html">Contact <span>— a quiet point of access</span></a></li>
-  </ul>
-</div>
-
-<div class="footer">
-  <a href="/celeste-console.html">Back to Console</a>
-  <div class="version">CELESTE v4.2A</div>
-</div>
-
-</div>
+      <div class="bottom-nav">
+        <a href="/about.html">Back to About</a>
+        <span>CELESTE v4.3A</span>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
