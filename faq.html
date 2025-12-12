@@ -5,102 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>FAQ — Celeste</title>
-<meta name="description" content="Frequently asked questions about Celeste. Learn what Celeste is, what it is not, and how it is designed to support quiet thinking without instruction or persuasion." />
-<meta name="robots" content="index, follow" />
 
-<link rel="canonical" href="https://celeste.world/faq.html" />
+<meta name="description" content="Frequently asked questions about Celeste — a quiet console for organizing thoughts without pressure or persuasion." />
+<meta name="robots" content="index, follow" />
 
 <!-- Open Graph -->
 <meta property="og:title" content="FAQ — Celeste" />
-<meta property="og:description" content="A quiet explanation of what Celeste is, how it works, and why it stays intentionally small." />
+<meta property="og:description" content="Clear answers about what Celeste is, what it is not, and how it is designed to stay gentle and limited." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://celeste.world/faq.html" />
-
-<style>
-:root{
-  --bg:#0f1216;
-  --panel:#141922;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-}
-
-*{box-sizing:border-box;}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-  line-height:1.75;
-}
-
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:40px 20px 80px;
-}
-
-header{
-  margin-bottom:48px;
-}
-
-h1{
-  font-size:28px;
-  margin:0 0 12px;
-}
-
-.intro{
-  color:var(--muted);
-  max-width:640px;
-}
-
-section{
-  margin-bottom:44px;
-}
-
-h2{
-  font-size:18px;
-  margin-bottom:10px;
-}
-
-.answer{
-  max-width:720px;
-}
-
-details{
-  margin-top:10px;
-}
-
-details summary{
-  cursor:pointer;
-  color:var(--muted);
-  font-size:14px;
-}
-
-details p{
-  margin-top:8px;
-  color:#c9cfda;
-}
-
-footer{
-  margin-top:80px;
-  display:flex;
-  justify-content:flex-end;
-  gap:20px;
-  font-size:13px;
-  color:var(--muted);
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-a:hover{
-  text-decoration:underline;
-}
-</style>
 
 <!-- FAQ Structured Data -->
 <script type="application/ld+json">
@@ -118,7 +31,7 @@ a:hover{
     },
     {
       "@type": "Question",
-      "name": "Is Celeste an AI assistant or a chatbot?",
+      "name": "Is Celeste an AI assistant or chatbot?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations."
@@ -150,110 +63,183 @@ a:hover{
     },
     {
       "@type": "Question",
+      "name": "What happens if I talk about something serious or urgent?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Why are the responses so short?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Short replies leave room for your own thinking. Silence is treated as part of the conversation."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data stored?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No accounts, no tracking, no long-term storage. Celeste is designed to be temporary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What languages does Celeste support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can write in any language. Celeste will respond in the same language when possible."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Celeste trying to become?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better."
+      }
     }
   ]
 }
 </script>
+
+<style>
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.wrap{
+  max-width:860px;
+  margin:0 auto;
+  padding:48px 20px 32px;
+}
+
+h1{
+  font-size:26px;
+  font-weight:400;
+  margin-bottom:28px;
+}
+
+.faq{
+  border-top:1px solid var(--line);
+}
+
+.item{
+  padding:26px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.item h2{
+  font-size:18px;
+  font-weight:400;
+  margin:0 0 10px;
+}
+
+.item p{
+  margin:0;
+  line-height:1.7;
+  color:var(--muted);
+}
+
+.footer{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:18px;
+  margin-top:32px;
+  font-size:13px;
+}
+
+.footer a{
+  color:var(--accent);
+  text-decoration:none;
+}
+
+.footer span{
+  color:#6d7588;
+}
+</style>
 </head>
 
 <body>
 <div class="wrap">
 
-<header>
   <h1>Frequently Asked Questions</h1>
-  <p class="intro">
-    These questions are here to clarify what Celeste is, what it is not,
-    and why it stays intentionally quiet.
-  </p>
-</header>
 
-<section>
-  <h2>1. What is Celeste?</h2>
-  <div class="answer">
-    Celeste is a small, quiet console for thinking.  
-    It gives you space to write and see your thoughts more clearly,
-    without telling you what to do.
+  <section class="faq">
+
+    <div class="item">
+      <h2>What is Celeste?</h2>
+      <p>Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do.</p>
+    </div>
+
+    <div class="item">
+      <h2>Is Celeste an AI assistant or chatbot?</h2>
+      <p>Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations.</p>
+    </div>
+
+    <div class="item">
+      <h2>Does Celeste remember me?</h2>
+      <p>No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</p>
+    </div>
+
+    <div class="item">
+      <h2>Can Celeste give advice or make decisions for me?</h2>
+      <p>No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</p>
+    </div>
+
+    <div class="item">
+      <h2>Is Celeste a therapist or coach?</h2>
+      <p>No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</p>
+    </div>
+
+    <div class="item">
+      <h2>What happens if I talk about something serious or urgent?</h2>
+      <p>If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</p>
+    </div>
+
+    <div class="item">
+      <h2>Why are the responses so short?</h2>
+      <p>Short replies leave room for your own thinking. Silence is treated as part of the conversation.</p>
+    </div>
+
+    <div class="item">
+      <h2>Is my data stored?</h2>
+      <p>No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</p>
+    </div>
+
+    <div class="item">
+      <h2>What languages does Celeste support?</h2>
+      <p>You can write in any language. Celeste will respond in the same language when possible.</p>
+    </div>
+
+    <div class="item">
+      <h2>What is Celeste trying to become?</h2>
+      <p>Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</p>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    <a href="about.html">Back to About</a>
+    <span>CELESTE v4.3A</span>
   </div>
-  <details>
-    <summary>日本語</summary>
-    <p>
-      Celesteは、考えを整理するための小さく静かなコンソールです。  
-      何をすべきかを指示せず、思考を見やすくするための空間を提供します。
-    </p>
-  </details>
-</section>
-
-<section>
-  <h2>2. Is Celeste an AI assistant or a chatbot?</h2>
-  <div class="answer">
-    Celeste uses AI, but it is not designed to act like a typical assistant or chatbot.  
-    It does not optimize, persuade, or lead conversations.
-  </div>
-  <details>
-    <summary>日本語</summary>
-    <p>
-      AIを使っていますが、一般的なアシスタントやチャットボットとは異なります。  
-      会話を誘導したり、最適化したりすることは目的としていません。
-    </p>
-  </details>
-</section>
-
-<section>
-  <h2>3. Does Celeste remember me?</h2>
-  <div class="answer">
-    No. Celeste does not keep long-term memory or build a profile about you.  
-    Each session is temporary.
-  </div>
-  <details>
-    <summary>日本語</summary>
-    <p>
-      いいえ。長期的な記憶やプロフィールは保持しません。  
-      各セッションは一時的なものです。
-    </p>
-  </details>
-</section>
-
-<section>
-  <h2>4. Can Celeste give advice or make decisions for me?</h2>
-  <div class="answer">
-    No. Celeste avoids giving direct advice or making decisions on your behalf.  
-    Decisions always remain with you.
-  </div>
-  <details>
-    <summary>日本語</summary>
-    <p>
-      直接的な助言や代わりの判断は行いません。  
-      決断は常にあなた自身のものです。
-    </p>
-  </details>
-</section>
-
-<section>
-  <h2>5. Why are the responses so short?</h2>
-  <div class="answer">
-    Short replies leave room for your own thinking.  
-    Silence is treated as part of the conversation.
-  </div>
-  <details>
-    <summary>日本語</summary>
-    <p>
-      あなた自身の思考の余白を残すためです。  
-      沈黙も会話の一部として扱います。
-    </p>
-  </details>
-</section>
-
-<footer>
-  <a href="/about.html">Back to About</a>
-  <span>CELESTE v4.3A</span>
-</footer>
 
 </div>
 </body>
 </html>
-
