@@ -12,25 +12,22 @@
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
-  --accent:#a9b7ff;
 }
-*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
-
-/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:40px 20px 30px;
+  padding:40px 20px;
 }
 .hero{
   color:var(--muted);
   font-size:16px;
+  line-height:1.6;
   margin-bottom:22px;
 }
 .console{
@@ -38,34 +35,22 @@ body{
   border:1px solid var(--line);
   border-radius:14px;
   padding:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
 .log{
   min-height:320px;
   max-height:520px;
   overflow-y:auto;
-  padding-right:6px;
 }
-
-/* ===== Messages ===== */
 .entry{
   margin:12px 0;
   line-height:1.75;
-  white-space:pre-wrap;
 }
-.celeste{ color:var(--text); }
-.user{ color:var(--accent); }
-
-/* ===== Spacing ===== */
+.celeste{color:var(--text);}
+.user{color:#a9b7ff;}
 .divider{
   border-top:1px solid var(--line);
   margin:56px 0 20px;
 }
-.input{
-  margin-top:6px;
-}
-
-/* ===== Input ===== */
 textarea{
   width:100%;
   background:transparent;
@@ -74,130 +59,71 @@ textarea{
   padding:12px 14px;
   color:var(--text);
   resize:none;
-  font-family:inherit;
-  font-size:15px;
-  min-height:48px;
 }
-textarea::placeholder{
+footer{
+  margin-top:14px;
+  text-align:right;
+  font-size:12px;
   color:#6d7588;
 }
-
-/* ===== Bottom navigation (Back to About + Version) ===== */
-.nav-bottom{
-  margin-top:22px;
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-}
-.nav-bottom a{
-  color:var(--accent);
-  text-decoration:none;
-}
-.nav-bottom a:hover{
-  text-decoration:underline;
-}
-.version{
-  color:var(--muted);
-}
-
+a{color:#a9b7ff;text-decoration:none;}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <!-- Initial display -->
   <div class="hero">
-    A quiet space to organize your thoughts — decisions stay with you.
+    A small, quiet console for thoughts that need room.<br>
+    Decisions always stay with you.<br>
+    You can read the <a href="/faq.html">FAQ</a> anytime.
   </div>
 
   <div class="console">
     <div id="log" class="log"></div>
-
     <div class="divider"></div>
-
-    <div class="input">
-      <textarea
-        id="input"
-        rows="1"
-        placeholder="Write freely."
-      ></textarea>
-    </div>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
-  <!-- Bottom navigation -->
-  <div class="nav-bottom">
-    <a href="/about.html">← Back to About</a>
-    <div class="version">CELESTE v4.3A</div>
-  </div>
-
+  <footer>
+    <a href="/about.html">Back to About</a> · CELESTE v4.3A
+  </footer>
 </div>
 
 <script>
-const log   = document.getElementById("log");
+const log = document.getElementById("log");
 const input = document.getElementById("input");
 
 function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = `entry ${cls}`;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  const d=document.createElement("div");
+  d.className=`entry ${cls}`;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
-/* Initial response */
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded",()=>{
   addEntry(
-`何でも書いてもらって大丈夫です。
-ここでは、考えを整理することができます。
-どの点から見ていきますか。`,
+`You can write anything here.
+This space exists to help thoughts slow down and take shape.
+Nothing needs to be decided right now.`,
   "celeste"
   );
 });
 
-/* Send logic */
-function onSend(){
-  const value = input.value.trim();
-  if(!value) return;
-
-  addEntry(value,"user");
+function send(){
+  const v=input.value.trim();
+  if(!v)return;
+  addEntry(v,"user");
   input.value="";
-  input.style.height="auto";
-
-  /* API endpoint */
-  fetch("/api/celeste", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message: value })
-  })
-  .then(res => res.json())
-  .then(data => {
-    const reply = (data.reply || "").trim();
-    if (reply) {
-      addEntry(reply, "celeste");
-    }
-  })
-  .catch(() => {
-    /* silence */
-  });
+  fetch("/api/celeste",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:v})})
+    .then(r=>r.json())
+    .then(d=>d.reply && addEntry(d.reply,"celeste"));
 }
 
-/* Enter to send */
-input.addEventListener("keydown", (e) => {
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    onSend();
-  }
-});
-
-/* Auto resize */
-input.addEventListener("input", () => {
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}
 });
 </script>
-
 </body>
 </html>
