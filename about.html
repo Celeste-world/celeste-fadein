@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
 <title>About – Celeste</title>
-<link rel="stylesheet" href="style.css">
+<meta name="description" content="Celeste is a small, quiet console for people who are not ready to decide yet.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin: 0;
+  background: #0b0e13;
+  color: #e6e9ef;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.8;
+}
+.container {
+  max-width: 720px;
+  margin: 80px auto 120px;
+  padding: 0 24px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+p {
+  margin-bottom: 24px;
+  color: #cfd4dc;
+}
+a {
+  color: #8fa8ff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.footer {
+  margin-top: 64px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #8a8f99;
+}
+</style>
 </head>
 
 <body>
-<main class="page">
-<h1>About</h1>
+<div class="container">
+  <h1>About</h1>
 
-<p>
-Celeste is a small, quiet console for people who are not ready to decide yet.
-It exists to give thoughts room, without pushing them toward conclusions.
-</p>
+  <p>
+    Celeste is a small, quiet console for people who are not ready to decide yet.
+    It exists to give thoughts room, without pushing them toward conclusions.
+  </p>
 
-<p>
-Celeste does not optimize, persuade, or lead.
-It offers affirmation without instruction, and accepts silence as a valid answer.
-</p>
+  <p>
+    Celeste does not optimize, persuade, or lead.
+    It offers affirmation without instruction, and accepts silence as a valid answer.
+  </p>
 
-<p>
-If you want a clearer explanation of boundaries and intent,
-you can read the <a href="/faq.html">FAQ</a>.
-</p>
+  <p>
+    If you want a clearer explanation of boundaries and intent,
+    you can read the <a href="faq.html">FAQ</a>.
+  </p>
 
-<footer>
-<a href="/about.html">Back to About</a> · CELESTE v4.3A
-</footer>
-</main>
+  <div class="footer">
+    <a href="index.html">Back to Index</a>
+    <span>CELESTE v4.3A</span>
+  </div>
+</div>
 </body>
 </html>
