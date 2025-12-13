@@ -1,73 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>About – Celeste</title>
-<meta name="description" content="Celeste is a small, quiet console for people who are not ready to decide yet.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — Celeste</title>
+<meta name="description" content="Celeste is a small, quiet console for thinking. It gives thoughts room without pushing them toward decisions." />
 
 <style>
-body {
-  margin: 0;
-  background: #0b0e13;
-  color: #e6e9ef;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.8;
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
 }
-.container {
-  max-width: 720px;
-  margin: 80px auto 120px;
-  padding: 0 24px;
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 32px;
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:28px 20px 60px;
 }
-p {
-  margin-bottom: 24px;
-  color: #cfd4dc;
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
 }
-a {
-  color: #8fa8ff;
-  text-decoration: none;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:var(--text);
 }
-a:hover {
-  text-decoration: underline;
+.logo img{
+  height:26px;
 }
-.footer {
-  margin-top: 64px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #8a8f99;
+.header-right{
+  font-size:13px;
+  color:var(--muted);
+}
+.content{
+  line-height:1.8;
+  font-size:16px;
+}
+.content h1{
+  font-size:28px;
+  margin-bottom:24px;
+}
+.content p{
+  margin:18px 0;
+}
+.nav{
+  margin-top:40px;
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.nav a{
+  color:var(--accent);
+  text-decoration:none;
+  font-size:14px;
+}
+.nav a:hover{
+  text-decoration:underline;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
-  <h1>About</h1>
+<div class="wrap">
 
-  <p>
-    Celeste is a small, quiet console for people who are not ready to decide yet.
-    It exists to give thoughts room, without pushing them toward conclusions.
-  </p>
-
-  <p>
-    Celeste does not optimize, persuade, or lead.
-    It offers affirmation without instruction, and accepts silence as a valid answer.
-  </p>
-
-  <p>
-    If you want a clearer explanation of boundaries and intent,
-    you can read the <a href="faq.html">FAQ</a>.
-  </p>
-
-  <div class="footer">
-    <a href="index.html">Back to Index</a>
-    <span>CELESTE v4.3A</span>
+  <div class="header">
+    <a href="index.html" class="logo">
+      <img src="images/logo.svg" alt="Celeste logo">
+      <span>CELESTE</span>
+    </a>
+    <div class="header-right">CELESTE v4.3A</div>
   </div>
+
+  <div class="content">
+    <h1>About</h1>
+
+    <p>
+      Celeste is a small, quiet console for people who are not ready to decide yet.
+      It exists to give thoughts room, without pushing them toward conclusions.
+    </p>
+
+    <p>
+      Celeste does not optimize, persuade, or lead.
+      It offers affirmation without instruction, and accepts silence as a valid answer.
+    </p>
+
+    <p>
+      This space is intentionally narrow.
+      It is not here to replace human judgment, emotion, or responsibility.
+    </p>
+
+    <div class="nav">
+      <a href="philosophy.html">Philosophy</a>
+      <a href="silent-structure.html">Silent Structure</a>
+      <a href="faq.html">FAQ</a>
+      <a href="celeste-console.html">Open Console</a>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>
