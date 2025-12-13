@@ -12,22 +12,23 @@
   --text:#e8ebef;
   --muted:#9aa3b2;
   --line:#242a3d;
+  --accent:#a9b7ff;
 }
+*{box-sizing:border-box;}
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, serif;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:40px 20px;
+  padding:40px 20px 30px;
 }
 .hero{
   color:var(--muted);
   font-size:16px;
-  line-height:1.6;
   margin-bottom:22px;
 }
 .console{
@@ -44,9 +45,10 @@ body{
 .entry{
   margin:12px 0;
   line-height:1.75;
+  white-space:pre-wrap;
 }
-.celeste{color:var(--text);}
-.user{color:#a9b7ff;}
+.celeste{ color:var(--text); }
+.user{ color:var(--accent); }
 .divider{
   border-top:1px solid var(--line);
   margin:56px 0 20px;
@@ -59,6 +61,8 @@ textarea{
   padding:12px 14px;
   color:var(--text);
   resize:none;
+  font-family:inherit;
+  font-size:15px;
 }
 footer{
   margin-top:14px;
@@ -66,7 +70,11 @@ footer{
   font-size:12px;
   color:#6d7588;
 }
-a{color:#a9b7ff;text-decoration:none;}
+footer a{
+  color:#6d7588;
+  text-decoration:none;
+}
+footer a:hover{ text-decoration:underline; }
 </style>
 </head>
 
@@ -74,9 +82,8 @@ a{color:#a9b7ff;text-decoration:none;}
 <div class="wrap">
 
   <div class="hero">
-    A small, quiet console for thoughts that need room.<br>
-    Decisions always stay with you.<br>
-    You can read the <a href="/faq.html">FAQ</a> anytime.
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    You can read the FAQ anytime.
   </div>
 
   <div class="console">
@@ -86,7 +93,7 @@ a{color:#a9b7ff;text-decoration:none;}
   </div>
 
   <footer>
-    <a href="/about.html">Back to About</a> · CELESTE v4.3A
+    <a href="/about.html">Back to About</a> &nbsp; CELESTE v4.3A
   </footer>
 </div>
 
@@ -95,34 +102,35 @@ const log = document.getElementById("log");
 const input = document.getElementById("input");
 
 function addEntry(text, cls){
-  const d=document.createElement("div");
-  d.className=`entry ${cls}`;
-  d.textContent=text;
-  log.appendChild(d);
-  log.scrollTop=log.scrollHeight;
+  const div = document.createElement("div");
+  div.className = `entry ${cls}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
 }
 
-window.addEventListener("DOMContentLoaded",()=>{
+window.addEventListener("DOMContentLoaded", () => {
   addEntry(
-`You can write anything here.
-This space exists to help thoughts slow down and take shape.
-Nothing needs to be decided right now.`,
+`何でも書いてもらって大丈夫です。
+ここでは、考えを整理することができます。
+どの点から見ていきますか。`,
   "celeste"
   );
 });
 
-function send(){
-  const v=input.value.trim();
-  if(!v)return;
-  addEntry(v,"user");
+function onSend(){
+  const value = input.value.trim();
+  if(!value) return;
+  addEntry(value,"user");
   input.value="";
-  fetch("/api/celeste",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:v})})
-    .then(r=>r.json())
-    .then(d=>d.reply && addEntry(d.reply,"celeste"));
+  fetch("/api/celeste",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:value})})
+    .then(r=>r.json()).then(d=>{
+      if(d.reply) addEntry(d.reply,"celeste");
+    });
 }
 
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSend();}
 });
 </script>
 </body>
