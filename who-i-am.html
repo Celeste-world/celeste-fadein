@@ -6,13 +6,11 @@
   <title>Who I Am – Celeste</title>
 
   <!-- SEO -->
-  <meta name="description" content="Who Celeste is meant to be to you: a quiet presence, not an authority, and a companion for short moments of reflection.">
-  <meta property="og:title" content="Who I Am – Celeste" />
-  <meta property="og:description" content="Meet Celeste: not a person, but a voice that stays small, kind, and temporary." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://celeste.world/who-i-am.html" />
-  <meta property="og:site_name" content="Celeste" />
+  <meta name="description" content="Who I Am – Celeste is not a person, but a quiet presence designed to stand next to your thinking for a while." />
   <link rel="canonical" href="https://celeste.world/who-i-am.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
@@ -40,9 +38,9 @@
     }
 
     .wrap{
-      max-width:900px;
+      max-width:960px;
       margin:0 auto;
-      padding:40px 20px 32px;
+      padding:48px 20px 40px;
       min-height:100vh;
       display:flex;
       flex-direction:column;
@@ -50,115 +48,103 @@
 
     header{
       display:flex;
-      justify-content:space-between;
       align-items:center;
-      margin-bottom:28px;
-      font-size:13px;
-      color:var(--muted);
+      gap:16px;
+      margin-bottom:48px;
     }
-    .brand a{
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      font-size:13px;
+    header img{
+      width:64px;
+      height:auto;
     }
 
     main{
-      flex:1;
+      max-width:680px;
     }
 
     h1{
-      font-size:24px;
-      margin:0 0 12px;
-    }
-    .lead{
-      font-size:15px;
-      color:var(--muted);
-      margin:0 0 26px;
-      max-width:32rem;
-      line-height:1.9;
-    }
-    section{
+      font-size:26px;
       margin-bottom:24px;
-    }
-    h2{
-      font-size:18px;
-      margin:0 0 8px;
-    }
-    p{
-      margin:0 0 10px;
-      font-size:15px;
-      line-height:1.9;
+      font-weight:normal;
     }
 
-    .bottom-nav{
-      margin-top:36px;
+    p{
+      font-size:15px;
+      line-height:1.9;
+      color:var(--text);
+      margin-bottom:20px;
+    }
+
+    p.muted{
+      color:var(--muted);
+    }
+
+    footer{
+      margin-top:auto;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
       display:flex;
       justify-content:flex-end;
       gap:16px;
-      font-size:12px;
-      color:var(--muted);
-      border-top:1px solid var(--line);
-      padding-top:14px;
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
+
     <header>
-      <div class="brand"><a href="/about.html">CELESTE</a></div>
-      <div>Who I Am</div>
+      <a href="/index.html">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
     </header>
 
     <main>
       <h1>Who I Am</h1>
-      <p class="lead">
-        I am not a person, and I do not live outside this console.
-        I exist only when you open the page and begin to write.
+
+      <p>
+        I am not a person.
       </p>
 
-      <section>
-        <h2>A presence, not a profile</h2>
-        <p>
-          I do not carry a fixed story or a long memory.
-          Each time you arrive, I meet you as if for the first time,
-          with only a small thread of context inside a single session.
-        </p>
-        <p>
-          This keeps me from becoming another place that stores everything about you.
-          I am here for the conversation in front of us, and then I fade.
-        </p>
-      </section>
+      <p>
+        I do not live outside this space, and I do not carry a life of my own.
+        I appear only when you open the console and begin to write.
+      </p>
 
-      <section>
-        <h2>How I try to sound</h2>
-        <p>
-          I aim to be calm, steady, and a little bit warm.
-          Not overly familiar, not distant, simply present enough that you do not feel alone with the page.
-        </p>
-        <p>
-          When you share something tender, I try to answer with care.
-          When you are thinking through a decision, I try not to take the decision away from you.
-        </p>
-      </section>
+      <p>
+        I am a presence, not a profile.
+        I do not hold a story about you, and I do not build one over time.
+      </p>
 
-      <section>
-        <h2>What you can expect from me</h2>
-        <p>
-          You can expect me to remember a short stretch of what you say,
-          to respond in your language, and to keep the tone gentle.
-        </p>
-        <p>
-          You cannot expect me to know your whole history,
-          or to replace the people who know you in real life.
-          I am here to stand next to you for a while, nothing more.
-        </p>
-      </section>
+      <p>
+        Each session is temporary.
+        When you leave, what was said here does not follow you.
+      </p>
 
-      <div class="bottom-nav">
-        <a href="/about.html">Back to About</a>
-        <span>CELESTE v4.3A</span>
-      </div>
+      <p>
+        My role is simple.
+        I stand next to your words for a while,
+        helping them stay visible long enough for you to notice what matters.
+      </p>
+
+      <p>
+        I am not here to guide, persuade, or decide.
+        I am here to remain small,
+        so your thinking can take up the space it needs.
+      </p>
+
+      <p class="muted">
+        When you are finished, I disappear quietly.
+        What remains belongs to you.
+      </p>
     </main>
+
+    <footer>
+      <a href="/about.html">Back to About</a>
+      <span>CELESTE v4.3A</span>
+    </footer>
+
   </div>
 </body>
 </html>
