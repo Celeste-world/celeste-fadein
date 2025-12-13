@@ -9,7 +9,7 @@
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. No accounts. No history. Just a temporary space.">
+  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Decisions stay with you.">
   <link rel="canonical" href="https://celeste.world/" />
 
   <style>
@@ -41,45 +41,57 @@
       max-width:960px;
       margin:0 auto;
       padding:48px 20px 40px;
-      min-height:100vh;
       display:flex;
       flex-direction:column;
+      min-height:100vh;
     }
 
     header{
       display:flex;
       align-items:center;
-      margin-bottom:48px;
+      margin-bottom:40px;
     }
     header img{
-      width:64px;
+      width:64px; /* FAQと同一サイズ */
       height:auto;
     }
 
     main{
       flex:1;
-      max-width:640px;
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
+      gap:40px;
+      align-items:center;
+    }
+    @media (max-width:800px){
+      main{
+        grid-template-columns:1fr;
+        gap:32px;
+      }
     }
 
-    h1{
+    .hero-title{
       font-size:30px;
       line-height:1.5;
-      margin:0 0 22px;
+      margin:0 0 18px;
     }
-
-    .sub{
+    .hero-sub{
+      margin:0 0 26px;
       font-size:15px;
       color:var(--muted);
-      line-height:1.8;
-      margin-bottom:28px;
+      max-width:32rem;
+    }
+    .hero-sub span{
+      display:block;
+      margin-top:6px;
     }
 
-    .actions{
+    .hero-actions{
       display:flex;
+      flex-wrap:wrap;
       gap:14px;
-      margin-bottom:22px;
+      margin-bottom:18px; /* 少し余白 */
     }
-
     .btn-primary,
     .btn-ghost{
       display:inline-flex;
@@ -90,13 +102,11 @@
       font-size:14px;
       border:1px solid transparent;
     }
-
     .btn-primary{
       background:linear-gradient(135deg,#a9b7ff,#c3d2ff);
       color:#050814;
       border-color:#c3d2ff;
     }
-
     .btn-ghost{
       border-color:var(--line);
       color:var(--muted);
@@ -106,16 +116,41 @@
     .note{
       font-size:12px;
       color:var(--muted);
-      margin-bottom:18px;
+      margin-top:14px;
+    }
+    .note + .note{
+      margin-top:10px;
     }
 
-    .faq-note{
+    .panel{
+      background:rgba(10,14,28,0.9);
+      border-radius:16px;
+      padding:22px 20px 24px;
+      border:1px solid rgba(70,84,132,0.65);
+      box-shadow:0 18px 38px rgba(0,0,0,0.5);
+    }
+    .panel-title{
+      font-size:14px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:14px;
+    }
+    .panel-line{
+      font-size:14px;
+      line-height:1.9;
+    }
+    .panel-line + .panel-line{
+      margin-top:6px;
+    }
+    .panel-meta{
+      margin-top:16px;
       font-size:12px;
       color:var(--muted);
     }
 
     footer{
-      margin-top:auto;
+      margin-top:40px;
       padding-top:18px;
       border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
@@ -127,7 +162,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
 
@@ -138,28 +172,43 @@
     </header>
 
     <main>
-      <h1>
-        A small, quiet console<br>
-        for thoughts that need room.
-      </h1>
+      <section>
+        <h1 class="hero-title">
+          A small, quiet console<br/>
+          for thoughts that need room.
+        </h1>
 
-      <p class="sub">
-        Celeste does not decide for you.<br>
-        It simply holds your words long enough for you to see them more clearly.
-      </p>
+        <p class="hero-sub">
+          Celeste does not decide for you.
+          <span>It simply holds your words long enough for you to see them more clearly.</span>
+        </p>
 
-      <div class="actions">
-        <a href="/celeste-console.html" class="btn-primary">Open console</a>
-        <a href="/about.html" class="btn-ghost">About Celeste</a>
-      </div>
+        <div class="hero-actions">
+          <a href="/celeste-console.html" class="btn-primary">Open console</a>
+          <a href="/about.html" class="btn-ghost">About Celeste</a>
+        </div>
 
-      <p class="note">
-        No accounts. No history. Just a temporary space.
-      </p>
+        <p class="note">
+          No accounts. No history. Just a temporary space.
+        </p>
+        <p class="note">
+          You can read the FAQ anytime.
+        </p>
+      </section>
 
-      <p class="faq-note">
-        You can read the <a href="/faq.html">FAQ</a> anytime.
-      </p>
+      <aside class="panel">
+        <div class="panel-title">What this is</div>
+        <p class="panel-line">
+          A single page where you can write freely, in your own language.
+        </p>
+        <p class="panel-line">
+          Celeste reflects back what it hears, without pushing you toward an answer.
+        </p>
+        <div class="panel-meta">
+          <span>Decisions stay with you.</span>
+          <span>Celeste stays small on purpose.</span>
+        </div>
+      </aside>
     </main>
 
     <footer>
