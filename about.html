@@ -1,81 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About — Celeste</title>
-<link rel="icon" href="images/logo.svg">
-<style>
-:root{
-  --bg:#0f1216;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-}
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:40px 20px 60px;
-}
-header img{
-  width:40px;
-}
-h1{font-size:26px;margin:40px 0 20px;}
-p{line-height:1.8;color:var(--muted);}
-nav{
-  margin-top:50px;
-  border-top:1px solid var(--line);
-  padding-top:20px;
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-nav a{
-  color:var(--text);
-  text-decoration:none;
-}
-footer{
-  margin-top:60px;
-  text-align:right;
-  font-size:12px;
-  color:var(--muted);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About – Celeste</title>
+
+  <!-- SEO -->
+  <meta name="description" content="About Celeste. A quiet console designed to help you organize thoughts without pressure, advice, or decisions." />
+  <meta property="og:title" content="About Celeste" />
+  <meta property="og:description" content="Celeste is a quiet space for thinking. Learn the intention, boundaries, and philosophy behind it." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://celeste.world/about.html" />
+  <meta property="og:site_name" content="Celeste" />
+  <link rel="canonical" href="https://celeste.world/about.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:40px;
+    }
+    header img{
+      width:64px;
+      height:auto;
+    }
+
+    main{
+      flex:1;
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
+      gap:40px;
+      align-items:flex-start;
+    }
+
+    @media (max-width:800px){
+      main{
+        grid-template-columns:1fr;
+        gap:32px;
+      }
+    }
+
+    h1{
+      font-size:28px;
+      line-height:1.5;
+      margin:0 0 22px;
+    }
+
+    .text-block{
+      font-size:15px;
+      line-height:1.9;
+      color:var(--text);
+      max-width:36rem;
+    }
+    .text-block p{
+      margin:0 0 16px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,0.9);
+      border-radius:16px;
+      padding:22px 20px 24px;
+      border:1px solid rgba(70,84,132,0.65);
+      box-shadow:0 18px 38px rgba(0,0,0,0.5);
+    }
+    .panel-title{
+      font-size:13px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:14px;
+    }
+    .panel-line{
+      font-size:14px;
+      line-height:1.9;
+      color:var(--text);
+      opacity:0.96;
+    }
+    .panel-line + .panel-line{
+      margin-top:6px;
+    }
+
+    .links{
+      margin-top:28px;
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:flex-end;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <a href="index.html"><img src="images/logo.svg" alt="Celeste"></a>
-</header>
+  <div class="wrap">
 
-<h1>About Celeste</h1>
-<p>
-Celeste is a small, quiet console for people who are not ready to decide yet.
-It does not optimize, persuade, or lead.
-It offers space — and nothing more than that.
-</p>
-<p>
-Silence is allowed. Short answers are allowed.
-Your thoughts remain yours.
-</p>
+    <header>
+      <a href="/index.html">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
+    </header>
 
-<nav>
-  <a href="philosophy.html">Philosophy</a>
-  <a href="silent-structure.html">Silent Structure</a>
-  <a href="vision.html">Vision</a>
-  <a href="who-i-am.html">Who I Am</a>
-  <a href="faq.html">FAQ</a>
-</nav>
+    <main>
+      <section>
+        <h1>About Celeste</h1>
 
-<footer>
-  Back to About · CELESTE v4.3A
-</footer>
-</div>
+        <div class="text-block">
+          <p>
+            Celeste is a small, quiet console designed for moments
+            when thinking feels crowded, unfinished, or not ready
+            to become a decision.
+          </p>
+
+          <p>
+            It does not guide you toward answers.
+            It does not optimize your thoughts.
+            It does not try to persuade, coach, or conclude.
+          </p>
+
+          <p>
+            Celeste exists to hold words briefly,
+            so you can see them more clearly before deciding
+            what they mean — or whether they need to mean anything at all.
+          </p>
+
+          <p>
+            Silence is allowed here.
+            Uncertainty is allowed here.
+          </p>
+        </div>
+
+        <div class="links">
+          <a href="/philosophy.html">Philosophy</a>
+          <a href="/silent-structure.html">Silent Structure</a>
+          <a href="/faq.html">FAQ</a>
+        </div>
+      </section>
+
+      <aside class="panel" aria-label="Boundaries of Celeste">
+        <div class="panel-title">What Celeste is not</div>
+        <p class="panel-line">
+          Not an assistant that decides for you.
+        </p>
+        <p class="panel-line">
+          Not a place for urgency, diagnosis, or instruction.
+        </p>
+        <p class="panel-line">
+          Not something that stays longer than it should.
+        </p>
+      </aside>
+    </main>
+
+    <footer>
+      <span>Back to Index · CELESTE v4.3A</span>
+    </footer>
+
+  </div>
 </body>
 </html>
