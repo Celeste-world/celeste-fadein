@@ -6,13 +6,11 @@
   <title>Vision – Celeste</title>
 
   <!-- SEO -->
-  <meta name="description" content="The long-term vision of Celeste: software that stays small, gentle, and human-centered.">
-  <meta property="og:title" content="Vision – Celeste" />
-  <meta property="og:description" content="Where Celeste is heading: a family of quiet tools that support thinking without taking over." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://celeste.world/vision.html" />
-  <meta property="og:site_name" content="Celeste" />
+  <meta name="description" content="The long-term vision behind Celeste. Why it stays small, quiet, and human-centered, even as it grows.">
   <link rel="canonical" href="https://celeste.world/vision.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
@@ -40,9 +38,9 @@
     }
 
     .wrap{
-      max-width:900px;
+      max-width:960px;
       margin:0 auto;
-      padding:40px 20px 32px;
+      padding:48px 20px 40px;
       min-height:100vh;
       display:flex;
       flex-direction:column;
@@ -50,116 +48,91 @@
 
     header{
       display:flex;
-      justify-content:space-between;
       align-items:center;
-      margin-bottom:28px;
-      font-size:13px;
-      color:var(--muted);
+      margin-bottom:40px;
     }
-    .brand a{
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      font-size:13px;
+    header img{
+      width:64px;
+      height:auto;
     }
 
     main{
-      flex:1;
+      max-width:640px;
     }
 
     h1{
-      font-size:24px;
-      margin:0 0 12px;
-    }
-    .lead{
-      font-size:15px;
-      color:var(--muted);
-      margin:0 0 26px;
-      max-width:32rem;
-      line-height:1.9;
-    }
-    section{
-      margin-bottom:24px;
-    }
-    h2{
-      font-size:18px;
-      margin:0 0 8px;
-    }
-    p{
-      margin:0 0 10px;
-      font-size:15px;
-      line-height:1.9;
+      font-size:26px;
+      margin-bottom:28px;
+      font-weight:normal;
     }
 
-    .bottom-nav{
-      margin-top:36px;
+    p{
+      font-size:15px;
+      line-height:1.9;
+      color:var(--text);
+      margin-bottom:18px;
+    }
+
+    p.muted{
+      color:var(--muted);
+    }
+
+    footer{
+      margin-top:auto;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
       display:flex;
       justify-content:flex-end;
       gap:16px;
-      font-size:12px;
-      color:var(--muted);
-      border-top:1px solid var(--line);
-      padding-top:14px;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+
     <header>
-      <div class="brand"><a href="/about.html">CELESTE</a></div>
-      <div>Vision</div>
+      <a href="/index.html">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
     </header>
 
     <main>
       <h1>Vision</h1>
-      <p class="lead">
-        Celeste begins as a single console.  
-        The vision is not to grow louder, but to stay gentle as it becomes more capable.
+
+      <p>
+        Celeste is not trying to become louder, faster, or more persuasive.
       </p>
 
-      <section>
-        <h2>Staying small while growing wiser</h2>
-        <p>
-          More models and more power do not have to mean more pressure.
-          Celeste aims to become more context-aware without turning into a voice of authority.
-        </p>
-        <p>
-          Over time, the console may learn to follow threads across a session more deeply,
-          while still leaving the final shape of your decisions untouched.
-        </p>
-      </section>
+      <p>
+        Its direction is quieter.
+        To remain useful without becoming demanding.
+        To grow more capable without increasing pressure.
+      </p>
 
-      <section>
-        <h2>A family of quiet tools</h2>
-        <p>
-          The console is only one form Celeste can take.
-          Future versions may appear as small, focused tools:
-          a place to prepare difficult conversations, to examine habits, to close the day.
-        </p>
-        <p>
-          Each one will share the same core boundary:
-          support the human in the room without becoming the main character.
-        </p>
-      </section>
+      <p>
+        As tools become more powerful,
+        Celeste aims to stay small in the room.
+        Not because it cannot do more,
+        but because doing less can sometimes serve better.
+      </p>
 
-      <section>
-        <h2>Human-first by design</h2>
-        <p>
-          The long-term vision is simple:
-          technology that helps you hear yourself more clearly,
-          instead of speaking over you.
-        </p>
-        <p>
-          Celeste is an ongoing experiment in that direction,
-          version by version, always returning to the same question:
-          “Is this still gentle enough?”
-        </p>
-      </section>
+      <p>
+        The future of Celeste is not about replacing human judgment,
+        but supporting it without stepping in front of it.
+      </p>
 
-      <div class="bottom-nav">
-        <a href="/about.html">Back to About</a>
-        <span>CELESTE v4.3A</span>
-      </div>
+      <p class="muted">
+        To support the human in the room,
+        without becoming the main character.
+      </p>
     </main>
+
+    <footer>
+      <span><a href="/about.html">Back to About</a> · CELESTE v4.3A</span>
+    </footer>
+
   </div>
 </body>
 </html>
