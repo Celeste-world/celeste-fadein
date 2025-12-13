@@ -1,39 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Philosophy — Celeste</title>
-<link rel="icon" href="images/logo.svg">
-<style>
-:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;--line:#242a3d;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
-.wrap{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
-header img{width:40px;}
-h1{font-size:26px;margin:40px 0 20px;}
-p{line-height:1.8;color:var(--muted);}
-footer{margin-top:60px;text-align:right;font-size:12px;color:var(--muted);}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Philosophy – Celeste</title>
+
+  <!-- SEO -->
+  <meta name="description" content="The philosophy behind Celeste. Why silence matters, why decisions stay human, and why this space stays intentionally small.">
+  <link rel="canonical" href="https://celeste.world/philosophy.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      margin-bottom:40px;
+    }
+    header img{
+      width:64px;
+      height:auto;
+    }
+
+    main{
+      max-width:720px;
+    }
+
+    h1{
+      font-size:26px;
+      font-weight:bold;
+      margin-bottom:28px;
+    }
+
+    .block{
+      margin-bottom:28px;
+      font-size:15px;
+      line-height:1.9;
+      color:var(--text);
+    }
+
+    .block.muted{
+      color:var(--muted);
+    }
+
+    footer{
+      margin-top:auto;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:flex-end;
+      gap:16px;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <a href="index.html"><img src="images/logo.svg" alt="Celeste"></a>
-</header>
+  <div class="wrap">
 
-<h1>Philosophy</h1>
-<p>
-Thinking becomes gentler when no one is trying to win the conversation.
-Celeste exists to hold that gentleness.
-</p>
-<p>
-There is no goal to reach, no output to maximize.
-Only space to notice what is already there.
-</p>
+    <!-- Header -->
+    <header>
+      <a href="/index.html">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
+    </header>
 
-<footer>
-  <a href="about.html">Back to About</a> · CELESTE v4.3A
-</footer>
-</div>
+    <!-- Main -->
+    <main>
+      <h1>Philosophy</h1>
+
+      <div class="block">
+        Celeste exists for moments when thinking feels crowded.
+        Not because the problem is complex,
+        but because too many voices are trying to solve it at once.
+      </div>
+
+      <div class="block">
+        Thinking becomes gentler
+        when no one is trying to win the conversation.
+      </div>
+
+      <div class="block">
+        Celeste does not persuade,
+        optimize,
+        or direct.
+        It reflects what is written,
+        then leaves space for what comes next.
+      </div>
+
+      <div class="block muted">
+        This space is intentionally narrow.
+        Not everything belongs here.
+        And that restraint is part of the design.
+      </div>
+
+      <div class="block">
+        Silence is not treated as failure.
+        Short replies are not shortcuts.
+        They are boundaries.
+      </div>
+
+      <div class="block muted">
+        Decisions remain human.
+        Responsibility remains shared.
+        Celeste stays smaller than the situation.
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <span>
+        <a href="/about.html">Back to About</a> · CELESTE v4.3A
+      </span>
+    </footer>
+
+  </div>
 </body>
 </html>
