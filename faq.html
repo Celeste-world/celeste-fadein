@@ -1,57 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FAQ — Celeste</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="images/logo.svg">
 
+<meta name="description" content="Frequently asked questions about Celeste — a quiet console for organizing thoughts without advice or decision-making." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="FAQ — Celeste" />
+<meta property="og:description" content="Answers to common questions about Celeste’s purpose, boundaries, memory, and design philosophy." />
+<meta property="og:type" content="website" />
+
+<!-- FAQPage Structured Data -->
 <script type="application/ld+json">
 {
- "@context":"https://schema.org",
- "@type":"FAQPage",
- "mainEntity":[
-  {"@type":"Question","name":"What is Celeste?","acceptedAnswer":{"@type":"Answer","text":"Celeste is a small, quiet console for thinking."}},
-  {"@type":"Question","name":"Is Celeste an AI assistant?","acceptedAnswer":{"@type":"Answer","text":"Celeste uses AI but does not act like a typical assistant."}},
-  {"@type":"Question","name":"Does Celeste remember me?","acceptedAnswer":{"@type":"Answer","text":"No. Sessions are temporary."}},
-  {"@type":"Question","name":"Can Celeste make decisions?","acceptedAnswer":{"@type":"Answer","text":"No. Decisions remain with you."}},
-  {"@type":"Question","name":"Is Celeste a therapist?","acceptedAnswer":{"@type":"Answer","text":"No. It cannot replace human support."}},
-  {"@type":"Question","name":"What if the topic is serious?","acceptedAnswer":{"@type":"Answer","text":"Celeste stays smaller in urgent situations."}},
-  {"@type":"Question","name":"Why are replies short?","acceptedAnswer":{"@type":"Answer","text":"To leave room for your thinking."}},
-  {"@type":"Question","name":"Is data stored?","acceptedAnswer":{"@type":"Answer","text":"No tracking, no long-term storage."}},
-  {"@type":"Question","name":"What languages are supported?","acceptedAnswer":{"@type":"Answer","text":"Any language. Responses match input."}},
-  {"@type":"Question","name":"What is Celeste becoming?","acceptedAnswer":{"@type":"Answer","text":"Gentler, wiser, and quieter."}}
- ]
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Celeste?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Celeste an AI assistant or a chatbot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Celeste remember me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Celeste give advice or make decisions for me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Celeste a therapist or coach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Celeste is not a therapist, coach, or professional service. It cannot replace human support."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I talk about something serious or urgent?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are the responses so short?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Short replies leave room for your own thinking. Silence is treated as part of the conversation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data stored?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No accounts, no tracking, no long-term storage. Celeste is designed to be temporary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What languages does Celeste support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can write in any language. Celeste will respond in the same language when possible."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Celeste trying to become?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better."
+      }
+    }
+  ]
 }
 </script>
 
 <style>
-:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
-.wrap{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
-header img{width:40px;}
-h1{margin:40px 0;}
-h2{margin-top:30px;}
-p{color:var(--muted);line-height:1.8;}
-footer{margin-top:60px;text-align:right;font-size:12px;color:var(--muted);}
+:root{
+  --bg:#0f1216;
+  --panel:#141922;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+  --accent:#a9b7ff;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:32px 20px 40px;
+}
+
+header{
+  margin-bottom:28px;
+}
+
+header a{
+  display:inline-block;
+}
+
+header img{
+  width:42px;
+  height:auto;
+}
+
+h1{
+  font-size:28px;
+  font-weight:normal;
+  margin:24px 0 12px;
+}
+
+p.lead{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:36px;
+}
+
+section.faq{
+  border-top:1px solid var(--line);
+  padding-top:32px;
+}
+
+.faq-item{
+  margin-bottom:32px;
+}
+
+.faq-item h2{
+  font-size:18px;
+  font-weight:normal;
+  margin-bottom:8px;
+}
+
+.faq-item p{
+  color:var(--muted);
+  line-height:1.7;
+  margin:0;
+}
+
+footer{
+  margin-top:48px;
+  text-align:right;
+  font-size:12px;
+  color:var(--muted);
+}
+
+footer a{
+  color:var(--muted);
+  text-decoration:none;
+}
+
+footer a:hover{
+  color:var(--accent);
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
+
 <header>
-  <a href="index.html"><img src="images/logo.svg" alt="Celeste"></a>
+  <a href="/index.html">
+    <img src="/images/logo.svg" alt="Celeste" />
+  </a>
 </header>
 
 <h1>FAQ</h1>
+<p class="lead">
+Common questions about what Celeste is — and what it intentionally is not.
+</p>
 
-<h2>What is Celeste?</h2>
-<p>A small, quiet console for thinking.</p>
+<section class="faq">
 
-<!-- 以下、同様に10問分表示 -->
+<div class="faq-item">
+  <h2>1. What is Celeste?</h2>
+  <p>Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do.</p>
+</div>
+
+<div class="faq-item">
+  <h2>2. Is Celeste an AI assistant or a chatbot?</h2>
+  <p>Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations.</p>
+</div>
+
+<div class="faq-item">
+  <h2>3. Does Celeste remember me?</h2>
+  <p>No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</p>
+</div>
+
+<div class="faq-item">
+  <h2>4. Can Celeste give advice or make decisions for me?</h2>
+  <p>No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</p>
+</div>
+
+<div class="faq-item">
+  <h2>5. Is Celeste a therapist or coach?</h2>
+  <p>No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</p>
+</div>
+
+<div class="faq-item">
+  <h2>6. What happens if I talk about something serious or urgent?</h2>
+  <p>If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</p>
+</div>
+
+<div class="faq-item">
+  <h2>7. Why are the responses so short?</h2>
+  <p>Short replies leave room for your own thinking. Silence is treated as part of the conversation.</p>
+</div>
+
+<div class="faq-item">
+  <h2>8. Is my data stored?</h2>
+  <p>No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</p>
+</div>
+
+<div class="faq-item">
+  <h2>9. What languages does Celeste support?</h2>
+  <p>You can write in any language. Celeste will respond in the same language when possible.</p>
+</div>
+
+<div class="faq-item">
+  <h2>10. What is Celeste trying to become?</h2>
+  <p>Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</p>
+</div>
+
+</section>
 
 <footer>
-  <a href="about.html">Back to About</a> · CELESTE v4.3A
+  <a href="/about.html">Back to About</a> · CELESTE v4.3A
 </footer>
+
 </div>
 </body>
 </html>
