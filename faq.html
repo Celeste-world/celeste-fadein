@@ -8,6 +8,7 @@
   <!-- SEO -->
   <meta name="description" content="Frequently Asked Questions about Celeste. Learn what Celeste is, how it works, privacy, memory, and philosophy.">
   <link rel="canonical" href="https://celeste.world/faq.html" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <!-- FAQ Structured Data -->
   <script type="application/ld+json">
@@ -15,86 +16,16 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is Celeste?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Celeste an AI assistant or a chatbot?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does Celeste remember me?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can Celeste give advice or make decisions for me?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Celeste a therapist or coach?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Celeste is not a therapist, coach, or professional service. It cannot replace human support."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens if I talk about something serious or urgent?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why are the responses so short?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Short replies leave room for your own thinking. Silence is treated as part of the conversation."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my data stored?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No accounts, no tracking, no long-term storage. Celeste is designed to be temporary."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What languages does Celeste support?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You can write in any language. Celeste will respond in the same language when possible."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is Celeste trying to become?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better."
-        }
-      }
+      { "@type": "Question", "name": "What is Celeste?", "acceptedAnswer": { "@type": "Answer", "text": "Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do." }},
+      { "@type": "Question", "name": "Is Celeste an AI assistant or a chatbot?", "acceptedAnswer": { "@type": "Answer", "text": "Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations." }},
+      { "@type": "Question", "name": "Does Celeste remember me?", "acceptedAnswer": { "@type": "Answer", "text": "No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary." }},
+      { "@type": "Question", "name": "Can Celeste give advice or make decisions for me?", "acceptedAnswer": { "@type": "Answer", "text": "No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you." }},
+      { "@type": "Question", "name": "Is Celeste a therapist or coach?", "acceptedAnswer": { "@type": "Answer", "text": "No. Celeste is not a therapist, coach, or professional service. It cannot replace human support." }},
+      { "@type": "Question", "name": "What happens if I talk about something serious or urgent?", "acceptedAnswer": { "@type": "Answer", "text": "If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations." }},
+      { "@type": "Question", "name": "Why are the responses so short?", "acceptedAnswer": { "@type": "Answer", "text": "Short replies leave room for your own thinking. Silence is treated as part of the conversation." }},
+      { "@type": "Question", "name": "Is my data stored?", "acceptedAnswer": { "@type": "Answer", "text": "No accounts, no tracking, no long-term storage. Celeste is designed to be temporary." }},
+      { "@type": "Question", "name": "What languages does Celeste support?", "acceptedAnswer": { "@type": "Answer", "text": "You can write in any language. Celeste will respond in the same language when possible." }},
+      { "@type": "Question", "name": "What is Celeste trying to become?", "acceptedAnswer": { "@type": "Answer", "text": "Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better." }}
     ]
   }
   </script>
@@ -102,11 +33,9 @@
   <style>
     :root{
       --bg:#050811;
-      --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
       --line:#252b3a;
-      --accent:#a9b7ff;
     }
     *{box-sizing:border-box;}
     body{
@@ -116,13 +45,8 @@
       color:var(--text);
       font-family: ui-serif, Georgia, "Times New Roman", serif;
     }
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-    a:hover{
-      text-decoration:underline;
-    }
+    a{color:inherit;text-decoration:none;}
+    a:hover{text-decoration:underline;}
 
     .wrap{
       max-width:960px;
@@ -134,9 +58,6 @@
     }
 
     header{
-      display:flex;
-      align-items:center;
-      gap:14px;
       margin-bottom:40px;
     }
     header img{
@@ -146,17 +67,17 @@
 
     h1{
       font-size:26px;
-      margin-bottom:32px;
       font-weight:bold;
+      margin-bottom:36px;
     }
 
     .faq-item{
-      margin-bottom:32px;
+      margin-bottom:34px;
     }
     .faq-q{
-      font-size:16px;
+      font-size:17px;
       font-weight:600;
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
     .faq-a{
       font-size:14px;
@@ -189,59 +110,21 @@
     <main>
       <h1>Frequently Asked Questions</h1>
 
-      <div class="faq-item">
-        <div class="faq-q">1. What is Celeste?</div>
-        <div class="faq-a">Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">2. Is Celeste an AI assistant or a chatbot?</div>
-        <div class="faq-a">Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">3. Does Celeste remember me?</div>
-        <div class="faq-a">No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">4. Can Celeste give advice or make decisions for me?</div>
-        <div class="faq-a">No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">5. Is Celeste a therapist or coach?</div>
-        <div class="faq-a">No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">6. What happens if I talk about something serious or urgent?</div>
-        <div class="faq-a">If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">7. Why are the responses so short?</div>
-        <div class="faq-a">Short replies leave room for your own thinking. Silence is treated as part of the conversation.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">8. Is my data stored?</div>
-        <div class="faq-a">No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">9. What languages does Celeste support?</div>
-        <div class="faq-a">You can write in any language. Celeste will respond in the same language when possible.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">10. What is Celeste trying to become?</div>
-        <div class="faq-a">Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</div>
-      </div>
+      <div class="faq-item"><div class="faq-q">1. What is Celeste?</div><div class="faq-a">Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do.</div></div>
+      <div class="faq-item"><div class="faq-q">2. Is Celeste an AI assistant or a chatbot?</div><div class="faq-a">Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations.</div></div>
+      <div class="faq-item"><div class="faq-q">3. Does Celeste remember me?</div><div class="faq-a">No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</div></div>
+      <div class="faq-item"><div class="faq-q">4. Can Celeste give advice or make decisions for me?</div><div class="faq-a">No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</div></div>
+      <div class="faq-item"><div class="faq-q">5. Is Celeste a therapist or coach?</div><div class="faq-a">No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</div></div>
+      <div class="faq-item"><div class="faq-q">6. What happens if I talk about something serious or urgent?</div><div class="faq-a">If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</div></div>
+      <div class="faq-item"><div class="faq-q">7. Why are the responses so short?</div><div class="faq-a">Short replies leave room for your own thinking. Silence is treated as part of the conversation.</div></div>
+      <div class="faq-item"><div class="faq-q">8. Is my data stored?</div><div class="faq-a">No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</div></div>
+      <div class="faq-item"><div class="faq-q">9. What languages does Celeste support?</div><div class="faq-a">You can write in any language. Celeste will respond in the same language when possible.</div></div>
+      <div class="faq-item"><div class="faq-q">10. What is Celeste trying to become?</div><div class="faq-a">Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</div></div>
     </main>
 
     <footer>
-      <span>Back to About · CELESTE v4.3A</span>
+      <a href="/about.html">Back to About</a>
+      <span>CELESTE v4.3A</span>
     </footer>
 
   </div>
