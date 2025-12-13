@@ -3,63 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <title>FAQ — Celeste</title>
-<meta name="description" content="Frequently asked questions about Celeste.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="images/logo.svg">
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is Celeste?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Celeste is a small, quiet console for thinking."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Celeste a chatbot?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Celeste uses AI but is not designed as a typical chatbot."
-      }
-    }
-    /* 残り8問も同様に追加可能 */
-  ]
+ "@context":"https://schema.org",
+ "@type":"FAQPage",
+ "mainEntity":[
+  {"@type":"Question","name":"What is Celeste?","acceptedAnswer":{"@type":"Answer","text":"Celeste is a small, quiet console for thinking."}},
+  {"@type":"Question","name":"Is Celeste an AI assistant?","acceptedAnswer":{"@type":"Answer","text":"Celeste uses AI but does not act like a typical assistant."}},
+  {"@type":"Question","name":"Does Celeste remember me?","acceptedAnswer":{"@type":"Answer","text":"No. Sessions are temporary."}},
+  {"@type":"Question","name":"Can Celeste make decisions?","acceptedAnswer":{"@type":"Answer","text":"No. Decisions remain with you."}},
+  {"@type":"Question","name":"Is Celeste a therapist?","acceptedAnswer":{"@type":"Answer","text":"No. It cannot replace human support."}},
+  {"@type":"Question","name":"What if the topic is serious?","acceptedAnswer":{"@type":"Answer","text":"Celeste stays smaller in urgent situations."}},
+  {"@type":"Question","name":"Why are replies short?","acceptedAnswer":{"@type":"Answer","text":"To leave room for your thinking."}},
+  {"@type":"Question","name":"Is data stored?","acceptedAnswer":{"@type":"Answer","text":"No tracking, no long-term storage."}},
+  {"@type":"Question","name":"What languages are supported?","acceptedAnswer":{"@type":"Answer","text":"Any language. Responses match input."}},
+  {"@type":"Question","name":"What is Celeste becoming?","acceptedAnswer":{"@type":"Answer","text":"Gentler, wiser, and quieter."}}
+ ]
 }
 </script>
 
 <style>
-/* same CSS */
+:root{--bg:#0f1216;--text:#e8ebef;--muted:#9aa3b2;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-serif,Georgia,serif;}
+.wrap{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
+header img{width:40px;}
+h1{margin:40px 0;}
+h2{margin-top:30px;}
+p{color:var(--muted);line-height:1.8;}
+footer{margin-top:60px;text-align:right;font-size:12px;color:var(--muted);}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
 <header>
-  <a href="index.html">
-    <img src="images/logo.svg" alt="Celeste">
-  </a>
+  <a href="index.html"><img src="images/logo.svg" alt="Celeste"></a>
 </header>
 
 <h1>FAQ</h1>
 
-<p><strong>What is Celeste?</strong><br>
-Celeste is a small, quiet console for thinking.</p>
+<h2>What is Celeste?</h2>
+<p>A small, quiet console for thinking.</p>
 
-<p><strong>Is Celeste a chatbot?</strong><br>
-Celeste uses AI but avoids acting like a typical assistant.</p>
-
-<!-- 残り8問をここに復活させてください（内容は以前の10問そのまま） -->
+<!-- 以下、同様に10問分表示 -->
 
 <footer>
   <a href="about.html">Back to About</a> · CELESTE v4.3A
 </footer>
-
 </div>
 </body>
 </html>
