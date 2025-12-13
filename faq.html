@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FAQ – Celeste</title>
 
-<meta name="description" content="Frequently asked questions about Celeste, a small quiet console for thinking." />
+<meta name="description" content="Frequently asked questions about Celeste — a quiet console for thinking, boundaries, memory, and intent." />
 
 <style>
 :root{
@@ -23,63 +23,63 @@ body{
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
+a{
+  color:var(--accent);
+  text-decoration:none;
+}
+a:hover{
+  text-decoration:underline;
+}
+
+/* ===== Layout ===== */
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:40px 20px 60px;
+  padding:28px 20px 40px;
 }
 
-/* Header */
+/* ===== Header ===== */
 .header{
-  margin-bottom:40px;
-}
-.header a{
-  display:inline-block;
+  margin-bottom:36px;
 }
 .header img{
-  width:56px;
+  width:48px; /* アイコン拡大 */
   height:auto;
 }
 
-/* Content */
+/* ===== Content ===== */
 h1{
   font-size:28px;
-  margin-bottom:30px;
-  font-weight:400;
+  margin:0 0 32px;
+  font-weight:bold;
 }
+
 .faq-item{
-  margin-bottom:34px;
+  margin-bottom:36px;
 }
 .faq-q{
   font-size:20px;
-  font-weight:600;
+  font-weight:bold;
   margin-bottom:10px;
 }
 .faq-a{
   font-size:16px;
   line-height:1.8;
-  color:var(--muted);
-  padding-left:12px;
-  border-left:2px solid var(--line);
+  color:var(--text);
 }
 
-/* Footer */
-footer{
+/* ===== Footer ===== */
+.footer{
   margin-top:60px;
-  text-align:right;
+  display:flex;
+  justify-content:flex-end;
+  gap:14px;
   font-size:12px;
   color:#6d7588;
 }
-footer a{
-  color:#6d7588;
-  text-decoration:none;
-}
-footer a:hover{
-  text-decoration:underline;
-}
 </style>
 
-<!-- FAQPage Structured Data -->
+<!-- FAQPage structured data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -168,14 +168,15 @@ footer a:hover{
   ]
 }
 </script>
+
 </head>
 
 <body>
 <div class="wrap">
 
   <div class="header">
-    <a href="index.html">
-      <img src="images/logo.svg" alt="Celeste">
+    <a href="/index.html">
+      <img src="/images/logo.svg" alt="Celeste">
     </a>
   </div>
 
@@ -183,57 +184,89 @@ footer a:hover{
 
   <div class="faq-item">
     <div class="faq-q">1. What is Celeste?</div>
-    <div class="faq-a">Celeste is a small, quiet console for thinking. It gives you space to write and see your thoughts more clearly, without telling you what to do.</div>
+    <div class="faq-a">
+      Celeste is a small, quiet console for thinking.<br>
+      It gives you space to write and see your thoughts more clearly, without telling you what to do.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">2. Is Celeste an AI assistant or a chatbot?</div>
-    <div class="faq-a">Celeste uses AI, but it is not designed to act like a typical assistant or chatbot. It does not optimize, persuade, or lead conversations.</div>
+    <div class="faq-a">
+      Celeste uses AI, but it is not designed to act like a typical assistant or chatbot.<br>
+      It does not optimize, persuade, or lead conversations.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">3. Does Celeste remember me?</div>
-    <div class="faq-a">No. Celeste does not keep long-term memory or build a profile about you. Each session is temporary.</div>
+    <div class="faq-a">
+      No. Celeste does not keep long-term memory or build a profile about you.<br>
+      Each session is temporary.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">4. Can Celeste give advice or make decisions for me?</div>
-    <div class="faq-a">No. Celeste avoids giving direct advice or making decisions on your behalf. Decisions always remain with you.</div>
+    <div class="faq-a">
+      No. Celeste avoids giving direct advice or making decisions on your behalf.<br>
+      Decisions always remain with you.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">5. Is Celeste a therapist or coach?</div>
-    <div class="faq-a">No. Celeste is not a therapist, coach, or professional service. It cannot replace human support.</div>
+    <div class="faq-a">
+      No. Celeste is not a therapist, coach, or professional service.<br>
+      It cannot replace human support.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">6. What happens if I talk about something serious or urgent?</div>
-    <div class="faq-a">If a topic feels unsafe or urgent, Celeste intentionally stays smaller. Human support matters more in those situations.</div>
+    <div class="faq-a">
+      If a topic feels unsafe or urgent, Celeste intentionally stays smaller.<br>
+      Human support matters more in those situations.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">7. Why are the responses so short?</div>
-    <div class="faq-a">Short replies leave room for your own thinking. Silence is treated as part of the conversation.</div>
+    <div class="faq-a">
+      Short replies leave room for your own thinking.<br>
+      Silence is treated as part of the conversation.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">8. Is my data stored?</div>
-    <div class="faq-a">No accounts, no tracking, no long-term storage. Celeste is designed to be temporary.</div>
+    <div class="faq-a">
+      No accounts, no tracking, no long-term storage.<br>
+      Celeste is designed to be temporary.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">9. What languages does Celeste support?</div>
-    <div class="faq-a">You can write in any language. Celeste will respond in the same language when possible.</div>
+    <div class="faq-a">
+      You can write in any language.<br>
+      Celeste will respond in the same language when possible.
+    </div>
   </div>
 
   <div class="faq-item">
     <div class="faq-q">10. What is Celeste trying to become?</div>
-    <div class="faq-a">Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</div>
+    <div class="faq-a">
+      Celeste aims to stay gentle while becoming wiser.<br>
+      The goal is not to speak more, but to listen better.
+    </div>
   </div>
 
-  <footer>
-    <a href="about.html">Back to About</a> · CELESTE v4.3A
-  </footer>
+  <div class="footer">
+    <a href="/about.html">Back to About</a>
+    <span>·</span>
+    <span>CELESTE v4.3A</span>
+  </div>
 
 </div>
 </body>
