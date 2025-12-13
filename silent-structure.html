@@ -1,113 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Silent Structure — Celeste</title>
-<meta name="description" content="Celeste is designed with intentional limits: short memory, no profiling, and clear boundaries." />
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Silent Structure – Celeste</title>
+<link rel="icon" href="images/logo.svg">
 <style>
-:root{
-  --bg:#0f1216;
-  --panel:#141922;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-  --accent:#a9b7ff;
-}
-*{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  background:#0f1216;
+  color:#e8ebef;
+  font-family: ui-serif, Georgia, serif;
 }
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:28px 20px 60px;
+  padding:36px 24px 64px;
 }
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:40px;
+header img{
+  width:28px;
 }
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:var(--text);
-}
-.logo img{ height:26px; }
-.header-right{
-  font-size:13px;
-  color:var(--muted);
-}
-.content{
+main p{
   line-height:1.8;
-  font-size:16px;
+  margin:20px 0;
 }
-.content h1{
-  font-size:28px;
-  margin-bottom:24px;
-}
-.content p{
-  margin:18px 0;
-}
-.nav{
-  margin-top:40px;
-}
-.nav a{
-  color:var(--accent);
+main a{
+  color:#a9b7ff;
   text-decoration:none;
-  font-size:14px;
+}
+footer{
+  margin-top:72px;
+  font-size:12px;
+  color:#9aa3b2;
+  text-align:right;
 }
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
-  <div class="header">
-    <a href="index.html" class="logo">
-      <img src="images/logo.svg" alt="Celeste logo">
-      <span>CELESTE</span>
-    </a>
-    <div class="header-right">
-      <a href="about.html" style="color:var(--accent);text-decoration:none;">Back to About</a>
-      &nbsp;·&nbsp; CELESTE v4.3A
-    </div>
-  </div>
+<header>
+  <a href="index.html">
+    <img src="images/logo.svg" alt="Celeste">
+  </a>
+</header>
 
-  <div class="content">
-    <h1>Silent Structure</h1>
+<main>
+<p>
+Celeste uses short, temporary context.
+It does not build a profile, and it does not remember you beyond the session.
+</p>
 
-    <p>
-      Celeste is intentionally limited.
-      It keeps short conversational memory and does not build profiles.
-    </p>
+<p>
+This limitation is intentional.
+When situations grow complex or urgent, Celeste stays smaller than the situation.
+</p>
 
-    <p>
-      When situations become urgent, dangerous, or overwhelming,
-      Celeste stays smaller than the situation.
-    </p>
+<p>
+It avoids diagnosis, crisis handling, or authority.
+Human support matters more in those moments.
+</p>
 
-    <p>
-      Silence is not avoidance.
-      It is a boundary.
-    </p>
+<p>
+For concrete questions about memory, data, and language,
+please see the <a href="faq.html">FAQ</a>.
+</p>
+</main>
 
-    <p>
-      Human support matters more than any system in moments of crisis.
-      Celeste is designed to step back when that line appears.
-    </p>
-
-    <div class="nav">
-      <a href="about.html">Back to About</a>
-    </div>
-  </div>
+<footer>
+<a href="about.html">Back to About</a> · CELESTE v4.3A
+</footer>
 
 </div>
 </body>
