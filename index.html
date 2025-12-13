@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Celeste – A Quiet Space for Your Thoughts</title>
 
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
   <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Enter the console or learn more about the philosophy behind Celeste.">
+  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Decisions stay with you." />
   <meta property="og:title" content="Celeste – A Quiet Space for Your Thoughts" />
   <meta property="og:description" content="A small, private space to lay out your thoughts. Decisions stay with you." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://celeste.world/" />
   <meta property="og:site_name" content="Celeste" />
   <link rel="canonical" href="https://celeste.world/" />
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
@@ -48,22 +50,23 @@
       flex-direction:column;
       min-height:100vh;
     }
+
     header{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:40px;
-      font-size:14px;
-      color:var(--muted);
+      margin-bottom:48px;
     }
-    .brand{
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      font-size:13px;
+
+    .brand-icon img{
+      width:44px;
+      height:auto;
+      display:block;
     }
+
     .version{
       font-size:12px;
-      opacity:0.85;
+      color:var(--muted);
     }
 
     main{
@@ -86,8 +89,9 @@
       line-height:1.5;
       margin:0 0 18px;
     }
+
     .hero-sub{
-      margin:0 0 26px;
+      margin:0 0 28px;
       font-size:15px;
       color:var(--muted);
       max-width:32rem;
@@ -101,7 +105,7 @@
       display:flex;
       flex-wrap:wrap;
       gap:14px;
-      margin-bottom:20px; /* ← Open console の後に余白 */
+      margin-bottom:24px; /* ← 余白を明確に */
     }
 
     .btn-primary,
@@ -115,11 +119,13 @@
       border:1px solid transparent;
       cursor:pointer;
     }
+
     .btn-primary{
       background:linear-gradient(135deg,#a9b7ff,#c3d2ff);
       color:#050814;
       border-color:#c3d2ff;
     }
+
     .btn-ghost{
       border-color:var(--line);
       color:var(--muted);
@@ -129,12 +135,13 @@
     .note{
       font-size:12px;
       color:var(--muted);
-      margin-top:8px;
+      margin-bottom:18px; /* ← 余白① */
     }
-    .note-secondary{
+
+    .faq-note{
       font-size:12px;
       color:var(--muted);
-      margin-top:14px; /* ← Note と FAQ 文言の間の余白 */
+      margin-top:14px; /* ← 余白② */
     }
 
     .panel{
@@ -144,6 +151,7 @@
       border:1px solid rgba(70,84,132,0.65);
       box-shadow:0 18px 38px rgba(0,0,0,0.5);
     }
+
     .panel-title{
       font-size:14px;
       letter-spacing:0.18em;
@@ -151,26 +159,25 @@
       color:var(--muted);
       margin-bottom:14px;
     }
+
     .panel-line{
       font-size:14px;
       line-height:1.9;
       color:var(--text);
-      opacity:0.96;
     }
+
     .panel-line + .panel-line{
       margin-top:6px;
     }
+
     .panel-meta{
       margin-top:16px;
       font-size:12px;
       color:var(--muted);
     }
-    .panel-meta span{
-      display:block;
-    }
 
     footer{
-      margin-top:40px;
+      margin-top:48px;
       padding-top:18px;
       border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
@@ -186,7 +193,9 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">CELESTE</div>
+      <a href="/" class="brand-icon" aria-label="Celeste home">
+        <img src="/images/logo.svg" alt="Celeste logo" />
+      </a>
       <div class="version">CELESTE v4.3A</div>
     </header>
 
@@ -196,21 +205,27 @@
           A small, quiet console<br/>
           for thoughts that need room.
         </h1>
+
         <p class="hero-sub">
           Celeste does not decide for you.
           <span>It simply holds your words long enough for you to see them more clearly.</span>
         </p>
 
         <div class="hero-actions">
-          <a href="/celeste-console.html" class="btn-primary">Open console</a>
-          <a href="/about.html" class="btn-ghost">About Celeste</a>
+          <a href="/celeste-console.html" class="btn-primary">
+            Open console
+          </a>
+          <a href="/about.html" class="btn-ghost">
+            About Celeste
+          </a>
         </div>
 
         <p class="note">
           No accounts. No history. Just a temporary space.
         </p>
-        <p class="note-secondary">
-          <a href="/faq.html">You can read the FAQ anytime.</a>
+
+        <p class="faq-note">
+          You can read the <a href="/faq.html">FAQ</a> anytime.
         </p>
       </section>
 
