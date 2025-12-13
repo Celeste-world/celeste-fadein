@@ -2,115 +2,85 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About — Celeste</title>
-<meta name="description" content="Celeste is a small, quiet console for thinking. It gives thoughts room without pushing them toward decisions." />
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About – Celeste</title>
+<link rel="icon" href="images/logo.svg">
 <style>
-:root{
-  --bg:#0f1216;
-  --panel:#141922;
-  --text:#e8ebef;
-  --muted:#9aa3b2;
-  --line:#242a3d;
-  --accent:#a9b7ff;
-}
-*{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  background:#0f1216;
+  color:#e8ebef;
+  font-family: ui-serif, Georgia, serif;
 }
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:28px 20px 60px;
+  padding:36px 24px 64px;
 }
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:40px;
+header{
+  margin-bottom:32px;
 }
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:var(--text);
+header img{
+  width:28px;
+  opacity:.9;
 }
-.logo img{
-  height:26px;
-}
-.header-right{
-  font-size:13px;
-  color:var(--muted);
-}
-.content{
+main p{
   line-height:1.8;
-  font-size:16px;
-}
-.content h1{
-  font-size:28px;
-  margin-bottom:24px;
-}
-.content p{
   margin:18px 0;
 }
-.nav{
-  margin-top:40px;
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-.nav a{
-  color:var(--accent);
+main a{
+  color:#a9b7ff;
   text-decoration:none;
-  font-size:14px;
 }
-.nav a:hover{
+main a:hover{
   text-decoration:underline;
+}
+nav{
+  margin-top:32px;
+}
+footer{
+  position:relative;
+  margin-top:72px;
+  font-size:12px;
+  color:#9aa3b2;
+  text-align:right;
 }
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
-  <div class="header">
-    <a href="index.html" class="logo">
-      <img src="images/logo.svg" alt="Celeste logo">
-      <span>CELESTE</span>
-    </a>
-    <div class="header-right">CELESTE v4.3A</div>
-  </div>
+<header>
+  <a href="index.html">
+    <img src="images/logo.svg" alt="Celeste">
+  </a>
+</header>
 
-  <div class="content">
-    <h1>About</h1>
+<main>
+<p>
+Celeste is a small, quiet console for people who are not ready to decide yet.
+It exists to give thoughts room, without pushing them toward conclusions.
+</p>
 
-    <p>
-      Celeste is a small, quiet console for people who are not ready to decide yet.
-      It exists to give thoughts room, without pushing them toward conclusions.
-    </p>
+<p>
+Celeste does not optimize, persuade, or lead.
+It offers affirmation without instruction, and accepts silence as a valid answer.
+</p>
 
-    <p>
-      Celeste does not optimize, persuade, or lead.
-      It offers affirmation without instruction, and accepts silence as a valid answer.
-    </p>
+<p>
+If you want to explore how this boundary is designed,
+you can read <a href="philosophy.html">Philosophy</a> or
+<a href="silent-structure.html">Silent Structure</a>.
+</p>
 
-    <p>
-      This space is intentionally narrow.
-      It is not here to replace human judgment, emotion, or responsibility.
-    </p>
+<p>
+Common questions are answered quietly in the <a href="faq.html">FAQ</a>.
+</p>
+</main>
 
-    <div class="nav">
-      <a href="philosophy.html">Philosophy</a>
-      <a href="silent-structure.html">Silent Structure</a>
-      <a href="faq.html">FAQ</a>
-      <a href="celeste-console.html">Open Console</a>
-    </div>
-  </div>
+<footer>
+Back to About · CELESTE v4.3A
+</footer>
 
 </div>
 </body>
