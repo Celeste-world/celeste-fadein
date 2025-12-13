@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
 <title>About – Celeste</title>
-<link rel="icon" href="images/logo.svg">
+<meta name="description" content="About Celeste. A small, quiet console for people who are not ready to decide yet.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body{
   margin:0;
@@ -12,44 +13,41 @@ body{
   color:#e8ebef;
   font-family: ui-serif, Georgia, serif;
 }
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:36px 24px 64px;
-}
 header{
-  margin-bottom:32px;
+  padding:20px;
 }
 header img{
-  width:28px;
-  opacity:.9;
+  height:28px;
 }
-main p{
+main{
+  max-width:720px;
+  margin:40px auto;
+  padding:0 20px;
   line-height:1.8;
-  margin:18px 0;
-}
-main a{
-  color:#a9b7ff;
-  text-decoration:none;
-}
-main a:hover{
-  text-decoration:underline;
-}
-nav{
-  margin-top:32px;
 }
 footer{
-  position:relative;
-  margin-top:72px;
-  font-size:12px;
+  max-width:720px;
+  margin:80px auto 40px;
+  padding:0 20px;
+  display:flex;
+  justify-content:flex-end;
   color:#9aa3b2;
-  text-align:right;
+  font-size:13px;
+}
+a{color:#a9b7ff;text-decoration:none;}
+.section-links{
+  margin-top:60px;
+  border-top:1px solid #242a3d;
+  padding-top:20px;
+}
+.section-links a{
+  display:block;
+  margin:6px 0;
 }
 </style>
 </head>
-<body>
-<div class="wrap">
 
+<body>
 <header>
   <a href="index.html">
     <img src="images/logo.svg" alt="Celeste">
@@ -57,6 +55,8 @@ footer{
 </header>
 
 <main>
+<h1>About</h1>
+
 <p>
 Celeste is a small, quiet console for people who are not ready to decide yet.
 It exists to give thoughts room, without pushing them toward conclusions.
@@ -64,24 +64,27 @@ It exists to give thoughts room, without pushing them toward conclusions.
 
 <p>
 Celeste does not optimize, persuade, or lead.
-It offers affirmation without instruction, and accepts silence as a valid answer.
+It offers affirmation without instruction,
+and accepts silence as a valid answer.
 </p>
 
 <p>
-If you want to explore how this boundary is designed,
-you can read <a href="philosophy.html">Philosophy</a> or
-<a href="silent-structure.html">Silent Structure</a>.
+This space is intentionally narrow.
+It stays small so that your thoughts can stay yours.
 </p>
 
-<p>
-Common questions are answered quietly in the <a href="faq.html">FAQ</a>.
-</p>
+<div class="section-links">
+  <strong>Explore:</strong>
+  <a href="philosophy.html">Philosophy</a>
+  <a href="silent-structure.html">Silent Structure</a>
+  <a href="vision.html">Vision</a>
+  <a href="who-i-am.html">Who I Am</a>
+  <a href="faq.html">FAQ</a>
+</div>
 </main>
 
 <footer>
-Back to About · CELESTE v4.3A
+  <span><a href="about.html">Back to About</a> · CELESTE v4.3A</span>
 </footer>
-
-</div>
 </body>
 </html>
