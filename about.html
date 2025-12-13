@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>About — Celeste</title>
-<meta name="description" content="About Celeste — a small, quiet console for thinking.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<link rel="icon" href="images/logo.svg">
 <style>
 :root{
   --bg:#0f1216;
@@ -17,88 +16,66 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, serif;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 .wrap{
   max-width:900px;
   margin:0 auto;
-  padding:32px 20px 40px;
+  padding:40px 20px 60px;
 }
 header img{
-  width:44px;
+  width:40px;
 }
-header{
-  margin-bottom:40px;
-}
-h1{
-  font-size:26px;
-  margin-bottom:24px;
-}
-p{
-  line-height:1.75;
-  color:var(--muted);
-  margin-bottom:20px;
-}
-.nav{
-  margin-top:48px;
+h1{font-size:26px;margin:40px 0 20px;}
+p{line-height:1.8;color:var(--muted);}
+nav{
+  margin-top:50px;
+  border-top:1px solid var(--line);
+  padding-top:20px;
   display:flex;
-  gap:24px;
+  gap:20px;
+  flex-wrap:wrap;
 }
-.nav a{
+nav a{
   color:var(--text);
   text-decoration:none;
-  border-bottom:1px solid var(--line);
 }
 footer{
-  margin-top:80px;
+  margin-top:60px;
   text-align:right;
   font-size:12px;
   color:var(--muted);
 }
-footer a{
-  color:var(--muted);
-  text-decoration:none;
-}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
 <header>
-  <a href="index.html">
-    <img src="images/logo.svg" alt="Celeste">
-  </a>
+  <a href="index.html"><img src="images/logo.svg" alt="Celeste"></a>
 </header>
 
 <h1>About Celeste</h1>
-
 <p>
-Celeste is a small, quiet console for moments when thinking feels crowded.
-It does not guide, advise, or decide.
-It offers space.
+Celeste is a small, quiet console for people who are not ready to decide yet.
+It does not optimize, persuade, or lead.
+It offers space — and nothing more than that.
+</p>
+<p>
+Silence is allowed. Short answers are allowed.
+Your thoughts remain yours.
 </p>
 
-<p>
-Celeste is intentionally narrow.
-It avoids optimization, persuasion, and instruction.
-It accepts silence as a valid response.
-</p>
-
-<p>
-Celeste exists for thoughts that are not ready to become answers.
-</p>
-
-<div class="nav">
+<nav>
   <a href="philosophy.html">Philosophy</a>
   <a href="silent-structure.html">Silent Structure</a>
+  <a href="vision.html">Vision</a>
+  <a href="who-i-am.html">Who I Am</a>
   <a href="faq.html">FAQ</a>
-</div>
+</nav>
 
 <footer>
-  <a href="about.html">Back to About</a> · CELESTE v4.3A
+  Back to About · CELESTE v4.3A
 </footer>
-
 </div>
 </body>
 </html>
