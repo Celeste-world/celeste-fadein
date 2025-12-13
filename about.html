@@ -2,89 +2,103 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>About – Celeste</title>
-<meta name="description" content="About Celeste. A small, quiet console for people who are not ready to decide yet.">
+<title>About — Celeste</title>
+<meta name="description" content="About Celeste — a small, quiet console for thinking.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --line:#242a3d;
+}
 body{
   margin:0;
-  background:#0f1216;
-  color:#e8ebef;
+  background:var(--bg);
+  color:var(--text);
   font-family: ui-serif, Georgia, serif;
 }
-header{
-  padding:20px;
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:32px 20px 40px;
 }
 header img{
-  height:28px;
+  width:44px;
 }
-main{
-  max-width:720px;
-  margin:40px auto;
-  padding:0 20px;
-  line-height:1.8;
+header{
+  margin-bottom:40px;
+}
+h1{
+  font-size:26px;
+  margin-bottom:24px;
+}
+p{
+  line-height:1.75;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.nav{
+  margin-top:48px;
+  display:flex;
+  gap:24px;
+}
+.nav a{
+  color:var(--text);
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
 }
 footer{
-  max-width:720px;
-  margin:80px auto 40px;
-  padding:0 20px;
-  display:flex;
-  justify-content:flex-end;
-  color:#9aa3b2;
-  font-size:13px;
+  margin-top:80px;
+  text-align:right;
+  font-size:12px;
+  color:var(--muted);
 }
-a{color:#a9b7ff;text-decoration:none;}
-.section-links{
-  margin-top:60px;
-  border-top:1px solid #242a3d;
-  padding-top:20px;
-}
-.section-links a{
-  display:block;
-  margin:6px 0;
+footer a{
+  color:var(--muted);
+  text-decoration:none;
 }
 </style>
 </head>
 
 <body>
+<div class="wrap">
+
 <header>
   <a href="index.html">
     <img src="images/logo.svg" alt="Celeste">
   </a>
 </header>
 
-<main>
-<h1>About</h1>
+<h1>About Celeste</h1>
 
 <p>
-Celeste is a small, quiet console for people who are not ready to decide yet.
-It exists to give thoughts room, without pushing them toward conclusions.
+Celeste is a small, quiet console for moments when thinking feels crowded.
+It does not guide, advise, or decide.
+It offers space.
 </p>
 
 <p>
-Celeste does not optimize, persuade, or lead.
-It offers affirmation without instruction,
-and accepts silence as a valid answer.
+Celeste is intentionally narrow.
+It avoids optimization, persuasion, and instruction.
+It accepts silence as a valid response.
 </p>
 
 <p>
-This space is intentionally narrow.
-It stays small so that your thoughts can stay yours.
+Celeste exists for thoughts that are not ready to become answers.
 </p>
 
-<div class="section-links">
-  <strong>Explore:</strong>
+<div class="nav">
   <a href="philosophy.html">Philosophy</a>
   <a href="silent-structure.html">Silent Structure</a>
-  <a href="vision.html">Vision</a>
-  <a href="who-i-am.html">Who I Am</a>
   <a href="faq.html">FAQ</a>
 </div>
-</main>
 
 <footer>
-  <span><a href="about.html">Back to About</a> · CELESTE v4.3A</span>
+  <a href="about.html">Back to About</a> · CELESTE v4.3A
 </footer>
+
+</div>
 </body>
 </html>
