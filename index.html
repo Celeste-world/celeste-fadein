@@ -6,10 +6,10 @@
   <title>Celeste – A Quiet Space for Your Thoughts</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Decisions stay with you." />
+  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Enter the console or learn more about the philosophy behind Celeste.">
   <meta property="og:title" content="Celeste – A Quiet Space for Your Thoughts" />
   <meta property="og:description" content="A small, private space to lay out your thoughts. Decisions stay with you." />
   <meta property="og:type" content="website" />
@@ -58,8 +58,8 @@
       margin-bottom:48px;
     }
 
-    .brand-icon img{
-      width:44px;
+    .logo-link img{
+      width:40px;   /* FAQ基準サイズ */
       height:auto;
       display:block;
     }
@@ -87,25 +87,21 @@
     .hero-title{
       font-size:30px;
       line-height:1.5;
-      margin:0 0 18px;
+      margin:0 0 20px;
     }
 
     .hero-sub{
-      margin:0 0 28px;
+      margin:0 0 30px;
       font-size:15px;
       color:var(--muted);
       max-width:32rem;
-    }
-    .hero-sub span{
-      display:block;
-      margin-top:6px;
     }
 
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
       gap:14px;
-      margin-bottom:24px; /* ← 余白を明確に */
+      margin-bottom:18px; /* ← 少し余白を追加 */
     }
 
     .btn-primary,
@@ -135,13 +131,14 @@
     .note{
       font-size:12px;
       color:var(--muted);
-      margin-bottom:18px; /* ← 余白① */
+      margin-top:14px; /* ← Open Console との間 */
+      margin-bottom:12px;
     }
 
     .faq-note{
       font-size:12px;
       color:var(--muted);
-      margin-top:14px; /* ← 余白② */
+      margin-top:8px; /* ← note との間に余白 */
     }
 
     .panel{
@@ -164,20 +161,15 @@
       font-size:14px;
       line-height:1.9;
       color:var(--text);
+      opacity:0.96;
     }
 
     .panel-line + .panel-line{
       margin-top:6px;
     }
 
-    .panel-meta{
-      margin-top:16px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
     footer{
-      margin-top:48px;
+      margin-top:40px;
       padding-top:18px;
       border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
@@ -193,8 +185,8 @@
 <body>
   <div class="wrap">
     <header>
-      <a href="/" class="brand-icon" aria-label="Celeste home">
-        <img src="/images/logo.svg" alt="Celeste logo" />
+      <a href="/" class="logo-link" aria-label="Back to home">
+        <img src="/images/logo.svg" alt="Celeste">
       </a>
       <div class="version">CELESTE v4.3A</div>
     </header>
@@ -207,17 +199,13 @@
         </h1>
 
         <p class="hero-sub">
-          Celeste does not decide for you.
-          <span>It simply holds your words long enough for you to see them more clearly.</span>
+          Celeste does not decide for you.<br/>
+          It simply holds your words long enough for you to see them more clearly.
         </p>
 
         <div class="hero-actions">
-          <a href="/celeste-console.html" class="btn-primary">
-            Open console
-          </a>
-          <a href="/about.html" class="btn-ghost">
-            About Celeste
-          </a>
+          <a href="/celeste-console.html" class="btn-primary">Open console</a>
+          <a href="/about.html" class="btn-ghost">About Celeste</a>
         </div>
 
         <p class="note">
@@ -225,11 +213,11 @@
         </p>
 
         <p class="faq-note">
-          You can read the <a href="/faq.html">FAQ</a> anytime.
+          You can read the FAQ anytime.
         </p>
       </section>
 
-      <aside class="panel" aria-label="What Celeste is">
+      <aside class="panel">
         <div class="panel-title">What this is</div>
         <p class="panel-line">
           A single page where you can write freely, in your own language.
@@ -237,10 +225,6 @@
         <p class="panel-line">
           Celeste reflects back what it hears, without pushing you toward an answer.
         </p>
-        <div class="panel-meta">
-          <span>Decisions stay with you.</span>
-          <span>Celeste stays small on purpose.</span>
-        </div>
       </aside>
     </main>
 
