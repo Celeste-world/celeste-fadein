@@ -1,39 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="description" content="Celeste Philosophy — thinking becomes gentler when no one is trying to win.">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Philosophy — Celeste</title>
-<link rel="stylesheet" href="/style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Philosophy — Celeste v4.3A</title>
+<meta name="description" content="Celeste is built on the belief that thinking becomes gentler when no one is trying to win the conversation." />
+
+<style>
+:root{
+  --bg:#0f1216;
+  --text:#e8ebef;
+  --muted:#9aa3b2;
+  --accent:#a9b7ff;
+}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+.wrap{
+  max-width:880px;
+  margin:0 auto;
+  padding:56px 20px 40px;
+}
+h1{
+  font-size:28px;
+  margin-bottom:28px;
+}
+p{
+  line-height:1.9;
+  margin-bottom:22px;
+}
+a{
+  color:var(--accent);
+  text-decoration:none;
+}
+a:hover{
+  text-decoration:underline;
+}
+.footer{
+  margin-top:64px;
+  display:flex;
+  justify-content:flex-end;
+  gap:16px;
+  font-size:12px;
+  color:#9aa3b2;
+}
+</style>
 </head>
+
 <body>
-<main class="page">
-<h1>Philosophy</h1>
+<div class="wrap">
+  <h1>Philosophy</h1>
 
-<p>
-Thinking becomes gentler when no one is trying to win the conversation.
-</p>
+  <p>
+    Thinking becomes gentler when no one is trying to win the conversation.
+    Celeste is built around this belief.
+  </p>
 
-<p>
-Celeste offers affirmation without instruction.
-It reflects without directing,
-and it listens without persuading.
-</p>
+  <p>
+    Many tools aim to persuade, optimize, or capture attention.
+    Celeste does none of these.
+    It exists to hold a moment where thoughts can unfold without being corrected.
+  </p>
 
-<p>
-Responsibility remains shared —
-between the person thinking
-and the space that allows thinking to happen.
-</p>
+  <p>
+    Affirmation without instruction is central here.
+    Shared responsibility replaces authority.
+    The user remains the only decision-maker in the room.
+  </p>
 
-<p>
-For common questions, see the <a href="/faq.html">FAQ</a>.
-</p>
+  <p>
+    This philosophy does not seek efficiency.
+    It values honesty, restraint, and the freedom to pause.
+  </p>
 
-<footer>
-<a href="/about.html">Back to About</a> · CELESTE v4.3A
-</footer>
-</main>
+  <p class="muted">
+    Practical questions about these boundaries are answered in the
+    <a href="/faq.html">FAQ</a>.
+  </p>
+
+  <div class="footer">
+    <a href="/index.html">Back to About</a>
+    <span>CELESTE v4.3A</span>
+  </div>
+</div>
 </body>
 </html>
