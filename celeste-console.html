@@ -1,153 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste Console</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Console – Celeste</title>
 
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+  <meta name="description" content="A quiet console where you can write freely. Celeste reflects without deciding for you." />
+  <link rel="canonical" href="https://celeste.world/celeste-console.html" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 
-<style>
-:root{
-  --bg:#050811;
-  --panel:#111623;
-  --text:#e8ebef;
-  --muted:#a0a8bb;
-  --line:#252b3a;
-}
-*{box-sizing:border-box;}
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
-  color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
 
-a{ color:inherit; text-decoration:none; }
-a:hover{ text-decoration:underline; }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{ text-decoration:underline; }
 
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:48px 20px 40px;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-}
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
 
-header{
-  display:flex;
-  align-items:center;
-  margin-bottom:32px;
-}
-header img{
-  width:64px;
-  height:auto;
-}
+    header{
+      display:flex;
+      align-items:center;
+      margin-bottom:32px;
+    }
+    header img{
+      width:64px;
+      height:auto;
+    }
 
-.hero{
-  font-size:15px;
-  color:var(--muted);
-  margin-bottom:24px;
-  line-height:1.8;
-}
+    .intro{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.7;
+      margin-bottom:28px;
+    }
 
-.console{
-  background:rgba(10,14,28,0.9);
-  border:1px solid rgba(70,84,132,0.65);
-  border-radius:16px;
-  padding:18px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.5);
-}
+    .console{
+      background:rgba(10,14,28,0.9);
+      border:1px solid rgba(70,84,132,0.65);
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 18px 38px rgba(0,0,0,0.5);
+    }
 
-.log{
-  min-height:300px;
-  max-height:520px;
-  overflow-y:auto;
-  padding-right:6px;
-}
+    .log{
+      min-height:280px;
+      max-height:420px;
+      overflow-y:auto;
+      margin-bottom:18px;
+      padding-right:6px;
+    }
 
-.entry{
-  margin:14px 0;
-  line-height:1.85;
-  white-space:pre-wrap;
-  opacity:0;
-  animation:fadeIn 0.4s ease forwards;
-}
+    .entry{
+      margin-bottom:14px;
+      line-height:1.8;
+      white-space:pre-wrap;
+    }
+    .user{ color:var(--accent); }
+    .celeste{ color:var(--text); }
 
-.entry.user{
-  color:#a9b7ff;
-}
+    textarea{
+      width:100%;
+      min-height:56px;
+      resize:none;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:transparent;
+      color:var(--text);
+      padding:12px 14px;
+      font-family:inherit;
+      font-size:15px;
+    }
 
-.entry.celeste{
-  color:var(--text);
-}
+    textarea::placeholder{
+      color:#6d7588;
+    }
 
-@keyframes fadeIn{
-  from{ opacity:0; transform:translateY(4px); }
-  to{ opacity:1; transform:none; }
-}
-
-.divider{
-  border-top:1px solid var(--line);
-  margin:56px 0 20px;
-}
-
-textarea{
-  width:100%;
-  background:transparent;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px 14px;
-  color:var(--text);
-  resize:none;
-  font-family:inherit;
-  font-size:15px;
-  min-height:48px;
-}
-textarea::placeholder{
-  color:#6d7588;
-}
-
-footer{
-  margin-top:auto;
-  padding-top:18px;
-  border-top:1px solid rgba(37,43,58,0.9);
-  font-size:12px;
-  color:var(--muted);
-  display:flex;
-  justify-content:flex-end;
-  gap:16px;
-}
-</style>
+    footer{
+      margin-top:auto;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:flex-end;
+      gap:16px;
+    }
+  </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<header>
-  <a href="/index.html">
-    <img src="/images/logo.svg" alt="Celeste">
-  </a>
-</header>
+  <header>
+    <a href="/index.html">
+      <img src="/images/logo.svg" alt="Celeste">
+    </a>
+  </header>
 
-<div class="hero">
-  A quiet space to organize your thoughts — decisions stay with you.<br>
-  This space is open to whatever you choose to write.<br>
-  You can read the FAQ anytime.
-</div>
+  <div class="intro">
+    A quiet space to organize your thoughts — decisions stay with you.<br/>
+    This space is open to whatever you choose to write.<br/>
+    You can read the <a href="/faq.html">FAQ</a> anytime.
+  </div>
 
-<div class="console">
-  <div id="log" class="log"></div>
-  <div class="divider"></div>
-  <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-</div>
+  <div class="console">
+    <div id="log" class="log"></div>
 
-<footer>
-  <span>CELESTE v4.3A</span>
-</footer>
+    <textarea
+      id="input"
+      placeholder="Write freely."
+    ></textarea>
+  </div>
+
+  <footer>
+    <span>CELESTE v4.3A</span>
+  </footer>
 
 </div>
 
@@ -155,52 +148,40 @@ footer{
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-function addEntry(text, cls, resonance){
+function addEntry(text, cls){
   const div = document.createElement("div");
-  div.className = `entry ${cls}`;
+  div.className = "entry " + cls;
   div.textContent = text;
-
-  if(typeof resonance === "number"){
-    const extra = Math.min(Math.max(resonance,0),1);
-    div.style.marginBottom = `${14 + extra * 10}px`;
-  }
-
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
 
 function send(){
-  const value = input.value.trim();
-  if(!value) return;
+  const text = input.value.trim();
+  if(!text) return;
 
-  addEntry(value,"user");
-  input.value="";
-  input.style.height="auto";
+  addEntry(text, "user");
+  input.value = "";
 
-  fetch("/api/celeste",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
+  fetch("/api/celeste", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
   })
-  .then(r=>r.json())
-  .then(data=>{
-    if(data.reply){
-      addEntry(data.reply,"celeste", data.resonance);
+  .then(r => r.json())
+  .then(d => {
+    if(d.reply){
+      addEntry(d.reply, "celeste");
     }
   })
-  .catch(()=>{});
+  .catch(() => {});
 }
 
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
-});
-
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
