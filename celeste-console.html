@@ -6,11 +6,11 @@
   <title>Console – Celeste</title>
 
   <!-- SEO -->
-  <meta name="description" content="A quiet console to organize your thoughts. Celeste does not decide for you. Decisions stay with you." />
+  <meta name="description" content="A quiet console to organize your thoughts. Celeste reflects without deciding for you." />
   <link rel="canonical" href="https://celeste.world/celeste-console.html" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 
   <style>
     :root{
@@ -46,6 +46,7 @@
       flex-direction:column;
     }
 
+    /* Header */
     header{
       display:flex;
       align-items:center;
@@ -56,49 +57,56 @@
       height:auto;
     }
 
-    .hero{
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.7;
+    /* Intro */
+    .intro{
       margin-bottom:28px;
-      max-width:36rem;
+      max-width:42rem;
     }
-    .hero p{
-      margin:0 0 10px;
+    .intro-title{
+      font-size:18px;
+      line-height:1.7;
+      margin-bottom:14px;
+      color:var(--text);
+    }
+    .intro-sub{
+      font-size:14px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+    .intro-sub span{
+      display:block;
+      margin-top:8px;
     }
 
+    /* Console */
     .console{
       background:rgba(10,14,28,0.9);
       border-radius:16px;
-      padding:22px 20px 24px;
+      padding:20px 18px 18px;
       border:1px solid rgba(70,84,132,0.65);
       box-shadow:0 18px 38px rgba(0,0,0,0.5);
-      flex:1;
       display:flex;
       flex-direction:column;
     }
-
     .log{
-      flex:1;
+      min-height:260px;
+      max-height:420px;
       overflow-y:auto;
       padding-right:6px;
     }
-
     .entry{
-      margin:14px 0;
-      line-height:1.8;
+      margin:12px 0;
+      line-height:1.75;
       white-space:pre-wrap;
+      font-size:15px;
     }
-    .celeste{
-      color:var(--text);
-    }
-    .user{
+    .entry.user{
       color:var(--accent);
     }
 
     .divider{
       border-top:1px solid var(--line);
-      margin:40px 0 18px;
+      margin:48px 0 18px;
     }
 
     textarea{
@@ -117,9 +125,10 @@
       color:#6d7588;
     }
 
+    /* Footer */
     footer{
-      margin-top:18px;
-      padding-top:16px;
+      margin-top:28px;
+      padding-top:18px;
       border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
       color:var(--muted);
@@ -129,25 +138,27 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
 
-    <!-- Header -->
     <header>
       <a href="/index.html">
         <img src="/images/logo.svg" alt="Celeste logo">
       </a>
     </header>
 
-    <!-- Intro text -->
-    <section class="hero">
-      <p>A quiet space to organize your thoughts — decisions stay with you.</p>
-      <p>This space is open to whatever you choose to write.</p>
-      <p>You can read the <a href="/faq.html">FAQ</a> anytime.</p>
+    <section class="intro">
+      <div class="intro-title">
+        A quiet space to organize your thoughts — decisions stay with you.
+      </div>
+      <div class="intro-sub">
+        This space is open to whatever you choose to write.
+        <span><a href="/faq.html">You can read the FAQ anytime.</a></span>
+      </div>
     </section>
 
-    <!-- Console -->
-    <div class="console">
+    <section class="console" aria-label="Celeste console">
       <div id="log" class="log"></div>
 
       <div class="divider"></div>
@@ -156,64 +167,63 @@
         id="input"
         rows="1"
         placeholder="Write freely."
-        aria-label="Write your thoughts here"
+        aria-label="Write your thoughts"
       ></textarea>
-    </div>
+    </section>
 
-    <!-- Footer -->
     <footer>
       <span>CELESTE v4.3A</span>
     </footer>
 
   </div>
 
-  <script>
-    const log = document.getElementById("log");
-    const input = document.getElementById("input");
+<script>
+const log = document.getElementById("log");
+const input = document.getElementById("input");
 
-    function addEntry(text, cls){
-      const div = document.createElement("div");
-      div.className = `entry ${cls}`;
-      div.textContent = text;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = "entry" + (cls ? " " + cls : "");
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function sendMessage(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
+
+  fetch("/api/celeste", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: value })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.reply){
+      addEntry(data.reply);
     }
+  })
+  .catch(() => {
+    /* silence is acceptable */
+  });
+}
 
-    function onSend(){
-      const value = input.value.trim();
-      if(!value) return;
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
 
-      addEntry(value,"user");
-      input.value="";
-      input.style.height="auto";
-
-      fetch(window.location.origin + "/api/celeste", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ message:value })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.reply){
-          addEntry(data.reply,"celeste");
-        }
-      })
-      .catch(() => {
-        /* silence is allowed */
-      });
-    }
-
-    input.addEventListener("keydown", e => {
-      if(e.key==="Enter" && !e.shiftKey){
-        e.preventDefault();
-        onSend();
-      }
-    });
-
-    input.addEventListener("input", () => {
-      input.style.height="auto";
-      input.style.height=input.scrollHeight+"px";
-    });
-  </script>
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+});
+</script>
 </body>
 </html>
