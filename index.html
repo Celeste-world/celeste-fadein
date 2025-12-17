@@ -2,233 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Celeste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="Atu39NPvDrQKBiFOUB77eXw4mRIlRi7Ta-msnO0rf7Y" />
-  <title>Celeste – A Quiet Space for Your Thoughts</title>
-
-<meta name="description" content="Celeste is a small, quiet console for organizing your thoughts. It does not decide for you. It simply gives your words room to settle.">
-
-<link rel="canonical" href="https://celeste.world/" />
-
-<meta property="og:title" content="Celeste – A Quiet Space for Your Thoughts">
-<meta property="og:description" content="A small, quiet space to write and see your thoughts more clearly. Decisions stay with you.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://celeste.world/">
-<meta property="og:site_name" content="Celeste">
-
-  <title>Celeste – A Quiet Space for Your Thoughts</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-
-  <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet, minimal space to organize your thoughts. Decisions stay with you.">
-  <link rel="canonical" href="https://celeste.world/" />
 
   <style>
-    :root{
-      --bg:#050811;
-      --panel:#111623;
-      --text:#e8ebef;
-      --muted:#a0a8bb;
-      --line:#252b3a;
-      --accent:#a9b7ff;
-    }
-    *{box-sizing:border-box;}
-    body{
-      margin:0;
-      min-height:100vh;
-      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
-      color:var(--text);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-    }
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-    a:hover{
-      text-decoration:underline;
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(
+        ellipse at top,
+        #1b2746 0%,
+        #0a0f1f 60%,
+        #05070f 100%
+      );
+      color: #e6e9f0;
     }
 
-    .wrap{
-      max-width:960px;
-      margin:0 auto;
-      padding:48px 20px 40px;
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
     }
 
-    header{
-      display:flex;
-      align-items:center;
-      margin-bottom:40px;
-    }
-    header img{
-      width:80px; /* FAQと同一サイズ */
-      height:auto;
+    /* ===== ロゴ（少し大きく）===== */
+    .logo {
+      font-size: 1.35rem; /* ← 以前より約20%アップ */
+      letter-spacing: 0.02em;
+      margin-bottom: 56px;
     }
 
-    main{
-      flex:1;
-      display:grid;
-      grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
-      gap:40px;
-      align-items:center;
-    }
-    @media (max-width:800px){
-      main{
-        grid-template-columns:1fr;
-        gap:32px;
-      }
+    /* ===== 最上段コピー ===== */
+    .hero {
+      margin-bottom: 56px;
     }
 
-    .hero-title{
-      font-size:30px;
-      line-height:1.5;
-      margin:0 0 18px;
-    }
-    .hero-sub{
-      margin:0 0 26px;
-      font-size:15px;
-      color:var(--muted);
-      max-width:32rem;
-    }
-    .hero-sub span{
-      display:block;
-      margin-top:6px;
+    .hero p {
+      font-size: 1.05rem;
+      line-height: 1.6; /* ← 行間をほんの少し広げる */
+      margin: 0 0 16px;
+      color: #d7dbef;
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:14px;
-      margin-bottom:18px; /* 少し余白 */
-    }
-    .btn-primary,
-    .btn-ghost{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 18px;
-      border-radius:999px;
-      font-size:14px;
-      border:1px solid transparent;
-    }
-    .btn-primary{
-      background:linear-gradient(135deg,#a9b7ff,#c3d2ff);
-      color:#050814;
-      border-color:#c3d2ff;
-    }
-    .btn-ghost{
-      border-color:var(--line);
-      color:var(--muted);
-      background:rgba(5,8,20,0.7);
+    .console {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+      background: rgba(10,15,30,0.55);
+      min-height: 240px;
     }
 
-    .note{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:14px;
-    }
-    .note + .note{
-      margin-top:10px;
-    }
-
-    .panel{
-      background:rgba(10,14,28,0.9);
-      border-radius:16px;
-      padding:22px 20px 24px;
-      border:1px solid rgba(70,84,132,0.65);
-      box-shadow:0 18px 38px rgba(0,0,0,0.5);
-    }
-    .panel-title{
-      font-size:14px;
-      letter-spacing:0.18em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:14px;
-    }
-    .panel-line{
-      font-size:14px;
-      line-height:1.9;
-    }
-    .panel-line + .panel-line{
-      margin-top:6px;
-    }
-    .panel-meta{
-      margin-top:16px;
-      font-size:12px;
-      color:var(--muted);
+    .input {
+      margin-top: 24px;
+      padding: 14px 16px;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e6e9f0;
+      font-size: 0.95rem;
     }
 
-    footer{
-      margin-top:40px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,0.9);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:16px;
+    footer {
+      position: fixed;
+      bottom: 24px;
+      right: 32px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.08em;
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
+  <div class="container">
+    <div class="logo">Celeste</div>
 
-    <header>
-      <a href="/index.html">
-        <img src="/images/logo.svg" alt="Celeste logo">
-      </a>
-    </header>
+    <div class="hero">
+      <p>A quiet space to organize your thoughts — decisions stay with you.</p>
+      <p>This space is open to whatever you choose to write.</p>
+      <p>You can read the FAQ anytime.</p>
+    </div>
 
-    <main>
-      <section>
-        <h1 class="hero-title">
-          A small, quiet console<br/>
-          for thoughts that need room.
-        </h1>
+    <div class="console">
+      <!-- console output -->
+    </div>
 
-        <p class="hero-sub">
-          Celeste does not decide for you.
-          <span>It simply holds your words long enough for you to see them more clearly.</span>
-        </p>
-
-        <div class="hero-actions">
-          <a href="/celeste-console.html" class="btn-primary">Open console</a>
-          <a href="/about.html" class="btn-ghost">About Celeste</a>
-        </div>
-
-        <p class="note">
-          No accounts. No history. Just a temporary space.
-        </p>
-        <p class="note">
-          You can read the FAQ anytime.
-        </p>
-      </section>
-
-      <aside class="panel">
-        <div class="panel-title">What this is</div>
-        <p class="panel-line">
-          A single page where you can write freely, in your own language.
-        </p>
-        <p class="panel-line">
-          Celeste reflects back what it hears, without pushing you toward an answer.
-        </p>
-        <div class="panel-meta">
-          <span>Decisions stay with you.</span>
-          <span>Celeste stays small on purpose.</span>
-        </div>
-      </aside>
-    </main>
-
-    <footer>
-      <span>© Celeste.world</span>
-      <span>CELESTE v4.3A</span>
-    </footer>
-
+    <input class="input" placeholder="Write freely." />
   </div>
+
+  <footer>CELESTE v4.3A</footer>
 </body>
 </html>
