@@ -4,92 +4,71 @@
   <meta charset="UTF-8" />
   <title>Celeste</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     body {
       margin: 0;
       font-family: Georgia, "Times New Roman", serif;
-      background: radial-gradient(
-        ellipse at top,
-        #1b2746 0%,
-        #0a0f1f 60%,
-        #05070f 100%
-      );
-      color: #e6e9f0;
+      background: radial-gradient(circle at top, #0b1530, #02040a 70%);
+      color: #e8ecf2;
     }
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 80px 24px 120px;
+    header {
+      padding: 48px 64px 32px;
     }
 
-    /* ===== ロゴ（少し大きく）===== */
+    /* ★ ロゴを少し大きく */
     .logo {
-      font-size: 1.35rem; /* ← 以前より約20%アップ */
-      letter-spacing: 0.02em;
-      margin-bottom: 56px;
+      font-size: 1.38rem; /* ← 約15%アップ */
+      letter-spacing: 0.08em;
+      margin-bottom: 36px;
     }
 
-    /* ===== 最上段コピー ===== */
-    .hero {
-      margin-bottom: 56px;
+    main {
+      max-width: 720px;
+      padding: 0 64px;
     }
 
-    .hero p {
+    /* ★ 最上段コピーの行間を微調整 */
+    .lead {
       font-size: 1.05rem;
-      line-height: 1.6; /* ← 行間をほんの少し広げる */
-      margin: 0 0 16px;
-      color: #d7dbef;
+      line-height: 1.75; /* ← ほんの少し広げる */
+      margin-bottom: 28px;
     }
 
-    .console {
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 24px;
-      background: rgba(10,15,30,0.55);
-      min-height: 240px;
-    }
-
-    .input {
-      margin-top: 24px;
-      padding: 14px 16px;
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: transparent;
-      color: #e6e9f0;
+    .sub {
       font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.85;
+      margin-bottom: 36px;
     }
 
     footer {
-      position: fixed;
-      bottom: 24px;
-      right: 32px;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.45);
-      letter-spacing: 0.08em;
+      margin-top: 80px;
+      padding: 24px 64px;
+      font-size: 0.8rem;
+      opacity: 0.6;
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="logo">Celeste</div>
 
-    <div class="hero">
-      <p>A quiet space to organize your thoughts — decisions stay with you.</p>
-      <p>This space is open to whatever you choose to write.</p>
-      <p>You can read the FAQ anytime.</p>
-    </div>
+  <header>
+    <div class="logo">CELESTE</div>
+  </header>
 
-    <div class="console">
-      <!-- console output -->
-    </div>
+  <main>
+    <p class="lead">
+      A quiet space to organize your thoughts — decisions stay with you.
+    </p>
+    <p class="sub">
+      This space is open to whatever you choose to write.<br />
+      You can read the FAQ anytime.
+    </p>
+  </main>
 
-    <input class="input" placeholder="Write freely." />
-  </div>
+  <footer>
+    CELESTE v4.3A
+  </footer>
 
-  <footer>CELESTE v4.3A</footer>
 </body>
 </html>
