@@ -3,24 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>FAQ – Celeste</title>
 
-<title>FAQ – Celeste</title>
-
-<meta name="description" content="Frequently Asked Questions about Celeste: memory, privacy, language support, and what this quiet console is designed to do.">
-
-<link rel="canonical" href="https://celeste.world/faq.html" />
-
-<meta property="og:title" content="Celeste FAQ">
-<meta property="og:description" content="Answers to common questions about Celeste, its design, limits, and philosophy.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://celeste.world/faq.html">
-<meta property="og:site_name" content="Celeste">
-
-  
   <!-- SEO -->
-  <meta name="description" content="Frequently Asked Questions about Celeste. Learn what Celeste is, how it works, privacy, memory, and philosophy.">
+  <meta name="description" content="Frequently Asked Questions about Celeste: memory, privacy, language support, and what this quiet console is designed to do.">
   <link rel="canonical" href="https://celeste.world/faq.html" />
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Celeste FAQ">
+  <meta property="og:description" content="Answers to common questions about Celeste, its design, limits, and philosophy.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://celeste.world/faq.html">
+  <meta property="og:site_name" content="Celeste">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <!-- Favicon -->
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <!-- FAQ Structured Data -->
@@ -58,8 +57,19 @@
       color:var(--text);
       font-family: ui-serif, Georgia, "Times New Roman", serif;
     }
-    a{color:inherit;text-decoration:none;}
-    a:hover{text-decoration:underline;}
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    /* subtle link for boundary page */
+    a.subtle-link{
+      border-bottom:1px solid rgba(160,168,187,0.35);
+    }
+    a.subtle-link:hover{
+      border-bottom-color:rgba(160,168,187,0.85);
+    }
 
     .wrap{
       max-width:960px;
@@ -134,11 +144,11 @@
       <div class="faq-item"><div class="faq-q">9. What languages does Celeste support?</div><div class="faq-a">You can write in any language. Celeste will respond in the same language when possible.</div></div>
       <div class="faq-item"><div class="faq-q">10. What is Celeste trying to become?</div><div class="faq-a">Celeste aims to stay gentle while becoming wiser. The goal is not to speak more, but to listen better.</div></div>
     </main>
-    
-<p style="margin-top:32px; font-size:13px; color:var(--muted);">
-  Not sure if Celeste is right for you?
-  <a href="/who-this-is-for.html">Read who this is for (and who it is not)</a>.
-</p>
+
+    <p style="margin-top:32px; font-size:13px; color:var(--muted);">
+      Not sure if Celeste is right for you?
+      <a href="/who-this-is-for.html" class="subtle-link">Read who this is for (and who it is not)</a>.
+    </p>
 
     <footer>
       <a href="/about.html">Back to About</a>
