@@ -194,10 +194,11 @@ function send(){
   input.style.height = "auto";
 
   fetch("https://celeste-worker-dev.inbox-celeste-world.workers.dev/", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
-  })
+  method:"POST",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({ message:value })
+})
+
   .then(res => res.json())
   .then(data => {
     if(data.reply){
