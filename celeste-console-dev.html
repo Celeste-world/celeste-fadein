@@ -16,7 +16,6 @@
   --line:#252b3a;
   --accent:#a9b7ff;
 }
-
 *{ box-sizing:border-box; }
 
 body{
@@ -27,9 +26,6 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-a{ color:inherit; text-decoration:none; }
-a:hover{ text-decoration:underline; }
-
 .wrap{
   max-width:960px;
   margin:0 auto;
@@ -38,14 +34,6 @@ a:hover{ text-decoration:underline; }
   display:flex;
   flex-direction:column;
 }
-
-header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:36px;
-}
-header img{ width:64px; }
 
 .intro{
   margin-bottom:24px;
@@ -113,27 +101,21 @@ footer{
 <body>
 <div class="wrap">
 
-<header>
-  <a href="/index.html">
-    <img src="/images/logo.svg" alt="Celeste logo">
-  </a>
-</header>
+  <div class="intro">
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
+  </div>
 
-<div class="intro">
-  A quiet space to organize your thoughts — decisions stay with you.<br>
-  This space is open to whatever you choose to write.<br>
-  <a href="/faq.html">You can read the FAQ anytime.</a>
-</div>
+  <div class="console">
+    <div id="log" class="log"></div>
+    <div class="divider"></div>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+  </div>
 
-<div class="console">
-  <div id="log" class="log"></div>
-  <div class="divider"></div>
-  <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-</div>
-
-<footer>
-  <span>CELESTE v4.3A-dev</span>
-</footer>
+  <footer>
+    <span>CELESTE v4.3A-dev</span>
+  </footer>
 
 </div>
 
@@ -141,9 +123,9 @@ footer{
 const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== Context history ===== */
-const history = [];
-const MAX_CONTEXT = 10;
+let silenceTimer = null;
+let pendingMessage = "";
+const SILENCE_MS = 3000;
 
 function addEntry(text, cls){
   const div = document.createElement("div");
@@ -155,54 +137,56 @@ function addEntry(text, cls){
 
 /* Initial message */
 window.addEventListener("DOMContentLoaded", () => {
-  const msg = `You don’t have to decide anything here.
-You can simply let your words appear.`;
-  addEntry(msg, "celeste");
-  history.push({ role: "assistant", content: msg });
+  addEntry(
+`You don’t have to decide anything here.
+You can simply let your words appear.`,
+  "celeste"
+  );
 });
 
-/* Send */
-function send(){
-  const value = input.value.trim();
-  if(!value) return;
-
-  addEntry(value, "user");
-  history.push({ role: "user", content: value });
-
-  input.value = "";
-  input.style.height = "auto";
-
-  const recent = history.slice(-MAX_CONTEXT);
-
+/* Send to worker */
+function sendToCeleste(message){
   fetch("/api/celeste", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: recent.map(h => `${h.role}: ${h.content}`).join("\n")
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      message,
+      addressed: true
     })
   })
   .then(res => res.json())
   .then(data => {
     if(data.reply){
       addEntry(data.reply, "celeste");
-      history.push({ role: "assistant", content: data.reply });
     }
   })
   .catch(()=>{});
 }
 
-/* Enter to send */
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    send();
-  }
-});
-
-/* Auto resize */
+/* Input handling */
 input.addEventListener("input", () => {
+  pendingMessage = input.value.trim();
+
   input.style.height = "auto";
   input.style.height = input.scrollHeight + "px";
+
+  if(silenceTimer){
+    clearTimeout(silenceTimer);
+  }
+
+  silenceTimer = setTimeout(() => {
+    if(!pendingMessage) return;
+
+    // ユーザー発話を確定表示
+    addEntry(pendingMessage, "user");
+
+    // Celeste へ送信（addressed）
+    sendToCeleste(pendingMessage);
+
+    pendingMessage = "";
+    input.value = "";
+    input.style.height = "auto";
+  }, SILENCE_MS);
 });
 </script>
 
