@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste Console – Dev (Contextual)</title>
+<title>Celeste Console – Dev</title>
 
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
@@ -16,6 +16,7 @@
   --line:#252b3a;
   --accent:#a9b7ff;
 }
+
 *{ box-sizing:border-box; }
 
 body{
@@ -33,6 +34,10 @@ body{
   min-height:100vh;
   display:flex;
   flex-direction:column;
+}
+
+header{
+  margin-bottom:36px;
 }
 
 .intro{
@@ -64,6 +69,7 @@ body{
   line-height:1.9;
   white-space:pre-wrap;
 }
+
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
@@ -84,7 +90,9 @@ textarea{
   font-size:15px;
   min-height:48px;
 }
-textarea::placeholder{ color:#6d7588; }
+textarea::placeholder{
+  color:#6d7588;
+}
 
 footer{
   margin-top:32px;
@@ -101,21 +109,25 @@ footer{
 <body>
 <div class="wrap">
 
-  <div class="intro">
-    A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.<br>
-    <a href="/faq.html">You can read the FAQ anytime.</a>
-  </div>
+<header>
+  <div>Celeste</div>
+</header>
 
-  <div class="console">
-    <div id="log" class="log"></div>
-    <div class="divider"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-  </div>
+<div class="intro">
+  A quiet space to organize your thoughts — decisions stay with you.<br>
+  This space is open to whatever you choose to write.<br>
+  <a href="/faq.html">You can read the FAQ anytime.</a>
+</div>
 
-  <footer>
-    <span>CELESTE v4.3A-dev</span>
-  </footer>
+<div class="console">
+  <div id="log" class="log"></div>
+  <div class="divider"></div>
+  <textarea id="input" placeholder="Write freely."></textarea>
+</div>
+
+<footer>
+  <span>CELESTE v4.3A-contextual-dev</span>
+</footer>
 
 </div>
 
@@ -124,9 +136,9 @@ const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
 let silenceTimer = null;
-let pendingMessage = "";
 const SILENCE_MS = 4000;
 
+/* utility */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = "entry " + cls;
@@ -135,7 +147,7 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Initial message */
+/* initial */
 window.addEventListener("DOMContentLoaded", () => {
   addEntry(
 `You don’t have to decide anything here.
@@ -144,15 +156,32 @@ You can simply let your words appear.`,
   );
 });
 
-/* Send to worker */
-function sendToCeleste(message){
+/* auto resize */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+
+  resetSilenceTimer();
+});
+
+/* silence-based send */
+function resetSilenceTimer(){
+  if(silenceTimer) clearTimeout(silenceTimer);
+  silenceTimer = setTimeout(commitInput, SILENCE_MS);
+}
+
+function commitInput(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
+
   fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      message,
-      addressed: true
-    })
+    body:JSON.stringify({ message:value })
   })
   .then(res => res.json())
   .then(data => {
@@ -163,30 +192,14 @@ function sendToCeleste(message){
   .catch(()=>{});
 }
 
-/* Input handling */
-input.addEventListener("input", () => {
-  pendingMessage = input.value.trim();
-
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
-
-  if(silenceTimer){
-    clearTimeout(silenceTimer);
+/* Enter behavior:
+   - always newline
+   - never send
+*/
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter"){
+    e.stopPropagation();
   }
-
-  silenceTimer = setTimeout(() => {
-    if(!pendingMessage) return;
-
-    // ユーザー発話を確定表示
-    addEntry(pendingMessage, "user");
-
-    // Celeste へ送信（addressed）
-    sendToCeleste(pendingMessage);
-
-    pendingMessage = "";
-    input.value = "";
-    input.style.height = "auto";
-  }, SILENCE_MS);
 });
 </script>
 
