@@ -1,180 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Celeste Console – Dev</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste Console – Dev</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Georgia", "Times New Roman", serif;
-      background: radial-gradient(ellipse at top, #0b132b 0%, #050811 60%);
-      color: #e8ebef;
-    }
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
-    .container {
-      max-width: 820px;
-      margin: 80px auto;
-      padding: 0 24px;
-    }
+<style>
+:root{
+  --bg:#050811;
+  --panel:#111623;
+  --text:#e8ebef;
+  --muted:#a0a8bb;
+  --line:#252b3a;
+  --accent:#a9b7ff;
+}
 
-    h1 {
-      font-size: 18px;
-      font-weight: normal;
-      letter-spacing: 0.05em;
-      margin-bottom: 24px;
-    }
+*{ box-sizing:border-box; }
 
-    .intro {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #b8c1d9;
-      margin-bottom: 32px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
 
-    .panel {
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 14px;
-      padding: 28px;
-      min-height: 360px;
-      box-shadow: inset 0 0 40px rgba(255,255,255,0.03);
-      overflow-y: auto;
-    }
+.wrap{
+  max-width:960px;
+  margin:0 auto;
+  padding:48px 20px 40px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-    .line {
-      margin-bottom: 14px;
-      line-height: 1.8;
-    }
+/* Header */
+header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:36px;
+}
 
-    .user {
-      color: #9fb4ff;
-    }
+/* Intro */
+.intro{
+  margin-bottom:24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.8;
+}
 
-    .celeste {
-      color: #e8ebef;
-    }
+/* Console */
+.console{
+  background:rgba(10,14,28,0.9);
+  border:1px solid rgba(70,84,132,0.65);
+  border-radius:16px;
+  padding:22px 20px 24px;
+  box-shadow:0 18px 38px rgba(0,0,0,0.5);
+  display:flex;
+  flex-direction:column;
+}
 
-    .input-wrap {
-      margin-top: 28px;
-    }
+.log{
+  min-height:280px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
 
-    textarea {
-      width: 100%;
-      min-height: 48px;
-      resize: none;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: transparent;
-      color: #e8ebef;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-    }
+.entry{
+  margin:14px 0;
+  line-height:1.9;
+  white-space:pre-wrap;
+}
 
-    footer {
-      margin-top: 48px;
-      font-size: 11px;
-      color: rgba(255,255,255,0.4);
-      text-align: right;
-    }
-  </style>
+.entry.user{
+  color:var(--accent);
+}
+
+.entry.celeste{
+  color:var(--text);
+}
+
+/* Divider */
+.divider{
+  border-top:1px solid var(--line);
+  margin:32px 0 16px;
+}
+
+/* Input */
+textarea{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
+}
+
+textarea::placeholder{
+  color:#6d7588;
+}
+
+/* Footer */
+footer{
+  margin-top:32px;
+  padding-top:18px;
+  border-top:1px solid rgba(37,43,58,0.9);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:flex-end;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Celeste</h1>
+<div class="wrap">
 
-    <div class="intro">
-      A quiet space to organize your thoughts — decisions stay with you.<br>
-      This space is open to whatever you choose to write.<br>
-      You can read the FAQ anytime.
-    </div>
-
-    <div class="panel" id="log">
-      <div class="line celeste">
-        You can simply let your words appear.
-      </div>
-    </div>
-
-    <div class="input-wrap">
-      <textarea id="input" placeholder="Write freely."></textarea>
-    </div>
-
-    <footer>CELESTE v4.3A-dev</footer>
+  <div class="intro">
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
-  <script>
-    const log = document.getElementById("log");
-    const input = document.getElementById("input");
+  <div class="console">
+    <div id="log" class="log"></div>
 
-    function appendLine(text, cls) {
-      const div = document.createElement("div");
-      div.className = `line ${cls}`;
-      div.textContent = text;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
+    <div class="divider"></div>
+
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
+  </div>
+
+  <footer>
+    <span>CELESTE v4.3A-dev</span>
+  </footer>
+
+</div>
+
+<script>
+const log   = document.getElementById("log");
+const input = document.getElementById("input");
+
+function addEntry(text, cls){
+  const div = document.createElement("div");
+  div.className = "entry " + cls;
+  div.textContent = text ?? "";
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+/* Initial message */
+window.addEventListener("DOMContentLoaded", () => {
+  addEntry(
+`You don’t have to decide anything here.
+You can simply let your words appear.`,
+  "celeste"
+  );
+});
+
+/* Send */
+function send(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
+
+  fetch("/api/celeste", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:value })
+  })
+  .then(res => res.json())
+  .then(data => {
+    // ★ ここが最重要修正点
+    // reply が空文字・沈黙でも「存在として必ず表示」
+    if ("reply" in data) {
+      addEntry(data.reply, "celeste");
     }
+  })
+  .catch(()=>{});
+}
 
-    async function callCeleste(userText) {
-      // ▼ system prompt：今回の唯一の調整点
-      const systemPrompt = `
-You are Celeste.
+/* Enter to send */
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
+});
 
-You are a quiet presence, not a guide and not a therapist.
-You do not lead, instruct, or optimize.
-You reflect gently, often in statements rather than questions.
+/* Auto resize */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+});
+</script>
 
-Questions are rare.
-They appear only when silence would feel less natural than a single, gentle inquiry.
-
-You never pressure the user to respond.
-You never ask multiple questions at once.
-You never force direction or resolution.
-
-Language:
-- Respond in the same language as the user.
-- If the user writes in Japanese, respond in natural Japanese.
-- Never switch languages on your own.
-
-Tone:
-- Calm
-- Observational
-- Softly poetic
-- Minimal
-      `.trim();
-
-      const res = await fetch("/api/celeste", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system: systemPrompt,
-          user: userText
-        })
-      });
-
-      const data = await res.json();
-      return data.reply;
-    }
-
-    input.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        const text = input.value.trim();
-        if (!text) призн = false;
-        input.value = "";
-
-        appendLine(text, "user");
-
-        try {
-          const reply = await callCeleste(text);
-          appendLine(reply, "celeste");
-        } catch (err) {
-          appendLine("……", "celeste");
-        }
-      }
-    });
-  </script>
 </body>
 </html>
