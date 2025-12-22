@@ -59,3 +59,5 @@ Celeste operates with a minimal system prompt designed to:
 - Version: v4.1 (Fixed)
 - State: Stable
 - Policy: Behavioral changes require explicit version updates
+
+For internal ethical boundaries guiding future development, see `/docs/internal`.
