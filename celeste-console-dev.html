@@ -27,6 +27,44 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
+/* -------------------------------------------------
+   v5.0A Ambient Presence (DEV)
+   Non-instrumental / Non-responsive / Dispensable
+-------------------------------------------------- */
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  /* 必ずUIの背面 */
+  z-index: 0;
+
+  background:
+    radial-gradient(1200px 900px at 28% 18%,
+      hsl(220 14% 9%),
+      transparent 60%),
+    radial-gradient(900px 700px at 82% 72%,
+      hsl(226 12% 8%),
+      transparent 65%);
+
+  opacity: 0.55;
+
+  /* 極端に遅く、周期感を持たせない */
+  animation: amb-drift 420s linear infinite;
+}
+
+@keyframes amb-drift{
+  0%   { filter: hue-rotate(0deg); }
+  19%  { filter: hue-rotate(1deg); }
+  43%  { filter: hue-rotate(0deg); }
+  71%  { filter: hue-rotate(2deg); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+/* ------------------------------------------------- */
+
 .wrap{
   max-width:960px;
   margin:0 auto;
@@ -34,14 +72,8 @@ body{
   min-height:100vh;
   display:flex;
   flex-direction:column;
-}
-
-/* Header */
-header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:36px;
+  position: relative;
+  z-index: 1; /* Ambient Presence の上 */
 }
 
 /* Intro */
@@ -185,7 +217,6 @@ function send(){
   })
   .then(res => res.json())
   .then(data => {
-    // ★ ここが最重要修正点
     // reply が空文字・沈黙でも「存在として必ず表示」
     if ("reply" in data) {
       addEntry(data.reply, "celeste");
