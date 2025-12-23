@@ -29,7 +29,7 @@ body{
 
 /* -------------------------------------------------
    v5.0A Ambient Presence (DEV)
-   Non-instrumental / Non-responsive / Dispensable
+   tuned for perceptibility (NOT meaning)
 -------------------------------------------------- */
 
 body::before{
@@ -38,21 +38,21 @@ body::before{
   inset: 0;
   pointer-events: none;
 
-  /* 必ずUIの背面 */
+  /* UI の背面 */
   z-index: 0;
 
   background:
-    radial-gradient(1200px 900px at 28% 18%,
-      hsl(220 14% 9%),
+    radial-gradient(1200px 900px at 30% 16%,
+      hsl(220 16% 10%),   /* ← 色差を +1% */
       transparent 60%),
-    radial-gradient(900px 700px at 82% 72%,
-      hsl(226 12% 8%),
+    radial-gradient(900px 700px at 84% 74%,
+      hsl(226 14% 9%),    /* ← 色差を +1% */
       transparent 65%);
 
-  opacity: 0.55;
+  opacity: 0.65;         /* ← 0.55 → 0.65 */
 
-  /* 極端に遅く、周期感を持たせない */
-  animation: amb-drift 20s linear infinite;
+  /* 速度は一切変更しない */
+  animation: amb-drift 420s linear infinite;
 }
 
 @keyframes amb-drift{
@@ -217,7 +217,6 @@ function send(){
   })
   .then(res => res.json())
   .then(data => {
-    // reply が空文字・沈黙でも「存在として必ず表示」
     if ("reply" in data) {
       addEntry(data.reply, "celeste");
     }
