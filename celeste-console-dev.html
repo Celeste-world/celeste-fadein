@@ -28,12 +28,13 @@ body{
 }
 
 /* =================================================
-   v5.0A Entrance Presence
-   - present at load
-   - fades away once
-   - never reacts
+   v5.0A — Indeterminate Continuity (DEV)
+   - no state
+   - no reaction
+   - no readable randomness
 ================================================= */
 
+/* Layer A */
 body::before{
   content:"";
   position: fixed;
@@ -42,35 +43,21 @@ body::before{
   z-index: 0;
 
   background:
-    radial-gradient(1200px 900px at 32% 20%,
-      hsl(220 18% 12%),
+    radial-gradient(1200px 900px at 31% 18%,
+      hsl(220 16% 10%),
       transparent 60%),
-    radial-gradient(900px 700px at 78% 72%,
-      hsl(226 16% 11%),
+    radial-gradient(900px 700px at 83% 74%,
+      hsl(226 14% 9%),
       transparent 65%);
 
-  opacity: 0.85;
+  opacity: 0.62;
 
-  /* 一度だけ、静かに消える */
-  animation: entrance-fade 6s ease-out forwards;
+  animation:
+    drift-a 397s linear infinite,
+    hue-a   613s linear infinite;
 }
 
-/* 完全に消失させる */
-@keyframes entrance-fade{
-  0%{
-    opacity: 0.85;
-  }
-  100%{
-    opacity: 0;
-  }
-}
-
-/* =================================================
-   Ambient Presence (after entrance)
-   - extremely slow
-   - barely detectable
-================================================= */
-
+/* Layer B */
 body::after{
   content:"";
   position: fixed;
@@ -79,22 +66,40 @@ body::after{
   z-index: 0;
 
   background:
-    radial-gradient(1200px 900px at 30% 16%,
-      hsl(220 16% 10%),
-      transparent 60%),
-    radial-gradient(900px 700px at 84% 74%,
-      hsl(226 14% 9%),
-      transparent 65%);
+    radial-gradient(1400px 1100px at 64% 36%,
+      hsl(222 15% 10%),
+      transparent 62%);
 
-  opacity: 0.65;
-  animation: amb-drift 420s linear infinite;
+  opacity: 0.58;
+
+  animation:
+    drift-b 521s linear infinite,
+    hue-b   811s linear infinite;
 }
 
-@keyframes amb-drift{
+/* --- 微差・非同期アニメーション --- */
+
+@keyframes drift-a{
+  0%   { transform: translate(0,0); }
+  50%  { transform: translate(0.6%, -0.4%); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes hue-a{
   0%   { filter: hue-rotate(0deg); }
-  19%  { filter: hue-rotate(1deg); }
-  43%  { filter: hue-rotate(0deg); }
-  71%  { filter: hue-rotate(2deg); }
+  50%  { filter: hue-rotate(1deg); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+@keyframes drift-b{
+  0%   { transform: translate(0,0); }
+  50%  { transform: translate(-0.5%, 0.7%); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes hue-b{
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(1.5deg); }
   100% { filter: hue-rotate(0deg); }
 }
 
