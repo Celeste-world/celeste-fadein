@@ -27,32 +27,67 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-/* -------------------------------------------------
-   v5.0A Ambient Presence (DEV)
-   tuned for perceptibility (NOT meaning)
--------------------------------------------------- */
+/* =================================================
+   v5.0A Entrance Presence
+   - present at load
+   - fades away once
+   - never reacts
+================================================= */
 
 body::before{
   content:"";
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: 0;
 
-  /* UI の背面 */
+  background:
+    radial-gradient(1200px 900px at 32% 20%,
+      hsl(220 18% 12%),
+      transparent 60%),
+    radial-gradient(900px 700px at 78% 72%,
+      hsl(226 16% 11%),
+      transparent 65%);
+
+  opacity: 0.85;
+
+  /* 一度だけ、静かに消える */
+  animation: entrance-fade 6s ease-out forwards;
+}
+
+/* 完全に消失させる */
+@keyframes entrance-fade{
+  0%{
+    opacity: 0.85;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
+/* =================================================
+   Ambient Presence (after entrance)
+   - extremely slow
+   - barely detectable
+================================================= */
+
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
   z-index: 0;
 
   background:
     radial-gradient(1200px 900px at 30% 16%,
-      hsl(220 16% 10%),   /* ← 色差を +1% */
+      hsl(220 16% 10%),
       transparent 60%),
     radial-gradient(900px 700px at 84% 74%,
-      hsl(226 14% 9%),    /* ← 色差を +1% */
+      hsl(226 14% 9%),
       transparent 65%);
 
-  opacity: 0.65;         /* ← 0.55 → 0.65 */
-
-  /* 速度は一切変更しない */
-  animation: amb-drift 20s linear infinite;
+  opacity: 0.65;
+  animation: amb-drift 420s linear infinite;
 }
 
 @keyframes amb-drift{
@@ -63,7 +98,7 @@ body::before{
   100% { filter: hue-rotate(0deg); }
 }
 
-/* ------------------------------------------------- */
+/* ================================================= */
 
 .wrap{
   max-width:960px;
@@ -73,7 +108,7 @@ body::before{
   display:flex;
   flex-direction:column;
   position: relative;
-  z-index: 1; /* Ambient Presence の上 */
+  z-index: 1;
 }
 
 /* Intro */
