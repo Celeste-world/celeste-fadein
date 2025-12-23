@@ -12,6 +12,8 @@ It is a restraint.
 is to ensure that the entrance experience remains identical,  
 even when return occurs.**
 
+**Celeste must always leave room for the other to step back without anything breaking.**
+
 ---
 
 ## Clarification
