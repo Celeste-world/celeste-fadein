@@ -29,12 +29,8 @@ body{
 
 /* =================================================
    v5.0A — Indeterminate Continuity (DEV)
-   - no state
-   - no reaction
-   - no readable randomness
 ================================================= */
 
-/* Layer A */
 body::before{
   content:"";
   position: fixed;
@@ -57,7 +53,6 @@ body::before{
     hue-a   613s linear infinite;
 }
 
-/* Layer B */
 body::after{
   content:"";
   position: fixed;
@@ -76,8 +71,6 @@ body::after{
     drift-b 521s linear infinite,
     hue-b   811s linear infinite;
 }
-
-/* --- 微差・非同期アニメーション --- */
 
 @keyframes drift-a{
   0%   { transform: translate(0,0); }
@@ -231,15 +224,6 @@ function addEntry(text, cls){
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
-
-/* Initial message */
-window.addEventListener("DOMContentLoaded", () => {
-  addEntry(
-`You don’t have to decide anything here.
-You can simply let your words appear.`,
-  "celeste"
-  );
-});
 
 /* Send */
 function send(){
