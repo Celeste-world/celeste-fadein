@@ -27,77 +27,6 @@ body{
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
-/* =================================================
-   v5.0A — Indeterminate Continuity (DEV)
-================================================= */
-
-body::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-
-  background:
-    radial-gradient(1200px 900px at 31% 18%,
-      hsl(220 16% 10%),
-      transparent 60%),
-    radial-gradient(900px 700px at 83% 74%,
-      hsl(226 14% 9%),
-      transparent 65%);
-
-  opacity: 0.62;
-
-  animation:
-    drift-a 397s linear infinite,
-    hue-a   613s linear infinite;
-}
-
-body::after{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-
-  background:
-    radial-gradient(1400px 1100px at 64% 36%,
-      hsl(222 15% 10%),
-      transparent 62%);
-
-  opacity: 0.58;
-
-  animation:
-    drift-b 521s linear infinite,
-    hue-b   811s linear infinite;
-}
-
-@keyframes drift-a{
-  0%   { transform: translate(0,0); }
-  50%  { transform: translate(0.6%, -0.4%); }
-  100% { transform: translate(0,0); }
-}
-
-@keyframes hue-a{
-  0%   { filter: hue-rotate(0deg); }
-  50%  { filter: hue-rotate(1deg); }
-  100% { filter: hue-rotate(0deg); }
-}
-
-@keyframes drift-b{
-  0%   { transform: translate(0,0); }
-  50%  { transform: translate(-0.5%, 0.7%); }
-  100% { transform: translate(0,0); }
-}
-
-@keyframes hue-b{
-  0%   { filter: hue-rotate(0deg); }
-  50%  { filter: hue-rotate(1.5deg); }
-  100% { filter: hue-rotate(0deg); }
-}
-
-/* ================================================= */
-
 .wrap{
   max-width:960px;
   margin:0 auto;
@@ -105,11 +34,8 @@ body::after{
   min-height:100vh;
   display:flex;
   flex-direction:column;
-  position: relative;
-  z-index: 1;
 }
 
-/* Intro */
 .intro{
   margin-bottom:24px;
   color:var(--muted);
@@ -117,7 +43,6 @@ body::after{
   line-height:1.8;
 }
 
-/* Console */
 .console{
   background:rgba(10,14,28,0.9);
   border:1px solid rgba(70,84,132,0.65);
@@ -149,13 +74,11 @@ body::after{
   color:var(--text);
 }
 
-/* Divider */
 .divider{
   border-top:1px solid var(--line);
   margin:32px 0 16px;
 }
 
-/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -173,7 +96,6 @@ textarea::placeholder{
   color:#6d7588;
 }
 
-/* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
@@ -181,10 +103,8 @@ footer{
   font-size:12px;
   color:var(--muted);
   display:flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content:flex-end;
 }
-
 </style>
 </head>
 
@@ -199,26 +119,24 @@ footer{
 
   <div class="console">
     <div id="log" class="log"></div>
-
     <div class="divider"></div>
-
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
   <footer>
-    <span>CELESTE v4.3A-dev</span>
+    <span>CELESTE v4.4A-dev</span>
   </footer>
 
 </div>
 
 <script>
-const log   = document.getElementById("log");
+const log = document.getElementById("log");
 const input = document.getElementById("input");
 
+/* ===== v4.4A: session id ===== */
+const sessionId = crypto.randomUUID();
+
+/* ===== util ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = "entry " + cls;
@@ -227,7 +145,7 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* Send */
+/* ===== send ===== */
 function send(){
   const value = input.value.trim();
   if(!value) return;
@@ -239,7 +157,10 @@ function send(){
   fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
+    body:JSON.stringify({
+      message: value,
+      sessionId: sessionId
+    })
   })
   .then(res => res.json())
   .then(data => {
@@ -250,7 +171,6 @@ function send(){
   .catch(()=>{});
 }
 
-/* Enter to send */
 input.addEventListener("keydown", e => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
@@ -258,7 +178,6 @@ input.addEventListener("keydown", e => {
   }
 });
 
-/* Auto resize */
 input.addEventListener("input", () => {
   input.style.height = "auto";
   input.style.height = input.scrollHeight + "px";
