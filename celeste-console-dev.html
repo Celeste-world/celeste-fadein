@@ -9,9 +9,10 @@
 
 <style>
 :root{
-  --bg-h: 230;              /* 基準色相（青寄り） */
-  --bg-s: 35%;
-  --bg-l: 18%;
+  /* 背景：より暗く、呼吸が見える設定 */
+  --bg-h: 228;
+  --bg-s: 42%;
+  --bg-l: 12%;
 
   --panel:#111623;
   --panel-border:#465484;
@@ -63,7 +64,6 @@ body{
   transition: border-color 0.6s ease;
 }
 
-/* v5.0A – receptive state */
 .console.receptive{
   border-color: var(--panel-border-react);
 }
@@ -89,13 +89,11 @@ body{
   color:var(--text);
 }
 
-/* Divider */
 .divider{
   border-top:1px solid var(--line);
   margin:32px 0 16px;
 }
 
-/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -113,7 +111,6 @@ textarea::placeholder{
   color:#6d7588;
 }
 
-/* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
@@ -137,14 +134,8 @@ footer{
 
   <div id="console" class="console">
     <div id="log" class="log"></div>
-
     <div class="divider"></div>
-
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
   <footer>
@@ -154,21 +145,17 @@ footer{
 </div>
 
 <script>
-const log        = document.getElementById("log");
-const input      = document.getElementById("input");
-const consoleEl  = document.getElementById("console");
-const rootStyle  = document.documentElement.style;
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const consoleEl = document.getElementById("console");
+const rootStyle = document.documentElement.style;
 
-/* ===============================
-   v4.4A / v5.0A 共通：sessionId
-   =============================== */
+/* session */
 let sessionId = localStorage.getItem("celeste.sessionId");
 if (!sessionId) {
   sessionId = crypto.randomUUID();
   localStorage.setItem("celeste.sessionId", sessionId);
 }
-
-/* =============================== */
 
 function addEntry(text, cls){
   const div = document.createElement("div");
@@ -178,7 +165,7 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* v5.0A – delayed receptive reaction (frame) */
+/* 枠：受容 */
 function receptivePulse(){
   setTimeout(() => {
     consoleEl.classList.add("receptive");
@@ -188,29 +175,21 @@ function receptivePulse(){
   }, 400);
 }
 
-/* v5.0A – background breathing (A2: slightly irregular) */
-let baseHue = 230;
+/* 背景：呼吸（より分かる） */
+let baseHue = 228;
 let direction = 1;
 
 function breathe(){
-  // 色相の揺れ幅：±4〜6°（微差）
-  const range = 4 + Math.random() * 2;
+  const range = 6 + Math.random() * 2; // ±6〜8°
   const nextHue = baseHue + direction * range;
-
   rootStyle.setProperty("--bg-h", nextHue.toFixed(1));
-
   direction *= -1;
-
-  // 周期：45〜70秒（微不規則）
   const nextInterval = 45000 + Math.random() * 25000;
-
   setTimeout(breathe, nextInterval);
 }
 
-// 開始
-setTimeout(breathe, 3000);
+setTimeout(breathe, 4000);
 
-/* Send */
 function send(){
   const value = input.value.trim();
   if(!value) return;
@@ -219,20 +198,15 @@ function send(){
   input.value = "";
   input.style.height = "auto";
 
-  // v5.0A attitude
   receptivePulse();
 
   fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      message: value,
-      sessionId: sessionId
-    })
+    body:JSON.stringify({ message:value, sessionId })
   })
   .then(res => res.json())
   .then(data => {
-    // v4.4A：沈黙は表示しない
     if (data.reply && data.reply.trim() !== "") {
       addEntry(data.reply, "celeste");
     }
@@ -240,7 +214,6 @@ function send(){
   .catch(()=>{});
 }
 
-/* Enter to send */
 input.addEventListener("keydown", e => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
@@ -248,7 +221,6 @@ input.addEventListener("keydown", e => {
   }
 });
 
-/* Auto resize */
 input.addEventListener("input", () => {
   input.style.height = "auto";
   input.style.height = input.scrollHeight + "px";
