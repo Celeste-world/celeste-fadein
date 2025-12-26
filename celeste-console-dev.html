@@ -11,6 +11,8 @@
 :root{
   --bg:#050811;
   --panel:#111623;
+  --panel-border:#465484;
+  --panel-border-react:#6b5cff; /* 紫寄り */
   --text:#e8ebef;
   --muted:#a0a8bb;
   --line:#252b3a;
@@ -47,12 +49,18 @@ body{
 /* Console */
 .console{
   background:rgba(10,14,28,0.9);
-  border:1px solid rgba(70,84,132,0.65);
+  border:1px solid var(--panel-border);
   border-radius:16px;
   padding:22px 20px 24px;
   box-shadow:0 18px 38px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
+  transition: border-color 0.6s ease;
+}
+
+/* v5.0A – receptive state */
+.console.receptive{
+  border-color: var(--panel-border-react);
 }
 
 .log{
@@ -122,7 +130,7 @@ footer{
     <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
-  <div class="console">
+  <div id="console" class="console">
     <div id="log" class="log"></div>
 
     <div class="divider"></div>
@@ -135,17 +143,18 @@ footer{
   </div>
 
   <footer>
-    <span>CELESTE v4.4A-dev</span>
+    <span>CELESTE v5.0A-dev</span>
   </footer>
 
 </div>
 
 <script>
-const log   = document.getElementById("log");
-const input = document.getElementById("input");
+const log     = document.getElementById("log");
+const input   = document.getElementById("input");
+const consoleEl = document.getElementById("console");
 
 /* ===============================
-   v4.4A FIX : stable sessionId
+   v4.4A / v5.0A 共通：sessionId
    =============================== */
 let sessionId = localStorage.getItem("celeste.sessionId");
 if (!sessionId) {
@@ -163,6 +172,16 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
+/* v5.0A – delayed receptive reaction */
+function receptivePulse(){
+  setTimeout(() => {
+    consoleEl.classList.add("receptive");
+    setTimeout(() => {
+      consoleEl.classList.remove("receptive");
+    }, 600);
+  }, 400);
+}
+
 /* Send */
 function send(){
   const value = input.value.trim();
@@ -172,17 +191,20 @@ function send(){
   input.value = "";
   input.style.height = "auto";
 
+  /* v5.0A attitude */
+  receptivePulse();
+
   fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
       message: value,
-      sessionId: sessionId   // ★ 必須
+      sessionId: sessionId
     })
   })
   .then(res => res.json())
   .then(data => {
-    // v4.4A : 沈黙は表示しない
+    // v4.4A：沈黙は表示しない
     if (data.reply && data.reply.trim() !== "") {
       addEntry(data.reply, "celeste");
     }
