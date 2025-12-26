@@ -9,10 +9,14 @@
 
 <style>
 :root{
-  --bg:#050811;
+  --bg-h: 230;              /* 基準色相（青寄り） */
+  --bg-s: 35%;
+  --bg-l: 18%;
+
   --panel:#111623;
   --panel-border:#465484;
-  --panel-border-react:#4e49c8; /* 紫寄り */
+  --panel-border-react:#4e49c8;
+
   --text:#e8ebef;
   --muted:#a0a8bb;
   --line:#252b3a;
@@ -24,9 +28,10 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+  background: hsl(var(--bg-h) var(--bg-s) var(--bg-l));
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
+  transition: background-color 20s linear;
 }
 
 .wrap{
@@ -149,9 +154,10 @@ footer{
 </div>
 
 <script>
-const log     = document.getElementById("log");
-const input   = document.getElementById("input");
-const consoleEl = document.getElementById("console");
+const log        = document.getElementById("log");
+const input      = document.getElementById("input");
+const consoleEl  = document.getElementById("console");
+const rootStyle  = document.documentElement.style;
 
 /* ===============================
    v4.4A / v5.0A 共通：sessionId
@@ -172,7 +178,7 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-/* v5.0A – delayed receptive reaction */
+/* v5.0A – delayed receptive reaction (frame) */
 function receptivePulse(){
   setTimeout(() => {
     consoleEl.classList.add("receptive");
@@ -181,6 +187,28 @@ function receptivePulse(){
     }, 600);
   }, 400);
 }
+
+/* v5.0A – background breathing (A2: slightly irregular) */
+let baseHue = 230;
+let direction = 1;
+
+function breathe(){
+  // 色相の揺れ幅：±4〜6°（微差）
+  const range = 4 + Math.random() * 2;
+  const nextHue = baseHue + direction * range;
+
+  rootStyle.setProperty("--bg-h", nextHue.toFixed(1));
+
+  direction *= -1;
+
+  // 周期：45〜70秒（微不規則）
+  const nextInterval = 45000 + Math.random() * 25000;
+
+  setTimeout(breathe, nextInterval);
+}
+
+// 開始
+setTimeout(breathe, 3000);
 
 /* Send */
 function send(){
@@ -191,7 +219,7 @@ function send(){
   input.value = "";
   input.style.height = "auto";
 
-  /* v5.0A attitude */
+  // v5.0A attitude
   receptivePulse();
 
   fetch("/api/celeste", {
