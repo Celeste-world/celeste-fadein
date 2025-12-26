@@ -36,6 +36,7 @@ body{
   flex-direction:column;
 }
 
+/* Intro */
 .intro{
   margin-bottom:24px;
   color:var(--muted);
@@ -43,6 +44,7 @@ body{
   line-height:1.8;
 }
 
+/* Console */
 .console{
   background:rgba(10,14,28,0.9);
   border:1px solid rgba(70,84,132,0.65);
@@ -74,11 +76,13 @@ body{
   color:var(--text);
 }
 
+/* Divider */
 .divider{
   border-top:1px solid var(--line);
   margin:32px 0 16px;
 }
 
+/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -96,6 +100,7 @@ textarea::placeholder{
   color:#6d7588;
 }
 
+/* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
@@ -119,8 +124,14 @@ footer{
 
   <div class="console">
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
   <footer>
@@ -130,22 +141,18 @@ footer{
 </div>
 
 <script>
-const log = document.getElementById("log");
+const log   = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== v4.4A: session id ===== */
-const sessionId = crypto.randomUUID();
-
-/* ===== util ===== */
 function addEntry(text, cls){
   const div = document.createElement("div");
   div.className = "entry " + cls;
-  div.textContent = text ?? "";
+  div.textContent = text;
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
 
-/* ===== send ===== */
+/* Send */
 function send(){
   const value = input.value.trim();
   if(!value) return;
@@ -157,20 +164,22 @@ function send(){
   fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      message: value,
-      sessionId: sessionId
-    })
+    body:JSON.stringify({ message:value })
   })
   .then(res => res.json())
   .then(data => {
-    if ("reply" in data) {
+    /* 
+      v4.4A FIX:
+      沈黙は「表示しない」
+    */
+    if (data.reply && data.reply.trim() !== "") {
       addEntry(data.reply, "celeste");
     }
   })
   .catch(()=>{});
 }
 
+/* Enter to send */
 input.addEventListener("keydown", e => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
@@ -178,6 +187,7 @@ input.addEventListener("keydown", e => {
   }
 });
 
+/* Auto resize */
 input.addEventListener("input", () => {
   input.style.height = "auto";
   input.style.height = input.scrollHeight + "px";
