@@ -9,20 +9,18 @@
 
 <style>
 :root{
-  /* 深い夜（ベース） */
-  --bg-base: #050811;
+  --bg-base:#050811;
 
-  /* セレステブルー（層の色：固定） */
-  --celeste-blue-1: rgba(120, 150, 255, 0.22);
-  --celeste-blue-2: rgba(120, 150, 255, 0.10);
-  --celeste-blue-3: rgba(120, 150, 255, 0.00);
+  /* セレステブルー（少しだけ強め） */
+  --celeste-blue-1: rgba(130, 160, 255, 0.32);
+  --celeste-blue-2: rgba(130, 160, 255, 0.14);
+  --celeste-blue-3: rgba(130, 160, 255, 0.00);
 
-  /* 気流レイヤーの状態（JSでゆっくり変える） */
   --drift-x: -6%;
   --drift-y: -4%;
   --drift-rot: -6deg;
   --drift-scale: 1.12;
-  --drift-opacity: 0.28;
+  --drift-opacity: 0.30;
 
   --panel:#111623;
   --panel-border:#465484;
@@ -39,16 +37,14 @@
 body{
   margin:0;
   min-height:100vh;
-  background: var(--bg-base);
+  background:var(--bg-base);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
   overflow-x:hidden;
   position:relative;
 }
 
-/* =========================
-   v5.0A – Celeste Blue Drift Layer
-   ========================= */
+/* 気流レイヤー */
 body::before{
   content:"";
   position:fixed;
@@ -56,36 +52,34 @@ body::before{
   pointer-events:none;
   z-index:0;
 
-  /* 横断する気流：斜め方向の大きなグラデーション */
   background:
     linear-gradient(
       115deg,
       var(--celeste-blue-3) 0%,
-      var(--celeste-blue-2) 28%,
-      var(--celeste-blue-1) 52%,
-      var(--celeste-blue-2) 74%,
+      var(--celeste-blue-2) 25%,
+      var(--celeste-blue-1) 50%,
+      var(--celeste-blue-2) 75%,
       var(--celeste-blue-3) 100%
     ),
     radial-gradient(
-      800px 520px at 22% 38%,
-      rgba(155, 188, 255, 0.10),
-      rgba(155, 188, 255, 0.00) 60%
+      700px 480px at 30% 40%,
+      rgba(155,188,255,0.14),
+      rgba(155,188,255,0.00) 60%
     );
 
-  opacity: var(--drift-opacity);
+  opacity:var(--drift-opacity);
 
   transform:
     translate(var(--drift-x), var(--drift-y))
     rotate(var(--drift-rot))
     scale(var(--drift-scale));
 
-  filter: blur(18px);
+  filter: blur(12px); /* ★弱めた */
   transition:
     transform 28s ease-in-out,
     opacity 28s ease-in-out;
 }
 
-/* コンテンツをレイヤーの上へ */
 .wrap{
   position:relative;
   z-index:1;
@@ -114,11 +108,11 @@ body::before{
   box-shadow:0 18px 38px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
-  transition: border-color 0.6s ease;
+  transition:border-color 0.6s ease;
 }
 
 .console.receptive{
-  border-color: var(--panel-border-react);
+  border-color:var(--panel-border-react);
 }
 
 .log{
@@ -134,13 +128,8 @@ body::before{
   white-space:pre-wrap;
 }
 
-.entry.user{
-  color:var(--accent);
-}
-
-.entry.celeste{
-  color:var(--text);
-}
+.entry.user{ color:var(--accent); }
+.entry.celeste{ color:var(--text); }
 
 .divider{
   border-top:1px solid var(--line);
@@ -160,9 +149,7 @@ textarea{
   min-height:48px;
 }
 
-textarea::placeholder{
-  color:#6d7588;
-}
+textarea::placeholder{ color:#6d7588; }
 
 footer{
   margin-top:32px;
@@ -198,111 +185,78 @@ footer{
 </div>
 
 <script>
-const log        = document.getElementById("log");
-const input      = document.getElementById("input");
-const consoleEl  = document.getElementById("console");
-const rootStyle  = document.documentElement.style;
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const consoleEl = document.getElementById("console");
+const root = document.documentElement.style;
 
-/* session */
 let sessionId = localStorage.getItem("celeste.sessionId");
-if (!sessionId) {
+if(!sessionId){
   sessionId = crypto.randomUUID();
   localStorage.setItem("celeste.sessionId", sessionId);
 }
 
 function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = "entry " + cls;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  const d=document.createElement("div");
+  d.className="entry "+cls;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
-/* 枠：受容（遅延） */
 function receptivePulse(){
-  setTimeout(() => {
+  setTimeout(()=>{
     consoleEl.classList.add("receptive");
-    setTimeout(() => consoleEl.classList.remove("receptive"), 600);
-  }, 400);
+    setTimeout(()=>consoleEl.classList.remove("receptive"),600);
+  },400);
 }
 
-/* =========================
-   v5.0A – Celeste Blue Drift (A2: slightly irregular)
-   - 色は固定（セレステブルー）
-   - 位置 / 回転 / 濃度 / 微拡大で「気流」を作る
-   ========================= */
+function rand(min,max){ return min+Math.random()*(max-min); }
 
-function rand(min, max){ return min + Math.random() * (max - min); }
-
-let driftPhase = 0;
-
-function setDriftTarget(){
-  driftPhase++;
-
-  // ごく弱い不規則性：毎回少しだけ違う
-  const x = rand(-10, 10);     // %
-  const y = rand(-8, 8);       // %
-  const rot = rand(-10, 10);   // deg
-  const scale = rand(1.08, 1.18);
-  const opacity = rand(0.20, 0.34);
-
-  rootStyle.setProperty("--drift-x", x.toFixed(2) + "%");
-  rootStyle.setProperty("--drift-y", y.toFixed(2) + "%");
-  rootStyle.setProperty("--drift-rot", rot.toFixed(2) + "deg");
-  rootStyle.setProperty("--drift-scale", scale.toFixed(3));
-  rootStyle.setProperty("--drift-opacity", opacity.toFixed(3));
-
-  // 周期：40〜70秒（微不規則）
-  const next = rand(40000, 70000);
-
-  // 変化速度も少し揺らす（過剰にしない）
-  const t = rand(24, 34); // seconds
-  document.body.style.setProperty("--drift-t", t.toFixed(1) + "s");
-
-  setTimeout(setDriftTarget, next);
+function setDrift(){
+  root.setProperty("--drift-x", rand(-12,12).toFixed(2)+"%");
+  root.setProperty("--drift-y", rand(-10,10).toFixed(2)+"%");
+  root.setProperty("--drift-rot", rand(-12,12).toFixed(2)+"deg");
+  root.setProperty("--drift-scale", rand(1.08,1.18).toFixed(3));
+  root.setProperty("--drift-opacity", rand(0.28,0.38).toFixed(3));
+  setTimeout(setDrift, rand(40000,70000));
 }
 
-/* 開始：いきなり動かさず、少し置く */
-setTimeout(setDriftTarget, 5000);
+setTimeout(setDrift, 5000);
 
-/* Send */
 function send(){
-  const value = input.value.trim();
-  if(!value) return;
+  const v=input.value.trim();
+  if(!v) return;
 
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
+  addEntry(v,"user");
+  input.value="";
+  input.style.height="auto";
 
   receptivePulse();
 
-  fetch("/api/celeste", {
+  fetch("/api/celeste",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value, sessionId })
+    body:JSON.stringify({ message:v, sessionId })
   })
-  .then(res => res.json())
-  .then(data => {
-    // 沈黙は表示しない（現行仕様）
-    if (data.reply && data.reply.trim() !== "") {
-      addEntry(data.reply, "celeste");
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.reply && d.reply.trim()!==""){
+      addEntry(d.reply,"celeste");
     }
-  })
-  .catch(()=>{});
+  });
 }
 
-/* Enter to send */
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-/* Auto resize */
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
