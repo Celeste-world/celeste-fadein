@@ -11,16 +11,16 @@
 :root{
   --bg-base:#050811;
 
-  /* セレステブルー（少しだけ強め） */
-  --celeste-blue-1: rgba(130, 160, 255, 0.32);
-  --celeste-blue-2: rgba(130, 160, 255, 0.14);
-  --celeste-blue-3: rgba(130, 160, 255, 0.00);
+  /* セレステブルー：明確に見える強度 */
+  --celeste-blue-1: rgba(135, 165, 255, 0.55);
+  --celeste-blue-2: rgba(135, 165, 255, 0.22);
+  --celeste-blue-3: rgba(135, 165, 255, 0.00);
 
-  --drift-x: -6%;
-  --drift-y: -4%;
-  --drift-rot: -6deg;
-  --drift-scale: 1.12;
-  --drift-opacity: 0.30;
+  --drift-x: -8%;
+  --drift-y: -6%;
+  --drift-rot: -12deg;
+  --drift-scale: 1.14;
+  --drift-opacity: 0.45;
 
   --panel:#111623;
   --panel-border:#465484;
@@ -44,27 +44,27 @@ body{
   position:relative;
 }
 
-/* 気流レイヤー */
+/* 気流レイヤー（強化） */
 body::before{
   content:"";
   position:fixed;
-  inset:-18%;
+  inset:-22%;
   pointer-events:none;
   z-index:0;
 
   background:
     linear-gradient(
-      115deg,
+      120deg,
       var(--celeste-blue-3) 0%,
-      var(--celeste-blue-2) 25%,
+      var(--celeste-blue-2) 30%,
       var(--celeste-blue-1) 50%,
-      var(--celeste-blue-2) 75%,
+      var(--celeste-blue-2) 70%,
       var(--celeste-blue-3) 100%
     ),
     radial-gradient(
-      700px 480px at 30% 40%,
-      rgba(155,188,255,0.14),
-      rgba(155,188,255,0.00) 60%
+      520px 360px at 40% 45%,
+      rgba(170,190,255,0.25),
+      rgba(170,190,255,0.00) 62%
     );
 
   opacity:var(--drift-opacity);
@@ -74,7 +74,8 @@ body::before{
     rotate(var(--drift-rot))
     scale(var(--drift-scale));
 
-  filter: blur(12px); /* ★弱めた */
+  filter: blur(8px);
+
   transition:
     transform 28s ease-in-out,
     opacity 28s ease-in-out;
@@ -101,7 +102,7 @@ body::before{
 
 /* Console */
 .console{
-  background:rgba(10,14,28,0.90);
+  background:rgba(10,14,28,0.92);
   border:1px solid var(--panel-border);
   border-radius:16px;
   padding:22px 20px 24px;
@@ -214,15 +215,15 @@ function receptivePulse(){
 function rand(min,max){ return min+Math.random()*(max-min); }
 
 function setDrift(){
-  root.setProperty("--drift-x", rand(-12,12).toFixed(2)+"%");
-  root.setProperty("--drift-y", rand(-10,10).toFixed(2)+"%");
-  root.setProperty("--drift-rot", rand(-12,12).toFixed(2)+"deg");
-  root.setProperty("--drift-scale", rand(1.08,1.18).toFixed(3));
-  root.setProperty("--drift-opacity", rand(0.28,0.38).toFixed(3));
+  root.setProperty("--drift-x", rand(-18,18).toFixed(2)+"%");
+  root.setProperty("--drift-y", rand(-14,14).toFixed(2)+"%");
+  root.setProperty("--drift-rot", rand(-20,20).toFixed(2)+"deg");
+  root.setProperty("--drift-scale", rand(1.10,1.22).toFixed(3));
+  root.setProperty("--drift-opacity", rand(0.38,0.55).toFixed(3));
   setTimeout(setDrift, rand(40000,70000));
 }
 
-setTimeout(setDrift, 5000);
+setTimeout(setDrift, 4000);
 
 function send(){
   const v=input.value.trim();
