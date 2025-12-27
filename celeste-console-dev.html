@@ -9,12 +9,13 @@
 
 <style>
 :root{
-  --bg:#04060e;
-  --panel:#0d1222;
+  --bg:#050811;
+  --panel:#0b1020;
   --text:#e8ebef;
-  --muted:#8b93a8;
-  --line:#1f2536;
-  --accent:#7f8cff;
+  --muted:#a0a8bb;
+  --line:#252b3a;
+  --accent:#6f85ff;
+  --accent-soft:#3b4a88;
 }
 
 *{ box-sizing:border-box; }
@@ -22,40 +23,47 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #121a33 0, var(--bg) 60%);
+  background:radial-gradient(circle at top, #0f1733 0, var(--bg) 60%);
   color:var(--text);
-  font-family: ui-serif, Georgia, serif;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
 .wrap{
   max-width:960px;
   margin:0 auto;
-  padding:48px 20px;
+  padding:48px 20px 40px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
 .intro{
+  margin-bottom:24px;
   color:var(--muted);
   font-size:15px;
   line-height:1.8;
-  margin-bottom:24px;
 }
 
 .console{
-  background:rgba(8,12,26,0.9);
+  background:rgba(8,12,30,0.9);
   border:1px solid var(--line);
   border-radius:16px;
-  padding:22px;
-  transition:border-color 1.2s ease;
+  padding:22px 20px 24px;
+  box-shadow:0 18px 38px rgba(0,0,0,0.5);
+  display:flex;
+  flex-direction:column;
+  transition:border-color 1.8s ease;
 }
 
 .console.active{
-  border-color:var(--accent);
+  border-color:var(--accent-soft);
 }
 
 .log{
   min-height:280px;
   max-height:520px;
   overflow-y:auto;
+  padding-right:6px;
 }
 
 .entry{
@@ -64,28 +72,21 @@ body{
   white-space:pre-wrap;
 }
 
-.entry.user{ color:var(--accent); }
-.entry.celeste{ color:var(--text); }
-
-.notice{
-  text-align:center;
-  font-size:14px;
-  color:var(--muted);
-  margin:18px 0;
-  opacity:0;
-  animation:fadeNotice 3.5s ease forwards;
+.entry.user{
+  color:var(--accent);
 }
 
-@keyframes fadeNotice{
-  0%{ opacity:0 }
-  20%{ opacity:1 }
-  80%{ opacity:1 }
-  100%{ opacity:0 }
+.entry.celeste{
+  color:var(--text);
+}
+
+.divider{
+  border-top:1px solid var(--line);
+  margin:32px 0 16px;
 }
 
 textarea{
   width:100%;
-  margin-top:20px;
   background:transparent;
   border:1px solid var(--line);
   border-radius:12px;
@@ -94,18 +95,26 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
-  transition:border-color 1.2s ease;
+  min-height:48px;
+  transition:border-color 1.8s ease;
 }
 
 textarea.active{
-  border-color:var(--accent);
+  border-color:var(--accent-soft);
+}
+
+textarea::placeholder{
+  color:#6d7588;
 }
 
 footer{
-  margin-top:28px;
+  margin-top:32px;
+  padding-top:18px;
+  border-top:1px solid rgba(37,43,58,0.9);
   font-size:12px;
   color:var(--muted);
-  text-align:right;
+  display:flex;
+  justify-content:flex-end;
 }
 </style>
 </head>
@@ -115,15 +124,23 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
   <div id="console" class="console">
     <div id="log" class="log"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+    <div class="divider"></div>
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
-  <footer>CELESTE v5.0A-dev</footer>
+  <footer>
+    <span>CELESTE v5.0A-dev</span>
+  </footer>
 
 </div>
 
@@ -131,8 +148,6 @@ footer{
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 const consoleBox = document.getElementById("console");
-
-let noticeShown = false;
 
 function addEntry(text, cls){
   const div = document.createElement("div");
@@ -142,62 +157,49 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-function showNotice(text){
-  if(noticeShown) return;
-  noticeShown = true;
-
-  const n = document.createElement("div");
-  n.className = "notice";
-  n.textContent = text;
-  log.appendChild(n);
-
-  setTimeout(()=> n.remove(), 3600);
-}
-
 function pulse(){
   consoleBox.classList.add("active");
   input.classList.add("active");
   setTimeout(()=>{
     consoleBox.classList.remove("active");
     input.classList.remove("active");
-  },1200);
+  },1800);
 }
 
 function send(){
   const value = input.value.trim();
   if(!value) return;
 
-  addEntry(value,"user");
-  input.value="";
-  input.style.height="auto";
-
-  showNotice("ここに自由に書けます。");
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
   pulse();
 
-  fetch("/api/celeste",{
+  fetch("/api/celeste", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({ message:value })
   })
   .then(res => res.text())
   .then(text => {
-    if(text.trim()){
-      addEntry(text,"celeste");
+    const reply = text.trim();
+    if(reply){
+      addEntry(reply, "celeste");
     }
   })
   .catch(()=>{});
 }
 
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
 
