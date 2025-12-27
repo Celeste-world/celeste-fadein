@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
 <style>
 :root{
-  --bg:#050811;
-  --panel:#111623;
+  --bg:#04060e;
+  --panel:#0d1222;
   --text:#e8ebef;
-  --muted:#a0a8bb;
-  --line:#252b3a;
-  --accent:#a9b7ff;
-  --react:#4e49c8;
+  --muted:#8b93a8;
+  --line:#1f2536;
+  --accent:#7f8cff;
 }
 
 *{ box-sizing:border-box; }
@@ -21,60 +22,34 @@
 body{
   margin:0;
   min-height:100vh;
-  background:var(--bg);
+  background:radial-gradient(circle at top, #121a33 0, var(--bg) 60%);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
 
 .wrap{
   max-width:960px;
   margin:0 auto;
-  padding:48px 20px 40px;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+  padding:48px 20px;
 }
 
 .intro{
-  margin-bottom:24px;
   color:var(--muted);
   font-size:15px;
   line-height:1.8;
+  margin-bottom:24px;
 }
 
 .console{
-  position:relative;
-  background:rgba(10,14,28,0.95);
+  background:rgba(8,12,26,0.9);
   border:1px solid var(--line);
   border-radius:16px;
-  padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.5);
-  transition:border-color .4s ease;
+  padding:22px;
+  transition:border-color 1.2s ease;
 }
 
-.console.receptive{
-  border-color:var(--react);
-}
-
-.notice{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .4s ease;
-}
-
-.notice.visible{
-  opacity:.6;
-}
-
-.notice p{
-  font-size:14px;
-  text-align:center;
-  line-height:1.7;
+.console.active{
+  border-color:var(--accent);
 }
 
 .log{
@@ -92,13 +67,25 @@ body{
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
-.divider{
-  border-top:1px solid var(--line);
-  margin:32px 0 16px;
+.notice{
+  text-align:center;
+  font-size:14px;
+  color:var(--muted);
+  margin:18px 0;
+  opacity:0;
+  animation:fadeNotice 3.5s ease forwards;
+}
+
+@keyframes fadeNotice{
+  0%{ opacity:0 }
+  20%{ opacity:1 }
+  80%{ opacity:1 }
+  100%{ opacity:0 }
 }
 
 textarea{
   width:100%;
+  margin-top:20px;
   background:transparent;
   border:1px solid var(--line);
   border-radius:12px;
@@ -107,10 +94,15 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
+  transition:border-color 1.2s ease;
+}
+
+textarea.active{
+  border-color:var(--accent);
 }
 
 footer{
-  margin-top:32px;
+  margin-top:28px;
   font-size:12px;
   color:var(--muted);
   text-align:right;
@@ -122,86 +114,92 @@ footer{
 <div class="wrap">
 
   <div class="intro">
-    A quiet space to organize your thoughts — decisions stay with you.
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    This space is open to whatever you choose to write.
   </div>
 
   <div id="console" class="console">
-    <div id="notice" class="notice"><p></p></div>
     <div id="log" class="log"></div>
-    <div class="divider"></div>
-    <textarea id="input" placeholder="Write freely."></textarea>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
-  <footer>CELESTE v4.4A-dev</footer>
+  <footer>CELESTE v5.0A-dev</footer>
+
 </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const notice = document.getElementById("notice");
-const noticeText = notice.querySelector("p");
-const consoleEl = document.getElementById("console");
+const consoleBox = document.getElementById("console");
 
 let noticeShown = false;
 
 function addEntry(text, cls){
-  const d = document.createElement("div");
-  d.className = "entry " + cls;
-  d.textContent = text;
-  log.appendChild(d);
+  const div = document.createElement("div");
+  div.className = "entry " + cls;
+  div.textContent = text;
+  log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
 
 function showNotice(text){
-  noticeText.textContent = text;
-  notice.classList.add("visible");
-  setTimeout(()=>{
-    notice.classList.remove("visible");
-    noticeText.textContent="";
-  },2500);
+  if(noticeShown) return;
+  noticeShown = true;
+
+  const n = document.createElement("div");
+  n.className = "notice";
+  n.textContent = text;
+  log.appendChild(n);
+
+  setTimeout(()=> n.remove(), 3600);
 }
 
 function pulse(){
-  consoleEl.classList.add("receptive");
-  setTimeout(()=>consoleEl.classList.remove("receptive"),600);
+  consoleBox.classList.add("active");
+  input.classList.add("active");
+  setTimeout(()=>{
+    consoleBox.classList.remove("active");
+    input.classList.remove("active");
+  },1200);
 }
 
-async function send(){
-  const v = input.value.trim();
-  if(!v) return;
+function send(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value,"user");
   input.value="";
+  input.style.height="auto";
 
-  const res = await fetch("/api/celeste-dev",{
+  showNotice("ここに自由に書けます。");
+  pulse();
+
+  fetch("/api/celeste",{
     method:"POST",
-    headers:{ "Content-Type":"text/plain" },
-    body:v
-  });
-
-  const data = await res.json();
-
-  // 初回のみ notice
-  if(!noticeShown && data.response){
-    showNotice(
-      "ここに自由に書けます。\n完成している必要はありません。"
-    );
-    noticeShown = true;
-    await new Promise(r=>setTimeout(r,1200));
-  }
-
-  addEntry(v,"user");
-
-  if(data.response){
-    pulse();
-    addEntry(data.response,"celeste");
-  }
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:value })
+  })
+  .then(res => res.text())
+  .then(text => {
+    if(text.trim()){
+      addEntry(text,"celeste");
+    }
+  })
+  .catch(()=>{});
 }
 
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
+
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
+});
 </script>
+
 </body>
 </html>
