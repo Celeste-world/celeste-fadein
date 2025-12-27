@@ -10,12 +10,13 @@
 <style>
 :root{
   --bg:#050811;
-  --panel:#0d1324;
+  --panel:#0c1222;
   --text:#e8ebef;
-  --muted:#9aa3b7;
-  --line:#1f2636;
-  --accent:#8fa2ff;
-  --active:#6f86ff;
+  --muted:#9aa3b8;
+  --line:#1f2638;
+  --accent:#7f8cff;
+  --border-idle:#1f2638;
+  --border-active:#3b4a7a;
 }
 
 *{ box-sizing:border-box; }
@@ -23,13 +24,13 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #141c34 0, var(--bg) 55%);
+  background:radial-gradient(circle at top, #141c35 0, var(--bg) 55%);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
 
 .wrap{
-  max-width:960px;
+  max-width:900px;
   margin:0 auto;
   padding:48px 20px 40px;
   min-height:100vh;
@@ -45,28 +46,29 @@ body{
 }
 
 .console{
-  background:rgba(8,12,24,0.92);
-  border:1px solid var(--line);
-  border-radius:16px;
+  position:relative;
+  background:rgba(8,12,24,0.9);
+  border:1px solid var(--border-idle);
+  border-radius:18px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.55);
-  display:flex;
-  flex-direction:column;
+  box-shadow:0 20px 40px rgba(0,0,0,0.55);
   transition:border-color 0.8s ease;
 }
 
 .console.active{
-  border-color:var(--active);
+  border-color:var(--border-active);
 }
 
 .log{
   min-height:260px;
   max-height:520px;
   overflow-y:auto;
-  padding-right:6px;
-  scrollbar-width:none;
+  padding-right:4px;
 }
-.log::-webkit-scrollbar{ display:none; }
+
+.log::-webkit-scrollbar{
+  width:0;
+}
 
 .entry{
   margin:14px 0;
@@ -74,22 +76,33 @@ body{
   white-space:pre-wrap;
 }
 
-.entry.user{ color:var(--accent); }
-.entry.celeste{ color:var(--text); }
+.entry.user{
+  color:var(--accent);
+}
 
-.notice{
-  text-align:center;
+.entry.celeste{
+  color:var(--text);
+}
+
+.guide{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
   color:var(--muted);
   font-size:14px;
-  margin:18px 0;
   opacity:0;
+  pointer-events:none;
   transition:opacity 1.2s ease;
 }
-.notice.show{ opacity:1; }
+
+.guide.show{
+  opacity:1;
+}
 
 .divider{
   border-top:1px solid var(--line);
-  margin:32px 0 16px;
+  margin:28px 0 14px;
 }
 
 textarea{
@@ -102,18 +115,17 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:48px;
-  transition:border-color 0.6s ease;
+  min-height:46px;
 }
+
 textarea:focus{
   outline:none;
-  border-color:var(--accent);
 }
 
 footer{
-  margin-top:32px;
+  margin-top:28px;
   padding-top:18px;
-  border-top:1px solid rgba(37,43,58,0.9);
+  border-top:1px solid rgba(31,38,56,0.9);
   font-size:12px;
   color:var(--muted);
   display:flex;
@@ -132,19 +144,13 @@ footer{
   </div>
 
   <div id="console" class="console">
-    <div id="log" class="log"></div>
+    <div id="guide" class="guide">ここに自由に書けます</div>
 
-    <div id="notice" class="notice">
-      ここに自由に書けます。
-    </div>
+    <div id="log" class="log"></div>
 
     <div class="divider"></div>
 
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+    <textarea id="input" rows="1"></textarea>
   </div>
 
   <footer>
@@ -156,10 +162,10 @@ footer{
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const notice = document.getElementById("notice");
+const guide = document.getElementById("guide");
 const consoleBox = document.getElementById("console");
 
-let firstInput = true;
+let guideShown = false;
 
 function addEntry(text, cls){
   const div = document.createElement("div");
@@ -169,52 +175,56 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-function showNotice(){
-  if(!firstInput) return;
-  firstInput = false;
-  notice.classList.add("show");
-  setTimeout(()=> notice.classList.remove("show"), 2200);
+function showGuideOnce(){
+  if(guideShown) return;
+  guideShown = true;
+  guide.classList.add("show");
+  setTimeout(()=>{
+    guide.classList.remove("show");
+    setTimeout(()=>guide.remove(),1200);
+  },2200);
 }
 
-function pulse(){
+function pulseBorder(){
   consoleBox.classList.add("active");
-  setTimeout(()=> consoleBox.classList.remove("active"), 1600);
+  setTimeout(()=>consoleBox.classList.remove("active"),1200);
 }
 
 function send(){
   const value = input.value.trim();
   if(!value) return;
 
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
+  addEntry(value,"user");
+  input.value="";
+  input.style.height="auto";
 
-  showNotice();
-  pulse();
+  showGuideOnce();
+  pulseBorder();
 
-  fetch("/api/celeste", {
+  fetch("/api/celeste",{
     method:"POST",
-    headers:{ "Content-Type":"text/plain" },
-    body:value
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:value })
   })
-  .then(res => res.text())
-  .then(text => {
-    const reply = text.trim();
-    if(reply) addEntry(reply, "celeste");
+  .then(res=>res.text())
+  .then(text=>{
+    if(text && text.trim()!==""){
+      addEntry(text,"celeste");
+    }
   })
   .catch(()=>{});
 }
 
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
