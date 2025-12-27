@@ -1,119 +1,101 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
 <style>
 :root{
-  --bg:#04060e;
-  --panel:#0f1426;
-  --border-base:#2a335c;
-  --border-p1:#303a6b;
-  --border-p2:#3a4a8a;
-  --border-p3:#4a5fb0;
-
+  --bg:#050811;
+  --panel:#0d1324;
   --text:#e8ebef;
-  --muted:#9aa4c8;
-  --accent:#a9b7ff;
+  --muted:#9aa3b7;
+  --line:#1f2636;
+  --accent:#8fa2ff;
+  --active:#6f86ff;
 }
 
-/* ===== Base ===== */
 *{ box-sizing:border-box; }
 
 body{
   margin:0;
   min-height:100vh;
-  background:var(--bg);
+  background:radial-gradient(circle at top, #141c34 0, var(--bg) 55%);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
 
 .wrap{
-  max-width:900px;
+  max-width:960px;
   margin:0 auto;
-  padding:48px 20px;
+  padding:48px 20px 40px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
-/* ===== Intro ===== */
 .intro{
+  margin-bottom:24px;
   color:var(--muted);
   font-size:15px;
   line-height:1.8;
-  margin-bottom:20px;
 }
 
-/* ===== Console ===== */
 .console{
-  position:relative;
-  background:rgba(10,14,28,0.96);
-  border:1px solid var(--border-base);
+  background:rgba(8,12,24,0.92);
+  border:1px solid var(--line);
   border-radius:16px;
-  padding:20px;
-  box-shadow:0 18px 40px rgba(0,0,0,0.55);
-  transition:border-color .4s ease;
-}
-
-/* pressure border */
-.console.p1{ border-color:var(--border-p1); }
-.console.p2{ border-color:var(--border-p2); }
-.console.p3{ border-color:var(--border-p3); }
-
-/* ===== Notice ===== */
-.notice{
-  position:absolute;
-  inset:0;
+  padding:22px 20px 24px;
+  box-shadow:0 18px 38px rgba(0,0,0,0.55);
   display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .4s ease;
+  flex-direction:column;
+  transition:border-color 0.8s ease;
 }
 
-.notice.show{ opacity:.65; }
-
-.notice p{
-  font-size:14px;
-  line-height:1.7;
-  text-align:center;
-  max-width:70%;
+.console.active{
+  border-color:var(--active);
 }
 
-/* ===== Log ===== */
 .log{
-  max-height:460px;
+  min-height:260px;
+  max-height:520px;
   overflow-y:auto;
-  padding-right:8px;
-
-  /* scrollbar hide (PC) */
+  padding-right:6px;
   scrollbar-width:none;
 }
-.log::-webkit-scrollbar{
-  width:0;
-  height:0;
-}
+.log::-webkit-scrollbar{ display:none; }
 
 .entry{
-  margin:12px 0;
-  line-height:1.85;
+  margin:14px 0;
+  line-height:1.9;
   white-space:pre-wrap;
 }
 
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
-/* ===== Input ===== */
+.notice{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  margin:18px 0;
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+.notice.show{ opacity:1; }
+
 .divider{
-  border-top:1px solid rgba(255,255,255,0.08);
-  margin:24px 0 12px;
+  border-top:1px solid var(--line);
+  margin:32px 0 16px;
 }
 
 textarea{
   width:100%;
   background:transparent;
-  border:1px solid rgba(255,255,255,0.18);
+  border:1px solid var(--line);
   border-radius:12px;
   padding:12px 14px;
   color:var(--text);
@@ -121,17 +103,21 @@ textarea{
   font-family:inherit;
   font-size:15px;
   min-height:48px;
+  transition:border-color 0.6s ease;
 }
-
-textarea::placeholder{
-  color:#6d759a;
+textarea:focus{
+  outline:none;
+  border-color:var(--accent);
 }
 
 footer{
-  margin-top:24px;
+  margin-top:32px;
+  padding-top:18px;
+  border-top:1px solid rgba(37,43,58,0.9);
   font-size:12px;
   color:var(--muted);
-  text-align:right;
+  display:flex;
+  justify-content:flex-end;
 }
 </style>
 </head>
@@ -140,109 +126,97 @@ footer{
 <div class="wrap">
 
   <div class="intro">
-    A quiet space to organize your thoughts — decisions stay with you.
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
   <div id="console" class="console">
-    <div id="notice" class="notice"><p></p></div>
-
     <div id="log" class="log"></div>
+
+    <div id="notice" class="notice">
+      ここに自由に書けます。
+    </div>
 
     <div class="divider"></div>
 
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
-  <footer>CELESTE v4.4A-dev</footer>
+  <footer>
+    <span>CELESTE v5.0A-dev</span>
+  </footer>
+
 </div>
 
 <script>
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
-const consoleEl = document.getElementById("console");
-const noticeEl = document.getElementById("notice");
-const noticeText = noticeEl.querySelector("p");
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const notice = document.getElementById("notice");
+const consoleBox = document.getElementById("console");
 
-let noticeShown = localStorage.getItem("celeste.notice") === "1";
+let firstInput = true;
 
-/* ===== helpers ===== */
 function addEntry(text, cls){
-  const d=document.createElement("div");
-  d.className="entry "+cls;
-  d.textContent=text;
-  logEl.appendChild(d);
-  logEl.scrollTop=logEl.scrollHeight;
+  const div = document.createElement("div");
+  div.className = "entry " + cls;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
 }
 
-function showNotice(text){
-  noticeText.textContent=text;
-  noticeEl.classList.add("show");
-  setTimeout(()=>{
-    noticeEl.classList.remove("show");
-    noticeText.textContent="";
-  },2200);
+function showNotice(){
+  if(!firstInput) return;
+  firstInput = false;
+  notice.classList.add("show");
+  setTimeout(()=> notice.classList.remove("show"), 2200);
 }
 
-/* ===== send ===== */
-async function send(){
-  const v=inputEl.value.trim();
-  if(!v) return;
-
-  inputEl.value="";
-  inputEl.style.height="auto";
-
-  // --- notice (first only) ---
-  if(!noticeShown){
-    try{
-      const r=await fetch("/api/celeste-dev",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ message:v, mode:"notice" })
-      });
-      const d=await r.json();
-      if(d.notice){
-        showNotice(d.notice);
-        noticeShown=true;
-        localStorage.setItem("celeste.notice","1");
-        await new Promise(r=>setTimeout(r,800));
-      }
-    }catch(e){}
-  }
-
-  // user text
-  addEntry(v,"user");
-
-  // reply
-  try{
-    const r=await fetch("/api/celeste-dev",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:v })
-    });
-    const d=await r.json();
-
-    if(typeof d.pressure==="number"){
-      consoleEl.classList.remove("p1","p2","p3");
-      if(d.pressure>=1) consoleEl.classList.add("p"+d.pressure);
-    }
-
-    if(d.response && d.response.trim()!==""){
-      addEntry(d.response,"celeste");
-    }
-  }catch(e){}
+function pulse(){
+  consoleBox.classList.add("active");
+  setTimeout(()=> consoleBox.classList.remove("active"), 1600);
 }
 
-inputEl.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+function send(){
+  const value = input.value.trim();
+  if(!value) return;
+
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
+
+  showNotice();
+  pulse();
+
+  fetch("/api/celeste", {
+    method:"POST",
+    headers:{ "Content-Type":"text/plain" },
+    body:value
+  })
+  .then(res => res.text())
+  .then(text => {
+    const reply = text.trim();
+    if(reply) addEntry(reply, "celeste");
+  })
+  .catch(()=>{});
+}
+
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-inputEl.addEventListener("input",()=>{
-  inputEl.style.height="auto";
-  inputEl.style.height=inputEl.scrollHeight+"px";
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
+
 </body>
 </html>
