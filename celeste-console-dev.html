@@ -55,9 +55,16 @@ body{
 }
 
 .log{
-  min-height:260px;
+  min-height:280px;
   max-height:520px;
-  overflow-y:auto;
+  overflow-y: auto;
+
+  /* ↓ 追加 */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge legacy */
+}
+.log::-webkit-scrollbar{
+  display: none;                /* Chrome / Safari */
 }
 
 .entry{
