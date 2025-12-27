@@ -10,24 +10,22 @@ export async function onRequest({ request }) {
 
   // --- 圧力判定（言語・意味 非依存） ---
   let pressure = 0;
-
   if (message.length === 0) {
     pressure = 0;
   } else if (message.length < 12) {
-    pressure = 1;   // 単語・挨拶
+    pressure = 1;
   } else if (message.length < 60) {
-    pressure = 2;   // 短文
+    pressure = 2;
   } else {
-    pressure = 3;   // 展開された文章
+    pressure = 3;
   }
 
-  // --- 応答生成（v5.0A-dev） ---
+  // --- 応答生成 ---
   let reply = "";
 
   switch (pressure) {
     case 0:
     case 1:
-      // 沈黙は「文字では返さない」
       reply = "";
       break;
 
@@ -46,11 +44,14 @@ export async function onRequest({ request }) {
       break;
   }
 
-  return new Response(reply, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8"
+  return new Response(
+    JSON.stringify({ reply }),
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
     }
-  });
+  );
 }
 
 function pick(arr) {
