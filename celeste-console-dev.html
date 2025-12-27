@@ -9,24 +9,27 @@
 
 <style>
 :root{
+  /* ===== Base Night ===== */
   --bg-base:#04060e;
 
-  /* セレステブルー（縦気流用） */
+  /* ===== Celeste Blue (Vertical Drift) ===== */
   --celeste-blue-1: rgba(135,165,255,0.55);
   --celeste-blue-2: rgba(135,165,255,0.22);
   --celeste-blue-3: rgba(135,165,255,0.00);
 
-  /* 初期はかなり静か */
+  /* ===== Drift Initial State (quiet) ===== */
   --drift-x: 0%;
   --drift-y: -4%;
   --drift-rot: 0deg;
   --drift-scale: 1.10;
   --drift-opacity: 0.18;
 
+  /* ===== Console ===== */
   --panel:#111623;
   --panel-border:#465484;
   --panel-border-react:#4e49c8;
 
+  /* ===== Text ===== */
   --text:#e8ebef;
   --muted:#a0a8bb;
   --line:#252b3a;
@@ -45,7 +48,9 @@ body{
   position:relative;
 }
 
-/* ===== Celeste Blue Vertical Drift ===== */
+/* =================================================
+   Celeste Blue Vertical Drift Layer (Presence)
+   ================================================= */
 body::before{
   content:"";
   position:fixed;
@@ -53,7 +58,6 @@ body::before{
   pointer-events:none;
   z-index:0;
 
-  /* 縦方向の気流 */
   background:
     linear-gradient(
       180deg,
@@ -83,6 +87,8 @@ body::before{
     opacity 32s ease-in-out;
 }
 
+/* ================================================= */
+
 .wrap{
   position:relative;
   z-index:1;
@@ -111,11 +117,24 @@ body::before{
   box-shadow:0 18px 38px rgba(0,0,0,0.55);
   display:flex;
   flex-direction:column;
-  transition:border-color 0.6s ease;
+  transition:
+    border-color 0.6s ease,
+    border-width 0.3s ease;
 }
 
+/* Receptive attitude */
 .console.receptive{
   border-color:var(--panel-border-react);
+}
+
+/* ===== Mobile Translation (same attitude, different sense) ===== */
+@media (max-width: 768px) {
+  .console{
+    border-width:1px;
+  }
+  .console.receptive{
+    border-width:2px;
+  }
 }
 
 .log{
@@ -193,6 +212,7 @@ const input = document.getElementById("input");
 const consoleEl = document.getElementById("console");
 const root = document.documentElement.style;
 
+/* session */
 let sessionId = localStorage.getItem("celeste.sessionId");
 if(!sessionId){
   sessionId = crypto.randomUUID();
@@ -207,6 +227,7 @@ function addEntry(text, cls){
   log.scrollTop=log.scrollHeight;
 }
 
+/* Receptive pulse (shared attitude) */
 function receptivePulse(){
   setTimeout(()=>{
     consoleEl.classList.add("receptive");
@@ -216,7 +237,7 @@ function receptivePulse(){
 
 function rand(min,max){ return min+Math.random()*(max-min); }
 
-/* 縦気流：y を主、x を副 */
+/* Vertical drift (presence, not reaction) */
 function setDrift(){
   root.setProperty("--drift-x", rand(-8,8).toFixed(2)+"%");
   root.setProperty("--drift-y", rand(-18,18).toFixed(2)+"%");
@@ -226,9 +247,10 @@ function setDrift(){
   setTimeout(setDrift, rand(42000,70000));
 }
 
-/* 少し待ってから呼吸開始 */
+/* Start quietly */
 setTimeout(setDrift, 6000);
 
+/* Send */
 function send(){
   const v=input.value.trim();
   if(!v) return;
