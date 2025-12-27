@@ -9,12 +9,16 @@
 
 <style>
 :root{
-  --bg:#04060e;
+  --bg:#050811;
   --panel:#111623;
   --text:#e8ebef;
   --muted:#a0a8bb;
   --line:#252b3a;
   --accent:#a9b7ff;
+
+  /* “態度”用（暗め） */
+  --breathA: rgba(110, 130, 255, 0.18);
+  --breathB: rgba(70, 95, 230, 0.10);
 }
 
 *{ box-sizing:border-box; }
@@ -22,7 +26,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:var(--bg);
+  background:radial-gradient(circle at top, #121a32 0, var(--bg) 58%);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
@@ -47,41 +51,48 @@ body{
 /* Console */
 .console{
   position:relative;
-  background:rgba(10,14,28,0.94);
-  border:1px solid rgba(70,84,132,0.65);
+  background:rgba(10,14,28,0.92);
+  border:1px solid rgba(70,84,132,0.55);
   border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.5);
+  box-shadow:0 18px 38px rgba(0,0,0,0.55);
   display:flex;
   flex-direction:column;
+  overflow:hidden;
 }
 
-/* Notice (center, ephemeral) */
-.notice{
+/* “受け取った態度”が分かる層（モバイルでも見えるように広め） */
+.console::before{
+  content:"";
   position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
+  inset:-40%;
+  background: radial-gradient(circle at 30% 20%, var(--breathA), transparent 55%),
+              radial-gradient(circle at 70% 80%, var(--breathB), transparent 60%);
   opacity:0;
-  transition: opacity 0.4s ease;
+  transform: scale(0.98);
+  transition: opacity 380ms ease, transform 380ms ease;
+  pointer-events:none;
 }
 
-.notice.visible{
-  opacity:0.65;
+/* 送信直後に“受理” */
+.console.received::before{
+  opacity:1;
+  transform: scale(1.0);
 }
 
-.notice p{
-  font-size:14px;
-  line-height:1.7;
-  text-align:center;
-  max-width:70%;
-  color:var(--text);
+/* さらに息づかい（短時間） */
+@keyframes drift {
+  0%   { transform: translate3d(0,0,0) scale(1.0); }
+  50%  { transform: translate3d(18px,-10px,0) scale(1.03); }
+  100% { transform: translate3d(-8px,12px,0) scale(1.0); }
+}
+.console.breathe::before{
+  opacity:1;
+  animation: drift 2.6s ease-in-out 1;
 }
 
-/* Log */
 .log{
+  position:relative;
   min-height:280px;
   max-height:520px;
   overflow-y:auto;
@@ -97,11 +108,13 @@ body{
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
+/* Divider */
 .divider{
   border-top:1px solid var(--line);
   margin:32px 0 16px;
 }
 
+/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -117,6 +130,36 @@ textarea{
 
 textarea::placeholder{ color:#6d7588; }
 
+/* 1回だけ出す中央トースト */
+.toast{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:13px;
+  letter-spacing:0.02em;
+  color:rgba(232,235,239,0.92);
+  background:rgba(10,14,28,0.55);
+  border:1px solid rgba(70,84,132,0.35);
+  padding:10px 12px;
+  border-radius:999px;
+  opacity:0;
+  pointer-events:none;
+  filter: blur(0px);
+}
+
+@keyframes toastInOut{
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(0.98); }
+  18%  { opacity:1; transform:translate(-50%,-50%) scale(1.00); }
+  75%  { opacity:1; }
+  100% { opacity:0; transform:translate(-50%,-50%) scale(1.02); }
+}
+
+.toast.show{
+  animation: toastInOut 2.2s ease forwards;
+}
+
+/* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
@@ -134,111 +177,131 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
   <div id="console" class="console">
-    <div id="notice" class="notice"><p></p></div>
+    <div id="toast" class="toast">ここに自由に書けます。</div>
+
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
   <footer>
-    <span>CELESTE v5.0A-dev</span>
+    <span>CELESTE v4.4A-dev</span>
   </footer>
 
 </div>
 
 <script>
-const log = document.getElementById("log");
+const consoleEl = document.getElementById("console");
+const toast = document.getElementById("toast");
+const log   = document.getElementById("log");
 const input = document.getElementById("input");
-const noticeEl = document.getElementById("notice");
-const noticeText = noticeEl.querySelector("p");
 
-let sessionId = localStorage.getItem("celeste.sessionId");
-if(!sessionId){
-  sessionId = crypto.randomUUID();
-  localStorage.setItem("celeste.sessionId", sessionId);
+const SESSION_ID_KEY = "celeste_session_id";
+const TOAST_SHOWN_KEY = "celeste_toast_shown";
+
+/* sessionId（タブ内維持） */
+function getSessionId(){
+  let id = sessionStorage.getItem(SESSION_ID_KEY);
+  if(!id){
+    id = (crypto?.randomUUID?.() || String(Date.now()) + "_" + Math.random().toString(16).slice(2));
+    sessionStorage.setItem(SESSION_ID_KEY, id);
+  }
+  return id;
 }
 
-let noticeShown = localStorage.getItem("celeste.noticeShown") === "1";
-
 function addEntry(text, cls){
-  const d = document.createElement("div");
-  d.className = "entry " + cls;
-  d.textContent = text;
-  log.appendChild(d);
+  const div = document.createElement("div");
+  div.className = "entry " + cls;
+  div.textContent = text ?? "";
+  log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
 
-function showNotice(text){
-  noticeText.textContent = text;
-  noticeEl.classList.add("visible");
+/* “受け取った態度”を視覚化（モバイルでも分かる） */
+function pulseReceived(){
+  consoleEl.classList.add("received");
+  consoleEl.classList.add("breathe");
+  // 受理の強さは短く、余韻は少し
+  setTimeout(() => consoleEl.classList.remove("received"), 420);
+  setTimeout(() => consoleEl.classList.remove("breathe"), 2800);
+}
 
-  setTimeout(()=>{
-    noticeEl.classList.remove("visible");
-    noticeText.textContent = "";
-  }, 2600);
+/* 1回だけ中央に出す（送信前に一瞬） */
+function showToastOnce(){
+  const shown = sessionStorage.getItem(TOAST_SHOWN_KEY);
+  if (shown) return;
+
+  sessionStorage.setItem(TOAST_SHOWN_KEY, "1");
+  toast.classList.remove("show");
+  // 連続発火防止のため reflow
+  void toast.offsetWidth;
+  toast.classList.add("show");
 }
 
 /* Send */
 async function send(){
-  const v = input.value.trim();
-  if(!v) return;
+  const value = input.value.trim();
+  if(!value) return;
 
-  input.value="";
-  input.style.height="auto";
+  // 送信した“態度”は即時に返す（テキスト返答より先）
+  pulseReceived();
 
-  // --- First-time notice (model decides language) ---
-  if(!noticeShown){
-    try{
-      const res = await fetch("/api/celeste",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({
-          message: v,
-          sessionId,
-          mode: "notice"
-        })
-      });
-      const data = await res.json();
-      if(data.notice){
-        showNotice(data.notice);
-        noticeShown = true;
-        localStorage.setItem("celeste.noticeShown","1");
-        await new Promise(r=>setTimeout(r, 1200));
-      }
-    }catch(e){}
-  }
+  // 1回だけ中央表示（ログに出る前）
+  showToastOnce();
 
-  // show user text after notice window
-  addEntry(v,"user");
+  // 少しだけ間（視覚が先に立つ）
+  await new Promise(r => setTimeout(r, 280));
 
-  // normal conversation
-  fetch("/api/celeste",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:v, sessionId })
-  })
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.reply && d.reply.trim()!==""){
-      addEntry(d.reply,"celeste");
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
+
+  try{
+    const res = await fetch("/api/celeste-dev", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        message: value,
+        sessionId: getSessionId()
+      })
+    });
+
+    const data = await res.json();
+
+    // replyが空なら “テキストは出さない”（態度だけ残る）
+    if (data?.reply && String(data.reply).trim() !== "") {
+      addEntry(String(data.reply), "celeste");
+      // 返答が来たことも軽く態度で返す
+      pulseReceived();
     }
-  });
+  }catch(e){
+    // 失敗しても沈黙でよい（態度は既に返している）
+  }
 }
 
-input.addEventListener("keydown", e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+/* Enter to send */
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", ()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+/* Auto resize */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
 
