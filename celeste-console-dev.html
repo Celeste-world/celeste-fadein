@@ -1,9 +1,155 @@
-<script>
-const log   = document.getElementById("log");
-const input = document.getElementById("input");
-const consoleBox = document.querySelector(".console");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Celeste Console – Dev</title>
 
-let guidanceShown = false;
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+<style>
+:root{
+  --bg:#04060e;
+  --panel:#0d1222;
+  --text:#e6e9f2;
+  --muted:#8b93a8;
+  --line:#1f2536;
+  --accent:#7f8cff;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top, #141b33 0, var(--bg) 60%);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.wrap{
+  max-width:960px;
+  margin:0 auto;
+  padding:48px 20px 40px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.intro{
+  margin-bottom:24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.8;
+}
+
+.console{
+  position:relative;
+  background:rgba(8,12,26,0.9);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:22px 20px 24px;
+  transition:border-color 1.6s ease;
+}
+
+.console.active{
+  border-color:rgba(127,140,255,0.55);
+}
+
+.log{
+  min-height:260px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+
+.entry{
+  margin:14px 0;
+  line-height:1.9;
+  white-space:pre-wrap;
+}
+
+.entry.user{ color:var(--accent); }
+.entry.celeste{ color:var(--text); }
+
+textarea{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  resize:none;
+  font-family:inherit;
+  font-size:15px;
+  min-height:48px;
+  transition:border-color 1.2s ease;
+}
+
+textarea.active{
+  border-color:rgba(127,140,255,0.6);
+}
+
+textarea::placeholder{ color:#6d748a; }
+
+footer{
+  margin-top:32px;
+  padding-top:18px;
+  border-top:1px solid rgba(31,37,54,0.8);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* --- Guide message --- */
+.guide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  font-size:14px;
+  color:var(--muted);
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+
+.guide.show{ opacity:1; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="intro">
+    A quiet space to organize your thoughts — decisions stay with you.<br>
+    This space is open to whatever you choose to write.
+  </div>
+
+  <div class="console" id="console">
+    <div class="guide" id="guide">ここに自由に書けます。</div>
+    <div id="log" class="log"></div>
+
+    <div style="margin:24px 0 14px;border-top:1px solid var(--line);"></div>
+
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+  </div>
+
+  <footer>
+    <span>CELESTE v5.0A-dev</span>
+  </footer>
+
+</div>
+
+<script>
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const guide = document.getElementById("guide");
+const panel = document.getElementById("console");
+
+let guideShown = false;
 
 function addEntry(text, cls){
   const div = document.createElement("div");
@@ -13,68 +159,59 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-function showGuidanceOnce(text){
-  if (guidanceShown) return;
-  guidanceShown = true;
-
-  const g = document.createElement("div");
-  g.textContent = text;
-  g.style.position = "absolute";
-  g.style.top = "50%";
-  g.style.left = "50%";
-  g.style.transform = "translate(-50%, -50%)";
-  g.style.color = "var(--muted)";
-  g.style.opacity = "0.9";
-  g.style.transition = "opacity 2s ease";
-  g.style.pointerEvents = "none";
-
-  consoleBox.appendChild(g);
-
-  setTimeout(() => g.style.opacity = "0", 1200);
-  setTimeout(() => g.remove(), 3200);
+function showGuideOnce(){
+  if(guideShown) return;
+  guideShown = true;
+  guide.classList.add("show");
+  setTimeout(()=>guide.classList.remove("show"), 2200);
 }
 
-function pulseBorder(){
-  consoleBox.style.borderColor = "#6b7cff";
-  setTimeout(() => {
-    consoleBox.style.borderColor = "rgba(70,84,132,0.65)";
-  }, 900);
+function pulse(){
+  panel.classList.add("active");
+  input.classList.add("active");
+  setTimeout(()=>{
+    panel.classList.remove("active");
+    input.classList.remove("active");
+  },1600);
 }
 
-function send(){
+async function send(){
   const value = input.value.trim();
   if(!value) return;
 
-  showGuidanceOnce("ここに自由に書けます。");
-  pulseBorder();
+  showGuideOnce();
+  pulse();
 
   addEntry(value, "user");
   input.value = "";
   input.style.height = "auto";
 
-  fetch("/api/celeste-dev", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.reply && data.reply.trim() !== "") {
-      addEntry(data.reply, "celeste");
+  try{
+    const res = await fetch("/api/celeste",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message:value })
+    });
+
+    const text = await res.text();
+    if(text){
+      addEntry(text, "celeste");
     }
-  })
-  .catch(()=>{});
+  }catch(e){}
 }
 
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown", e=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input", ()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
+
+</body>
+</html>
