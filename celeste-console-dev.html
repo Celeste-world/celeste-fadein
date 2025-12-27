@@ -10,16 +10,11 @@
 <style>
 :root{
   --bg:#04060e;
-  --panel:#111623;
-  --text:#e8ebef;
-  --muted:#a0a8bb;
-  --line:#252b3a;
-  --accent:#a9b7ff;
-
-  /* Border states */
-  --border-idle: rgba(70,84,132,0.55);
-  --border-receive: rgba(120,130,210,0.85);
-  --border-deep: rgba(160,170,255,0.95);
+  --panel:#0d1222;
+  --text:#e6e9f0;
+  --muted:#9aa2b8;
+  --line:#22283a;
+  --accent:#8fa3ff;
 }
 
 *{ box-sizing:border-box; }
@@ -27,21 +22,20 @@
 body{
   margin:0;
   min-height:100vh;
-  background:var(--bg);
+  background:radial-gradient(circle at top, #141b33 0, var(--bg) 60%);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
 
 .wrap{
   max-width:960px;
   margin:0 auto;
-  padding:48px 20px 40px;
+  padding:48px 20px;
   min-height:100vh;
   display:flex;
   flex-direction:column;
 }
 
-/* Intro */
 .intro{
   margin-bottom:24px;
   color:var(--muted);
@@ -49,72 +43,24 @@ body{
   line-height:1.8;
 }
 
-/* Console */
 .console{
-  position:relative;
-  background:rgba(10,14,28,0.94);
-  border:1px solid var(--border-idle);
+  background:rgba(8,12,26,0.9);
+  border:1px solid var(--line);
   border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.5);
+  box-shadow:0 18px 38px rgba(0,0,0,0.55);
   display:flex;
   flex-direction:column;
-
-  transition:
-    border-color 0.35s ease,
-    border-width 0.25s ease;
+  transition:border-color 0.8s ease;
 }
 
-/* === State A: received (short input / silence) === */
-.console.state-receive{
-  border-color:var(--border-receive);
+/* 状態変化（控えめ） */
+.console.received{
+  border-color:#3a4a7a;
 }
 
-/* === State B/C: deep (longer input) === */
-.console.state-deep{
-  border-color:var(--border-deep);
-}
-
-/* Mobile translation: thickness instead of color */
-@media (max-width: 768px) {
-  .console{
-    border-width:1px;
-  }
-  .console.state-receive{
-    border-width:2px;
-  }
-  .console.state-deep{
-    border-width:2px;
-  }
-}
-
-/* Notice (one-time, ephemeral) */
-.notice{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  opacity:0;
-  transition: opacity 0.4s ease;
-}
-
-.notice.visible{
-  opacity:0.65;
-}
-
-.notice p{
-  font-size:14px;
-  line-height:1.7;
-  text-align:center;
-  max-width:70%;
-  color:var(--text);
-}
-
-/* Log */
 .log{
-  min-height:280px;
+  min-height:260px;
   max-height:520px;
   overflow-y:auto;
   padding-right:6px;
@@ -131,7 +77,7 @@ body{
 
 .divider{
   border-top:1px solid var(--line);
-  margin:32px 0 16px;
+  margin:28px 0 14px;
 }
 
 textarea{
@@ -144,20 +90,44 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:48px;
+  min-height:46px;
+  transition:border-color .4s ease;
 }
 
-textarea::placeholder{ color:#6d7588; }
+textarea:focus{
+  outline:none;
+  border-color:#3a4a7a;
+}
+
+textarea::placeholder{
+  color:#6f768c;
+}
 
 footer{
   margin-top:32px;
   padding-top:18px;
-  border-top:1px solid rgba(37,43,58,0.9);
+  border-top:1px solid var(--line);
   font-size:12px;
   color:var(--muted);
   display:flex;
   justify-content:flex-end;
 }
+
+/* 一時案内 */
+.notice{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  font-size:14px;
+  color:var(--muted);
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+
+.notice.show{ opacity:1; }
 </style>
 </head>
 
@@ -166,14 +136,22 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.
+    This space is open to whatever you choose to write.<br>
+    <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
-  <div id="console" class="console">
-    <div id="notice" class="notice"><p></p></div>
+  <div class="console" id="console">
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
-    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
+
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
+
+    <div id="notice" class="notice">ここに自由に書けます</div>
   </div>
 
   <footer>
@@ -183,103 +161,75 @@ footer{
 </div>
 
 <script>
-const log = document.getElementById("log");
-const input = document.getElementById("input");
-const consoleEl = document.getElementById("console");
-const noticeEl = document.getElementById("notice");
-const noticeText = noticeEl.querySelector("p");
+const log     = document.getElementById("log");
+const input   = document.getElementById("input");
+const notice  = document.getElementById("notice");
+const panel   = document.getElementById("console");
 
-let sessionId = localStorage.getItem("celeste.sessionId");
-if(!sessionId){
-  sessionId = crypto.randomUUID();
-  localStorage.setItem("celeste.sessionId", sessionId);
-}
-
-let noticeShown = localStorage.getItem("celeste.noticeShown") === "1";
+let noticeShown = false;
 
 function addEntry(text, cls){
-  const d=document.createElement("div");
-  d.className="entry "+cls;
-  d.textContent=text;
-  log.appendChild(d);
-  log.scrollTop=log.scrollHeight;
+  const div = document.createElement("div");
+  div.className = "entry " + cls;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
 }
 
-function clearStates(){
-  consoleEl.classList.remove("state-receive","state-deep");
-}
-
-function showNotice(text){
-  noticeText.textContent = text;
-  noticeEl.classList.add("visible");
-  setTimeout(()=>{
-    noticeEl.classList.remove("visible");
-    noticeText.textContent="";
-  }, 2600);
-}
-
-function applyStateByPressure(p){
-  clearStates();
-  if(p >= 3){
-    consoleEl.classList.add("state-deep");
-  }else{
-    consoleEl.classList.add("state-receive");
-  }
-  setTimeout(clearStates, 700);
+function showNoticeOnce(){
+  if(noticeShown) return;
+  noticeShown = true;
+  notice.classList.add("show");
+  setTimeout(() => notice.classList.remove("show"), 2800);
 }
 
 async function send(){
-  const v=input.value.trim();
-  if(!v) return;
+  const value = input.value.trim();
+  if(!value) return;
 
-  input.value="";
-  input.style.height="auto";
+  addEntry(value, "user");
+  input.value = "";
+  input.style.height = "auto";
 
-  if(!noticeShown){
+  showNoticeOnce();
+  panel.classList.add("received");
+  setTimeout(()=>panel.classList.remove("received"), 1600);
+
+  try{
+    const res = await fetch("/api/celeste", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message:value })
+    });
+
+    const text = await res.text();
+    let reply = "";
+
     try{
-      const res = await fetch("/api/celeste-dev",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ message:v, sessionId, mode:"notice" })
-      });
-      const d = await res.json();
-      if(d.notice){
-        showNotice(d.notice);
-        noticeShown = true;
-        localStorage.setItem("celeste.noticeShown","1");
-        await new Promise(r=>setTimeout(r,1200));
-      }
-    }catch(e){}
+      const json = JSON.parse(text);
+      reply = json.reply || "";
+    }catch{
+      reply = text;
+    }
+
+    if(reply.trim()){
+      addEntry(reply.trim(), "celeste");
+    }
+  }catch(e){
+    console.error(e);
   }
-
-  addEntry(v,"user");
-
-  fetch("/api/celeste-dev",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:v, sessionId })
-  })
-  .then(r=>r.json())
-  .then(d=>{
-    if(typeof d.pressure === "number"){
-      applyStateByPressure(d.pressure);
-    }
-    if(d.response && d.response.trim()!==""){
-      addEntry(d.response,"celeste");
-    }
-  });
 }
 
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
 
