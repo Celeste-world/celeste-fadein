@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +9,18 @@
 
 <style>
 :root{
-  --bg:#050811;
-  --panel:#0b1020;
+  --bg:#04060e;
+  --panel:#111623;
   --text:#e8ebef;
-  --muted:#9aa3bd;
-  --line:#1f2536;
-  --accent:#7f8cff;
-  --active:#5f6fe6;
+  --muted:#a0a8bb;
+  --line:#252b3a;
+  --accent:#a9b7ff;
+
+  /* pressure-based border colors (very subtle) */
+  --border-p0:#252b3a;
+  --border-p1:#2a3150;
+  --border-p2:#3a4090;
+  --border-p3:#4a46c0;
 }
 
 *{ box-sizing:border-box; }
@@ -23,7 +28,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #121a33 0%, var(--bg) 55%);
+  background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
@@ -37,33 +42,64 @@ body{
   flex-direction:column;
 }
 
+/* Intro */
 .intro{
-  margin-bottom:28px;
+  margin-bottom:24px;
   color:var(--muted);
   font-size:15px;
   line-height:1.8;
 }
 
+/* Console */
 .console{
-  background:rgba(6,10,22,0.92);
-  border:1px solid var(--line);
-  border-radius:18px;
+  position:relative;
+  background:rgba(10,14,28,0.94);
+  border:1px solid var(--border-p0);
+  border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 40px rgba(0,0,0,0.55);
+  box-shadow:0 18px 38px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
-  transition:border-color .8s ease;
+  transition:border-color 0.6s ease;
 }
 
-.console.active{
-  border-color:var(--active);
+/* pressure states */
+.console.p1{ border-color:var(--border-p1); }
+.console.p2{ border-color:var(--border-p2); }
+.console.p3{ border-color:var(--border-p3); }
+
+/* Notice */
+.notice{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.4s ease;
+}
+.notice.visible{ opacity:0.65; }
+.notice p{
+  font-size:14px;
+  line-height:1.7;
+  text-align:center;
+  max-width:70%;
 }
 
+/* Log */
 .log{
-  min-height:260px;
+  min-height:280px;
   max-height:520px;
   overflow-y:auto;
   padding-right:6px;
+
+  /* hide scrollbar but keep scroll */
+  scrollbar-width: none;        /* Firefox */
+}
+.log::-webkit-scrollbar{        /* Chrome / Safari */
+  width:0;
+  height:0;
 }
 
 .entry{
@@ -77,31 +113,25 @@ body{
 
 .divider{
   border-top:1px solid var(--line);
-  margin:28px 0 16px;
+  margin:32px 0 16px;
 }
 
 textarea{
   width:100%;
   background:transparent;
   border:1px solid var(--line);
-  border-radius:14px;
+  border-radius:12px;
   padding:12px 14px;
   color:var(--text);
   resize:none;
   font-family:inherit;
   font-size:15px;
   min-height:48px;
-  transition:border-color .6s ease;
 }
-
-textarea.active{
-  border-color:var(--active);
-}
-
-textarea::placeholder{ color:#6f7894; }
+textarea::placeholder{ color:#6d7588; }
 
 footer{
-  margin-top:34px;
+  margin-top:32px;
   padding-top:18px;
   border-top:1px solid rgba(37,43,58,0.9);
   font-size:12px;
@@ -109,20 +139,6 @@ footer{
   display:flex;
   justify-content:flex-end;
 }
-
-/* 案内文 */
-.notice{
-  position:absolute;
-  left:50%;
-  top:46%;
-  transform:translate(-50%,-50%);
-  font-size:14px;
-  color:var(--muted);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .6s ease;
-}
-.notice.show{ opacity:1; }
 </style>
 </head>
 
@@ -131,11 +147,11 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.<br>
-    <a href="/faq.html">You can read the FAQ anytime.</a>
+    This space is open to whatever you choose to write.
   </div>
 
-  <div class="console" id="console">
+  <div id="console" class="console">
+    <div id="notice" class="notice"><p></p></div>
     <div id="log" class="log"></div>
     <div class="divider"></div>
     <textarea id="input" rows="1" placeholder="Write freely."></textarea>
@@ -147,72 +163,85 @@ footer{
 
 </div>
 
-<div id="notice" class="notice"></div>
-
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const consoleBox = document.getElementById("console");
-const notice = document.getElementById("notice");
+const consoleEl = document.getElementById("console");
+const noticeEl = document.getElementById("notice");
+const noticeText = noticeEl.querySelector("p");
 
-let noticeShown = false;
+let sessionId = localStorage.getItem("celeste.sessionId");
+if(!sessionId){
+  sessionId = crypto.randomUUID();
+  localStorage.setItem("celeste.sessionId", sessionId);
+}
+
+let noticeShown = localStorage.getItem("celeste.noticeShown") === "1";
 
 function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = "entry " + cls;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  const d=document.createElement("div");
+  d.className="entry "+cls;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
 function showNotice(text){
-  if(noticeShown) return;
-  notice.textContent = text;
-  notice.classList.add("show");
-  noticeShown = true;
-  setTimeout(() => notice.classList.remove("show"), 2400);
-}
-
-async function send(){
-  const value = input.value.trim();
-  if(!value) return;
-
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
-
-  consoleBox.classList.add("active");
-  input.classList.add("active");
-
-  showNotice("ここに自由に書けます。");
-
-  try{
-    const res = await fetch("/api/celeste", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:value })
-    });
-
-    const data = await res.json();
-    if(data && data.reply){
-      addEntry(data.reply, "celeste");
-    }
-  }catch(e){}
-
+  noticeText.textContent=text;
+  noticeEl.classList.add("visible");
   setTimeout(()=>{
-    consoleBox.classList.remove("active");
-    input.classList.remove("active");
-  },1200);
+    noticeEl.classList.remove("visible");
+    noticeText.textContent="";
+  },2600);
 }
 
-input.addEventListener("keydown", e=>{
+function setPressureClass(p){
+  consoleEl.classList.remove("p1","p2","p3");
+  if(p>=1) consoleEl.classList.add("p"+p);
+}
+
+/* Send */
+async function send(){
+  const v=input.value.trim();
+  if(!v) return;
+
+  input.value="";
+  input.style.height="auto";
+
+  const res = await fetch("/api/celeste",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:v, sessionId })
+  });
+
+  const data = await res.json();
+
+  if(!noticeShown && data.notice){
+    showNotice(data.notice);
+    noticeShown=true;
+    localStorage.setItem("celeste.noticeShown","1");
+    await new Promise(r=>setTimeout(r,1200));
+  }
+
+  addEntry(v,"user");
+
+  if(typeof data.pressure === "number"){
+    setPressureClass(data.pressure);
+  }
+
+  if(data.response && data.response.trim()!==""){
+    addEntry(data.response,"celeste");
+  }
+}
+
+input.addEventListener("keydown",e=>{
   if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", ()=>{
+input.addEventListener("input",()=>{
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
 });
