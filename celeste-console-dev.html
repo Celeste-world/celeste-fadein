@@ -9,27 +9,8 @@
 
 <style>
 :root{
-  /* ===== Base Night ===== */
-  --bg-base:#04060e;
-
-  /* ===== Celeste Blue (Vertical Drift) ===== */
-  --celeste-blue-1: rgba(135,165,255,0.55);
-  --celeste-blue-2: rgba(135,165,255,0.22);
-  --celeste-blue-3: rgba(135,165,255,0.00);
-
-  /* ===== Drift Initial State (quiet) ===== */
-  --drift-x: 0%;
-  --drift-y: -4%;
-  --drift-rot: 0deg;
-  --drift-scale: 1.10;
-  --drift-opacity: 0.18;
-
-  /* ===== Console ===== */
+  --bg:#04060e;
   --panel:#111623;
-  --panel-border:#465484;
-  --panel-border-react:#4e49c8;
-
-  /* ===== Text ===== */
   --text:#e8ebef;
   --muted:#a0a8bb;
   --line:#252b3a;
@@ -41,57 +22,12 @@
 body{
   margin:0;
   min-height:100vh;
-  background:var(--bg-base);
+  background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
-  overflow-x:hidden;
-  position:relative;
 }
-
-/* =================================================
-   Celeste Blue Vertical Drift Layer (Presence)
-   ================================================= */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-22%;
-  pointer-events:none;
-  z-index:0;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--celeste-blue-3) 0%,
-      var(--celeste-blue-2) 28%,
-      var(--celeste-blue-1) 50%,
-      var(--celeste-blue-2) 72%,
-      var(--celeste-blue-3) 100%
-    ),
-    radial-gradient(
-      520px 420px at 50% 35%,
-      rgba(170,190,255,0.22),
-      rgba(170,190,255,0.00) 62%
-    );
-
-  opacity:var(--drift-opacity);
-
-  transform:
-    translate(var(--drift-x), var(--drift-y))
-    rotate(var(--drift-rot))
-    scale(var(--drift-scale));
-
-  filter: blur(8px);
-
-  transition:
-    transform 32s ease-in-out,
-    opacity 32s ease-in-out;
-}
-
-/* ================================================= */
 
 .wrap{
-  position:relative;
-  z-index:1;
   max-width:960px;
   margin:0 auto;
   padding:48px 20px 40px;
@@ -110,33 +46,41 @@ body::before{
 
 /* Console */
 .console{
+  position:relative;
   background:rgba(10,14,28,0.94);
-  border:1px solid var(--panel-border);
+  border:1px solid rgba(70,84,132,0.65);
   border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.55);
+  box-shadow:0 18px 38px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
-  transition:
-    border-color 0.6s ease,
-    border-width 0.3s ease;
 }
 
-/* Receptive attitude */
-.console.receptive{
-  border-color:var(--panel-border-react);
+/* Notice (center, ephemeral) */
+.notice{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity 0.4s ease;
 }
 
-/* ===== Mobile Translation (same attitude, different sense) ===== */
-@media (max-width: 768px) {
-  .console{
-    border-width:1px;
-  }
-  .console.receptive{
-    border-width:2px;
-  }
+.notice.visible{
+  opacity:0.65;
 }
 
+.notice p{
+  font-size:14px;
+  line-height:1.7;
+  text-align:center;
+  max-width:70%;
+  color:var(--text);
+}
+
+/* Log */
 .log{
   min-height:280px;
   max-height:520px;
@@ -190,11 +134,11 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.<br>
-    <a href="/faq.html">You can read the FAQ anytime.</a>
+    This space is open to whatever you choose to write.
   </div>
 
   <div id="console" class="console">
+    <div id="notice" class="notice"><p></p></div>
     <div id="log" class="log"></div>
     <div class="divider"></div>
     <textarea id="input" rows="1" placeholder="Write freely."></textarea>
@@ -209,58 +153,69 @@ footer{
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const consoleEl = document.getElementById("console");
-const root = document.documentElement.style;
+const noticeEl = document.getElementById("notice");
+const noticeText = noticeEl.querySelector("p");
 
-/* session */
 let sessionId = localStorage.getItem("celeste.sessionId");
 if(!sessionId){
   sessionId = crypto.randomUUID();
   localStorage.setItem("celeste.sessionId", sessionId);
 }
 
+let noticeShown = localStorage.getItem("celeste.noticeShown") === "1";
+
 function addEntry(text, cls){
-  const d=document.createElement("div");
-  d.className="entry "+cls;
-  d.textContent=text;
+  const d = document.createElement("div");
+  d.className = "entry " + cls;
+  d.textContent = text;
   log.appendChild(d);
-  log.scrollTop=log.scrollHeight;
+  log.scrollTop = log.scrollHeight;
 }
 
-/* Receptive pulse (shared attitude) */
-function receptivePulse(){
+function showNotice(text){
+  noticeText.textContent = text;
+  noticeEl.classList.add("visible");
+
   setTimeout(()=>{
-    consoleEl.classList.add("receptive");
-    setTimeout(()=>consoleEl.classList.remove("receptive"),600);
-  },400);
+    noticeEl.classList.remove("visible");
+    noticeText.textContent = "";
+  }, 2600);
 }
-
-function rand(min,max){ return min+Math.random()*(max-min); }
-
-/* Vertical drift (presence, not reaction) */
-function setDrift(){
-  root.setProperty("--drift-x", rand(-8,8).toFixed(2)+"%");
-  root.setProperty("--drift-y", rand(-18,18).toFixed(2)+"%");
-  root.setProperty("--drift-rot", rand(-8,8).toFixed(2)+"deg");
-  root.setProperty("--drift-scale", rand(1.10,1.22).toFixed(3));
-  root.setProperty("--drift-opacity", rand(0.38,0.55).toFixed(3));
-  setTimeout(setDrift, rand(42000,70000));
-}
-
-/* Start quietly */
-setTimeout(setDrift, 6000);
 
 /* Send */
-function send(){
-  const v=input.value.trim();
+async function send(){
+  const v = input.value.trim();
   if(!v) return;
 
-  addEntry(v,"user");
   input.value="";
   input.style.height="auto";
 
-  receptivePulse();
+  // --- First-time notice (model decides language) ---
+  if(!noticeShown){
+    try{
+      const res = await fetch("/api/celeste",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          message: v,
+          sessionId,
+          mode: "notice"
+        })
+      });
+      const data = await res.json();
+      if(data.notice){
+        showNotice(data.notice);
+        noticeShown = true;
+        localStorage.setItem("celeste.noticeShown","1");
+        await new Promise(r=>setTimeout(r, 1200));
+      }
+    }catch(e){}
+  }
 
+  // show user text after notice window
+  addEntry(v,"user");
+
+  // normal conversation
   fetch("/api/celeste",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
@@ -274,14 +229,14 @@ function send(){
   });
 }
 
-input.addEventListener("keydown",e=>{
+input.addEventListener("keydown", e=>{
   if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input",()=>{
+input.addEventListener("input", ()=>{
   input.style.height="auto";
   input.style.height=input.scrollHeight+"px";
 });
