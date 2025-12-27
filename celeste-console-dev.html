@@ -9,13 +9,13 @@
 
 <style>
 :root{
-  --bg:#050811;
+  --bg:#04060e;
   --panel:#0d1222;
-  --text:#e8ebef;
-  --muted:#8b92a8;
-  --line:#1e2433;
-  --accent:#8fa2ff;
-  --focus:#5f73ff;
+  --text:#e6e9f2;
+  --muted:#9aa3b7;
+  --line:#1f2538;
+  --accent:#7f8cff;
+  --accent-soft: rgba(127,140,255,0.35);
 }
 
 *{ box-sizing:border-box; }
@@ -23,7 +23,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #121a33 0, var(--bg) 60%);
+  background:radial-gradient(circle at top, #141a33 0, var(--bg) 55%);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
@@ -47,22 +47,21 @@ body{
 
 /* Console */
 .console{
-  background:rgba(8,12,26,0.92);
+  background:rgba(9,12,26,0.92);
   border:1px solid var(--line);
   border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 16px 34px rgba(0,0,0,0.55);
+  box-shadow:0 18px 38px rgba(0,0,0,0.55);
   display:flex;
   flex-direction:column;
-  transition:border-color 1.8s ease;
+  transition:border-color 1.6s ease;
 }
 
-/* subtle response */
-.console.responded{
-  border-color:rgba(143,162,255,0.55);
+/* 受理時の枠変化（メイン演出） */
+.console.active{
+  border-color:var(--accent-soft);
 }
 
-/* Log */
 .log{
   min-height:280px;
   max-height:520px;
@@ -76,8 +75,13 @@ body{
   white-space:pre-wrap;
 }
 
-.entry.user{ color:var(--accent); }
-.entry.celeste{ color:var(--text); }
+.entry.user{
+  color:var(--accent);
+}
+
+.entry.celeste{
+  color:var(--text);
+}
 
 /* Divider */
 .divider{
@@ -97,49 +101,28 @@ textarea{
   font-family:inherit;
   font-size:15px;
   min-height:48px;
-  transition:border-color 1.2s ease;
+  transition:border-color 1.4s ease;
 }
 
-textarea::placeholder{ color:#66708a; }
-
-textarea.responded{
-  border-color:rgba(143,162,255,0.55);
+textarea::placeholder{
+  color:#6d7588;
 }
 
-/* Overlay notice */
-.notice{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity 1.2s ease;
+/* モバイル向け：入力欄だけ反応 */
+textarea.active{
+  border-color:var(--accent-soft);
 }
-
-.notice span{
-  font-size:14px;
-  color:var(--muted);
-  background:rgba(8,12,26,0.75);
-  padding:10px 16px;
-  border-radius:12px;
-}
-
-.notice.show{ opacity:1; }
 
 /* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
-  border-top:1px solid rgba(30,36,51,0.9);
+  border-top:1px solid rgba(31,37,56,0.9);
   font-size:12px;
   color:var(--muted);
   display:flex;
   justify-content:flex-end;
 }
-
-.console-wrap{ position:relative; }
 </style>
 </head>
 
@@ -152,14 +135,16 @@ footer{
     <a href="/faq.html">You can read the FAQ anytime.</a>
   </div>
 
-  <div class="console-wrap">
-    <div id="notice" class="notice"><span></span></div>
+  <div id="console" class="console">
+    <div id="log" class="log"></div>
 
-    <div id="console" class="console">
-      <div id="log" class="log"></div>
-      <div class="divider"></div>
-      <textarea id="input" rows="1" placeholder="Write freely."></textarea>
-    </div>
+    <div class="divider"></div>
+
+    <textarea
+      id="input"
+      rows="1"
+      placeholder="Write freely."
+    ></textarea>
   </div>
 
   <footer>
@@ -169,13 +154,12 @@ footer{
 </div>
 
 <script>
-const log = document.getElementById("log");
-const input = document.getElementById("input");
-const consoleEl = document.getElementById("console");
-const notice = document.getElementById("notice");
-let noticeShown = false;
+const log     = document.getElementById("log");
+const input   = document.getElementById("input");
+const consoleBox = document.getElementById("console");
 
 function addEntry(text, cls){
+  if(!text) return;
   const div = document.createElement("div");
   div.className = "entry " + cls;
   div.textContent = text;
@@ -183,24 +167,19 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-function showNotice(text){
-  if(noticeShown) return;
-  noticeShown = true;
-  notice.querySelector("span").textContent = text;
-  notice.classList.add("show");
-  setTimeout(() => notice.classList.remove("show"), 2600);
-}
+/* 視覚的「受理」 */
+function acknowledge(){
+  consoleBox.classList.add("active");
+  input.classList.add("active");
 
-function pulse(){
-  consoleEl.classList.add("responded");
-  input.classList.add("responded");
   setTimeout(()=>{
-    consoleEl.classList.remove("responded");
-    input.classList.remove("responded");
-  }, 2600);
+    consoleBox.classList.remove("active");
+    input.classList.remove("active");
+  }, 1600);
 }
 
-function send(){
+/* Send */
+async function send(){
   const value = input.value.trim();
   if(!value) return;
 
@@ -208,32 +187,37 @@ function send(){
   input.value = "";
   input.style.height = "auto";
 
-  fetch("/api/celeste", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
-  })
-  .then(res => res.text())
-  .then(reply => {
-    showNotice("ここに自由に書けます。");
-    pulse();
-    if(reply && reply.trim()){
-      addEntry(reply.trim(), "celeste");
+  acknowledge();
+
+  try{
+    const res = await fetch("/api/celeste-dev", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message:value })
+    });
+
+    const data = await res.json();
+
+    if(data.reply && data.reply.trim() !== ""){
+      addEntry(data.reply, "celeste");
     }
-  })
-  .catch(()=>{});
+  }catch(e){
+    // 沈黙は失敗ではない
+  }
 }
 
-input.addEventListener("keydown", e=>{
-  if(e.key==="Enter" && !e.shiftKey){
+/* Enter to send */
+input.addEventListener("keydown", e => {
+  if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", ()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+/* Auto resize */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
 });
 </script>
 
