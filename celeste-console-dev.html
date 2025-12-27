@@ -9,12 +9,12 @@
 
 <style>
 :root{
-  --bg:#04060e;
-  --panel:#0d1222;
-  --text:#e6e9f2;
-  --muted:#8b93a8;
-  --line:#1f2536;
-  --accent:#7f8cff;
+  --bg:#050811;
+  --panel:#0b1020;
+  --text:#e8ebef;
+  --muted:#7f89a3;
+  --line:#1c2236;
+  --accent:#6f85ff;
 }
 
 *{ box-sizing:border-box; }
@@ -22,18 +22,15 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #141b33 0, var(--bg) 60%);
+  background:radial-gradient(circle at top, #141a30 0, var(--bg) 55%);
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: ui-serif, Georgia, serif;
 }
 
 .wrap{
   max-width:960px;
   margin:0 auto;
-  padding:48px 20px 40px;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+  padding:48px 20px;
 }
 
 .intro{
@@ -44,23 +41,21 @@ body{
 }
 
 .console{
-  position:relative;
-  background:rgba(8,12,26,0.9);
+  background:rgba(8,12,24,0.9);
   border:1px solid var(--line);
   border-radius:16px;
   padding:22px 20px 24px;
-  transition:border-color 1.6s ease;
+  transition:border-color 1.5s ease;
 }
 
-.console.active{
-  border-color:rgba(127,140,255,0.55);
+.console.react{
+  border-color:var(--accent);
 }
 
 .log{
-  min-height:260px;
+  min-height:280px;
   max-height:520px;
   overflow-y:auto;
-  padding-right:6px;
 }
 
 .entry{
@@ -72,6 +67,11 @@ body{
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
+.divider{
+  border-top:1px solid var(--line);
+  margin:28px 0 16px;
+}
+
 textarea{
   width:100%;
   background:transparent;
@@ -82,41 +82,34 @@ textarea{
   resize:none;
   font-family:inherit;
   font-size:15px;
-  min-height:48px;
-  transition:border-color 1.2s ease;
 }
 
-textarea.active{
-  border-color:rgba(127,140,255,0.6);
+textarea:focus{
+  outline:none;
+  border-color:var(--accent);
 }
 
-textarea::placeholder{ color:#6d748a; }
-
-footer{
-  margin-top:32px;
-  padding-top:18px;
-  border-top:1px solid rgba(31,37,54,0.8);
-  font-size:12px;
-  color:var(--muted);
-  display:flex;
-  justify-content:flex-end;
-}
-
-/* --- Guide message --- */
-.guide{
+.overlay{
   position:absolute;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
   pointer-events:none;
-  font-size:14px;
-  color:var(--muted);
   opacity:0;
   transition:opacity 1.2s ease;
+  font-size:14px;
+  color:var(--muted);
 }
 
-.guide.show{ opacity:1; }
+.overlay.show{ opacity:1; }
+
+footer{
+  margin-top:32px;
+  text-align:right;
+  font-size:12px;
+  color:var(--muted);
+}
 </style>
 </head>
 
@@ -129,25 +122,20 @@ footer{
   </div>
 
   <div class="console" id="console">
-    <div class="guide" id="guide">ここに自由に書けます。</div>
-    <div id="log" class="log"></div>
-
-    <div style="margin:24px 0 14px;border-top:1px solid var(--line);"></div>
-
+    <div class="overlay" id="overlay"></div>
+    <div class="log" id="log"></div>
+    <div class="divider"></div>
     <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
-  <footer>
-    <span>CELESTE v5.0A-dev</span>
-  </footer>
-
+  <footer>CELESTE v5.0A-dev</footer>
 </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const guide = document.getElementById("guide");
-const panel = document.getElementById("console");
+const overlay = document.getElementById("overlay");
+const consoleBox = document.getElementById("console");
 
 let guideShown = false;
 
@@ -159,45 +147,40 @@ function addEntry(text, cls){
   log.scrollTop = log.scrollHeight;
 }
 
-function showGuideOnce(){
+function showGuide(text){
   if(guideShown) return;
   guideShown = true;
-  guide.classList.add("show");
-  setTimeout(()=>guide.classList.remove("show"), 2200);
+  overlay.textContent = text;
+  overlay.classList.add("show");
+  setTimeout(()=>overlay.classList.remove("show"), 2200);
 }
 
-function pulse(){
-  panel.classList.add("active");
-  input.classList.add("active");
-  setTimeout(()=>{
-    panel.classList.remove("active");
-    input.classList.remove("active");
-  },1600);
+function react(){
+  consoleBox.classList.add("react");
+  setTimeout(()=>consoleBox.classList.remove("react"), 1800);
 }
 
 async function send(){
   const value = input.value.trim();
   if(!value) return;
 
-  showGuideOnce();
-  pulse();
-
   addEntry(value, "user");
   input.value = "";
-  input.style.height = "auto";
 
-  try{
-    const res = await fetch("/api/celeste",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:value })
-    });
+  showGuide("ここに自由に書けます。");
+  react();
 
-    const text = await res.text();
-    if(text){
-      addEntry(text, "celeste");
-    }
-  }catch(e){}
+  const res = await fetch("/api/celeste", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:value })
+  });
+
+  const data = await res.json();
+
+  if(data.reply && data.reply.trim()){
+    addEntry(data.reply, "celeste");
+  }
 }
 
 input.addEventListener("keydown", e=>{
@@ -205,11 +188,6 @@ input.addEventListener("keydown", e=>{
     e.preventDefault();
     send();
   }
-});
-
-input.addEventListener("input", ()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
