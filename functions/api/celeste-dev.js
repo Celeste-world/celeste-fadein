@@ -8,7 +8,7 @@ export async function onRequest({ request }) {
     message = "";
   }
 
-  // --- 圧力判定（非言語依存） ---
+  // --- 圧力判定（言語・意味・文字種 非依存） ---
   let pressure = 0;
   if (message.length === 0) {
     pressure = 0;
@@ -20,19 +20,25 @@ export async function onRequest({ request }) {
     pressure = 3;
   }
 
-  // --- 応答生成 ---
   let reply = "";
 
-  if (pressure === 2) {
-    reply = pick([
-      "今の言葉は、ここにあります。",
-      "少し間を置いても構いません。"
-    ]);
-  } else if (pressure === 3) {
-    reply = pick([
-      "ここで一度、区切れそうです。",
-      "もう十分に書かれています。"
-    ]);
+  switch (pressure) {
+    case 0:
+    case 1:
+      reply = ""; // 沈黙
+      break;
+    case 2:
+      reply = pick([
+        "今の言葉は、ここにあります。",
+        "少し間を置いても構いません。"
+      ]);
+      break;
+    case 3:
+      reply = pick([
+        "ここで一度、区切れそうです。",
+        "もう十分に書かれています。"
+      ]);
+      break;
   }
 
   return new Response(
