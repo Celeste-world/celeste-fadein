@@ -1,55 +1,48 @@
 export async function onRequest({ request }) {
-  let message = "";
+  const text = await request.text();
+  const t = text.trim();
 
-  try {
-    const body = await request.json();
-    message = (body.message || "").trim();
-  } catch {
-    message = "";
-  }
-
-  // --- 圧力判定（言語・意味・文字種 非依存） ---
+  // --- 圧力判定（言語・意味 非依存） ---
   let pressure = 0;
-
-  if (message.length === 0) {
+  if (t.length === 0) {
     pressure = 0;
-  } else if (message.length < 12) {
-    pressure = 1; // 単語・挨拶・記号
-  } else if (message.length < 60) {
-    pressure = 2; // 短文
+  } else if (t.length < 12) {
+    pressure = 1;   // 短語・名詞・挨拶
+  } else if (t.length < 60) {
+    pressure = 2;   // 短文
   } else {
-    pressure = 3; // 展開された文章
+    pressure = 3;   // 展開・複文
   }
 
-  // --- 応答生成（v4.3A思想準拠） ---
-  let reply = "";
+  // --- 応答生成（v4.3A互換） ---
+  let response = "";
 
   switch (pressure) {
     case 0:
     case 1:
-      // 沈黙は沈黙として返す
-      reply = "";
+      response = ""; // 沈黙
       break;
 
     case 2:
-      reply = pick([
+      response = pick([
         "今の言葉は、ここにあります。",
-        "急がなくて大丈夫です。"
+        "少し間を置いても構いません。"
       ]);
       break;
 
     case 3:
-      reply = pick([
-        "ここまでで、十分に書かれています。",
-        "一度、ここで区切れそうです。"
+      response = pick([
+        "ここで一度、区切れそうです。",
+        "もう十分に書かれています。"
       ]);
       break;
   }
 
+  // --- JSON で返す（後方互換） ---
   return new Response(
     JSON.stringify({
-      reply,
-      pressure
+      response,   // v4.3A 用
+      pressure    // v5.0A 用
     }),
     {
       headers: {
