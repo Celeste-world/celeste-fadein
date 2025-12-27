@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-
 <style>
 :root{
   --bg:#04060e;
-  --panel:#111623;
-  --text:#e8ebef;
-  --muted:#a0a8bb;
-  --line:#252b3a;
-  --accent:#a9b7ff;
+  --panel:#0f1426;
+  --border-base:#2a335c;
+  --border-p1:#303a6b;
+  --border-p2:#3a4a8a;
+  --border-p3:#4a5fb0;
 
-  /* pressure-based border colors (very subtle) */
-  --border-p0:#252b3a;
-  --border-p1:#2a3150;
-  --border-p2:#3a4090;
-  --border-p3:#4a46c0;
+  --text:#e8ebef;
+  --muted:#9aa4c8;
+  --accent:#a9b7ff;
 }
 
+/* ===== Base ===== */
 *{ box-sizing:border-box; }
 
 body{
@@ -34,41 +31,36 @@ body{
 }
 
 .wrap{
-  max-width:960px;
+  max-width:900px;
   margin:0 auto;
-  padding:48px 20px 40px;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+  padding:48px 20px;
 }
 
-/* Intro */
+/* ===== Intro ===== */
 .intro{
-  margin-bottom:24px;
   color:var(--muted);
   font-size:15px;
   line-height:1.8;
+  margin-bottom:20px;
 }
 
-/* Console */
+/* ===== Console ===== */
 .console{
   position:relative;
-  background:rgba(10,14,28,0.94);
-  border:1px solid var(--border-p0);
+  background:rgba(10,14,28,0.96);
+  border:1px solid var(--border-base);
   border-radius:16px;
-  padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.5);
-  display:flex;
-  flex-direction:column;
-  transition:border-color 0.6s ease;
+  padding:20px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.55);
+  transition:border-color .4s ease;
 }
 
-/* pressure states */
+/* pressure border */
 .console.p1{ border-color:var(--border-p1); }
 .console.p2{ border-color:var(--border-p2); }
 .console.p3{ border-color:var(--border-p3); }
 
-/* Notice */
+/* ===== Notice ===== */
 .notice{
   position:absolute;
   inset:0;
@@ -77,9 +69,11 @@ body{
   justify-content:center;
   pointer-events:none;
   opacity:0;
-  transition:opacity 0.4s ease;
+  transition:opacity .4s ease;
 }
-.notice.visible{ opacity:0.65; }
+
+.notice.show{ opacity:.65; }
+
 .notice p{
   font-size:14px;
   line-height:1.7;
@@ -87,39 +81,39 @@ body{
   max-width:70%;
 }
 
-/* Log */
+/* ===== Log ===== */
 .log{
-  min-height:280px;
-  max-height:520px;
+  max-height:460px;
   overflow-y:auto;
-  padding-right:6px;
+  padding-right:8px;
 
-  /* hide scrollbar but keep scroll */
-  scrollbar-width: none;        /* Firefox */
+  /* scrollbar hide (PC) */
+  scrollbar-width:none;
 }
-.log::-webkit-scrollbar{        /* Chrome / Safari */
+.log::-webkit-scrollbar{
   width:0;
   height:0;
 }
 
 .entry{
-  margin:14px 0;
-  line-height:1.9;
+  margin:12px 0;
+  line-height:1.85;
   white-space:pre-wrap;
 }
 
 .entry.user{ color:var(--accent); }
 .entry.celeste{ color:var(--text); }
 
+/* ===== Input ===== */
 .divider{
-  border-top:1px solid var(--line);
-  margin:32px 0 16px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  margin:24px 0 12px;
 }
 
 textarea{
   width:100%;
   background:transparent;
-  border:1px solid var(--line);
+  border:1px solid rgba(255,255,255,0.18);
   border-radius:12px;
   padding:12px 14px;
   color:var(--text);
@@ -128,16 +122,16 @@ textarea{
   font-size:15px;
   min-height:48px;
 }
-textarea::placeholder{ color:#6d7588; }
+
+textarea::placeholder{
+  color:#6d759a;
+}
 
 footer{
-  margin-top:32px;
-  padding-top:18px;
-  border-top:1px solid rgba(37,43,58,0.9);
+  margin-top:24px;
   font-size:12px;
   color:var(--muted);
-  display:flex;
-  justify-content:flex-end;
+  text-align:right;
 }
 </style>
 </head>
@@ -146,106 +140,109 @@ footer{
 <div class="wrap">
 
   <div class="intro">
-    A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
   <div id="console" class="console">
     <div id="notice" class="notice"><p></p></div>
+
     <div id="log" class="log"></div>
+
     <div class="divider"></div>
+
     <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
-  <footer>
-    <span>CELESTE v5.0A-dev</span>
-  </footer>
-
+  <footer>CELESTE v4.4A-dev</footer>
 </div>
 
 <script>
-const log = document.getElementById("log");
-const input = document.getElementById("input");
+const logEl = document.getElementById("log");
+const inputEl = document.getElementById("input");
 const consoleEl = document.getElementById("console");
 const noticeEl = document.getElementById("notice");
 const noticeText = noticeEl.querySelector("p");
 
-let sessionId = localStorage.getItem("celeste.sessionId");
-if(!sessionId){
-  sessionId = crypto.randomUUID();
-  localStorage.setItem("celeste.sessionId", sessionId);
-}
+let noticeShown = localStorage.getItem("celeste.notice") === "1";
 
-let noticeShown = localStorage.getItem("celeste.noticeShown") === "1";
-
+/* ===== helpers ===== */
 function addEntry(text, cls){
   const d=document.createElement("div");
   d.className="entry "+cls;
   d.textContent=text;
-  log.appendChild(d);
-  log.scrollTop=log.scrollHeight;
+  logEl.appendChild(d);
+  logEl.scrollTop=logEl.scrollHeight;
 }
 
 function showNotice(text){
   noticeText.textContent=text;
-  noticeEl.classList.add("visible");
+  noticeEl.classList.add("show");
   setTimeout(()=>{
-    noticeEl.classList.remove("visible");
+    noticeEl.classList.remove("show");
     noticeText.textContent="";
-  },2600);
+  },2200);
 }
 
-function setPressureClass(p){
-  consoleEl.classList.remove("p1","p2","p3");
-  if(p>=1) consoleEl.classList.add("p"+p);
-}
-
-/* Send */
+/* ===== send ===== */
 async function send(){
-  const v=input.value.trim();
+  const v=inputEl.value.trim();
   if(!v) return;
 
-  input.value="";
-  input.style.height="auto";
+  inputEl.value="";
+  inputEl.style.height="auto";
 
-  const res = await fetch("/api/celeste",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:v, sessionId })
-  });
-
-  const data = await res.json();
-
-  if(!noticeShown && data.notice){
-    showNotice(data.notice);
-    noticeShown=true;
-    localStorage.setItem("celeste.noticeShown","1");
-    await new Promise(r=>setTimeout(r,1200));
+  // --- notice (first only) ---
+  if(!noticeShown){
+    try{
+      const r=await fetch("/api/celeste-dev",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ message:v, mode:"notice" })
+      });
+      const d=await r.json();
+      if(d.notice){
+        showNotice(d.notice);
+        noticeShown=true;
+        localStorage.setItem("celeste.notice","1");
+        await new Promise(r=>setTimeout(r,800));
+      }
+    }catch(e){}
   }
 
+  // user text
   addEntry(v,"user");
 
-  if(typeof data.pressure === "number"){
-    setPressureClass(data.pressure);
-  }
+  // reply
+  try{
+    const r=await fetch("/api/celeste-dev",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message:v })
+    });
+    const d=await r.json();
 
-  if(data.response && data.response.trim()!==""){
-    addEntry(data.response,"celeste");
-  }
+    if(typeof d.pressure==="number"){
+      consoleEl.classList.remove("p1","p2","p3");
+      if(d.pressure>=1) consoleEl.classList.add("p"+d.pressure);
+    }
+
+    if(d.response && d.response.trim()!==""){
+      addEntry(d.response,"celeste");
+    }
+  }catch(e){}
 }
 
-input.addEventListener("keydown",e=>{
+inputEl.addEventListener("keydown",e=>{
   if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=input.scrollHeight+"px";
+inputEl.addEventListener("input",()=>{
+  inputEl.style.height="auto";
+  inputEl.style.height=inputEl.scrollHeight+"px";
 });
 </script>
-
 </body>
 </html>
