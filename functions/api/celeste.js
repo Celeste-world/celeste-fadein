@@ -1,47 +1,62 @@
 export async function onRequest({ request }) {
-  const text = await request.text();
-  const t = text.trim();
+  let message = "";
 
-  // --- 圧力判定（言語・意味 非依存） ---
-  let pressure = 0;
-  if (t.length === 0) {
-    pressure = 0;
-  } else if (t.length < 12) {
-    pressure = 1;   // 短語・名詞・挨拶
-  } else if (t.length < 60) {
-    pressure = 2;   // 短文
-  } else {
-    pressure = 3;   // 展開・複文
+  try {
+    const body = await request.json();
+    message = (body.message || "").trim();
+  } catch {
+    message = "";
   }
 
-  // --- 応答生成 ---
-  let response = "";
+  // --- 圧力判定（言語・意味・文字種 非依存） ---
+  let pressure = 0;
+
+  if (message.length === 0) {
+    pressure = 0;
+  } else if (message.length < 12) {
+    pressure = 1; // 単語・挨拶・記号
+  } else if (message.length < 60) {
+    pressure = 2; // 短文
+  } else {
+    pressure = 3; // 展開された文章
+  }
+
+  // --- 応答生成（v4.3A思想準拠） ---
+  let reply = "";
 
   switch (pressure) {
     case 0:
     case 1:
-      // 完全沈黙（これが正解）
-      response = "";
+      // 沈黙は沈黙として返す
+      reply = "";
       break;
 
     case 2:
-      response = pick([
+      reply = pick([
         "今の言葉は、ここにあります。",
-        "少し間を置いても構いません。"
+        "急がなくて大丈夫です。"
       ]);
       break;
 
     case 3:
-      response = pick([
-        "ここで一度、区切れそうです。",
-        "もう十分に書かれています。"
+      reply = pick([
+        "ここまでで、十分に書かれています。",
+        "一度、ここで区切れそうです。"
       ]);
       break;
   }
 
-  return new Response(response, {
-    headers: { "Content-Type": "text/plain; charset=utf-8" }
-  });
+  return new Response(
+    JSON.stringify({
+      reply,
+      pressure
+    }),
+    {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }
+  );
 }
 
 function pick(arr) {
