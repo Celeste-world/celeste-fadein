@@ -10,12 +10,12 @@
 <style>
 :root{
   --bg:#04060e;
-  --panel:#0d1222;
-  --text:#e6e9f2;
-  --muted:#9aa3b7;
-  --line:#1f2538;
-  --accent:#7f8cff;
-  --accent-soft: rgba(127,140,255,0.35);
+  --panel:#111623;
+  --text:#e8ebef;
+  --muted:#a0a8bb;
+  --line:#252b3a;
+  --accent:#8fa6ff;
+  --react:#5d6cff;
 }
 
 *{ box-sizing:border-box; }
@@ -23,7 +23,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #141a33 0, var(--bg) 55%);
+  background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
@@ -37,7 +37,6 @@ body{
   flex-direction:column;
 }
 
-/* Intro */
 .intro{
   margin-bottom:24px;
   color:var(--muted);
@@ -45,23 +44,46 @@ body{
   line-height:1.8;
 }
 
-/* Console */
 .console{
-  background:rgba(9,12,26,0.92);
+  position:relative;
+  background:rgba(10,14,28,0.95);
   border:1px solid var(--line);
   border-radius:16px;
   padding:22px 20px 24px;
-  box-shadow:0 18px 38px rgba(0,0,0,0.55);
+  box-shadow:0 18px 38px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
-  transition:border-color 1.6s ease;
+  transition:border-color 0.4s ease;
 }
 
-/* 受理時の枠変化（メイン演出） */
-.console.active{
-  border-color:var(--accent-soft);
+.console.reactive{
+  border-color:var(--react);
 }
 
+/* Notice */
+.notice{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.4s ease;
+}
+
+.notice.show{
+  opacity:0.65;
+}
+
+.notice p{
+  font-size:14px;
+  line-height:1.7;
+  text-align:center;
+  max-width:70%;
+}
+
+/* Log */
 .log{
   min-height:280px;
   max-height:520px;
@@ -75,21 +97,14 @@ body{
   white-space:pre-wrap;
 }
 
-.entry.user{
-  color:var(--accent);
-}
+.entry.user{ color:var(--accent); }
+.entry.celeste{ color:var(--text); }
 
-.entry.celeste{
-  color:var(--text);
-}
-
-/* Divider */
 .divider{
   border-top:1px solid var(--line);
   margin:32px 0 16px;
 }
 
-/* Input */
 textarea{
   width:100%;
   background:transparent;
@@ -101,23 +116,17 @@ textarea{
   font-family:inherit;
   font-size:15px;
   min-height:48px;
-  transition:border-color 1.4s ease;
 }
 
-textarea::placeholder{
-  color:#6d7588;
+textarea:focus{
+  outline:none;
+  border-color:var(--react);
 }
 
-/* モバイル向け：入力欄だけ反応 */
-textarea.active{
-  border-color:var(--accent-soft);
-}
-
-/* Footer */
 footer{
   margin-top:32px;
   padding-top:18px;
-  border-top:1px solid rgba(31,37,56,0.9);
+  border-top:1px solid rgba(37,43,58,0.9);
   font-size:12px;
   color:var(--muted);
   display:flex;
@@ -130,21 +139,14 @@ footer{
 <div class="wrap">
 
   <div class="intro">
-    A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.<br>
-    <a href="/faq.html">You can read the FAQ anytime.</a>
+    A quiet space to organize your thoughts — decisions stay with you.
   </div>
 
   <div id="console" class="console">
+    <div id="notice" class="notice"><p></p></div>
     <div id="log" class="log"></div>
-
     <div class="divider"></div>
-
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
   <footer>
@@ -154,70 +156,84 @@ footer{
 </div>
 
 <script>
-const log     = document.getElementById("log");
-const input   = document.getElementById("input");
-const consoleBox = document.getElementById("console");
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const consoleEl = document.getElementById("console");
+const noticeEl = document.getElementById("notice");
+const noticeText = noticeEl.querySelector("p");
+
+let noticeShown = false;
 
 function addEntry(text, cls){
-  if(!text) return;
-  const div = document.createElement("div");
-  div.className = "entry " + cls;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  const d=document.createElement("div");
+  d.className="entry "+cls;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
-/* 視覚的「受理」 */
-function acknowledge(){
-  consoleBox.classList.add("active");
-  input.classList.add("active");
-
+function showNotice(text){
+  noticeText.textContent = text;
+  noticeEl.classList.add("show");
   setTimeout(()=>{
-    consoleBox.classList.remove("active");
-    input.classList.remove("active");
-  }, 1600);
+    noticeEl.classList.remove("show");
+    noticeText.textContent="";
+  },2600);
 }
 
-/* Send */
+function pulse(){
+  consoleEl.classList.add("reactive");
+  setTimeout(()=>consoleEl.classList.remove("reactive"),600);
+}
+
 async function send(){
-  const value = input.value.trim();
-  if(!value) return;
+  const v=input.value.trim();
+  if(!v) return;
 
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
+  input.value="";
+  input.style.height="auto";
 
-  acknowledge();
+  pulse();
 
-  try{
-    const res = await fetch("/api/celeste-dev", {
+  if(!noticeShown){
+    const res = await fetch("/api/celeste",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:value })
+      body:JSON.stringify({ message:v, mode:"notice" })
     });
-
     const data = await res.json();
-
-    if(data.reply && data.reply.trim() !== ""){
-      addEntry(data.reply, "celeste");
+    if(data.notice){
+      showNotice(data.notice);
+      noticeShown=true;
+      await new Promise(r=>setTimeout(r,1200));
     }
-  }catch(e){
-    // 沈黙は失敗ではない
   }
+
+  addEntry(v,"user");
+
+  fetch("/api/celeste",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ message:v })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.response){
+      addEntry(d.response,"celeste");
+    }
+  });
 }
 
-/* Enter to send */
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-/* Auto resize */
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
