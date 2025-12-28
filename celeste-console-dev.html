@@ -25,12 +25,25 @@
     min-height: 80px;
     white-space: pre-wrap;
     margin-bottom: 16px;
-    opacity: 0;
-    transition: opacity 2.5s ease;
   }
 
-  .log.visible {
-    opacity: 1;
+  /* 初期メッセージ */
+  .intro {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeIn 2.2s ease-out forwards;
+    line-height: 1.8;
+  }
+
+  .intro span {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   input {
@@ -80,12 +93,18 @@ const log = document.getElementById("log");
 const input = document.getElementById("input");
 const error = document.getElementById("error");
 
-/* ---- 初期メッセージ（APIは叩かない） ---- */
-window.addEventListener("load", () => {
-  log.textContent = "Hi";
-  requestAnimationFrame(() => {
-    log.classList.add("visible");
-  });
+let introShown = true;
+
+/* 初期メッセージをフェードイン */
+window.addEventListener("DOMContentLoaded", () => {
+  const intro = document.createElement("div");
+  intro.className = "intro";
+  intro.innerHTML = `
+    <span>Hello, I’m Celeste.</span>
+    <span></span>
+    <span>Write freely.</span>
+  `;
+  log.appendChild(intro);
 });
 
 async function sendMessage() {
@@ -94,7 +113,14 @@ async function sendMessage() {
 
   input.value = "";
   error.textContent = "";
-  log.textContent += "\n> " + message;
+
+  /* 初期メッセージは最初の入力で役目を終える */
+  if (introShown) {
+    log.textContent = "";
+    introShown = false;
+  }
+
+  log.textContent += `> ${message}\n`;
 
   try {
     const res = await fetch(API_URL, {
@@ -108,7 +134,9 @@ async function sendMessage() {
     if (!res.ok) throw new Error("API error");
 
     const data = await res.json();
-    log.textContent += "\n" + data.reply;
+    if (data.reply) {
+      log.textContent += `${data.reply}\n`;
+    }
 
   } catch (e) {
     error.textContent = "[API error]";
