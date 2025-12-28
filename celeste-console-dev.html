@@ -1,157 +1,179 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <title>Celeste Console – Dev</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <style>
-  body {
-    margin: 0;
-    background: radial-gradient(circle at top, #0b1530, #050811);
-    color: #e8ebef;
-    font-family: "Georgia", serif;
-  }
+:root {
+  --bg: #050811;
+  --panel: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.18);
+  --text: #e8ebef;
+  --dim: rgba(232,235,239,0.55);
+}
 
-  .container {
-    max-width: 860px;
-    margin: 60px auto;
-    padding: 0 20px;
-  }
+* { box-sizing: border-box; }
 
-  .panel {
-    border: 1px solid rgba(200,220,255,0.25);
-    border-radius: 16px;
-    padding: 28px;
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
-  }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 50% -200px, #0d1633, transparent),
+    var(--bg);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .panel.pressure-1 {
-    border-color: rgba(160,200,255,0.6);
-  }
+.console {
+  width: min(720px, 92vw);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55);
+  transition: border-color .3s, box-shadow .3s;
+}
 
-  .panel.pressure-2 {
-    border-color: rgba(180,220,255,0.85);
-    box-shadow: 0 0 28px rgba(120,180,255,0.25);
-  }
+.console.pressure-1 { border-color: rgba(180,200,255,.35); }
+.console.pressure-2 { border-color: rgba(140,180,255,.55); box-shadow: 0 0 0 1px rgba(140,180,255,.15), 0 40px 80px rgba(0,0,0,.55); }
+.console.pressure-3 { border-color: rgba(255,190,160,.55); box-shadow: 0 0 0 1px rgba(255,190,160,.18), 0 40px 80px rgba(0,0,0,.55); }
 
-  .log {
-    white-space: pre-wrap;
-    line-height: 1.7;
-    margin-bottom: 18px;
-  }
+.log {
+  min-height: 140px;
+  white-space: pre-wrap;
+  line-height: 1.65;
+  font-size: 15px;
+}
 
-  .notice {
-    text-align: center;
-    font-size: 13px;
-    opacity: 0.6;
-    margin: 18px 0 10px;
-    display: none;
-  }
+.log .user { color: #cfe0ff; }
+.log .celeste { color: #ffffff; }
+.log .notice { color: var(--dim); font-size: 13px; margin-top: 8px; }
 
-  .notice.show {
-    display: block;
-  }
+.input-wrap {
+  margin-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 14px;
+}
 
-  textarea {
-    width: 100%;
-    background: transparent;
-    color: #e8ebef;
-    border: 1px solid rgba(200,220,255,0.25);
-    border-radius: 10px;
-    padding: 14px;
-    font-size: 15px;
-    resize: none;
-    outline: none;
-  }
+input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+}
 
-  textarea::placeholder {
-    color: rgba(200,220,255,0.35);
-  }
+input::placeholder {
+  color: rgba(232,235,239,.45);
+}
 
-  .footer {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 12px;
-    opacity: 0.4;
-  }
+.footer {
+  margin-top: 10px;
+  text-align: right;
+  font-size: 11px;
+  color: rgba(232,235,239,.35);
+}
 </style>
 </head>
 
 <body>
-<div class="container">
-  <div id="panel" class="panel">
-    <div id="log" class="log">Hi</div>
 
-    <div id="notice" class="notice">
-      This space is open to whatever you choose to write.
-    </div>
+<div id="console" class="console">
+  <div id="log" class="log"></div>
 
-    <textarea
+  <div id="notice" class="log notice" style="display:none;"></div>
+
+  <div class="input-wrap">
+    <input
       id="input"
-      rows="3"
       placeholder="Write freely."
-    ></textarea>
+      autocomplete="off"
+    />
   </div>
 
   <div class="footer">CELESTE v4.4-dev</div>
 </div>
 
 <script>
-const input = document.getElementById("input");
+const API_URL = "/functions/api/celeste-dev";
 const log = document.getElementById("log");
-const panel = document.getElementById("panel");
 const notice = document.getElementById("notice");
+const input = document.getElementById("input");
+const consoleBox = document.getElementById("console");
+
+function setPressure(p) {
+  consoleBox.className = "console";
+  if (p > 0) consoleBox.classList.add("pressure-" + p);
+}
+
+function addLine(text, cls) {
+  const div = document.createElement("div");
+  div.className = cls;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function showNotice(text) {
+  notice.textContent = text;
+  notice.style.display = text ? "block" : "none";
+}
 
 async function sendMessage(text) {
+  addLine(text, "user");
+
   try {
-    const res = await fetch("/functions/api/celeste-dev", {
+    const res = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text })
     });
 
-    if (!res.ok) {
-      throw new Error("API error");
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      throw new Error("Non-JSON response");
     }
 
     const data = await res.json();
-    return data;
+
+    if (data.reply) {
+      addLine(data.reply, "celeste");
+    }
+
+    setPressure(data.pressure || 0);
+
+    if (data.pressure === 2) {
+      showNotice("このあたりは、まだ書き続けられます。");
+    } else if (data.pressure === 3) {
+      showNotice("ここで一度、区切ってもよさそうです。");
+    } else {
+      showNotice("");
+    }
 
   } catch (e) {
-    return { reply: "[API error]", pressure: 0 };
+    addLine("[API error]", "celeste");
+    setPressure(0);
+    showNotice("");
   }
 }
 
-input.addEventListener("keydown", async (e) => {
-  if (e.key !== "Enter" || e.shiftKey) return;
-
-  e.preventDefault();
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = "";
-
-  log.textContent += "\n\n" + text;
-
-  const { reply, pressure } = await sendMessage(text);
-
-  if (reply) {
-    log.textContent += "\n" + reply;
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    sendMessage(text);
   }
-
-  panel.className = "panel pressure-" + pressure;
-
-  if (pressure >= 1) {
-    notice.classList.add("show");
-  } else {
-    notice.classList.remove("show");
-  }
-
-  log.scrollTop = log.scrollHeight;
 });
 </script>
+
 </body>
 </html>
