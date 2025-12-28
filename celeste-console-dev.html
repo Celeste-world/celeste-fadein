@@ -25,6 +25,12 @@
     min-height: 80px;
     white-space: pre-wrap;
     margin-bottom: 16px;
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
+
+  .log.visible {
+    opacity: 1;
   }
 
   input {
@@ -54,7 +60,6 @@
 
 <body>
   <div class="console">
-    <!-- 初期状態は静寂 -->
     <div id="log" class="log"></div>
 
     <input
@@ -71,6 +76,18 @@
 const API_URL =
   "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
 
+const INITIAL_MESSAGE = "Hi";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const log = document.getElementById("log");
+
+  // 少し間を置いて表示（静寂）
+  setTimeout(() => {
+    log.textContent = INITIAL_MESSAGE;
+    log.classList.add("visible");
+  }, 600);
+});
+
 async function sendMessage() {
   const input = document.getElementById("input");
   const log = document.getElementById("log");
@@ -81,6 +98,7 @@ async function sendMessage() {
 
   input.value = "";
   error.textContent = "";
+
   log.textContent += "\n> " + message;
 
   try {
