@@ -1,155 +1,178 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
 <style>
-  body {
-    margin: 0;
-    background: radial-gradient(ellipse at top, #0b1530, #02040a);
-    color: #e6ebff;
-    font-family: "Georgia", serif;
-  }
+:root {
+  --bg: #050811;
+  --panel: #0b1020;
+  --border: rgba(140,170,255,0.25);
+  --border-active: rgba(160,190,255,0.65);
+  --text: #e6e9f0;
+  --muted: #8a92b2;
+}
 
-  .wrapper {
-    max-width: 820px;
-    margin: 80px auto;
-    padding: 0 20px;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  .console {
-    border: 1px solid rgba(160,180,255,0.25);
-    border-radius: 14px;
-    padding: 28px;
-    transition: border-color 0.6s ease;
-  }
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0b1430, #02030a 70%);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-  .console.p1 {
-    border-color: rgba(170,190,255,0.45);
-  }
-  .console.p2 {
-    border-color: rgba(200,210,255,0.7);
-  }
-  .console.p3 {
-    border-color: rgba(230,235,255,0.95);
-  }
+#console-wrap {
+  width: min(720px, 92vw);
+}
 
-  .log {
-    min-height: 240px;
-    white-space: pre-wrap;
-    line-height: 1.8;
-  }
+#console {
+  background: linear-gradient(180deg, #0b1126, #060914);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.4s ease;
+}
 
-  .user {
-    color: #9fb6ff;
-    margin-bottom: 10px;
-  }
+#console.active {
+  border-color: var(--border-active);
+}
 
-  .reply {
-    margin-bottom: 18px;
-  }
+#log {
+  min-height: 220px;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  overflow: hidden;
+}
 
-  .guide {
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    margin: 12px 0 20px;
-    font-size: 0.9rem;
-    color: #b8c3ff;
-  }
+.user {
+  color: #8fb0ff;
+  margin-bottom: 10px;
+}
 
-  .guide.show {
-    opacity: 1;
-  }
+.reply {
+  margin-bottom: 16px;
+}
 
-  .input-area {
-    margin-top: 20px;
-  }
+#input-wrap {
+  margin-top: 18px;
+}
 
-  input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(150,170,255,0.35);
-    background: transparent;
-    color: #e6ebff;
-    font-size: 1rem;
-  }
+#input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #050811;
+  color: var(--text);
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.4s ease;
+}
 
-  input:focus {
-    outline: none;
-    border-color: rgba(200,220,255,0.8);
-  }
+#input.active {
+  border-color: var(--border-active);
+}
+
+#notice {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+#notice.show {
+  opacity: 1;
+}
+
+#notice span {
+  font-size: 14px;
+  color: var(--muted);
+  background: rgba(10,15,30,0.6);
+  padding: 10px 18px;
+  border-radius: 999px;
+}
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-  <div id="console" class="console">
-    <div id="guide" class="guide">ここに自由に書けます</div>
-    <div id="log" class="log"></div>
+<div id="console-wrap">
+  <div id="console">
+    <div id="log"></div>
 
-    <div class="input-area">
+    <div id="input-wrap">
       <input id="input" placeholder="Write freely." />
     </div>
   </div>
 </div>
 
+<div id="notice">
+  <span>ここは自由に書けます</span>
+</div>
+
 <script>
 const input = document.getElementById("input");
 const log = document.getElementById("log");
-const guide = document.getElementById("guide");
+const notice = document.getElementById("notice");
 const consoleBox = document.getElementById("console");
 
-let guideShown = false;
+let noticeShown = false;
 
-input.addEventListener("keydown", async (e) => {
-  if (e.key !== "Enter") return;
+function showNoticeOnce() {
+  if (noticeShown) return;
+  noticeShown = true;
+  notice.classList.add("show");
+  setTimeout(() => notice.classList.remove("show"), 1800);
+}
 
-  const text = input.value.trim();
-  if (!text) return;
+function activateFrame() {
+  consoleBox.classList.add("active");
+  input.classList.add("active");
+  setTimeout(() => {
+    consoleBox.classList.remove("active");
+    input.classList.remove("active");
+  }, 1400);
+}
 
-  input.value = "";
+async function send(text) {
+  showNoticeOnce();
+  activateFrame();
 
   log.innerHTML += `<div class="user">${text}</div>`;
 
   const res = await fetch("/api/celeste-dev", {
     method: "POST",
-    body: JSON.stringify({ message: text }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
   });
 
   const data = await res.json();
 
-  const pressure = data.pressure ?? 2;
-  const reply = data.reply ?? "";
-
-  // 枠反応
-  consoleBox.classList.remove("p1","p2","p3");
-  if (pressure >= 1) consoleBox.classList.add("p1");
-  if (pressure >= 2) consoleBox.classList.add("p2");
-  if (pressure >= 3) consoleBox.classList.add("p3");
-
-  // 注意書き（1回だけ）
-  if (!guideShown && pressure >= 1) {
-    guide.classList.add("show");
-    guideShown = true;
-
-    setTimeout(() => {
-      guide.style.opacity = "0";
-    }, 1400);
-
-    setTimeout(() => {
-      guide.remove();
-    }, 2200);
-  }
-
-  // 返事は必ず表示
-  if (reply) {
-    log.innerHTML += `<div class="reply">${reply}</div>`;
+  if (data.reply) {
+    log.innerHTML += `<div class="reply">${data.reply}</div>`;
   }
 
   log.scrollTop = log.scrollHeight;
+}
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter" && input.value.trim()) {
+    const text = input.value.trim();
+    input.value = "";
+    send(text);
+  }
 });
 </script>
 </body>
