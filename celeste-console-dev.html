@@ -1,94 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <title>Celeste Console – Dev</title>
 
 <style>
-  html, body {
+  body {
     margin: 0;
-    padding: 0;
-    background: #050811;
+    background: radial-gradient(circle at top, #0b1530, #050811);
     color: #e8ebef;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: "Georgia", serif;
   }
 
-  .wrap {
-    max-width: 800px;
-    margin: 80px auto;
-    padding: 24px;
+  .container {
+    max-width: 860px;
+    margin: 60px auto;
+    padding: 0 20px;
   }
 
   .panel {
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 14px;
-    padding: 24px;
-    background: linear-gradient(180deg, #0b1020, #050811);
+    border: 1px solid rgba(200,220,255,0.25);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .panel.pressure-1 {
+    border-color: rgba(160,200,255,0.6);
+  }
+
+  .panel.pressure-2 {
+    border-color: rgba(180,220,255,0.85);
+    box-shadow: 0 0 28px rgba(120,180,255,0.25);
   }
 
   .log {
     white-space: pre-wrap;
-    line-height: 1.6;
-    margin-bottom: 24px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+
+  .notice {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.6;
+    margin: 18px 0 10px;
+    display: none;
+  }
+
+  .notice.show {
+    display: block;
   }
 
   textarea {
     width: 100%;
-    height: 64px;
-    resize: none;
     background: transparent;
     color: #e8ebef;
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(200,220,255,0.25);
     border-radius: 10px;
-    padding: 12px;
+    padding: 14px;
     font-size: 15px;
+    resize: none;
     outline: none;
   }
 
   textarea::placeholder {
-    color: rgba(255,255,255,0.4);
+    color: rgba(200,220,255,0.35);
   }
 
   .footer {
-    margin-top: 12px;
     text-align: right;
+    margin-top: 10px;
     font-size: 12px;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="panel">
-    <div id="log" class="log"></div>
+<div class="container">
+  <div id="panel" class="panel">
+    <div id="log" class="log">Hi</div>
+
+    <div id="notice" class="notice">
+      This space is open to whatever you choose to write.
+    </div>
 
     <textarea
       id="input"
+      rows="3"
       placeholder="Write freely."
     ></textarea>
-
-    <div class="footer">CELESTE v4.4-dev</div>
   </div>
+
+  <div class="footer">CELESTE v4.4-dev</div>
 </div>
 
 <script>
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
+const input = document.getElementById("input");
+const log = document.getElementById("log");
+const panel = document.getElementById("panel");
+const notice = document.getElementById("notice");
 
-inputEl.addEventListener("keydown", async (e) => {
-  if (e.key !== "Enter") return;
-  if (e.shiftKey) return;
-
-  e.preventDefault();
-
-  const text = inputEl.value.trim();
-  if (!text) return;
-
-  inputEl.value = "";
-
-  appendLine(text);
-
+async function sendMessage(text) {
   try {
     const res = await fetch("/functions/api/celeste-dev", {
       method: "POST",
@@ -99,24 +113,45 @@ inputEl.addEventListener("keydown", async (e) => {
     });
 
     if (!res.ok) {
-      appendLine("[API error]");
-      return;
+      throw new Error("API error");
     }
 
     const data = await res.json();
+    return data;
 
-    if (data.reply) {
-      appendLine(data.reply);
-    }
-
-  } catch (err) {
-    appendLine("[Network error]");
+  } catch (e) {
+    return { reply: "[API error]", pressure: 0 };
   }
-});
-
-function appendLine(text) {
-  logEl.textContent += text + "\n\n";
 }
+
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter" || e.shiftKey) return;
+
+  e.preventDefault();
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+
+  log.textContent += "\n\n" + text;
+
+  const { reply, pressure } = await sendMessage(text);
+
+  if (reply) {
+    log.textContent += "\n" + reply;
+  }
+
+  panel.className = "panel pressure-" + pressure;
+
+  if (pressure >= 1) {
+    notice.classList.add("show");
+  } else {
+    notice.classList.remove("show");
+  }
+
+  log.scrollTop = log.scrollHeight;
+});
 </script>
 </body>
 </html>
