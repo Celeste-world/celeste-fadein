@@ -1,5 +1,3 @@
-// functions/api/celeste-dev.js
-
 export async function onRequest({ request }) {
   let text = "";
 
@@ -32,7 +30,7 @@ export async function onRequest({ request }) {
       break;
 
     case 1:
-      // 単語はそのまま返す（Hi → Hi）
+      // 単語そのまま返す（Hi → Hi）
       reply = text;
       break;
 
@@ -54,6 +52,7 @@ export async function onRequest({ request }) {
   return new Response(
     JSON.stringify({ reply, pressure }),
     {
+      status: 200,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
       },
