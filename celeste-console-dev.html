@@ -54,7 +54,7 @@
 
 <body>
   <div class="console">
-    <!-- ★ ここが修正点 -->
+    <!-- 初期状態は静寂 -->
     <div id="log" class="log"></div>
 
     <input
@@ -62,6 +62,7 @@
       placeholder="Write freely."
       onkeydown="if(event.key==='Enter') sendMessage()"
     />
+
     <div id="error" class="error"></div>
     <footer>CELESTE v4.4-dev</footer>
   </div>
@@ -80,7 +81,7 @@ async function sendMessage() {
 
   input.value = "";
   error.textContent = "";
-  log.textContent += (log.textContent ? "\n" : "") + "> " + message;
+  log.textContent += "\n> " + message;
 
   try {
     const res = await fetch(API_URL, {
