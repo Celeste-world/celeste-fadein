@@ -2,209 +2,154 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
 <style>
-  :root{
-    --bg1:#0b1430;
-    --bg2:#02040a;
-    --text:#e8ebef;
-    --panel:rgba(255,255,255,0.04);
-    --line:rgba(255,255,255,0.10);
-    --input:rgba(255,255,255,0.08);
-    --error:#ff6b6b;
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #0b1430, #02040a);
+    color: #e8ebef;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
   }
 
-  body{
-    margin:0;
-    min-height:100vh;
-    background: radial-gradient(circle at top, var(--bg1), var(--bg2));
-    color: var(--text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-  }
-
-  .console{
-    width:min(720px, calc(100vw - 32px));
+  .console {
+    max-width: 720px;
     margin: 120px auto;
     padding: 24px;
     border-radius: 16px;
-    background: var(--panel);
+    background: rgba(255,255,255,0.04);
     backdrop-filter: blur(12px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
   }
 
-  /* ===== Intro (separate from log) ===== */
-  .intro{
-    padding: 6px 2px 14px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 14px;
-  }
-
-  .intro-line{
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 1.8s ease, transform 1.8s ease;
-    font-size: 16px;
-    line-height: 1.6;
-    margin: 0 0 10px 0;
-    letter-spacing: 0.2px;
-  }
-
-  .intro-line.show{
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .intro.fadeout{
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 1.4s ease, transform 1.4s ease; /* ← 1.4秒フェードアウト */
-  }
-
-  /* ===== Conversation log ===== */
-  .log{
-    min-height: 96px;
+  .log {
+    min-height: 120px;
     white-space: pre-wrap;
-    margin: 0 0 14px 0;
-    font-size: 14px;
-    line-height: 1.7;
+    margin-bottom: 16px;
+    line-height: 1.6;
   }
 
-  input{
-    width:100%;
-    padding: 12px 12px;
+  .intro {
+    opacity: 0;
+    transition: opacity 2.6s ease;
+  }
+
+  .intro.visible {
+    opacity: 1;
+  }
+
+  .intro.fadeout {
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
     border-radius: 10px;
-    border: 1px solid transparent;
-    outline:none;
-    background: var(--input);
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.08);
     color: white;
     font-size: 14px;
   }
 
-  input:disabled{
-    opacity: 0.55;
-    cursor: not-allowed;
+  input:disabled {
+    opacity: 0.4;
   }
 
-  .error{
-    color: var(--error);
+  .error {
+    color: #ff6b6b;
     margin-top: 8px;
-    font-size: 13px;
-    min-height: 18px;
   }
 
-  footer{
-    text-align:right;
+  footer {
+    text-align: right;
     font-size: 11px;
     opacity: 0.6;
     margin-top: 8px;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .intro-line, .intro.fadeout{
-      transition: none !important;
-    }
   }
 </style>
 </head>
 
 <body>
   <div class="console">
-    <!-- Intro (NOT part of log) -->
-    <div id="intro" class="intro" aria-label="intro">
-      <p id="intro1" class="intro-line">Hello, I’m Celeste.</p>
-      <p id="intro2" class="intro-line">Write freely.</p>
-    </div>
-
-    <!-- Conversation log -->
-    <div id="log" class="log" aria-label="conversation"></div>
+    <div id="log" class="log"></div>
 
     <input
       id="input"
       placeholder="Write freely."
       disabled
       onkeydown="if(event.key==='Enter') sendMessage()"
-      autocomplete="off"
-      spellcheck="false"
     />
+
     <div id="error" class="error"></div>
     <footer>CELESTE v4.4-dev</footer>
   </div>
 
 <script>
-const API_URL = "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
+const API_URL =
+  "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
 
-const intro = document.getElementById("intro");
-const intro1 = document.getElementById("intro1");
-const intro2 = document.getElementById("intro2");
-const input = document.getElementById("input");
 const log = document.getElementById("log");
+const input = document.getElementById("input");
 const error = document.getElementById("error");
 
-/**
- * Intro sequence:
- * - line1 fades in slowly
- * - line2 fades in after a short delay
- * - then the whole intro fades out over 1.4s BEFORE input is enabled
- */
-function runIntroSequence(){
-  // start with input locked
-  input.disabled = true;
+let introDone = false;
 
-  // fade in lines (slow)
-  setTimeout(() => intro1.classList.add("show"), 120);
-  setTimeout(() => intro2.classList.add("show"), 1100);
+/* ---- 初期文言フェード制御 ---- */
+function showIntro() {
+  const intro = document.createElement("div");
+  intro.className = "intro";
+  intro.innerHTML = "Hello, I’m Celeste.\n\nWrite freely.";
+  log.appendChild(intro);
 
-  // after they are visible, fade out whole intro
-  // (tune: total timing = appearance + reading time)
-  const fadeOutStartMs = 3800;  // ← 長ければ増やす（例: 4500）
+  requestAnimationFrame(() => {
+    intro.classList.add("visible");
+  });
+
+  // 4秒表示 → 1.4秒フェードアウト
   setTimeout(() => {
     intro.classList.add("fadeout");
-  }, fadeOutStartMs);
+  }, 4000);
 
-  // when fadeout finished, remove intro from layout and enable input
-  intro.addEventListener("transitionend", (e) => {
-    if (!intro.classList.contains("fadeout")) return;
-    if (e.propertyName !== "opacity") return;
-
-    intro.style.display = "none";
+  setTimeout(() => {
+    intro.remove();
+    introDone = true;
     input.disabled = false;
     input.focus();
-  }, { once: true });
+  }, 5400);
 }
 
-document.addEventListener("DOMContentLoaded", runIntroSequence);
+showIntro();
 
-async function sendMessage(){
+/* ---- 通常メッセージ送信 ---- */
+async function sendMessage() {
+  if (!introDone) return;
+
   const message = input.value.trim();
-  if(!message) return;
+  if (!message) return;
 
   input.value = "";
   error.textContent = "";
 
-  // append user message
-  log.textContent += (log.textContent ? "\n" : "") + "> " + message;
+  log.textContent += "\n> " + message + "\n";
 
-  try{
+  try {
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message })
     });
 
-    if(!res.ok) throw new Error("API error");
+    if (!res.ok) throw new Error("API error");
 
     const data = await res.json();
 
-    // append assistant reply (only the reply field)
-    const reply = (data && typeof data.reply === "string") ? data.reply : "";
-    log.textContent += "\n" + (reply || "…");
+    if (data.reply) {
+      log.textContent += data.reply + "\n";
+    }
 
-  }catch(e){
+  } catch (e) {
     error.textContent = "[API error]";
   }
 }
