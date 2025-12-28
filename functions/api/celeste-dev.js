@@ -8,42 +8,61 @@ export async function onRequest({ request }) {
     message = "";
   }
 
-  // --- 圧力判定（言語・意味・文字種 非依存） ---
+  // --- pressure 判定 ---
   let pressure = 0;
+
   if (message.length === 0) {
     pressure = 0;
-  } else if (message.length < 12) {
-    pressure = 1;
-  } else if (message.length < 60) {
-    pressure = 2;
+
   } else {
-    pressure = 3;
+    // 挨拶検出（最小限・言語依存を避ける）
+    const greetingPattern = /^(hi|hello|hey|good morning|good evening|こんにちは|こんばんは|おはよう|やあ|もしもし)$/i;
+
+    if (greetingPattern.test(message)) {
+      pressure = 2; // 対話開始として扱う
+
+    } else if (message.length < 12) {
+      pressure = 1;
+
+    } else if (message.length < 60) {
+      pressure = 2;
+
+    } else {
+      pressure = 3;
+    }
   }
 
+  // --- 応答生成 ---
   let reply = "";
 
   switch (pressure) {
     case 0:
     case 1:
-      reply = ""; // 沈黙
+      reply = "";
       break;
+
     case 2:
       reply = pick([
-        "今の言葉は、ここにあります。",
-        "少し間を置いても構いません。"
+        "ここに声が届いています。",
+        "静かに始めていけます。",
+        "今の言葉は、ここにあります。"
       ]);
       break;
+
     case 3:
       reply = pick([
         "ここで一度、区切れそうです。",
-        "もう十分に書かれています。"
+        "もう十分に書かれています。",
+        "この流れは、しばらく続けられそうです。"
       ]);
       break;
   }
 
   return new Response(
     JSON.stringify({ reply }),
-    { headers: { "Content-Type": "application/json; charset=utf-8" } }
+    {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    }
   );
 }
 
