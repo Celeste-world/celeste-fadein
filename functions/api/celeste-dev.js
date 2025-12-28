@@ -8,51 +8,40 @@ export async function onRequest({ request }) {
     message = "";
   }
 
-  // --- pressure 判定（最小変更） ---
-  let pressure = 0;
-  const len = message.length;
+  const len = [...message].length; // 全角・絵文字対応
 
+  // --- pressure 判定（最小・非言語依存） ---
+  let pressure = 0;
   if (len === 0) {
     pressure = 0;
   } else if (len <= 2) {
-    pressure = 1;
-  } else if (len < 60) {
-    pressure = 2;
+    pressure = 1; // 合図・挨拶の種
   } else {
-    pressure = 3;
+    pressure = 2; // 意図のある入力
   }
 
   // --- 応答 ---
   let reply = "";
 
-  switch (pressure) {
-    case 0:
-      reply = "";
-      break;
+  if (pressure === 1) {
+    // 極短入力：単発・軽い返答のみ
+    reply = pick([
+      "静かな始まりですね。",
+      "ここに届いています。",
+      "その一言が、ここにあります。"
+    ]);
+  }
 
-    case 1:
-      // 単語はそのまま返す（反射）
-      reply = message;
-      break;
-
-    case 2:
-      reply = pick([
-        "ここに、言葉が置かれました。",
-        "今の言葉は、確かにここにあります。",
-        "少し立ち止まってもいいですね。"
-      ]);
-      break;
-
-    case 3:
-      reply = pick([
-        "十分に書かれています。",
-        "ここで一度、区切れそうです。"
-      ]);
-      break;
+  if (pressure === 2) {
+    reply = pick([
+      "静かな朝の中にいますね。どんな気配を感じていますか。",
+      "今、心に浮かんでいることは何でしょう。",
+      "ここに書かれた言葉が、少しずつ形になっています。"
+    ]);
   }
 
   return new Response(
-    JSON.stringify({ reply }),
+    JSON.stringify({ reply, pressure }),
     { headers: { "Content-Type": "application/json; charset=utf-8" } }
   );
 }
