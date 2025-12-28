@@ -1,4 +1,17 @@
 export async function onRequest({ request }) {
+  // POST 以外は拒否（405 を返さないため明示）
+  if (request.method !== "POST") {
+    return new Response(
+      JSON.stringify({ error: "Method Not Allowed" }),
+      {
+        status: 405,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      }
+    );
+  }
+
   let text = "";
 
   try {
@@ -8,8 +21,7 @@ export async function onRequest({ request }) {
     text = "";
   }
 
-  // 文字数（日本語・絵文字対応）
-  const len = [...text].length;
+  const len = [...text].length; // 日本語・絵文字対応
 
   let pressure = 0;
   if (len === 0) {
@@ -30,7 +42,7 @@ export async function onRequest({ request }) {
       break;
 
     case 1:
-      // 単語そのまま返す（Hi → Hi）
+      // 単語オウム返し（Hi → Hi）
       reply = text;
       break;
 
@@ -52,7 +64,6 @@ export async function onRequest({ request }) {
   return new Response(
     JSON.stringify({ reply, pressure }),
     {
-      status: 200,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
       },
