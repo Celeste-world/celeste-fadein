@@ -2,198 +2,152 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-:root {
-  --bg: #050811;
-  --panel: #0c1220;
-  --border: rgba(160,180,255,0.15);
-  --border-active: rgba(160,180,255,0.45);
-  --text: #e8ebef;
-  --muted: #9aa3b2;
+:root{
+  --bg:#050811;
+  --panel:#0c1324;
+  --border:rgba(120,140,200,.25);
+  --accent:rgba(140,170,255,.7);
+  --text:#e8ebef;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at top, #0b1230 0%, #050811 60%);
-  color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden; /* スクロールバー非表示 */
+html,body{
+  margin:0;
+  height:100%;
+  background:radial-gradient(ellipse at top,#0b1635,#050811 70%);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont;
 }
 
-main {
-  max-width: 760px;
-  margin: 80px auto;
-  padding: 0 20px;
+main{
+  max-width:820px;
+  margin:0 auto;
+  padding:80px 20px;
 }
 
-h1, p {
-  margin: 0 0 12px 0;
+.console{
+  background:linear-gradient(180deg,#0c1324,#070c1a);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:28px;
+  transition:border-color .4s, box-shadow .4s;
 }
 
-.console {
-  position: relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  min-height: 260px;
-  transition: border-color 0.6s ease, box-shadow 0.6s ease;
+.console.pressure-1{ border-color:rgba(140,170,255,.45); }
+.console.pressure-2{ border-color:rgba(170,200,255,.7); }
+.console.pressure-3{
+  border-color:rgba(200,220,255,.95);
+  box-shadow:0 0 22px rgba(200,220,255,.25);
 }
 
-.console.active {
-  border-color: var(--border-active);
-  box-shadow: 0 0 0 1px rgba(160,180,255,0.15);
+#log{
+  min-height:180px;
+  white-space:pre-wrap;
+  line-height:1.7;
 }
 
-.log {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  font-size: 15px;
+.user{ color:#9fb5ff; margin-bottom:6px; }
+.reply{ color:#ffffff; margin-bottom:16px; }
+
+.notice{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .8s;
+  font-size:15px;
+  color:#cfd7ff;
 }
 
-.log .user {
-  color: #9fb4ff;
-  margin-bottom: 6px;
-}
+.notice.show{ opacity:1; }
 
-.log .reply {
-  margin-bottom: 18px;
+input{
+  width:100%;
+  margin-top:18px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:#050811;
+  border:1px solid var(--border);
+  color:var(--text);
+  font-size:15px;
 }
-
-.input-wrap {
-  margin-top: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 12px 14px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.4s ease;
-}
-
-input:focus {
-  border-color: var(--border-active);
-}
-
-/* 注意書き（中央表示） */
-.notice {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-
-.notice.show {
-  opacity: 1;
-}
-
-.notice span {
-  font-size: 14px;
-  color: var(--muted);
-}
-
-footer {
-  margin-top: 24px;
-  font-size: 12px;
-  color: var(--muted);
-  text-align: right;
+input:focus{
+  outline:none;
+  border-color:var(--accent);
 }
 </style>
 </head>
 
 <body>
 <main>
-  <p>A quiet space to organize your thoughts — decisions stay with you.</p>
-  <p>This space is open to whatever you choose to write.</p>
-
   <div id="console" class="console">
-    <div id="log" class="log"></div>
-
-    <div class="input-wrap">
-      <input id="input" type="text" placeholder="Write freely." />
-    </div>
+    <div id="log"></div>
+    <input id="input" placeholder="Write freely." />
   </div>
-
-  <footer>CELESTE v4.4-dev</footer>
 </main>
 
-<div id="notice" class="notice">
-  <span>ここは自由に書けます</span>
-</div>
+<div id="notice" class="notice">ここは自由に書けます</div>
 
 <script>
 const input = document.getElementById("input");
 const log = document.getElementById("log");
-const consoleBox = document.getElementById("console");
+const box = document.getElementById("console");
 const notice = document.getElementById("notice");
 
-let noticeShown = false;
-
-function showNoticeOnce() {
-  if (noticeShown) return;
-  noticeShown = true;
-  notice.classList.add("show");
-  setTimeout(() => {
-    notice.classList.remove("show");
-  }, 1400); // 1.4秒 → フェードアウト
+function setPressure(p){
+  box.className = "console pressure-" + p;
 }
 
-async function send(text) {
-  const len = text.length;
+function showNotice(){
+  notice.classList.add("show");
+  setTimeout(()=>notice.classList.remove("show"),1400);
+}
 
+async function send(text){
+  const len = [...text].length;
+
+  // pressure 定義（あなたの最終案）
   let pressure = 0;
-  if (len >= 1 && len <= 2) pressure = 1;
-  else if (len >= 3) pressure = 2;
+  if(len===0) pressure = 0;
+  else if(len<=2) pressure = 1;
+  else if(len<=60) pressure = 2;
+  else pressure = 3;
 
-  if (pressure === 0) return;
-
-  consoleBox.classList.add("active");
-  showNoticeOnce();
+  setPressure(pressure);
+  if(pressure>=1) showNotice();
 
   log.innerHTML += `<div class="user">${text}</div>`;
 
-  // pressure1：単語そのまま返す
-  if (pressure === 1) {
+  // pressure 1：単語返し
+  if(pressure===1){
     log.innerHTML += `<div class="reply">${text}</div>`;
     return;
   }
 
-  // pressure2以上：Workerに投げる
-  try {
-    const res = await fetch("/functions/api/celeste-dev", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    });
-
+  try{
+    const res = await fetch(
+      "/functions/api/celeste-dev?q=" + encodeURIComponent(text)
+    );
     const data = await res.json();
-    if (data.reply) {
+    if(data.reply){
       log.innerHTML += `<div class="reply">${data.reply}</div>`;
     }
-  } catch (e) {
+  }catch(e){
     console.error(e);
   }
 }
 
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    const text = input.value.trim();
-    input.value = "";
-    send(text);
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const v = input.value.trim();
+    input.value="";
+    if(v) send(v);
   }
 });
 </script>
