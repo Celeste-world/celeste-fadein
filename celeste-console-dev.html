@@ -2,32 +2,25 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-  html, body {
+  body {
     margin: 0;
-    height: 100%;
-    background: radial-gradient(ellipse at top, #0b1630, #02040a);
-    font-family: "Georgia", "Yu Mincho", serif;
+    background: radial-gradient(1200px 600px at 50% 20%, #0b1430, #03060f);
     color: #e6ebff;
-  }
-
-  .wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .console {
-    width: 640px;
-    max-width: 90%;
-    padding: 28px;
+    max-width: 720px;
+    margin: 80px auto;
+    padding: 28px 32px 24px;
     border-radius: 18px;
-    background: rgba(10, 20, 50, 0.55);
-    box-shadow: 0 0 40px rgba(120,140,255,0.15);
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    backdrop-filter: blur(14px);
   }
 
   .log {
@@ -35,59 +28,82 @@
     line-height: 1.7;
     font-size: 15px;
     min-height: 120px;
-    margin-bottom: 18px;
+  }
+
+  .user {
+    color: #cfd8ff;
+  }
+
+  .reply {
+    margin-top: 10px;
+    color: #f2f5ff;
   }
 
   .error {
-    color: #ff9aa2;
-    margin-top: 8px;
+    margin-top: 10px;
+    color: #ff6b6b;
+    font-size: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+    margin: 20px 0;
   }
 
   textarea {
     width: 100%;
     resize: none;
-    padding: 12px;
-    border-radius: 10px;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(160,180,255,0.25);
-    color: #e6ebff;
-    font-size: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #fff;
+    font-size: 15px;
     outline: none;
   }
 
-  .footer {
-    margin-top: 10px;
-    font-size: 11px;
-    opacity: 0.6;
+  textarea::placeholder {
+    color: rgba(255,255,255,0.45);
+  }
+
+  footer {
     text-align: right;
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: 0.6;
   }
 </style>
 </head>
 
 <body>
-<div class="wrap">
   <div class="console">
     <div id="log" class="log"></div>
 
-    <textarea id="input" rows="2" placeholder="Write freely."></textarea>
+    <div class="divider"></div>
 
-    <div id="error" class="error"></div>
+    <textarea
+      id="input"
+      rows="2"
+      placeholder="Write freely."
+    ></textarea>
 
-    <div class="footer">CELESTE v4.4-dev</div>
+    <footer>CELESTE v4.4-dev</footer>
   </div>
-</div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const errorBox = document.getElementById("error");
 
-function append(text) {
-  log.textContent += text + "\n\n";
+function append(text, cls = "") {
+  const div = document.createElement("div");
+  div.className = cls;
+  div.textContent = text;
+  log.appendChild(div);
 }
 
 async function sendMessage(text) {
-  errorBox.textContent = "";
+  append(text, "user");
 
   try {
     const res = await fetch("/functions/api/celeste-dev", {
@@ -96,33 +112,31 @@ async function sendMessage(text) {
       body: JSON.stringify({ message: text })
     });
 
-    const raw = await res.text();
+    const contentType = res.headers.get("content-type") || "";
 
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      throw new Error("Non-JSON response");
+    if (!contentType.includes("application/json")) {
+      append("[API error]", "error");
+      return;
     }
 
+    const data = await res.json();
+
     if (data.reply) {
-      append(data.reply);
+      append(data.reply, "reply");
+    } else {
+      append("[API error]", "error");
     }
 
   } catch (e) {
-    errorBox.textContent = "[API error]";
-    console.error(e);
+    append("[API error]", "error");
   }
 }
 
-input.addEventListener("keydown", (e) => {
+input.addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
-
     const text = input.value.trim();
     if (!text) return;
-
-    append(text);
     input.value = "";
     sendMessage(text);
   }
