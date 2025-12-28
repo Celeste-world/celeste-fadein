@@ -30,16 +30,19 @@
 
   .intro {
     opacity: 0;
-    transition: opacity 2.8s ease;
+    animation: fadeIn 3.5s ease forwards;
   }
 
-  .intro.visible {
-    opacity: 1;
+  .intro.fade-out {
+    animation: fadeOut 1.4s ease forwards;
   }
 
-  .intro.fadeout {
-    opacity: 0;
-    transition: opacity 1.4s ease;
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; }
   }
 
   input {
@@ -71,9 +74,9 @@
   <div class="console">
     <div id="log" class="log">
       <div id="intro" class="intro">
-Hello, I’m Celeste.
+        Hello, I’m Celeste.
 
-Write freely.
+        Write freely.
       </div>
     </div>
 
@@ -91,59 +94,45 @@ Write freely.
 const API_URL =
   "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
 
-const log = document.getElementById("log");
 const intro = document.getElementById("intro");
-const input = document.getElementById("input");
-const error = document.getElementById("error");
+const log = document.getElementById("log");
 
-let introVisible = true;
+// 初期文言：表示 → 自動フェードアウト → 完全削除
+setTimeout(() => {
+  intro.classList.add("fade-out");
 
-/* 初期フェードイン */
-requestAnimationFrame(() => {
-  intro.classList.add("visible");
-});
+  setTimeout(() => {
+    intro.remove();
+  }, 1400);
+
+}, 4500); // フェードイン完了後
 
 async function sendMessage() {
+  const input = document.getElementById("input");
+  const error = document.getElementById("error");
+
   const message = input.value.trim();
   if (!message) return;
 
   input.value = "";
   error.textContent = "";
 
-  /* 初回入力時：初期文言をフェードアウトして除去 */
-  if (introVisible) {
-    intro.classList.remove("visible");
-    intro.classList.add("fadeout");
-
-    setTimeout(() => {
-      intro.remove();
-    }, 1400);
-
-    introVisible = false;
-  }
-
-  log.textContent += `\n> ${message}\n`;
+  log.textContent += `\n> ${message}`;
 
   try {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message })
     });
 
-    if (!res.ok) throw new Error("API error");
+    if (!res.ok) throw new Error();
 
     const data = await res.json();
 
-    if (data.reply) {
-      log.textContent += `${data.reply}\n`;
-    } else {
-      throw new Error("Invalid response");
-    }
+    log.textContent += `\n${data.reply}`;
 
-  } catch (e) {
+  } catch {
     error.textContent = "[API error]";
   }
 }
