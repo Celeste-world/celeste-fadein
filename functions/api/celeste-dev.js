@@ -1,17 +1,4 @@
-export async function onRequest({ request }) {
-  // POST 以外は拒否（405 を返さないため明示）
-  if (request.method !== "POST") {
-    return new Response(
-      JSON.stringify({ error: "Method Not Allowed" }),
-      {
-        status: 405,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-      }
-    );
-  }
-
+export async function onRequestPost({ request }) {
   let text = "";
 
   try {
@@ -42,7 +29,7 @@ export async function onRequest({ request }) {
       break;
 
     case 1:
-      // 単語オウム返し（Hi → Hi）
+      // 単語そのまま返す（Hi → Hi）
       reply = text;
       break;
 
@@ -69,6 +56,18 @@ export async function onRequest({ request }) {
       },
     }
   );
+}
+
+// OPTIONS（CORS / 405 回避）
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
 }
 
 function pick(arr) {
