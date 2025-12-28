@@ -1,65 +1,58 @@
 export async function onRequest({ request }) {
-  let t = "";
+  let message = "";
 
   try {
     const body = await request.json();
-    t = (body.message || "").trim();
+    message = (body.message || "").trim();
   } catch {
-    t = "";
+    message = "";
   }
 
-  // --- greeting 判定（最小セット） ---
-  const greetings = [
-    "hi", "hello", "hey",
-    "おはよう", "こんにちは", "こんばんは"
-  ];
-
-  const lower = t.toLowerCase();
-  const isGreeting = greetings.some(g =>
-    lower.startsWith(g)
-  );
-
-  // --- pressure 判定 ---
+  // --- pressure 判定（最小変更） ---
   let pressure = 0;
+  const len = message.length;
 
-  if (t.length === 0) {
+  if (len === 0) {
     pressure = 0;
-  } else if (isGreeting) {
-    pressure = 2;
-  } else if (t.length < 12) {
+  } else if (len <= 2) {
     pressure = 1;
-  } else if (t.length < 60) {
+  } else if (len < 60) {
     pressure = 2;
   } else {
     pressure = 3;
   }
 
-  // --- 応答生成 ---
+  // --- 応答 ---
   let reply = "";
 
   switch (pressure) {
     case 0:
-    case 1:
       reply = "";
+      break;
+
+    case 1:
+      // 単語はそのまま返す（反射）
+      reply = message;
       break;
 
     case 2:
       reply = pick([
-        "ここに言葉が届いています。",
-        "今の言葉は、確かにここにあります。"
+        "ここに、言葉が置かれました。",
+        "今の言葉は、確かにここにあります。",
+        "少し立ち止まってもいいですね。"
       ]);
       break;
 
     case 3:
       reply = pick([
-        "ここで一度、区切れそうです。",
-        "もう十分に書かれています。"
+        "十分に書かれています。",
+        "ここで一度、区切れそうです。"
       ]);
       break;
   }
 
   return new Response(
-    JSON.stringify({ reply, pressure }),
+    JSON.stringify({ reply }),
     { headers: { "Content-Type": "application/json; charset=utf-8" } }
   );
 }
