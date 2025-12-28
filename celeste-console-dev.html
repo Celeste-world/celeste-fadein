@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,12 +9,22 @@
 
 <style>
 :root{
-  --bg:#050811;
-  --panel:#0e1324;
+  --bg:#04060e;
+  --panel:#111623;
+  --panel-border:#2a3150;
+
   --text:#e8ebef;
-  --muted:#8b92a6;
+  --muted:#a0a8bb;
   --line:#252b3a;
-  --accent:#7f8cff;
+
+  /* input base */
+  --input-bg: rgba(255,255,255,0.02);
+  --input-border: rgba(255,255,255,0.12);
+
+  /* reaction colors */
+  --react-low: rgba(150,170,255,0.25);
+  --react-mid: rgba(150,170,255,0.45);
+  --react-high: rgba(180,200,255,0.65);
 }
 
 *{ box-sizing:border-box; }
@@ -22,7 +32,7 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top, #141c34 0, var(--bg) 55%);
+  background:var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
 }
@@ -30,7 +40,10 @@ body{
 .wrap{
   max-width:960px;
   margin:0 auto;
-  padding:48px 20px;
+  padding:48px 20px 40px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
 .intro{
@@ -42,29 +55,52 @@ body{
 
 .console{
   position:relative;
-  background:rgba(10,14,28,0.92);
-  border:1px solid var(--line);
-  border-radius:18px;
+  background:rgba(10,14,28,0.95);
+  border:1px solid var(--panel-border);
+  border-radius:16px;
   padding:22px 20px 24px;
   box-shadow:0 18px 38px rgba(0,0,0,0.5);
-  transition:border-color .6s ease;
+  display:flex;
+  flex-direction:column;
+  transition:border-color 0.6s ease;
 }
 
-.console.active{
-  border-color:#5f6dff;
+.console.react-strong{
+  border-color: rgba(150,170,255,0.45);
+}
+
+.notice{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  z-index:5;
+}
+
+.notice span{
+  font-size:14px;
+  line-height:1.7;
+  text-align:center;
+  color:var(--text);
+  opacity:0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  transform: translateY(6px);
+}
+
+.notice.show span{
+  opacity:0.6;
+  transform: translateY(0);
 }
 
 .log{
-  min-height:280px;
+  min-height:260px;
   max-height:520px;
-  overflow-y: auto;
-
-  /* ↓ 追加 */
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE / Edge legacy */
-}
-.log::-webkit-scrollbar{
-  display: none;                /* Chrome / Safari */
+  overflow-y:auto;
+  padding-right:6px;
 }
 
 .entry{
@@ -73,58 +109,52 @@ body{
   white-space:pre-wrap;
 }
 
-.entry.user{
-  color:var(--accent);
-}
-
-.entry.celeste{
-  color:var(--text);
-}
-
-/* 中央案内文 */
-.hint{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:15px;
-  color:var(--muted);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .8s ease;
-}
-
-.hint.show{
-  opacity:1;
-}
+.entry.user{ color:#a9b7ff; }
+.entry.celeste{ color:var(--text); }
 
 .divider{
   border-top:1px solid var(--line);
-  margin:26px 0 14px;
+  margin:32px 0 16px;
 }
 
 textarea{
   width:100%;
-  background:transparent;
-  border:1px solid var(--line);
-  border-radius:14px;
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:12px;
   padding:12px 14px;
   color:var(--text);
   resize:none;
   font-family:inherit;
   font-size:15px;
   min-height:48px;
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    background-color 0.4s ease;
 }
 
-textarea:focus{
-  outline:none;
-  border-color:#5f6dff;
+textarea::placeholder{ color:#6d7588; }
+
+/* input reactions */
+textarea.react-low{
+  border-color:var(--react-low);
+  box-shadow:0 0 0 1px var(--react-low);
+}
+
+textarea.react-mid{
+  border-color:var(--react-mid);
+  box-shadow:0 0 0 1px var(--react-mid);
+}
+
+textarea.react-high{
+  border-color:var(--react-high);
+  box-shadow:0 0 0 1px var(--react-high);
 }
 
 footer{
-  margin-top:28px;
-  padding-top:16px;
+  margin-top:32px;
+  padding-top:18px;
   border-top:1px solid rgba(37,43,58,0.9);
   font-size:12px;
   color:var(--muted);
@@ -139,25 +169,18 @@ footer{
 
   <div class="intro">
     A quiet space to organize your thoughts — decisions stay with you.<br>
-    This space is open to whatever you choose to write.<br>
-    <a href="/faq.html">You can read the FAQ anytime.</a>
+    This space is open to whatever you choose to write.
   </div>
 
   <div id="console" class="console">
-    <div id="hint" class="hint">ここに自由に書けます</div>
+    <div id="notice" class="notice"><span></span></div>
     <div id="log" class="log"></div>
-
     <div class="divider"></div>
-
-    <textarea
-      id="input"
-      rows="1"
-      placeholder="Write freely."
-    ></textarea>
+    <textarea id="input" rows="1" placeholder="Write freely."></textarea>
   </div>
 
   <footer>
-    <span>CELESTE v5.0A-dev</span>
+    <span>CELESTE v4.4A-dev</span>
   </footer>
 
 </div>
@@ -165,62 +188,95 @@ footer{
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
-const hint = document.getElementById("hint");
-const consoleBox = document.getElementById("console");
+const consoleEl = document.getElementById("console");
+const notice = document.getElementById("notice");
+const noticeText = notice.querySelector("span");
 
-let hintShown = false;
+let sessionId = localStorage.getItem("celeste.sessionId");
+if(!sessionId){
+  sessionId = crypto.randomUUID();
+  localStorage.setItem("celeste.sessionId", sessionId);
+}
+
+let noticeShown = localStorage.getItem("celeste.noticeShown")==="1";
 
 function addEntry(text, cls){
-  const div = document.createElement("div");
-  div.className = "entry " + cls;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  const d=document.createElement("div");
+  d.className="entry "+cls;
+  d.textContent=text;
+  log.appendChild(d);
+  log.scrollTop=log.scrollHeight;
 }
 
-function showHintOnce(){
-  if(hintShown) return;
-  hintShown = true;
-  hint.classList.add("show");
-  setTimeout(() => hint.classList.remove("show"), 2200);
+function showNotice(text){
+  noticeText.textContent = text;
+  notice.classList.add("show");
+  setTimeout(()=>{
+    notice.classList.remove("show");
+    noticeText.textContent="";
+  }, 2600);
 }
 
-function send(){
-  const value = input.value.trim();
-  if(!value) return;
+function applyReaction(pressure){
+  input.classList.remove("react-low","react-mid","react-high");
+  consoleEl.classList.remove("react-strong");
 
-  addEntry(value, "user");
-  input.value = "";
-  input.style.height = "auto";
+  if(pressure<=1){
+    input.classList.add("react-low");
+  }else if(pressure===2){
+    input.classList.add("react-mid");
+  }else{
+    input.classList.add("react-high");
+    consoleEl.classList.add("react-strong");
+  }
 
-  showHintOnce();
-  consoleBox.classList.add("active");
-  setTimeout(() => consoleBox.classList.remove("active"), 1200);
+  setTimeout(()=>{
+    input.style.transition="border-color 0.8s ease, box-shadow 0.8s ease";
+    input.classList.remove("react-low","react-mid","react-high");
+    consoleEl.classList.remove("react-strong");
+  }, 1400);
+}
 
-  fetch("/api/celeste", {
+async function send(){
+  const v=input.value.trim();
+  if(!v) return;
+
+  input.value="";
+  input.style.height="auto";
+
+  const res = await fetch("/api/celeste-dev",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ message:value })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if(data.reply && data.reply.trim()){
-      addEntry(data.reply, "celeste");
-    }
-  })
-  .catch(()=>{});
+    body:JSON.stringify({ message:v, sessionId })
+  });
+
+  const data = await res.json();
+
+  if(!noticeShown && data.notice){
+    showNotice(data.notice);
+    noticeShown=true;
+    localStorage.setItem("celeste.noticeShown","1");
+    await new Promise(r=>setTimeout(r,1200));
+  }
+
+  addEntry(v,"user");
+  applyReaction(data.pressure||0);
+
+  if(data.response){
+    addEntry(data.response,"celeste");
+  }
 }
 
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
     e.preventDefault();
     send();
   }
 });
 
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = input.scrollHeight + "px";
+input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=input.scrollHeight+"px";
 });
 </script>
 
