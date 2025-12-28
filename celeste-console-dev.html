@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <title>Celeste Console – Dev</title>
@@ -8,70 +8,59 @@
 <style>
   body {
     margin: 0;
-    background: radial-gradient(1200px 600px at 50% 20%, #0b1430, #03060f);
-    color: #e6ebff;
+    height: 100vh;
+    background: radial-gradient(circle at top, #0b1530, #03060f);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #e8ebef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .console {
-    max-width: 720px;
-    margin: 80px auto;
-    padding: 28px 32px 24px;
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-    backdrop-filter: blur(14px);
+    width: 720px;
+    max-width: 92%;
+    padding: 28px;
+    border-radius: 16px;
+    background: rgba(10, 18, 40, 0.55);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
   }
 
   .log {
-    white-space: pre-wrap;
-    line-height: 1.7;
-    font-size: 15px;
     min-height: 120px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-size: 15px;
   }
 
-  .user {
-    color: #cfd8ff;
+  .input {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #e8ebef;
+    outline: none;
+    font-size: 15px;
   }
 
-  .reply {
+  .input::placeholder {
+    color: rgba(255,255,255,0.35);
+  }
+
+  .footer {
     margin-top: 10px;
-    color: #f2f5ff;
+    text-align: right;
+    font-size: 11px;
+    opacity: 0.4;
   }
 
   .error {
-    margin-top: 10px;
     color: #ff6b6b;
+    margin-top: 8px;
     font-size: 14px;
-  }
-
-  .divider {
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
-    margin: 20px 0;
-  }
-
-  textarea {
-    width: 100%;
-    resize: none;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #fff;
-    font-size: 15px;
-    outline: none;
-  }
-
-  textarea::placeholder {
-    color: rgba(255,255,255,0.45);
-  }
-
-  footer {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 12px;
-    opacity: 0.6;
   }
 </style>
 </head>
@@ -79,31 +68,31 @@
 <body>
   <div class="console">
     <div id="log" class="log"></div>
-
-    <div class="divider"></div>
-
-    <textarea
+    <input
       id="input"
-      rows="2"
+      class="input"
       placeholder="Write freely."
-    ></textarea>
-
-    <footer>CELESTE v4.4-dev</footer>
+      autocomplete="off"
+    />
+    <div id="error" class="error"></div>
+    <div class="footer">CELESTE v4.4-dev</div>
   </div>
 
 <script>
 const log = document.getElementById("log");
 const input = document.getElementById("input");
+const errorBox = document.getElementById("error");
 
-function append(text, cls = "") {
-  const div = document.createElement("div");
-  div.className = cls;
-  div.textContent = text;
-  log.appendChild(div);
-}
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter") return;
 
-async function sendMessage(text) {
-  append(text, "user");
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+  errorBox.textContent = "";
+
+  log.textContent += `\n${text}\n`;
 
   try {
     const res = await fetch("/functions/api/celeste-dev", {
@@ -115,30 +104,17 @@ async function sendMessage(text) {
     const contentType = res.headers.get("content-type") || "";
 
     if (!contentType.includes("application/json")) {
-      append("[API error]", "error");
-      return;
+      throw new Error("Non-JSON response");
     }
 
     const data = await res.json();
 
     if (data.reply) {
-      append(data.reply, "reply");
-    } else {
-      append("[API error]", "error");
+      log.textContent += `${data.reply}\n`;
     }
 
-  } catch (e) {
-    append("[API error]", "error");
-  }
-}
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
-    sendMessage(text);
+  } catch (err) {
+    errorBox.textContent = "[API error]";
   }
 });
 </script>
