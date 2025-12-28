@@ -26,7 +26,7 @@
     white-space: pre-wrap;
     margin-bottom: 16px;
     opacity: 0;
-    transition: opacity 3s ease;
+    transition: opacity 2.5s ease;
   }
 
   .log.visible {
@@ -76,29 +76,24 @@
 const API_URL =
   "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
 
-const INITIAL_MESSAGE = "Hi";
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const error = document.getElementById("error");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const log = document.getElementById("log");
-
-  // 少し間を置いて表示（静寂）
-  setTimeout(() => {
-    log.textContent = INITIAL_MESSAGE;
+/* ---- 初期メッセージ（APIは叩かない） ---- */
+window.addEventListener("load", () => {
+  log.textContent = "Hi";
+  requestAnimationFrame(() => {
     log.classList.add("visible");
-  }, 600);
+  });
 });
 
 async function sendMessage() {
-  const input = document.getElementById("input");
-  const log = document.getElementById("log");
-  const error = document.getElementById("error");
-
   const message = input.value.trim();
   if (!message) return;
 
   input.value = "";
   error.textContent = "";
-
   log.textContent += "\n> " + message;
 
   try {
