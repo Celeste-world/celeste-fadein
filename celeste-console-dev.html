@@ -2,128 +2,168 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
+
 <style>
-  body {
-    margin: 0;
-    background: radial-gradient(ellipse at top, #0b132b, #02040f);
-    color: #e6e9f0;
-    font-family: "Georgia", serif;
-  }
+:root {
+  --bg: #050811;
+  --panel: #0d1324;
+  --border: rgba(255,255,255,0.18);
+  --border-active: rgba(180,200,255,0.65);
+  --text: #e8ebef;
+  --muted: rgba(232,235,239,0.55);
+}
 
-  .console {
-    max-width: 820px;
-    margin: 80px auto;
-    padding: 32px;
-    border-radius: 16px;
-    border: 1px solid rgba(180,190,255,0.25);
-    transition: border-color 0.6s, box-shadow 0.6s;
-  }
+* { box-sizing: border-box; }
 
-  .console.pressure1 {
-    border-color: rgba(140,160,255,0.5);
-    box-shadow: 0 0 24px rgba(140,160,255,0.25);
-  }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 50% -200px, #101a38, var(--bg));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 60px 16px;
+}
 
-  .console.pressure2 {
-    border-color: rgba(200,220,255,0.9);
-    box-shadow: 0 0 40px rgba(200,220,255,0.45);
-  }
+#console {
+  width: 100%;
+  max-width: 820px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border-radius: 18px;
+  padding: 28px 28px 24px;
+  border: 1px solid var(--border);
+  transition: border-color 0.6s ease, box-shadow 0.6s ease;
+}
 
-  .log {
-    white-space: pre-wrap;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
+#console.active {
+  border-color: var(--border-active);
+  box-shadow: 0 0 0 1px rgba(180,200,255,0.15),
+              0 0 40px rgba(120,150,255,0.15);
+}
 
-  .notice {
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0;
-    transition: opacity 0.6s;
-    margin-bottom: 20px;
-  }
+#log {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  min-height: 220px;
+  font-size: 15px;
+}
 
-  .notice.show {
-    opacity: 0.75;
-  }
+.notice {
+  margin: 22px 0 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
 
-  textarea {
-    width: 100%;
-    box-sizing: border-box;
-    resize: none;
-    height: 56px;
-    background: transparent;
-    border: 1px solid rgba(180,190,255,0.3);
-    border-radius: 12px;
-    padding: 14px;
-    color: #fff;
-    font-size: 1rem;
-  }
+.notice.show {
+  opacity: 1;
+}
+
+#inputWrap {
+  margin-top: 10px;
+}
+
+#input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.4s ease;
+}
+
+#input:focus {
+  border-color: var(--border-active);
+}
+
+footer {
+  margin-top: 18px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--muted);
+}
 </style>
 </head>
 
 <body>
-<div id="console" class="console">
-  <div id="log" class="log"></div>
-  <div id="notice" class="notice">ここは自由に書けます</div>
-  <textarea id="input" placeholder="Write freely."></textarea>
-</div>
+  <div id="console">
+    <div id="log"></div>
+
+    <div id="notice" class="notice">
+      This space is open to whatever you choose to write.
+    </div>
+
+    <div id="inputWrap">
+      <input id="input" placeholder="Write freely." autocomplete="off" />
+    </div>
+
+    <footer>CELESTE v4.4-dev</footer>
+  </div>
 
 <script>
 const input = document.getElementById("input");
 const log = document.getElementById("log");
 const notice = document.getElementById("notice");
-const consoleBox = document.getElementById("console");
+const panel = document.getElementById("console");
 
-function detectPressure(text) {
-  const len = text.trim().length;
-  if (len === 0) return 0;
-  if (len <= 2) return 1;
-  return 2;
+let noticeTimer = null;
+
+function showNotice() {
+  notice.classList.add("show");
 }
 
-async function send(text) {
-  const pressure = detectPressure(text);
+function hideNotice(delay = 1400) {
+  clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(() => {
+    notice.classList.remove("show");
+  }, delay);
+}
 
-  consoleBox.className = "console pressure" + pressure;
-  if (pressure >= 1) notice.classList.add("show");
-  else notice.classList.remove("show");
-
-  log.textContent += text + "\n";
-
-  // pressure1：単語返し
-  if (pressure === 1) {
-    log.textContent += text + "\n";
-    return;
-  }
-
-  try {
-    const res = await fetch("/functions/api/celeste-dev", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, pressure })
-    });
-
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) {
-      throw new Error("Invalid response type");
-    }
-
-    const data = await res.json();
-    log.textContent += data.reply + "\n";
-
-  } catch (e) {
-    console.error(e);
+function setPressureUI(p) {
+  if (p >= 1) {
+    panel.classList.add("active");
+    showNotice();
+    hideNotice();
+  } else {
+    panel.classList.remove("active");
   }
 }
 
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    const text = input.value.trim();
-    input.value = "";
-    if (text) send(text);
+async function sendMessage(text) {
+  const res = await fetch("/functions/api/celeste-dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  });
+
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter") return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+
+  log.textContent += (log.textContent ? "\n" : "") + text;
+
+  const data = await sendMessage(text);
+  if (!data) return;
+
+  setPressureUI(data.pressure);
+
+  if (data.reply) {
+    log.textContent += "\n" + data.reply;
   }
 });
 </script>
