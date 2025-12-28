@@ -1,70 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8">
 <title>Celeste Console – Dev</title>
 
 <style>
 :root {
   --bg: #050811;
-  --panel: #0b1020;
-  --border: rgba(140,170,255,0.25);
-  --border-active: rgba(160,190,255,0.7);
+  --panel: #0d1324;
+  --border: rgba(160,180,255,0.18);
+  --border-active: rgba(160,180,255,0.45);
   --text: #e8ebef;
-  --muted: rgba(200,210,255,0.55);
+  --muted: #9aa3c7;
 }
 
-* { box-sizing: border-box; }
-
-body {
+html, body {
   margin: 0;
-  background: radial-gradient(ellipse at center, #0b1430 0%, #050811 70%);
+  background: radial-gradient(circle at center, #0b1430 0%, #050811 70%);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+main {
+  max-width: 720px;
+  margin: 80px auto;
+  padding: 0 20px;
 }
 
-.console {
-  width: min(720px, 92vw);
-  background: linear-gradient(180deg, #0c132b, #080c1c);
-  border-radius: 16px;
+.panel {
+  background: linear-gradient(180deg, #0d1324, #070b18);
   border: 1px solid var(--border);
-  padding: 22px;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.4s ease;
 }
 
-.console.active {
+.panel.active {
   border-color: var(--border-active);
-  box-shadow: 0 0 0 1px rgba(160,190,255,0.15);
 }
 
 .log {
-  min-height: 220px;
+  min-height: 160px;
   white-space: pre-wrap;
-  line-height: 1.65;
-  font-size: 15px;
+  line-height: 1.6;
 }
 
-.user {
-  color: #9db4ff;
-  margin-bottom: 6px;
+.input {
+  margin-top: 16px;
 }
 
-.reply {
-  margin-bottom: 18px;
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #050811;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--muted);
 }
 
 .notice {
   position: fixed;
   inset: 0;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   pointer-events: none;
@@ -75,107 +78,70 @@ body {
 }
 
 .notice.show {
+  display: flex;
   opacity: 1;
-}
-
-.input-wrap {
-  margin-top: 12px;
-}
-
-input {
-  width: 100%;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: var(--text);
-  font-size: 15px;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--border-active);
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-  <div class="console" id="console">
-    <div class="log" id="log"></div>
-    <div class="input-wrap">
-      <input id="input" placeholder="Write freely." autocomplete="off"/>
+<main>
+  <div id="panel" class="panel">
+    <div id="log" class="log"></div>
+    <div class="input">
+      <input id="input" placeholder="ここは自由に書けます" />
     </div>
   </div>
-</div>
+</main>
 
-<div class="notice" id="notice">ここに自由に書けます</div>
+<div id="notice" class="notice">ここに自由に書けます</div>
 
 <script>
 const input = document.getElementById("input");
 const log = document.getElementById("log");
-const box = document.getElementById("console");
+const panel = document.getElementById("panel");
 const notice = document.getElementById("notice");
-
-let lock = false;
 
 function showNotice() {
   notice.classList.add("show");
   setTimeout(() => notice.classList.remove("show"), 1400);
 }
 
-function activateBox() {
-  box.classList.add("active");
-  setTimeout(() => box.classList.remove("active"), 2200);
-}
-
-function appendUser(text) {
-  log.innerHTML += `<div class="user">${text}</div>`;
-}
-
-function appendReply(text) {
-  if (!text) return;
-  log.innerHTML += `<div class="reply">${text}</div>`;
+function append(text) {
+  log.textContent += text + "\n";
 }
 
 async function send(text) {
-  showNotice();
-  activateBox();
+  const url = `/functions/api/celeste-dev?q=${encodeURIComponent(text)}`;
 
-  // pressure 判定（フロント側でも最低限）
-  if (text.length <= 2) {
-    appendReply(text);
-    return;
+  const res = await fetch(url);
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  if (data.pressure > 0) {
+    panel.classList.add("active");
+    setTimeout(() => panel.classList.remove("active"), 1400);
   }
 
-  try {
-    const res = await fetch("/functions/api/celeste-dev", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    });
-
-    if (!res.ok) return;
-
-    const ct = res.headers.get("content-type") || "";
-    if (!ct.includes("application/json")) return;
-
-    const data = await res.json();
-    appendReply(data.reply || "");
-  } catch (e) {
-    console.warn("API ignored:", e);
+  if (data.reply) {
+    append(data.reply);
   }
 }
 
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !lock) {
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
-    appendUser(text);
-    send(text);
-  }
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter") return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+  append(text);
+  showNotice();
+
+  await send(text);
 });
 </script>
+
 </body>
 </html>
