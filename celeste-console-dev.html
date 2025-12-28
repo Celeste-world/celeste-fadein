@@ -7,6 +7,7 @@
 <style>
   body {
     margin: 0;
+    min-height: 100vh;
     background: radial-gradient(circle at top, #0b1430, #02040a);
     color: #e8ebef;
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
@@ -15,51 +16,43 @@
   .console {
     max-width: 720px;
     margin: 120px auto;
-    padding: 24px;
+    padding: 28px;
     border-radius: 16px;
     background: rgba(255,255,255,0.04);
     backdrop-filter: blur(12px);
   }
 
+  .intro {
+    text-align: center;
+    line-height: 1.8;
+    opacity: 0;
+    transition: opacity 2.5s ease;
+    margin-bottom: 20px;
+  }
+
+  .intro.show {
+    opacity: 1;
+  }
+
   .log {
-    min-height: 80px;
     white-space: pre-wrap;
     margin-bottom: 16px;
+    min-height: 40px;
   }
 
-  /* 初期メッセージ */
-  .intro {
-    opacity: 0;
-    transform: translateY(6px);
-    animation: fadeIn 2.2s ease-out forwards;
-    line-height: 1.8;
-  }
-
-  .intro span {
-    display: block;
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .user {
+    color: #9bbcff;
   }
 
   input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 14px;
     border-radius: 10px;
     border: none;
     outline: none;
     background: rgba(255,255,255,0.08);
     color: white;
     font-size: 14px;
-  }
-
-  .error {
-    color: #ff6b6b;
-    margin-top: 8px;
   }
 
   footer {
@@ -73,15 +66,19 @@
 
 <body>
   <div class="console">
+    <div id="intro" class="intro">
+      Hello, I’m Celeste.<br><br>
+      Write freely.
+    </div>
+
     <div id="log" class="log"></div>
 
     <input
       id="input"
       placeholder="Write freely."
-      onkeydown="if(event.key==='Enter') sendMessage()"
+      autocomplete="off"
     />
 
-    <div id="error" class="error"></div>
     <footer>CELESTE v4.4-dev</footer>
   </div>
 
@@ -89,45 +86,40 @@
 const API_URL =
   "https://celeste-worker-dev.inbox-celeste-world.workers.dev";
 
-const log = document.getElementById("log");
+const intro = document.getElementById("intro");
 const input = document.getElementById("input");
-const error = document.getElementById("error");
+const log = document.getElementById("log");
 
-let introShown = true;
+let started = false;
 
-/* 初期メッセージをフェードイン */
+// フェードイン
 window.addEventListener("DOMContentLoaded", () => {
-  const intro = document.createElement("div");
-  intro.className = "intro";
-  intro.innerHTML = `
-    <span>Hello, I’m Celeste.</span>
-    <span></span>
-    <span>Write freely.</span>
-  `;
-  log.appendChild(intro);
+  requestAnimationFrame(() => {
+    intro.classList.add("show");
+  });
 });
 
-async function sendMessage() {
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter") return;
+
   const message = input.value.trim();
   if (!message) return;
 
   input.value = "";
-  error.textContent = "";
 
-  /* 初期メッセージは最初の入力で役目を終える */
-  if (introShown) {
-    log.textContent = "";
-    introShown = false;
+  // 初回入力で intro を消す
+  if (!started) {
+    started = true;
+    intro.style.opacity = "0";
+    setTimeout(() => intro.remove(), 2000);
   }
 
-  log.textContent += `> ${message}\n`;
+  log.textContent += `\n> ${message}`;
 
   try {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message })
     });
 
@@ -135,13 +127,13 @@ async function sendMessage() {
 
     const data = await res.json();
     if (data.reply) {
-      log.textContent += `${data.reply}\n`;
+      log.textContent += `\n${data.reply}`;
     }
 
-  } catch (e) {
-    error.textContent = "[API error]";
+  } catch {
+    log.textContent += `\n[error]`;
   }
-}
+});
 </script>
 </body>
 </html>
