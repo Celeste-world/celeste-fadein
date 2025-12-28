@@ -2,142 +2,168 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
 <style>
-:root {
-  --bg: #050811;
-  --panel: #0d1324;
-  --border: rgba(120,140,200,0.25);
-  --border-active: rgba(140,170,255,0.6);
-  --text: #e8ebef;
-  --hint: rgba(200,210,255,0.85);
-}
+  :root {
+    --bg: #050811;
+    --panel: #0c1220;
+    --border: rgba(140,160,255,0.25);
+    --border-active: rgba(140,160,255,0.6);
+    --text: #e6ebff;
+    --muted: rgba(230,235,255,0.55);
+  }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(ellipse at top, #0b1430 0%, #050811 60%);
-  color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: radial-gradient(circle at top, #0a1030, #03040a 70%);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+  }
 
-.container {
-  max-width: 720px;
-  margin: 80px auto;
-  padding: 0 20px;
-}
+  .wrap {
+    display: flex;
+    justify-content: center;
+    padding: 64px 16px;
+  }
 
-.console {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
-}
+  .console {
+    width: 100%;
+    max-width: 720px;
+    background: linear-gradient(180deg, #0b1025, #070b18);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 0 0 1px var(--border);
+    transition: box-shadow 0.6s ease;
+  }
 
-.console.active {
-  border-color: var(--border-active);
-  box-shadow: 0 0 0 1px rgba(120,160,255,0.15);
-}
+  .console.active {
+    box-shadow: 0 0 0 1px var(--border-active);
+  }
 
-.log {
-  min-height: 200px;
-  white-space: pre-wrap;
-  line-height: 1.7;
-}
+  .log {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
 
-.user {
-  color: #8fb3ff;
-  margin-bottom: 6px;
-}
+  .log .user {
+    color: #9fb4ff;
+    margin-bottom: 6px;
+  }
 
-.reply {
-  margin-bottom: 18px;
-}
+  .log .reply {
+    color: var(--text);
+    margin-bottom: 14px;
+  }
 
-.hint {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
+  .input-wrap {
+    position: relative;
+  }
 
-.hint.show {
-  opacity: 1;
-}
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #060a16;
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
 
-.hint span {
-  font-size: 14px;
-  color: var(--hint);
-}
+  input:focus {
+    border-color: var(--border-active);
+  }
 
-.input-wrap {
-  margin-top: 20px;
-}
+  .hint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--muted);
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
 
-input {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-}
-
-input:focus {
-  border-color: var(--border-active);
-}
+  .hint.show {
+    opacity: 1;
+  }
 </style>
 </head>
 
 <body>
-<div class="container">
-  <div id="console" class="console">
-    <div id="log" class="log"></div>
+<div class="wrap">
+  <div class="console" id="console">
+    <div class="log" id="log"></div>
     <div class="input-wrap">
-      <input id="input" placeholder="Write freely." />
+      <input id="input" placeholder="Write freely." autocomplete="off" />
     </div>
   </div>
 </div>
 
-<div id="hint" class="hint">
-  <span>ここは自由に書けます</span>
-</div>
+<div class="hint" id="hint">ここは自由に書けます</div>
 
 <script>
 const input = document.getElementById("input");
 const log = document.getElementById("log");
-const consoleBox = document.getElementById("console");
 const hint = document.getElementById("hint");
+const consoleBox = document.getElementById("console");
 
 let hintShown = false;
 
-function showHintOnce() {
+function getPressure(text) {
+  const t = text.trim();
+  if (t.length === 0) return 0;
+  if (t.length <= 2) return 1;
+  return 2;
+}
+
+function showHint() {
   if (hintShown) return;
   hintShown = true;
   hint.classList.add("show");
-  setTimeout(() => hint.classList.remove("show"), 1400);
-}
-
-function activateFrame() {
-  consoleBox.classList.add("active");
   setTimeout(() => {
-    consoleBox.classList.remove("active");
+    hint.style.transition = "opacity 1.2s ease";
+    hint.classList.remove("show");
   }, 1400);
 }
 
-async function sendMessage(text) {
-  showHintOnce();
-  activateFrame();
+function addLine(cls, text) {
+  const div = document.createElement("div");
+  div.className = cls;
+  div.textContent = text;
+  log.appendChild(div);
+}
 
-  log.innerHTML += `<div class="user">${text}</div>`;
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter") return;
+
+  const text = input.value;
+  input.value = "";
+
+  const pressure = getPressure(text);
+
+  addLine("user", text);
+
+  if (pressure >= 1) {
+    consoleBox.classList.add("active");
+    showHint();
+    setTimeout(() => consoleBox.classList.remove("active"), 1800);
+  }
+
+  if (pressure === 1) {
+    addLine("reply", text);
+    return;
+  }
+
+  if (pressure === 0) return;
 
   try {
     const res = await fetch("/functions/api/celeste-dev", {
@@ -146,27 +172,12 @@ async function sendMessage(text) {
       body: JSON.stringify({ message: text })
     });
 
-    if (!res.ok) {
-      console.error("API error:", res.status);
-      return;
-    }
-
     const data = await res.json();
     if (data.reply) {
-      log.innerHTML += `<div class="reply">${data.reply}</div>`;
+      addLine("reply", data.reply);
     }
-  } catch (e) {
-    console.error(e);
-  }
-
-  log.scrollTop = log.scrollHeight;
-}
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && input.value.trim()) {
-    const text = input.value.trim();
-    input.value = "";
-    sendMessage(text);
+  } catch (err) {
+    console.error("API error", err);
   }
 });
 </script>
