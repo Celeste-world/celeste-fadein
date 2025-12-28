@@ -1,147 +1,146 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>Celeste Console – Dev</title>
 
 <style>
-:root {
-  --bg: #050811;
-  --panel: #0d1324;
-  --border: rgba(160,180,255,0.18);
-  --border-active: rgba(160,180,255,0.45);
-  --text: #e8ebef;
-  --muted: #9aa3c7;
-}
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 50% 0%, #0b1630, #050811);
+    color: #e8ebef;
+    font-family: "Georgia", serif;
+  }
 
-html, body {
-  margin: 0;
-  background: radial-gradient(circle at center, #0b1430 0%, #050811 70%);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: var(--text);
-}
+  .wrap {
+    max-width: 860px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
 
-main {
-  max-width: 720px;
-  margin: 80px auto;
-  padding: 0 20px;
-}
+  .console {
+    border: 1px solid rgba(180,200,255,.35);
+    border-radius: 18px;
+    padding: 28px;
+    transition: border-color .4s, box-shadow .4s;
+  }
 
-.panel {
-  background: linear-gradient(180deg, #0d1324, #070b18);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: border-color 0.4s ease;
-}
+  .console.pressure1 {
+    border-color: rgba(200,220,255,.6);
+    box-shadow: 0 0 18px rgba(180,200,255,.15);
+  }
 
-.panel.active {
-  border-color: var(--border-active);
-}
+  .console.pressure2 {
+    border-color: rgba(220,235,255,.9);
+    box-shadow: 0 0 30px rgba(200,220,255,.35);
+  }
 
-.log {
-  min-height: 160px;
-  white-space: pre-wrap;
-  line-height: 1.6;
-}
+  .log {
+    min-height: 140px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
 
-.input {
-  margin-top: 16px;
-}
+  .notice {
+    text-align: center;
+    font-size: 14px;
+    opacity: .75;
+    margin-bottom: 16px;
+    display: none;
+  }
 
-input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #050811;
-  color: var(--text);
-  font-size: 16px;
-  outline: none;
-}
+  .notice.show {
+    display: block;
+  }
 
-input::placeholder {
-  color: var(--muted);
-}
+  textarea {
+    width: 100%;
+    height: 56px;
+    resize: none;
+    background: transparent;
+    border: 1px solid rgba(180,200,255,.35);
+    border-radius: 12px;
+    padding: 14px;
+    color: #e8ebef;
+    font-size: 16px;
+    outline: none;
+  }
 
-.notice {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  font-size: 14px;
-  color: var(--muted);
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-
-.notice.show {
-  display: flex;
-  opacity: 1;
-}
+  footer {
+    text-align: right;
+    font-size: 12px;
+    opacity: .5;
+    margin-top: 12px;
+  }
 </style>
 </head>
 
 <body>
-<main>
-  <div id="panel" class="panel">
+<div class="wrap">
+  <div id="console" class="console">
     <div id="log" class="log"></div>
-    <div class="input">
-      <input id="input" placeholder="ここは自由に書けます" />
-    </div>
+    <div id="notice" class="notice">This space is open to whatever you choose to write.</div>
+    <textarea id="input" placeholder="Write freely."></textarea>
   </div>
-</main>
-
-<div id="notice" class="notice">ここに自由に書けます</div>
+  <footer>CELESTE v4.4-dev</footer>
+</div>
 
 <script>
-const input = document.getElementById("input");
-const log = document.getElementById("log");
-const panel = document.getElementById("panel");
-const notice = document.getElementById("notice");
+const input   = document.getElementById("input");
+const log     = document.getElementById("log");
+const notice  = document.getElementById("notice");
+const consoleBox = document.getElementById("console");
 
-function showNotice() {
-  notice.classList.add("show");
-  setTimeout(() => notice.classList.remove("show"), 1400);
+function setPressure(level) {
+  consoleBox.classList.remove("pressure1","pressure2");
+  if (level > 0) consoleBox.classList.add("pressure" + level);
 }
 
 function append(text) {
-  log.textContent += text + "\n";
-}
-
-async function send(text) {
-  const url = `/functions/api/celeste-dev?q=${encodeURIComponent(text)}`;
-
-  const res = await fetch(url);
-  if (!res.ok) return;
-
-  const data = await res.json();
-
-  if (data.pressure > 0) {
-    panel.classList.add("active");
-    setTimeout(() => panel.classList.remove("active"), 1400);
-  }
-
-  if (data.reply) {
-    append(data.reply);
-  }
+  log.textContent += text + "\n\n";
 }
 
 input.addEventListener("keydown", async (e) => {
   if (e.key !== "Enter") return;
+  e.preventDefault();
 
   const text = input.value.trim();
+  input.value = "";
   if (!text) return;
 
-  input.value = "";
   append(text);
-  showNotice();
 
-  await send(text);
+  const len = [...text].length;
+
+  // ---- pressure 1 ----
+  if (len <= 2) {
+    setPressure(1);
+    notice.classList.add("show");
+    append(text);
+    return;
+  }
+
+  // ---- pressure 2 ----
+  setPressure(2);
+  notice.classList.add("show");
+
+  try {
+    const res = await fetch("/functions/api/celeste-dev", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: text })
+    });
+
+    if (!res.ok) throw new Error("API error");
+
+    const data = await res.json();
+    append(data.reply);
+
+  } catch (err) {
+    append("…");
+  }
 });
 </script>
-
 </body>
 </html>
