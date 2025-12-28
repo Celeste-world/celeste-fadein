@@ -1,17 +1,6 @@
-export async function onRequest({ request }) {
-  // POST 以外は拒否（405）
-  if (request.method !== "POST") {
-    return new Response(
-      JSON.stringify({ error: "Method Not Allowed" }),
-      {
-        status: 405,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-      }
-    );
-  }
+// functions/api/celeste-dev.js
 
+export async function onRequest({ request }) {
   let text = "";
 
   try {
@@ -21,7 +10,7 @@ export async function onRequest({ request }) {
     text = "";
   }
 
-  // 文字数カウント（日本語・絵文字対応）
+  // 文字数（日本語・絵文字対応）
   const len = [...text].length;
 
   let pressure = 0;
