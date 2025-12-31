@@ -125,6 +125,7 @@ const log = document.getElementById("log");
 const input = document.getElementById("input");
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const isMobile = window.innerWidth <= 600;
 
 let introDone = false;
 
@@ -135,19 +136,16 @@ function showIntro() {
   intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
-  // fade in
   requestAnimationFrame(() => {
     intro.classList.add("visible");
   });
 
-  // start exit after 4s
   setTimeout(() => {
     if (!isIOS) {
       intro.classList.add("fadeout");
     }
   }, 4000);
 
-  // guaranteed cleanup
   setTimeout(() => {
     if (intro.parentNode) intro.remove();
     introDone = true;
@@ -189,8 +187,19 @@ async function sendMessage() {
       celesteLine.style.opacity = 1;
       log.appendChild(celesteLine);
 
-      if (window.innerWidth <= 600) {
-        celesteLine.scrollIntoView({ behavior: "smooth", block: "end" });
+      /* ---- auto scroll behavior ---- */
+      if (!isMobile) {
+        // PC / Tablet：センターに寄せる
+        celesteLine.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      } else {
+        // Mobile：下に自然追従
+        celesteLine.scrollIntoView({
+          behavior: "smooth",
+          block: "end"
+        });
       }
     }
 
