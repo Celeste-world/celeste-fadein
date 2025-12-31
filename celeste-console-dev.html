@@ -9,7 +9,7 @@
   html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Safari 横はみ出し対策 */
+    overflow-x: hidden;
   }
 
   body {
@@ -51,13 +51,18 @@
     margin-bottom: 1.6em;
   }
 
+  /* intro */
   .intro {
     opacity: 0;
-    transition: opacity 1.8s ease;
+    transition: opacity 2.6s ease;
   }
 
   .intro.visible {
     opacity: 1;
+  }
+
+  .intro.fadeout {
+    opacity: 0;
   }
 
   input {
@@ -119,31 +124,41 @@ const API_URL =
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 let introDone = false;
 
-/* ---- intro（fade-in only, remove silently） ---- */
+/* ---- intro (platform aware) ---- */
 function showIntro() {
   const intro = document.createElement("div");
   intro.className = "intro";
   intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
+  // fade in
   requestAnimationFrame(() => {
     intro.classList.add("visible");
   });
 
-  // 一定時間後に静かに消す（フェードアウトしない）
+  // start exit after 4s
+  setTimeout(() => {
+    if (!isIOS) {
+      intro.classList.add("fadeout");
+    }
+  }, 4000);
+
+  // guaranteed cleanup
   setTimeout(() => {
     if (intro.parentNode) intro.remove();
     introDone = true;
     input.disabled = false;
     input.focus();
-  }, 4200);
+  }, isIOS ? 4200 : 7000);
 }
 
 showIntro();
 
-/* ---- 通常送信 ---- */
+/* ---- send message ---- */
 async function sendMessage() {
   if (!introDone) return;
 
