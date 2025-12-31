@@ -2,249 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste – Console</title>
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
 <style>
 :root{
   --bg:#050811;
-  --panel:rgba(255,255,255,0.04);
+  --panel:#0b1020cc;
+  --border:#1b2540;
   --text:#e8ebef;
-  --muted:#a0a8bb;
-
-  --user:#f0f2f8;
-  --assistant:#9bbcff;
-
-  --accept: rgba(155,188,255,.78);
-  --acceptShadow: rgba(155,188,255,.16);
-
-  --turnGap: 14px;       /* ← ターン間の余白（1行分の間） */
-  --lineGap: 2px;        /* ターン内の行の詰め */
+  --muted:#a9b3c7;
+  --accent:#9bbcff;
+  --radius:18px;
 }
-*{box-sizing:border-box;}
-html,body{
-  margin:0;height:100%;
-  background:
-    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),
-    var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system;
-}
-.wrapper{
-  min-height:100dvh;
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
   display:flex;
   justify-content:center;
-  padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);
+  background:
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),
+    radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  padding:56px 20px 80px;
 }
-.console{
-  width:100%;
-  max-width:720px;
-  margin:80px auto 60px;
-  background:var(--panel);
-  border-radius:18px;
-  padding:24px 20px 18px;
-  backdrop-filter:blur(14px);
+
+.wrap{width:min(760px,100%)}
+
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--radius);
+  overflow:hidden;
 }
+
 .log{
-  min-height:160px;
+  min-height:180px;
   max-height:56vh;
-  overflow:auto;
+  padding:28px 26px;
+  overflow:hidden;
   display:flex;
   flex-direction:column;
-  justify-content:center; /* “センター寄り” */
+  justify-content:center;
+  transition:opacity .8s ease;
 }
+
 .log.free{
-  justify-content:flex-start; /* ログが増えたら上詰め */
+  overflow:auto;
+  justify-content:flex-start;
 }
 
-/* ===== ターン（会話ブロック） ===== */
 .turn{
-  display:flex;
-  flex-direction:column;
-  gap: var(--lineGap);
-  margin: 0 0 var(--turnGap);
+  margin-bottom:22px;
+  line-height:1.75;
+  font-size:16px;
 }
-.turn:last-child{ margin-bottom: 0; }
 
-/* （任意）ターンの薄い仕切り。不要なら消してOK */
-.turn::after{
-  content:"";
-  height:1px;
-  background:rgba(255,255,255,.06);
-  margin-top:10px;
-  opacity:.55;
+.turn.user{color:var(--accent)}
+
+.inputbar{
+  padding:16px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.08);
 }
-.turn:last-child::after{ display:none; }
 
-.entry{
-  white-space:pre-wrap;
-  line-height:1.55;
-  font-size:15px;
-  margin:0;
-}
-.entry.user{ color:var(--user); }
-.entry.assistant{ color:var(--assistant); }
-
-.input-wrap{ margin-top:18px; }
 input{
   width:100%;
   padding:14px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.16);
   background:rgba(0,0,0,.22);
   color:var(--text);
+  font-size:15px;
   outline:none;
+  transition:border-color 1.6s ease, box-shadow 1.6s ease;
 }
-input.accepting{
-  animation:acceptBreath 1.6s ease forwards;
+
+input::placeholder{color:rgba(169,179,199,.6)}
+
+input.received{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1px rgba(155,188,255,.25);
 }
-@keyframes acceptBreath{
-  0%{border-color:rgba(255,255,255,.14);}
-  20%,70%{border-color:var(--accept);box-shadow:0 0 0 2px var(--acceptShadow);}
-  100%{border-color:rgba(255,255,255,.14);box-shadow:none;}
-}
+
 .footer{
-  margin-top:18px;
-  padding-top:14px;
-  border-top:1px solid rgba(37,43,58,.9);
-  font-size:12px;
-  color:var(--muted);
   display:flex;
   justify-content:flex-end;
   gap:16px;
-}
-.footer a{
+  margin-top:10px;
+  font-size:12px;
   color:var(--muted);
-  text-decoration:none;
-  border-bottom:1px solid rgba(160,168,187,.35);
 }
+
+.fade-out{animation:fadeOut 1.6s ease forwards}
+@keyframes fadeOut{to{opacity:0}}
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-  <div class="console">
+<div class="wrap">
+
+  <div class="panel">
     <div id="log" class="log"></div>
-
-    <div class="input-wrap">
-      <input id="input" placeholder="Write freely." autocomplete="off" disabled />
-    </div>
-
-    <div class="footer">
-      <a href="/about.html">Back to About</a>
-      <span>CELESTE v4.4A</span>
+    <div class="inputbar">
+      <input id="input" placeholder="Write freely." autocomplete="off" />
     </div>
   </div>
+
+  <div class="footer">
+    <a href="/about.html">Back to About</a>
+    <span>CELESTE v4.4A</span>
+  </div>
+
 </div>
 
 <script>
-const API_ENDPOINT="/api/celeste";
+const API="/api/celeste";
 const log=document.getElementById("log");
 const input=document.getElementById("input");
 
-let currentTurn = null;
-
-function scrollToLatest(mode="end"){
-  // mode: "end"（最後へ） / "center"（最新ターンを中央寄り）
-  if(mode==="end"){
-    log.scrollTop = log.scrollHeight;
-    return;
-  }
-  const last = log.lastElementChild;
-  if(!last) return;
-  const top = last.offsetTop;
-  const h = last.offsetHeight;
-  const target = top - (log.clientHeight/2) + (h/2);
-  log.scrollTop = Math.max(0, target);
+function addTurn(text,cls){
+  const d=document.createElement("div");
+  d.className="turn "+(cls||"");
+  d.textContent=text;
+  log.appendChild(d);
+  scrollCenter();
 }
 
-function ensureTurn(){
-  if(currentTurn) return currentTurn;
-  currentTurn = document.createElement("div");
-  currentTurn.className = "turn";
-  log.appendChild(currentTurn);
-  return currentTurn;
-}
-
-function addToTurn(text, cls){
-  const t = ensureTurn();
-  const e = document.createElement("div");
-  e.className = "entry " + cls;
-  e.textContent = text;
-  t.appendChild(e);
-}
-
-function closeTurn(){
-  currentTurn = null;
-}
-
-function playAcceptBreath(){
-  input.classList.remove("accepting");
-  void input.offsetWidth;
-  input.classList.add("accepting");
-  return new Promise(r=>input.addEventListener("animationend",r,{once:true}));
+function scrollCenter(){
+  requestAnimationFrame(()=>{
+    const last=log.lastElementChild;
+    if(!last) return;
+    log.scrollTop=last.offsetTop-(log.clientHeight/2)+(last.offsetHeight/2);
+  });
 }
 
 async function send(){
-  const msg = input.value.trim();
+  const msg=input.value.trim();
   if(!msg) return;
 
-  input.value = "";
-
-  // 入力開始：センター固定（free解除）→枠演出
-  log.classList.remove("free");
-  const breath = playAcceptBreath();
-
-  // 新しいターン開始：user
-  closeTurn();
-  addToTurn(msg, "user");
-
-  await breath;
+  log.classList.add("free");
+  addTurn(msg,"user");
+  input.value="";
+  input.disabled=true;
 
   try{
-    const r = await fetch(API_ENDPOINT,{
+    const r=await fetch(API,{
       method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ message: msg })
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:msg})
     });
-    const d = await r.json().catch(()=>({}));
-    const reply = (typeof d.reply === "string") ? d.reply : "";
-
-    // 返答：同じターンに assistant を追加
-    if(reply){
-      addToTurn(reply, "assistant");
+    const j=await r.json();
+    if(j.reply){
+      addTurn(j.reply,"assistant");
+      input.classList.add("received");
+      setTimeout(()=>input.classList.remove("received"),1800);
     }
-  }catch{}
-
-  // 返答が終わったらターンを閉じ、以降は上詰めで自然に積む
-  closeTurn();
-  log.classList.add("free");
-
-  // dev同様：最新が見える位置へ（好みで "center" に変えられます）
-  scrollToLatest("end");
-
-  input.focus();
+  }finally{
+    input.disabled=false;
+    input.focus();
+  }
 }
 
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){ e.preventDefault(); send(); }
+  if(e.key==="Enter"){e.preventDefault();send();}
 });
 
-(function intro(){
-  // intro も “assistant単独ターン” として扱う（devの見え方に近い）
-  closeTurn();
-  addToTurn("Hello, I’m Celeste.\n\nWrite freely.","assistant");
-  scrollToLatest("center");
+/* opening */
+addTurn("You can simply let your words appear.","assistant");
+setTimeout(()=>{
+  log.classList.add("fade-out");
+},4200);
 
-  setTimeout(()=>{ 
-    // フェードはCSSでなく、存在を消すだけ（挙動安定優先）
-    log.innerHTML = "";
-    closeTurn();
-    input.disabled = false;
-    input.focus();
-  }, 5400);
-})();
+setTimeout(()=>{
+  log.innerHTML="";
+  log.classList.remove("fade-out");
+  input.focus();
+},5800);
 </script>
 </body>
 </html>
