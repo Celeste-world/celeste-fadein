@@ -11,14 +11,13 @@
 :root{
   --bg:#050811;
   --panel:#0b1020cc;
+  --border:#1b2540;
   --text:#e8ebef;
   --muted:#a9b3c7;
   --accent:#9bbcff;
   --radius:18px;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   min-height:100vh;
@@ -26,155 +25,135 @@ body{
   justify-content:center;
   background:
     radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),
-    radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
     var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
-  padding:56px 20px 80px;
+  padding:60px 20px 80px;
 }
-
 .wrap{width:min(760px,100%)}
 
 .panel{
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
   border:1px solid rgba(255,255,255,.08);
   border-radius:var(--radius);
-  overflow:hidden;
+  padding:24px;
 }
 
-/* ===== log ===== */
 .log{
-  min-height:260px;
-  padding:28px 26px;
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  overflow:hidden; /* ← 初期はスクロールしない */
-}
-
-.log.scroll{
-  overflow:auto;
-  justify-content:flex-start;
+  gap:18px;
 }
 
 .turn{
-  margin-bottom:22px;
-  font-size:16px;
-  white-space:pre-line;
-}
-
-.turn.user{
-  color:var(--accent);
+  white-space:pre-wrap;
   line-height:1.7;
+  font-size:16px;
 }
 
-.turn.assistant{
-  line-height:1.45;
-}
+.turn.user{color:var(--accent)}
+.turn.assistant{color:var(--text)}
 
-.turn.initial{
-  opacity:1;
-  transition:opacity 1.2s ease;
-}
-
-.turn.initial.fadeout{
+.intro{
   opacity:0;
+  transition:opacity 2.4s ease;
 }
+.intro.show{opacity:1}
+.intro.hide{opacity:0}
 
-/* ===== input ===== */
-.inputbar{
-  padding:16px;
-  border-top:1px solid rgba(255,255,255,.06);
-  background:rgba(0,0,0,.08);
+.input-wrap{
+  margin-top:24px;
 }
-
 input{
   width:100%;
   padding:14px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.28);
   color:var(--text);
   font-size:15px;
   outline:none;
-  transition:border-color 1.4s ease, box-shadow 1.4s ease;
+  transition:border-color .9s ease;
 }
-
-input::placeholder{color:rgba(169,179,199,.6)}
-
 input.received{
   border-color:var(--accent);
-  box-shadow:0 0 0 1px rgba(155,188,255,.28);
 }
-
-.footer{
-  display:flex;
-  justify-content:flex-end;
-  gap:16px;
-  margin-top:10px;
+footer{
+  margin-top:14px;
   font-size:12px;
   color:var(--muted);
+  display:flex;
+  justify-content:space-between;
 }
+footer a{color:var(--accent);text-decoration:none}
 </style>
 </head>
 
 <body>
 <div class="wrap">
-
   <div class="panel">
     <div id="log" class="log"></div>
-    <div class="inputbar">
-      <input id="input" placeholder="Write freely." autocomplete="off" />
+
+    <div class="input-wrap">
+      <input id="input" placeholder="Write freely." autocomplete="off">
     </div>
-  </div>
 
-  <div class="footer">
-    <a href="/about.html">Back to About</a>
-    <span>CELESTE v4.4A</span>
+    <footer>
+      <a href="/about.html">Back to About</a>
+      <span>CELESTE v4.4A</span>
+    </footer>
   </div>
-
 </div>
 
 <script>
-const API="/api/celeste";
-const log=document.getElementById("log");
-const input=document.getElementById("input");
+const API = "/api/celeste";
+const log = document.getElementById("log");
+const input = document.getElementById("input");
 
-/* ===== utilities ===== */
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+/* ===== utility ===== */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const validText = s => /[A-Za-z0-9\u3040-\u30FF\u4E00-\u9FFF]/.test(s);
 
-function addTurn(text,cls){
+/* ===== intro ===== */
+const intro = document.createElement("div");
+intro.className="turn assistant intro";
+intro.textContent="You can simply let your words appear.";
+log.appendChild(intro);
+requestAnimationFrame(()=>intro.classList.add("show"));
+setTimeout(()=>{
+  intro.classList.remove("show");
+  intro.classList.add("hide");
+  setTimeout(()=>intro.remove(),1400);
+},3600);
+
+/* ===== turn handling ===== */
+function addTurn(text,role){
   const d=document.createElement("div");
-  d.className="turn "+cls;
-  d.innerText=text;
+  d.className=`turn ${role}`;
+  d.textContent=text;
   log.appendChild(d);
-
-  // 2ターン目以降でスクロールを許可
-  if(log.children.length > 2){
-    log.classList.add("scroll");
-  }
-
-  requestAnimationFrame(()=>{
-    d.scrollIntoView({block:"center",behavior:"smooth"});
-  });
-
-  return d;
+  d.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
-/* ===== send flow ===== */
+/* ===== send ===== */
 async function send(){
-  const msg=input.value.trim();
-  if(!msg) return;
+  const raw=input.value;
+  const msg=raw.trim();
+
+  // 無効入力は完全無視
+  if(!msg || !validText(msg)){
+    input.value="";
+    return;
+  }
 
   addTurn(msg,"user");
   input.value="";
   input.disabled=true;
 
-  /* ① 枠の変化 */
+  // 枠の反応
   input.classList.add("received");
-  await sleep(900);   // ← ここで必ず待つ
+  await sleep(900);
 
-  /* ② API 呼び出し */
   try{
     const r=await fetch(API,{
       method:"POST",
@@ -185,7 +164,8 @@ async function send(){
     if(j.reply){
       addTurn(j.reply,"assistant");
     }
-  }finally{
+  }catch(e){}
+  finally{
     input.classList.remove("received");
     input.disabled=false;
     input.focus();
@@ -198,17 +178,6 @@ input.addEventListener("keydown",e=>{
     send();
   }
 });
-
-/* ===== initial message ===== */
-const initial = addTurn(
-  "You can simply let your words appear.",
-  "assistant initial"
-);
-
-setTimeout(()=>{
-  initial.classList.add("fadeout");
-  setTimeout(()=>initial.remove(),1200);
-},1800);
 </script>
 </body>
 </html>
