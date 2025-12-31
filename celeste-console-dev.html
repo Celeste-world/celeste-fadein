@@ -28,6 +28,19 @@
     line-height: 1.6;
   }
 
+  /* --- log lines --- */
+  .line {
+    margin: 4px 0;
+  }
+
+  .line.user {
+    color: rgba(232,235,239,0.85);
+  }
+
+  .line.celeste {
+    color: rgba(180,200,255,0.9);
+  }
+
   .intro {
     opacity: 0;
     transition: opacity 2.6s ease;
@@ -100,7 +113,7 @@ let introDone = false;
 function showIntro() {
   const intro = document.createElement("div");
   intro.className = "intro";
-  intro.innerHTML = "Hello, I’m Celeste.\n\nWrite freely.";
+  intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
   requestAnimationFrame(() => {
@@ -132,7 +145,11 @@ async function sendMessage() {
   input.value = "";
   error.textContent = "";
 
-  log.textContent += "\n> " + message + "\n";
+  // user line
+  const userLine = document.createElement("div");
+  userLine.className = "line user";
+  userLine.textContent = message;
+  log.appendChild(userLine);
 
   try {
     const res = await fetch(API_URL, {
@@ -146,7 +163,10 @@ async function sendMessage() {
     const data = await res.json();
 
     if (data.reply) {
-      log.textContent += data.reply + "\n";
+      const celesteLine = document.createElement("div");
+      celesteLine.className = "line celeste";
+      celesteLine.textContent = data.reply;
+      log.appendChild(celesteLine);
     }
 
   } catch (e) {
