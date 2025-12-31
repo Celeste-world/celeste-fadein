@@ -57,13 +57,8 @@
     transition: opacity 2.6s ease;
   }
 
-  .intro.visible {
-    opacity: 1;
-  }
-
-  .intro.fadeout {
-    opacity: 0;
-  }
+  .intro.visible { opacity: 1; }
+  .intro.fadeout { opacity: 0; }
 
   /* input */
   input {
@@ -76,19 +71,16 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
-    transition: box-shadow 1.6s ease; /* ← 余韻を長く */
+    transition: box-shadow 1.6s ease;
   }
 
-  /* ★ 受理サイン（深い余韻） */
   input.ack {
     box-shadow:
       0 0 0 1px rgba(150, 180, 255, 0.55),
       0 0 16px rgba(120, 160, 255, 0.3);
   }
 
-  input:disabled {
-    opacity: 0.4;
-  }
+  input:disabled { opacity: 0.4; }
 
   footer {
     text-align: right;
@@ -98,10 +90,7 @@
   }
 
   @media (max-width: 600px) {
-    body {
-      font-size: 14px;
-    }
-
+    body { font-size: 14px; }
     .console {
       max-width: 420px;
       margin: 40px auto;
@@ -136,6 +125,8 @@ const input = document.getElementById("input");
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 const isMobile = window.innerWidth <= 600;
 
+const ACK_DURATION = 1600; // 枠の余韻と完全同期
+
 let introDone = false;
 
 /* ---- intro ---- */
@@ -145,9 +136,7 @@ function showIntro() {
   intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
-  requestAnimationFrame(() => {
-    intro.classList.add("visible");
-  });
+  requestAnimationFrame(() => intro.classList.add("visible"));
 
   setTimeout(() => {
     if (!isIOS) intro.classList.add("fadeout");
@@ -163,12 +152,12 @@ function showIntro() {
 
 showIntro();
 
-/* ---- input acknowledge (長い余韻) ---- */
+/* ---- input acknowledge ---- */
 function acknowledgeInput() {
   input.classList.add("ack");
   setTimeout(() => {
     input.classList.remove("ack");
-  }, 1600); // ← 呼気を長く
+  }, ACK_DURATION);
 }
 
 /* ---- send message ---- */
@@ -177,7 +166,7 @@ async function sendMessage() {
 
   const message = input.value.trim();
 
-  // 受理サインは常に出す
+  // ① 受理サイン
   acknowledgeInput();
 
   if (!message) {
@@ -187,6 +176,7 @@ async function sendMessage() {
 
   input.value = "";
 
+  // ② ユーザー行は即表示
   const userLine = document.createElement("div");
   userLine.className = "line user";
   userLine.textContent = message;
@@ -201,25 +191,29 @@ async function sendMessage() {
     });
 
     const data = await res.json();
+    const reply = data.reply;
 
-    if (data.reply) {
-      const celesteLine = document.createElement("div");
-      celesteLine.className = "line celeste";
-      celesteLine.textContent = data.reply;
-      celesteLine.style.opacity = 1;
-      log.appendChild(celesteLine);
+    if (reply) {
+      // ③ 枠の余韻が終わってから表示
+      setTimeout(() => {
+        const celesteLine = document.createElement("div");
+        celesteLine.className = "line celeste";
+        celesteLine.textContent = reply;
+        celesteLine.style.opacity = 1;
+        log.appendChild(celesteLine);
 
-      if (!isMobile) {
-        celesteLine.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      } else {
-        celesteLine.scrollIntoView({
-          behavior: "smooth",
-          block: "end"
-        });
-      }
+        if (!isMobile) {
+          celesteLine.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        } else {
+          celesteLine.scrollIntoView({
+            behavior: "smooth",
+            block: "end"
+          });
+        }
+      }, ACK_DURATION);
     }
 
   } catch {}
