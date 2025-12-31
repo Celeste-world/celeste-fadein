@@ -19,7 +19,6 @@
   --accent:#9bbcff;
 }
 
-/* reset */
 *{ box-sizing:border-box; }
 
 html,body{
@@ -33,7 +32,6 @@ html,body{
   font-family: system-ui,-apple-system,BlinkMacSystemFont;
 }
 
-/* layout */
 .wrapper{
   min-height:100dvh;
   display:flex;
@@ -52,7 +50,6 @@ html,body{
   box-shadow: 0 30px 80px rgba(0,0,0,.55);
 }
 
-/* log */
 .log{
   min-height:160px;
   max-height:56vh;
@@ -63,6 +60,10 @@ html,body{
   transition: padding .4s ease;
 }
 
+.log.free{
+  justify-content:flex-start;
+}
+
 .entry{
   white-space:pre-wrap;
   line-height:1.8;
@@ -71,19 +72,10 @@ html,body{
   transition: opacity .6s ease;
 }
 
-.entry.user{
-  color:var(--user);
-}
+.entry.user{ color:var(--user); }
+.entry.assistant{ color:var(--assistant); }
+.entry.faded{ opacity:.35; }
 
-.entry.assistant{
-  color:var(--assistant);
-}
-
-.entry.faded{
-  opacity:.35;
-}
-
-/* input */
 .input-wrap{
   margin-top:18px;
 }
@@ -109,12 +101,21 @@ input.accepted{
   box-shadow: 0 0 0 2px rgba(155,188,255,.18);
 }
 
-/* footer */
 .footer{
-  margin-top:10px;
-  text-align:right;
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
   font-size:11px;
   color:var(--muted);
+}
+
+.footer a{
+  color:var(--muted);
+  text-decoration:none;
+  border-bottom:1px solid rgba(160,168,187,.3);
+}
+.footer a:hover{
+  border-bottom-color:rgba(160,168,187,.7);
 }
 </style>
 </head>
@@ -128,29 +129,25 @@ input.accepted{
       <input id="input" placeholder="Write freely." autocomplete="off" disabled />
     </div>
 
-    <div class="footer">CELESTE v4.4A</div>
+    <div class="footer">
+      <a href="/about.html">About Celeste</a>
+      <span>CELESTE v4.4A</span>
+    </div>
   </div>
 </div>
 
 <script>
-/* ===== config ===== */
 const API_ENDPOINT = "/api/celeste";
-
-/* ===== elements ===== */
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* ===== intro ===== */
 function intro(){
   const e = document.createElement("div");
   e.className = "entry assistant";
   e.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(e);
 
-  setTimeout(()=>{
-    e.style.opacity = "0";
-  },4000);
-
+  setTimeout(()=>{ e.style.opacity = "0"; },4000);
   setTimeout(()=>{
     e.remove();
     input.disabled = false;
@@ -158,21 +155,13 @@ function intro(){
   },5400);
 }
 
-/* ===== helpers ===== */
 function addEntry(text, cls){
   const e = document.createElement("div");
   e.className = "entry " + cls;
   e.textContent = text;
   log.appendChild(e);
-  centerView();
   fadeOld();
   return e;
-}
-
-function centerView(){
-  const h = log.scrollHeight;
-  const v = log.clientHeight;
-  log.scrollTop = Math.max(0, h/2 - v/2);
 }
 
 function fadeOld(){
@@ -181,7 +170,6 @@ function fadeOld(){
   entries.slice(0,-5).forEach(e=>e.classList.add("faded"));
 }
 
-/* ===== send ===== */
 async function send(){
   const msg = input.value.trim();
   if(!msg) return;
@@ -190,6 +178,7 @@ async function send(){
   input.classList.add("accepted");
   setTimeout(()=>input.classList.remove("accepted"),1400);
 
+  log.classList.remove("free");
   addEntry(msg,"user");
 
   setTimeout(async ()=>{
@@ -201,13 +190,14 @@ async function send(){
       });
       const d = await r.json();
       if(d.reply){
+        log.classList.add("free");   // ★ 返答時にセンター解除
         addEntry(d.reply,"assistant");
+        log.scrollTop = log.scrollHeight;
       }
     }catch{}
   },900);
 }
 
-/* ===== events ===== */
 input.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     e.preventDefault();
@@ -215,7 +205,6 @@ input.addEventListener("keydown",e=>{
   }
 });
 
-/* ===== start ===== */
 intro();
 </script>
 </body>
