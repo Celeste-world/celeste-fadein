@@ -123,6 +123,15 @@ function fadeOldLines() {
   });
 }
 
+/* ---- 最新行を中央に寄せる ---- */
+function bringToCenter(element) {
+  if (!element) return;
+  element.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
 /* ---- 初期文言フェード制御 ---- */
 function showIntro() {
   const intro = document.createElement("div");
@@ -185,6 +194,9 @@ async function sendMessage() {
       celesteLine.textContent = data.reply;
       celesteLine.style.opacity = 1;
       log.appendChild(celesteLine);
+
+      // Celeste の発話を視線の中心へ
+      bringToCenter(celesteLine);
     }
 
   } catch (e) {
