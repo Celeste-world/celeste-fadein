@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Celeste Console – Dev</title>
 
 <style>
@@ -10,6 +11,7 @@
     background: radial-gradient(circle at top, #0b1430, #02040a);
     color: #e8ebef;
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    font-size: 16px;
   }
 
   .console {
@@ -85,6 +87,33 @@
     opacity: 0.6;
     margin-top: 8px;
   }
+
+  /* ===== Mobile optimization ===== */
+  @media (max-width: 600px) {
+
+    body {
+      font-size: 14px;
+    }
+
+    .console {
+      margin: 48px 16px;
+      padding: 16px;
+      border-radius: 14px;
+    }
+
+    .log {
+      line-height: 1.55;
+    }
+
+    input {
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    footer {
+      font-size: 10px;
+    }
+  }
 </style>
 </head>
 
@@ -118,14 +147,15 @@ function fadeOldLines() {
   const lines = document.querySelectorAll(".line");
   lines.forEach(line => {
     const current = parseFloat(line.style.opacity) || 1;
-    const next = Math.max(current - 0.12, 0.35); // 下限35%
+    const next = Math.max(current - 0.12, 0.35);
     line.style.opacity = next;
   });
 }
 
-/* ---- 最新行を中央に寄せる ---- */
+/* ---- 最新行を中央に寄せる（PC想定） ---- */
 function bringToCenter(element) {
   if (!element) return;
+  if (window.innerWidth <= 600) return; // mobileでは抑制
   element.scrollIntoView({
     behavior: "smooth",
     block: "center"
@@ -167,10 +197,8 @@ async function sendMessage() {
   input.value = "";
   error.textContent = "";
 
-  // 既存ログを少し薄く
   fadeOldLines();
 
-  // user line
   const userLine = document.createElement("div");
   userLine.className = "line user";
   userLine.textContent = message;
@@ -195,7 +223,6 @@ async function sendMessage() {
       celesteLine.style.opacity = 1;
       log.appendChild(celesteLine);
 
-      // Celeste の発話を視線の中心へ
       bringToCenter(celesteLine);
     }
 
