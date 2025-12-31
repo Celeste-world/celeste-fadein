@@ -43,7 +43,7 @@ body{
 }
 
 .log{
-  min-height:200px;
+  min-height:240px;
   max-height:56vh;
   padding:28px 26px;
   overflow:hidden;
@@ -58,8 +58,9 @@ body{
 }
 
 .turn{
-  margin-bottom:18px;
+  margin-bottom:20px;
   font-size:16px;
+  white-space:pre-line;
 }
 
 .turn.user{
@@ -68,8 +69,16 @@ body{
 }
 
 .turn.assistant{
-  line-height:1.45;   /* ← dev準拠で詰める */
-  white-space:pre-line;
+  line-height:1.45;
+}
+
+.turn.initial{
+  opacity:1;
+  transition:opacity 1.2s ease;
+}
+
+.turn.initial.fadeout{
+  opacity:0;
 }
 
 .inputbar{
@@ -87,7 +96,7 @@ input{
   color:var(--text);
   font-size:15px;
   outline:none;
-  transition:border-color 1.8s ease, box-shadow 1.8s ease;
+  transition:border-color 1.6s ease, box-shadow 1.6s ease;
 }
 
 input::placeholder{color:rgba(169,179,199,.6)}
@@ -133,19 +142,15 @@ const input=document.getElementById("input");
 function addTurn(text,cls){
   const d=document.createElement("div");
   d.className="turn "+cls;
-  d.textContent=text;
+  d.innerText=text;
   log.appendChild(d);
-  centerLast();
+  center(d);
+  return d;
 }
 
-function centerLast(){
+function center(el){
   requestAnimationFrame(()=>{
-    const last=log.lastElementChild;
-    if(!last) return;
-    log.scrollTop =
-      last.offsetTop -
-      log.clientHeight / 2 +
-      last.offsetHeight / 2;
+    el.scrollIntoView({block:"center",behavior:"smooth"});
   });
 }
 
@@ -158,10 +163,7 @@ async function send(){
   input.value="";
   input.disabled=true;
 
-  /* ① 受信サインを即時出す */
   input.classList.add("received");
-
-  /* ② 余韻を確保 */
   await new Promise(r=>setTimeout(r,900));
 
   try{
@@ -171,7 +173,6 @@ async function send(){
       body:JSON.stringify({message:msg})
     });
     const j=await r.json();
-
     if(j.reply){
       addTurn(j.reply,"assistant");
     }
@@ -189,8 +190,16 @@ input.addEventListener("keydown",e=>{
   }
 });
 
-/* 初期メッセージ */
-addTurn("You can simply let your words appear.","assistant");
+/* 初期文言（フェードアウト管理付き） */
+const initial = addTurn(
+  "You can simply let your words appear.",
+  "assistant initial"
+);
+
+setTimeout(()=>{
+  initial.classList.add("fadeout");
+  setTimeout(()=>initial.remove(),1200);
+},2000);
 </script>
 </body>
 </html>
