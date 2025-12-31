@@ -33,7 +33,6 @@
     line-height: 1.6;
   }
 
-  /* ---- log lines ---- */
   .line {
     margin: 4px 0;
     transition: opacity 0.6s ease;
@@ -59,7 +58,6 @@
 
   .intro.fadeout {
     opacity: 0;
-    transition: opacity 1.4s ease;
   }
 
   input {
@@ -89,31 +87,16 @@
     margin-top: 8px;
   }
 
-  /* ===== Mobile optimization ===== */
   @media (max-width: 600px) {
-
     body {
       font-size: 14px;
     }
 
     .console {
-      max-width: 420px;          /* ← ここが重要：幅を絞る */
+      max-width: 420px;
       margin: 40px auto;
       padding: 14px;
       border-radius: 14px;
-    }
-
-    .log {
-      line-height: 1.55;
-    }
-
-    input {
-      font-size: 14px;
-      padding: 10px;
-    }
-
-    footer {
-      font-size: 10px;
     }
   }
 </style>
@@ -144,37 +127,50 @@ const error = document.getElementById("error");
 
 let introDone = false;
 
-/* ---- 古いログを少しずつ薄くする ---- */
-function fadeOldLines() {
-  const lines = document.querySelectorAll(".line");
-  lines.forEach(line => {
-    const current = parseFloat(line.style.opacity) || 1;
-    const next = Math.max(current - 0.12, 0.35);
-    line.style.opacity = next;
-  });
-}
-
-/* ---- 初期文言 ---- */
+/* ---- intro (iOS-safe fade) ---- */
 function showIntro() {
   const intro = document.createElement("div");
   intro.className = "intro";
   intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
-  requestAnimationFrame(() => intro.classList.add("visible"));
+  // フェードイン
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      intro.classList.add("visible");
+    });
+  });
 
-  setTimeout(() => intro.classList.add("fadeout"), 4000);
+  // 表示維持後にフェードアウト
   setTimeout(() => {
-    intro.remove();
-    introDone = true;
-    input.disabled = false;
-    input.focus();
-  }, 5400);
+    requestAnimationFrame(() => {
+      intro.classList.add("fadeout");
+    });
+  }, 4000);
+
+  // transition 完了後に remove
+  intro.addEventListener("transitionend", () => {
+    if (intro.classList.contains("fadeout")) {
+      intro.remove();
+      introDone = true;
+      input.disabled = false;
+      input.focus();
+    }
+  }, { once: true });
 }
 
 showIntro();
 
-/* ---- 通常メッセージ送信 ---- */
+/* ---- 古いログ減衰 ---- */
+function fadeOldLines() {
+  const lines = document.querySelectorAll(".line");
+  lines.forEach(line => {
+    const current = parseFloat(line.style.opacity) || 1;
+    line.style.opacity = Math.max(current - 0.12, 0.35);
+  });
+}
+
+/* ---- 通常送信 ---- */
 async function sendMessage() {
   if (!introDone) return;
 
@@ -199,7 +195,7 @@ async function sendMessage() {
       body: JSON.stringify({ message })
     });
 
-    if (!res.ok) throw new Error("API error");
+    if (!res.ok) throw new Error();
 
     const data = await res.json();
 
@@ -210,11 +206,12 @@ async function sendMessage() {
       celesteLine.style.opacity = 1;
       log.appendChild(celesteLine);
 
-      // モバイルは「下に寄せる」だけ（中央スクロールしない）
-      celesteLine.scrollIntoView({ behavior: "smooth", block: "end" });
+      if (window.innerWidth <= 600) {
+        celesteLine.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
     }
 
-  } catch (e) {
+  } catch {
     error.textContent = "[API error]";
   }
 }
