@@ -42,23 +42,23 @@ body{
   overflow:hidden;
 }
 
+/* ===== log ===== */
 .log{
-  min-height:240px;
-  max-height:56vh;
+  min-height:260px;
   padding:28px 26px;
-  overflow:hidden;
   display:flex;
   flex-direction:column;
   justify-content:center;
+  overflow:hidden; /* ← 初期はスクロールしない */
 }
 
-.log.active{
+.log.scroll{
   overflow:auto;
   justify-content:flex-start;
 }
 
 .turn{
-  margin-bottom:20px;
+  margin-bottom:22px;
   font-size:16px;
   white-space:pre-line;
 }
@@ -81,6 +81,7 @@ body{
   opacity:0;
 }
 
+/* ===== input ===== */
 .inputbar{
   padding:16px;
   border-top:1px solid rgba(255,255,255,.06);
@@ -96,14 +97,14 @@ input{
   color:var(--text);
   font-size:15px;
   outline:none;
-  transition:border-color 1.6s ease, box-shadow 1.6s ease;
+  transition:border-color 1.4s ease, box-shadow 1.4s ease;
 }
 
 input::placeholder{color:rgba(169,179,199,.6)}
 
 input.received{
   border-color:var(--accent);
-  box-shadow:0 0 0 1px rgba(155,188,255,.25);
+  box-shadow:0 0 0 1px rgba(155,188,255,.28);
 }
 
 .footer{
@@ -139,33 +140,41 @@ const API="/api/celeste";
 const log=document.getElementById("log");
 const input=document.getElementById("input");
 
+/* ===== utilities ===== */
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
 function addTurn(text,cls){
   const d=document.createElement("div");
   d.className="turn "+cls;
   d.innerText=text;
   log.appendChild(d);
-  center(d);
+
+  // 2ターン目以降でスクロールを許可
+  if(log.children.length > 2){
+    log.classList.add("scroll");
+  }
+
+  requestAnimationFrame(()=>{
+    d.scrollIntoView({block:"center",behavior:"smooth"});
+  });
+
   return d;
 }
 
-function center(el){
-  requestAnimationFrame(()=>{
-    el.scrollIntoView({block:"center",behavior:"smooth"});
-  });
-}
-
+/* ===== send flow ===== */
 async function send(){
   const msg=input.value.trim();
   if(!msg) return;
 
-  log.classList.add("active");
   addTurn(msg,"user");
   input.value="";
   input.disabled=true;
 
+  /* ① 枠の変化 */
   input.classList.add("received");
-  await new Promise(r=>setTimeout(r,900));
+  await sleep(900);   // ← ここで必ず待つ
 
+  /* ② API 呼び出し */
   try{
     const r=await fetch(API,{
       method:"POST",
@@ -177,9 +186,9 @@ async function send(){
       addTurn(j.reply,"assistant");
     }
   }finally{
+    input.classList.remove("received");
     input.disabled=false;
     input.focus();
-    setTimeout(()=>input.classList.remove("received"),600);
   }
 }
 
@@ -190,7 +199,7 @@ input.addEventListener("keydown",e=>{
   }
 });
 
-/* 初期文言（フェードアウト管理付き） */
+/* ===== initial message ===== */
 const initial = addTurn(
   "You can simply let your words appear.",
   "assistant initial"
@@ -199,7 +208,7 @@ const initial = addTurn(
 setTimeout(()=>{
   initial.classList.add("fadeout");
   setTimeout(()=>initial.remove(),1200);
-},2000);
+},1800);
 </script>
 </body>
 </html>
