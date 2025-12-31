@@ -76,13 +76,14 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease;
   }
 
-  /* ★ 受理サイン */
+  /* ★ 受理サイン（枠のみ） */
   input.ack {
-    background: rgba(255,255,255,0.14);
-    box-shadow: 0 0 0 1px rgba(200,210,255,0.35);
+    box-shadow:
+      0 0 0 1px rgba(150, 180, 255, 0.55),
+      0 0 12px rgba(120, 160, 255, 0.25);
   }
 
   input:disabled {
