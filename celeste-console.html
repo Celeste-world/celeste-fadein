@@ -12,15 +12,22 @@
   --panel:rgba(255,255,255,0.04);
   --text:#e8ebef;
   --muted:#a0a8bb;
+
   --user:#f0f2f8;
   --assistant:#9bbcff;
+
   --accept: rgba(155,188,255,.78);
   --acceptShadow: rgba(155,188,255,.16);
+
+  --turnGap: 14px;       /* ← ターン間の余白（1行分の間） */
+  --lineGap: 2px;        /* ターン内の行の詰め */
 }
 *{box-sizing:border-box;}
 html,body{
   margin:0;height:100%;
-  background:radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),var(--bg);
+  background:
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),
+    var(--bg);
   color:var(--text);
   font-family:system-ui,-apple-system;
 }
@@ -45,20 +52,41 @@ html,body{
   overflow:auto;
   display:flex;
   flex-direction:column;
-  justify-content:center;
+  justify-content:center; /* “センター寄り” */
 }
 .log.free{
-  justify-content:flex-start;
+  justify-content:flex-start; /* ログが増えたら上詰め */
 }
+
+/* ===== ターン（会話ブロック） ===== */
+.turn{
+  display:flex;
+  flex-direction:column;
+  gap: var(--lineGap);
+  margin: 0 0 var(--turnGap);
+}
+.turn:last-child{ margin-bottom: 0; }
+
+/* （任意）ターンの薄い仕切り。不要なら消してOK */
+.turn::after{
+  content:"";
+  height:1px;
+  background:rgba(255,255,255,.06);
+  margin-top:10px;
+  opacity:.55;
+}
+.turn:last-child::after{ display:none; }
+
 .entry{
   white-space:pre-wrap;
   line-height:1.55;
   font-size:15px;
-  margin:2px 0;
+  margin:0;
 }
-.entry.user{color:var(--user);}
-.entry.assistant{color:var(--assistant);}
-.input-wrap{margin-top:18px;}
+.entry.user{ color:var(--user); }
+.entry.assistant{ color:var(--assistant); }
+
+.input-wrap{ margin-top:18px; }
 input{
   width:100%;
   padding:14px;
@@ -66,6 +94,7 @@ input{
   border:1px solid rgba(255,255,255,.14);
   background:rgba(0,0,0,.22);
   color:var(--text);
+  outline:none;
 }
 input.accepting{
   animation:acceptBreath 1.6s ease forwards;
@@ -85,7 +114,11 @@ input.accepting{
   justify-content:flex-end;
   gap:16px;
 }
-.footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(160,168,187,.35);}
+.footer a{
+  color:var(--muted);
+  text-decoration:none;
+  border-bottom:1px solid rgba(160,168,187,.35);
+}
 </style>
 </head>
 
@@ -93,9 +126,11 @@ input.accepting{
 <div class="wrapper">
   <div class="console">
     <div id="log" class="log"></div>
+
     <div class="input-wrap">
       <input id="input" placeholder="Write freely." autocomplete="off" disabled />
     </div>
+
     <div class="footer">
       <a href="/about.html">Back to About</a>
       <span>CELESTE v4.4A</span>
@@ -108,12 +143,40 @@ const API_ENDPOINT="/api/celeste";
 const log=document.getElementById("log");
 const input=document.getElementById("input");
 
-function addEntry(text,cls){
-  const e=document.createElement("div");
-  e.className="entry "+cls;
-  e.textContent=text;
-  log.appendChild(e);
-  log.scrollTop=log.scrollHeight;
+let currentTurn = null;
+
+function scrollToLatest(mode="end"){
+  // mode: "end"（最後へ） / "center"（最新ターンを中央寄り）
+  if(mode==="end"){
+    log.scrollTop = log.scrollHeight;
+    return;
+  }
+  const last = log.lastElementChild;
+  if(!last) return;
+  const top = last.offsetTop;
+  const h = last.offsetHeight;
+  const target = top - (log.clientHeight/2) + (h/2);
+  log.scrollTop = Math.max(0, target);
+}
+
+function ensureTurn(){
+  if(currentTurn) return currentTurn;
+  currentTurn = document.createElement("div");
+  currentTurn.className = "turn";
+  log.appendChild(currentTurn);
+  return currentTurn;
+}
+
+function addToTurn(text, cls){
+  const t = ensureTurn();
+  const e = document.createElement("div");
+  e.className = "entry " + cls;
+  e.textContent = text;
+  t.appendChild(e);
+}
+
+function closeTurn(){
+  currentTurn = null;
 }
 
 function playAcceptBreath(){
@@ -124,44 +187,63 @@ function playAcceptBreath(){
 }
 
 async function send(){
-  const msg=input.value.trim();
+  const msg = input.value.trim();
   if(!msg) return;
-  input.value="";
 
+  input.value = "";
+
+  // 入力開始：センター固定（free解除）→枠演出
   log.classList.remove("free");
-  const breath=playAcceptBreath();
+  const breath = playAcceptBreath();
 
-  addEntry(msg,"user");
+  // 新しいターン開始：user
+  closeTurn();
+  addToTurn(msg, "user");
 
   await breath;
 
   try{
-    const r=await fetch(API_ENDPOINT,{
+    const r = await fetch(API_ENDPOINT,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({message:msg})
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ message: msg })
     });
-    const d=await r.json();
-    if(d.reply){
-      log.classList.add("free");
-      addEntry(d.reply,"assistant");
+    const d = await r.json().catch(()=>({}));
+    const reply = (typeof d.reply === "string") ? d.reply : "";
+
+    // 返答：同じターンに assistant を追加
+    if(reply){
+      addToTurn(reply, "assistant");
     }
   }catch{}
+
+  // 返答が終わったらターンを閉じ、以降は上詰めで自然に積む
+  closeTurn();
+  log.classList.add("free");
+
+  // dev同様：最新が見える位置へ（好みで "center" に変えられます）
+  scrollToLatest("end");
 
   input.focus();
 }
 
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){e.preventDefault();send();}
+  if(e.key==="Enter"){ e.preventDefault(); send(); }
 });
 
 (function intro(){
-  const e=document.createElement("div");
-  e.className="entry assistant";
-  e.textContent="Hello, I’m Celeste.\n\nWrite freely.";
-  log.appendChild(e);
-  setTimeout(()=>e.style.opacity="0",4000);
-  setTimeout(()=>{e.remove();input.disabled=false;input.focus();},5400);
+  // intro も “assistant単独ターン” として扱う（devの見え方に近い）
+  closeTurn();
+  addToTurn("Hello, I’m Celeste.\n\nWrite freely.","assistant");
+  scrollToLatest("center");
+
+  setTimeout(()=>{ 
+    // フェードはCSSでなく、存在を消すだけ（挙動安定優先）
+    log.innerHTML = "";
+    closeTurn();
+    input.disabled = false;
+    input.focus();
+  }, 5400);
 })();
 </script>
 </body>
