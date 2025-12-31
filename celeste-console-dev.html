@@ -28,17 +28,20 @@
     line-height: 1.6;
   }
 
-  /* --- log lines --- */
+  /* ---- log lines ---- */
   .line {
     margin: 4px 0;
   }
 
+  /* user: 少し暖色・明るめ */
   .line.user {
-    color: rgba(232,235,239,0.85);
+    color: rgba(245, 242, 235, 0.9);
   }
 
+  /* celeste: 彩度を落とした青灰色 + 下に余白 */
   .line.celeste {
-    color: rgba(180,200,255,0.9);
+    color: rgba(170, 185, 215, 0.9);
+    margin-bottom: 1.6em; /* 1行分の間 */
   }
 
   .intro {
@@ -120,7 +123,6 @@ function showIntro() {
     intro.classList.add("visible");
   });
 
-  // 4秒表示 → 1.4秒フェードアウト
   setTimeout(() => {
     intro.classList.add("fadeout");
   }, 4000);
@@ -145,7 +147,6 @@ async function sendMessage() {
   input.value = "";
   error.textContent = "";
 
-  // user line
   const userLine = document.createElement("div");
   userLine.className = "line user";
   userLine.textContent = message;
