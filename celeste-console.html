@@ -18,7 +18,6 @@
   --line:#252b3a;
   --accent:#9bbcff;
 
-  /* accept (subtle) */
   --accept: rgba(155,188,255,.78);
   --acceptShadow: rgba(155,188,255,.16);
 }
@@ -67,11 +66,12 @@ html,body{
   justify-content:flex-start;
 }
 
+/* ===== 行間最終調整ポイント ===== */
 .entry{
   white-space:pre-wrap;
-  line-height:1.8;
+  line-height:1.65;     /* 呼吸を残したまま詰める */
   font-size:15px;
-  margin:6px 0;
+  margin:2px 0;         /* 余白を最小限に */
   transition: opacity .6s ease;
 }
 
@@ -83,7 +83,6 @@ html,body{
   margin-top:18px;
 }
 
-/* input base */
 input{
   width:100%;
   padding:14px 14px;
@@ -99,7 +98,6 @@ input::placeholder{
   color:rgba(160,168,187,.7);
 }
 
-/* accept animation: breath, not flash */
 input.accepting{
   animation: acceptBreath 1.7s ease forwards;
 }
@@ -109,17 +107,14 @@ input.accepting{
     border-color: rgba(255,255,255,.14);
     box-shadow: none;
   }
-  /* fade-in 0.3s */
   18%{
     border-color: var(--accept);
     box-shadow: 0 0 0 2px var(--acceptShadow);
   }
-  /* hold 0.8s */
   65%{
     border-color: var(--accept);
     box-shadow: 0 0 0 2px var(--acceptShadow);
   }
-  /* fade-out 0.6s */
   100%{
     border-color: rgba(255,255,255,.14);
     box-shadow: none;
@@ -169,7 +164,6 @@ const API_ENDPOINT = "/api/celeste";
 const log = document.getElementById("log");
 const input = document.getElementById("input");
 
-/* --- intro --- */
 function intro(){
   const e = document.createElement("div");
   e.className = "entry assistant";
@@ -184,7 +178,6 @@ function intro(){
   }, 5400);
 }
 
-/* --- log helpers --- */
 function addEntry(text, cls){
   const e = document.createElement("div");
   e.className = "entry " + cls;
@@ -200,84 +193,60 @@ function fadeOld(){
   entries.slice(0,-5).forEach(e=>e.classList.add("faded"));
 }
 
-/* --- meaningful input gate (v4.4A) --- */
-/* rule: do NOT send symbol-only / non-linguistic input */
 function isMeaningfulInput(text){
   const s = (text || "").trim();
   if(!s) return false;
-
-  // any letter-like content: Latin, Hiragana/Katakana, Hangul, Han
-  // (minimal and script-based; not keyword lists)
   return /[A-Za-z\u3040-\u30FF\uAC00-\uD7AF\u4E00-\u9FFF]/.test(s);
 }
 
-/* --- accept breath (UI acknowledgment) --- */
 function playAcceptBreath(){
-  // restart animation reliably
   input.classList.remove("accepting");
-  // force reflow
   void input.offsetWidth;
   input.classList.add("accepting");
-
-  return new Promise(resolve => {
-    const done = () => {
-      input.removeEventListener("animationend", done);
-      resolve();
-    };
-    input.addEventListener("animationend", done, { once:true });
+  return new Promise(resolve=>{
+    input.addEventListener("animationend", resolve, { once:true });
   });
 }
 
-/* --- send --- */
 async function send(){
-  const raw = input.value || "";
-  const msg = raw.trim();
+  const msg = (input.value || "").trim();
   if(!msg) return;
-
   input.value = "";
 
-  // Always show "received" attitude (breath),
-  // even when we choose silence.
   const breath = playAcceptBreath();
 
-  // If the input is not meaningful, stop here (silent handling).
   if(!isMeaningfulInput(msg)){
     await breath;
     input.focus();
     return;
   }
 
-  // Normal path: show the user's line
   log.classList.remove("free");
   addEntry(msg, "user");
 
-  // Wait until the breath fully ends (no flicker with scroll/response)
   await breath;
 
   try{
-    const r = await fetch(API_ENDPOINT, {
+    const r = await fetch(API_ENDPOINT,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ message: msg })
     });
-
-    const d = await r.json().catch(()=> ({}));
-    const reply = (d && typeof d.reply === "string") ? d.reply.trim() : "";
-
+    const d = await r.json().catch(()=>({}));
+    const reply = typeof d.reply === "string" ? d.reply.trim() : "";
     if(reply){
       log.classList.add("free");
       addEntry(reply, "assistant");
       log.scrollTop = log.scrollHeight;
     }
-  }catch{
-    // silent failure by design
-  }finally{
+  }catch{}
+  finally{
     input.focus();
   }
 }
 
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter"){
+input.addEventListener("keydown", e=>{
+  if(e.key==="Enter"){
     e.preventDefault();
     send();
   }
