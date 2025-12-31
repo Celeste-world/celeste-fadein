@@ -1,279 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Celeste – Console</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Celeste – Console</title>
 
-  <!-- Favicon (optional) -->
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 
-  <style>
-    :root{
-      --bg:#050811;
-      --panel:#0b1020cc;
-      --border:#1b2540;
-      --text:#e8ebef;
-      --muted:#a9b3c7;
-      --accent:#9bbcff;
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      background:
-        radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.20), transparent 55%),
-        radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
-        radial-gradient(900px 700px at 55% 85%, rgba(40,160,255,.10), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      letter-spacing: .2px;
-      padding: 56px 20px 80px;
-    }
-    .wrap{
-      width:min(760px, 100%);
-    }
-    .head{
-      margin: 0 0 22px;
-      padding: 0 6px;
-    }
-    .title{
-      font-size: 26px;
-      font-weight: 600;
-      margin: 0 0 10px;
-    }
-    .sub{
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin: 0;
-    }
-    .sub a{ color: var(--accent); text-decoration: none; border-bottom:1px solid rgba(155,188,255,.35) }
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    .console{
-      padding: 22px 22px 10px;
-      max-height: 520px;
-      overflow: auto;
-    }
-    .line{
-      margin: 0 0 14px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      line-height: 1.85;
-      font-size: 16px;
-    }
-    .user{
-      color: var(--accent);
-    }
-    .divider{
-      height:1px;
-      background: rgba(255,255,255,.07);
-      margin: 14px 0 12px;
-    }
-    .inputbar{
-      padding: 14px 16px 16px;
-      border-top: 1px solid rgba(255,255,255,.06);
-      background: rgba(0,0,0,.08);
-      display:flex;
-      gap: 10px;
-      align-items:center;
-    }
-    input[type="text"]{
-      flex:1;
-      padding: 14px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-    }
-    input[type="text"]::placeholder{ color: rgba(169,179,199,.65); }
-    button{
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(155,188,255,.16);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 14px;
-      letter-spacing: .2px;
-    }
-    button:disabled{
-      opacity: .55;
-      cursor: default;
-    }
-    .foot{
-      margin-top: 16px;
-      color: rgba(169,179,199,.55);
-      font-size: 12px;
-      text-align: right;
-      padding-right: 6px;
-    }
-  </style>
+<style>
+:root{
+  --bg:#050811;
+  --panel:rgba(255,255,255,0.04);
+  --text:#e8ebef;
+  --muted:#a0a8bb;
+  --user:#f0f2f8;
+  --assistant:#9bbcff;
+  --line:#252b3a;
+  --accent:#9bbcff;
+}
+
+/* reset */
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  height:100%;
+  background:
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.18), transparent 55%),
+    radial-gradient(900px 700px at 70% 75%, rgba(120,80,255,.12), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family: system-ui,-apple-system,BlinkMacSystemFont;
+}
+
+/* layout */
+.wrapper{
+  min-height:100dvh;
+  display:flex;
+  justify-content:center;
+  padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom);
+}
+
+.console{
+  width:100%;
+  max-width:720px;
+  margin: 80px auto 60px;
+  background:var(--panel);
+  border-radius:18px;
+  padding:24px 20px 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.55);
+}
+
+/* log */
+.log{
+  min-height:160px;
+  max-height:56vh;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  transition: padding .4s ease;
+}
+
+.entry{
+  white-space:pre-wrap;
+  line-height:1.8;
+  font-size:15px;
+  margin:6px 0;
+  transition: opacity .6s ease;
+}
+
+.entry.user{
+  color:var(--user);
+}
+
+.entry.assistant{
+  color:var(--assistant);
+}
+
+.entry.faded{
+  opacity:.35;
+}
+
+/* input */
+.input-wrap{
+  margin-top:18px;
+}
+
+input{
+  width:100%;
+  padding:14px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.22);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+  transition:border-color 1.2s ease, box-shadow 1.2s ease;
+}
+
+input::placeholder{
+  color:rgba(160,168,187,.7);
+}
+
+input.accepted{
+  border-color:rgba(155,188,255,.75);
+  box-shadow: 0 0 0 2px rgba(155,188,255,.18);
+}
+
+/* footer */
+.footer{
+  margin-top:10px;
+  text-align:right;
+  font-size:11px;
+  color:var(--muted);
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="head">
-      <div class="title">Celeste</div>
-      <p class="sub">
-        A quiet space to organize your thoughts — decisions stay with you.<br/>
-        This space is open to whatever you choose to write.<br/>
-        <a href="/faq.html">You can read the FAQ anytime.</a>
-      </p>
+<div class="wrapper">
+  <div class="console">
+    <div id="log" class="log"></div>
+
+    <div class="input-wrap">
+      <input id="input" placeholder="Write freely." autocomplete="off" disabled />
     </div>
 
-    <div class="panel">
-      <div id="console" class="console" aria-live="polite"></div>
-      <div class="divider"></div>
-      <div class="inputbar">
-        <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
-        <button id="send">Send</button>
-      </div>
-    </div>
-
-    <div class="foot">CELESTE v4.3A</div>
+    <div class="footer">CELESTE v4.4A</div>
   </div>
+</div>
 
-  <script>
-    // PUBLIC endpoint (same-origin)
-    const API_ENDPOINT = "/api/celeste";
+<script>
+/* ===== config ===== */
+const API_ENDPOINT = "/api/celeste";
 
-    const consoleEl = document.getElementById("console");
-    const inputEl = document.getElementById("input");
-    const sendBtn = document.getElementById("send");
+/* ===== elements ===== */
+const log = document.getElementById("log");
+const input = document.getElementById("input");
 
-    function uid() {
-      // stable-ish session id without external libs
-      const a = crypto.getRandomValues(new Uint32Array(4));
-      return Array.from(a).map(x => x.toString(16).padStart(8, "0")).join("");
-    }
+/* ===== intro ===== */
+function intro(){
+  const e = document.createElement("div");
+  e.className = "entry assistant";
+  e.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
+  log.appendChild(e);
 
-    const storage = {
-      get(k){ try { return localStorage.getItem(k); } catch { return null; } },
-      set(k,v){ try { localStorage.setItem(k, v); } catch {} }
-    };
+  setTimeout(()=>{
+    e.style.opacity = "0";
+  },4000);
 
-    const SESSION_ID_KEY = "celeste.sessionId";
-    const SESSION_LANG_KEY = "celeste.sessionLang";
+  setTimeout(()=>{
+    e.remove();
+    input.disabled = false;
+    input.focus();
+  },5400);
+}
 
-    let sessionId = storage.get(SESSION_ID_KEY);
-    if (!sessionId) {
-      sessionId = uid();
-      storage.set(SESSION_ID_KEY, sessionId);
-    }
+/* ===== helpers ===== */
+function addEntry(text, cls){
+  const e = document.createElement("div");
+  e.className = "entry " + cls;
+  e.textContent = text;
+  log.appendChild(e);
+  centerView();
+  fadeOld();
+  return e;
+}
 
-    // Language lock (session-level)
-    let sessionLang = storage.get(SESSION_LANG_KEY) || "";
+function centerView(){
+  const h = log.scrollHeight;
+  const v = log.clientHeight;
+  log.scrollTop = Math.max(0, h/2 - v/2);
+}
 
-    // Heuristic: decide language only when we don't have a locked one.
-    // IMPORTANT: We do not re-detect once locked, to avoid "Kanji repetition => zh".
-    function detectLangOnce(text) {
-      const s = (text || "").trim();
-      if (!s) return "";
+function fadeOld(){
+  const entries = [...log.children];
+  if(entries.length < 6) return;
+  entries.slice(0,-5).forEach(e=>e.classList.add("faded"));
+}
 
-      // If the user explicitly writes in a script strongly tied to a language, choose it.
-      // Otherwise: stay empty and fall back to browser preference.
-      // Note: We intentionally avoid word lists and avoid re-detecting later.
-      const hasHiraganaKatakana = /[\u3040-\u30FF]/.test(s);
-      const hasHangul = /[\uAC00-\uD7AF]/.test(s);
-      const hasLatin = /[A-Za-z]/.test(s);
+/* ===== send ===== */
+async function send(){
+  const msg = input.value.trim();
+  if(!msg) return;
 
-      if (hasHiraganaKatakana) return "ja";
-      if (hasHangul) return "ko";
-      if (hasLatin) return "en";
+  input.value = "";
+  input.classList.add("accepted");
+  setTimeout(()=>input.classList.remove("accepted"),1400);
 
-      // Han-only is ambiguous (ja/zh). Do NOT assume zh.
-      // Use browser preference as a gentle default.
-      const nav = (navigator.language || "").toLowerCase();
-      if (nav.startsWith("ja")) return "ja";
-      if (nav.startsWith("ko")) return "ko";
-      if (nav.startsWith("zh")) return "zh";
-      return "en";
-    }
+  addEntry(msg,"user");
 
-    function addLine(text, cls) {
-      const div = document.createElement("div");
-      div.className = "line" + (cls ? " " + cls : "");
-      div.textContent = text;
-      consoleEl.appendChild(div);
-      consoleEl.scrollTop = consoleEl.scrollHeight;
-    }
-
-    function setBusy(busy) {
-      sendBtn.disabled = busy;
-      inputEl.disabled = busy;
-    }
-
-    async function sendMessage() {
-      const msg = (inputEl.value || "").trim();
-      if (!msg) return;
-
-      addLine(msg, "user");
-      inputEl.value = "";
-
-      if (!sessionLang) {
-        sessionLang = detectLangOnce(msg);
-        storage.set(SESSION_LANG_KEY, sessionLang);
+  setTimeout(async ()=>{
+    try{
+      const r = await fetch(API_ENDPOINT,{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+      const d = await r.json();
+      if(d.reply){
+        addEntry(d.reply,"assistant");
       }
+    }catch{}
+  },900);
+}
 
-      setBusy(true);
-      addLine("…", "assistant");
+/* ===== events ===== */
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    send();
+  }
+});
 
-      try {
-        const res = await fetch(API_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: msg,
-            sessionId,
-            lang: sessionLang
-          })
-        });
-
-        const data = await res.json().catch(() => ({}));
-        const reply = (data && typeof data.reply === "string") ? data.reply.trim() : "";
-
-        // replace last "…" line
-        const last = consoleEl.lastElementChild;
-        if (last && last.textContent === "…") {
-          last.textContent = reply || "";
-          last.className = "line assistant";
-        } else {
-          addLine(reply || "", "assistant");
-        }
-      } catch {
-        const last = consoleEl.lastElementChild;
-        if (last && last.textContent === "…") last.textContent = "";
-      } finally {
-        setBusy(false);
-        inputEl.focus();
-      }
-    }
-
-    sendBtn.addEventListener("click", sendMessage);
-    inputEl.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    // Optional: opening presence
-    // (No forced question. No language forcing here.)
-    addLine("You can simply let your words appear.", "assistant");
-  </script>
+/* ===== start ===== */
+intro();
+</script>
 </body>
 </html>
