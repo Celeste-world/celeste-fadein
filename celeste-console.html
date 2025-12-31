@@ -57,7 +57,6 @@ html,body{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  transition: padding .4s ease;
 }
 
 .log.free{
@@ -102,20 +101,23 @@ input.accepted{
 }
 
 .footer{
-  margin-top:12px;
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid rgba(37,43,58,0.9);
+  font-size:12px;
   color:var(--muted);
+  display:flex;
+  justify-content:flex-end;
+  gap:16px;
 }
 
 .footer a{
   color:var(--muted);
   text-decoration:none;
-  border-bottom:1px solid rgba(160,168,187,.3);
+  border-bottom:1px solid rgba(160,168,187,.35);
 }
 .footer a:hover{
-  border-bottom-color:rgba(160,168,187,.7);
+  border-bottom-color:rgba(160,168,187,.75);
 }
 </style>
 </head>
@@ -130,7 +132,7 @@ input.accepted{
     </div>
 
     <div class="footer">
-      <a href="/about.html">About Celeste</a>
+      <a href="/about.html">Back to About</a>
       <span>CELESTE v4.4A</span>
     </div>
   </div>
@@ -190,7 +192,7 @@ async function send(){
       });
       const d = await r.json();
       if(d.reply){
-        log.classList.add("free");   // ★ 返答時にセンター解除
+        log.classList.add("free");
         addEntry(d.reply,"assistant");
         log.scrollTop = log.scrollHeight;
       }
