@@ -6,14 +6,17 @@
 <title>Celeste Console – Dev</title>
 
 <style>
-  body {
+  html, body {
     margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Safari 横はみ出し対策 */
+  }
+
+  body {
     background: radial-gradient(circle at top, #0b1430, #02040a);
     color: #e8ebef;
     font-family: system-ui, -apple-system, BlinkMacSystemFont;
     font-size: 16px;
-    display: flex;
-    justify-content: center;
   }
 
   .console {
@@ -24,6 +27,7 @@
     border-radius: 16px;
     background: rgba(255,255,255,0.04);
     backdrop-filter: blur(12px);
+    box-sizing: border-box;
   }
 
   .log {
@@ -49,15 +53,11 @@
 
   .intro {
     opacity: 0;
-    transition: opacity 2.6s ease;
+    transition: opacity 1.8s ease;
   }
 
   .intro.visible {
     opacity: 1;
-  }
-
-  .intro.fadeout {
-    opacity: 0;
   }
 
   input {
@@ -69,6 +69,7 @@
     background: rgba(255,255,255,0.08);
     color: white;
     font-size: 14px;
+    box-sizing: border-box;
   }
 
   input:disabled {
@@ -86,6 +87,7 @@
     body {
       font-size: 14px;
     }
+
     .console {
       max-width: 420px;
       margin: 40px auto;
@@ -119,35 +121,29 @@ const input = document.getElementById("input");
 
 let introDone = false;
 
-/* ---- intro (iOS-safe, time guaranteed) ---- */
+/* ---- intro（fade-in only, remove silently） ---- */
 function showIntro() {
   const intro = document.createElement("div");
   intro.className = "intro";
   intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
   log.appendChild(intro);
 
-  // フェードイン
   requestAnimationFrame(() => {
     intro.classList.add("visible");
   });
 
-  // 4秒後にフェードアウト開始
-  setTimeout(() => {
-    intro.classList.add("fadeout");
-  }, 4000);
-
-  // フェードアウト完了想定時刻で強制終了（iOS保険）
+  // 一定時間後に静かに消す（フェードアウトしない）
   setTimeout(() => {
     if (intro.parentNode) intro.remove();
     introDone = true;
     input.disabled = false;
     input.focus();
-  }, 7000); // 4s + 2.6s + 余裕
+  }, 4200);
 }
 
 showIntro();
 
-/* ---- 既存UI処理（省略なし） ---- */
+/* ---- 通常送信 ---- */
 async function sendMessage() {
   if (!introDone) return;
 
