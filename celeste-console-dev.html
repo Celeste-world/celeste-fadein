@@ -76,14 +76,14 @@
     color: white;
     font-size: 14px;
     box-sizing: border-box;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.9s ease; /* ← ゆっくり戻る */
   }
 
-  /* ★ 受理サイン（枠のみ） */
+  /* ★ 受理サイン（余韻あり） */
   input.ack {
     box-shadow:
       0 0 0 1px rgba(150, 180, 255, 0.55),
-      0 0 12px rgba(120, 160, 255, 0.25);
+      0 0 14px rgba(120, 160, 255, 0.28);
   }
 
   input:disabled {
@@ -163,12 +163,12 @@ function showIntro() {
 
 showIntro();
 
-/* ---- input acknowledge ---- */
+/* ---- input acknowledge (余韻) ---- */
 function acknowledgeInput() {
   input.classList.add("ack");
   setTimeout(() => {
     input.classList.remove("ack");
-  }, 300);
+  }, 900); // ← 余韻を残す
 }
 
 /* ---- send message ---- */
@@ -177,7 +177,7 @@ async function sendMessage() {
 
   const message = input.value.trim();
 
-  // ★ 受理サインは常に出す
+  // 受理サインは常に出す
   acknowledgeInput();
 
   if (!message) {
