@@ -14,7 +14,6 @@
   --muted:#a9b3c7;
   --accent:#9bbcff;
   --panel: rgba(10,14,28,.72);
-  --panel2: rgba(255,255,255,.03);
   --border: rgba(255,255,255,.10);
   --radius:18px;
   --shadow:0 24px 70px rgba(0,0,0,.52);
@@ -29,50 +28,62 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.20), transparent 55%),
+    radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
+    radial-gradient(900px 700px at 55% 85%, rgba(40,160,255,.10), transparent 55%),
+    var(--bg);
   color:var(--text);
-  font-family: ui-serif, Georgia, serif;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
   padding:24px;
 }
 
 .wrap{ width:min(760px,100%); }
 
 .panel{
-  background:linear-gradient(180deg,var(--panel2),rgba(255,255,255,.012));
-  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border:1px solid var(--border);
   box-shadow:var(--shadow);
   border-radius:var(--radius);
   overflow:hidden;
 }
 
 .log{
-  padding:22px;
+  padding:22px 22px 16px;
   max-height:min(62vh,520px);
   overflow-y:auto;
+  scrollbar-width:none;
 }
-.log::-webkit-scrollbar{ display:none; }
-.log{ scrollbar-width:none; }
+.log::-webkit-scrollbar{ width:0; }
 
 .turn{ margin-bottom:16px; }
 
 .bubble{
   white-space:pre-wrap;
   word-break:break-word;
-  line-height:1.65;
+  line-height:1.7;
   font-size:16px;
 }
-
 .bubble.user{
   color:var(--accent);
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
-
 .bubble.assistant{
   color:var(--text);
 }
 
+.intro{
+  opacity:0;
+  transition:opacity 2.6s ease;
+}
+.intro.visible{ opacity:1; }
+.intro.fadeout{
+  opacity:0;
+  transition:opacity 1.4s ease;
+}
+
 .inputbar{
-  padding:14px 16px;
+  padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.06);
 }
 
@@ -84,22 +95,28 @@ input{
   background:rgba(0,0,0,.22);
   color:var(--text);
   font-size:15px;
-  transition:border-color 1.25s ease, box-shadow 1.25s ease;
+  outline:none;
+  transition:border-color 1.2s ease, box-shadow 1.2s ease;
 }
-
+input::placeholder{ color:rgba(169,179,199,.65); }
 input.received{
   border-color:rgba(155,188,255,.95);
   box-shadow:0 0 0 3px rgba(155,188,255,.12);
 }
 
 .foot{
-  padding:12px 16px;
+  padding:12px 16px 14px;
   display:flex;
   justify-content:flex-end;
   gap:18px;
   font-size:12px;
   color:rgba(169,179,199,.7);
   border-top:1px solid rgba(255,255,255,.04);
+}
+.foot a{
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px solid rgba(155,188,255,.32);
 }
 </style>
 </head>
@@ -110,7 +127,7 @@ input.received{
     <div id="log" class="log"></div>
 
     <div class="inputbar">
-      <input id="input" placeholder="Write freely." autocomplete="off" />
+      <input id="input" placeholder="Write freely." autocomplete="off">
     </div>
 
     <div class="foot">
@@ -121,25 +138,16 @@ input.received{
 </div>
 
 <script>
-const API = "/api/celeste";
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
-
-function isMeaningful(text){
-  if (!text) return false;
-  const s = text.trim();
-  if (!s) return false;
-  if (/[0-9]/.test(s)) return true;
-  if (/[A-Za-z]/.test(s)) return true;
-  if (/[^\x00-\x7F]/.test(s)) return true;
-  return false;
-}
+const API="/api/celeste";
+const log=document.getElementById("log");
+const input=document.getElementById("input");
 
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function isMeaningful(t){ return /[\p{L}\p{N}]/u.test(t.trim()); }
 
 function addTurn(text){
-  const t=document.createElement("div");
-  t.className="turn";
+  const turn=document.createElement("div");
+  turn.className="turn";
 
   const u=document.createElement("div");
   u.className="bubble user";
@@ -148,54 +156,58 @@ function addTurn(text){
   const a=document.createElement("div");
   a.className="bubble assistant";
 
-  t.append(u,a);
-  logEl.appendChild(t);
-
-  // ★ 安定スクロール（centerは使わない）
-  logEl.scrollTop = logEl.scrollHeight;
-
+  turn.append(u,a);
+  log.appendChild(turn);
+  turn.scrollIntoView({block:"center"});
   return a;
 }
 
+// Intro
+(function(){
+  const i=document.createElement("div");
+  i.className="bubble assistant intro";
+  i.textContent="You can simply let your words appear.";
+  log.appendChild(i);
+  requestAnimationFrame(()=>i.classList.add("visible"));
+  setTimeout(()=>i.classList.add("fadeout"),4000);
+  setTimeout(()=>i.remove(),5400);
+})();
+
 async function send(){
-  const msg = inputEl.value.trim();
+  const msg=input.value.trim();
   if(!msg) return;
+  input.value="";
 
-  inputEl.value="";
-
-  // ★ 枠反応は必ず出す
-  inputEl.classList.add("received");
-  void inputEl.offsetHeight; // PC 強制 reflow
+  // ★ 枠は必ず反応
+  input.classList.add("received");
+  void input.offsetHeight;
   await sleep(1200);
-  inputEl.classList.remove("received");
+  input.classList.remove("received");
   await sleep(250);
 
+  // ★ 無意味入力は沈黙
   if(!isMeaningful(msg)){
-    inputEl.focus();
+    input.focus();
     return;
   }
 
-  const slot = addTurn(msg);
+  const slot=addTurn(msg);
 
   try{
-    const res = await fetch(API,{
+    const res=await fetch(API,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({message:msg})
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message:msg })
     });
-
-    const data = await res.json();
-    slot.textContent = (data.reply || "").trim();
-    logEl.scrollTop = logEl.scrollHeight;
-
+    const data=await res.json();
+    slot.textContent=(data.reply||"").trim();
   }catch{
-    slot.textContent = "";
+    slot.textContent="";
   }
-
-  inputEl.focus();
+  input.focus();
 }
 
-inputEl.addEventListener("keydown", e=>{
+input.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     e.preventDefault();
     send();
