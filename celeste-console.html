@@ -20,8 +20,7 @@
   --shadow:0 24px 70px rgba(0,0,0,.52);
 }
 
-/* reset */
-*{ box-sizing:border-box; }
+*{box-sizing:border-box;}
 
 body{
   margin:0;
@@ -37,38 +36,27 @@ body{
     var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
-  letter-spacing:.2px;
-  padding:24px;
 }
 
-.wrap{
-  width:min(760px,100%);
-}
+.wrap{ width:min(760px,100%); }
 
 .panel{
-  background:linear-gradient(180deg,var(--panel2),rgba(255,255,255,.012));
+  background: linear-gradient(180deg, var(--panel2), rgba(255,255,255,.012));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:var(--shadow);
   border-radius:var(--radius);
   overflow:hidden;
 }
 
-/* log */
 .log{
-  padding:22px 22px 16px;
+  padding:22px;
   max-height:min(62vh,520px);
   overflow-y:auto;
-  overscroll-behavior:contain;
+  scrollbar-width:none;
 }
-.log::-webkit-scrollbar{ width:0;height:0; }
-.log{ scrollbar-width:none; }
+.log::-webkit-scrollbar{display:none;}
 
-/* turn */
-.turn{
-  margin-bottom:16px;
-}
-.turn:last-child{ margin-bottom:0; }
-
+.turn{ margin-bottom:18px; }
 .bubble{
   white-space:pre-wrap;
   word-break:break-word;
@@ -79,29 +67,25 @@ body{
   color:var(--accent);
   margin-bottom:10px;
 }
-.bubble.assistant{
-  color:var(--text);
-}
+.bubble.assistant{ color:var(--text); }
 
-/* intro */
 .intro{
   opacity:0;
   transition:opacity 2.6s ease;
 }
-.intro.visible{ opacity:1; }
+.intro.visible{opacity:1;}
 .intro.fadeout{
   opacity:0;
   transition:opacity 1.4s ease;
 }
 
-/* input */
 .inputbar{
-  padding:14px 16px 16px;
+  padding:14px 16px;
   border-top:1px solid rgba(255,255,255,.06);
   background:rgba(0,0,0,.10);
 }
 
-input[type="text"]{
+input{
   width:100%;
   padding:14px;
   border-radius:12px;
@@ -112,23 +96,19 @@ input[type="text"]{
   outline:none;
   transition:border-color 1.25s ease, box-shadow 1.25s ease;
 }
-input::placeholder{ color:rgba(169,179,199,.65); }
-input:disabled{ opacity:.72; }
-
+input::placeholder{color:rgba(169,179,199,.65);}
 input.received{
   border-color:rgba(155,188,255,.95);
   box-shadow:0 0 0 3px rgba(155,188,255,.12);
 }
 
-/* footer */
 .foot{
-  padding:12px 16px 14px;
+  padding:12px 16px;
   display:flex;
   justify-content:flex-end;
   gap:18px;
   font-size:12px;
-  color:rgba(169,179,199,.70);
-  background:rgba(0,0,0,.06);
+  color:rgba(169,179,199,.7);
   border-top:1px solid rgba(255,255,255,.04);
 }
 .foot a{
@@ -136,19 +116,16 @@ input.received{
   text-decoration:none;
   border-bottom:1px solid rgba(155,188,255,.32);
 }
-.foot a:hover{
-  border-bottom-color:rgba(155,188,255,.78);
-}
 </style>
 </head>
 
 <body>
 <div class="wrap">
   <div class="panel">
-    <div id="log" class="log" aria-live="polite"></div>
+    <div id="log" class="log"></div>
 
     <div class="inputbar">
-      <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
+      <input id="input" type="text" placeholder="Write freely." autocomplete="off">
     </div>
 
     <div class="foot">
@@ -159,114 +136,96 @@ input.received{
 </div>
 
 <script>
-const API_ENDPOINT = "/api/celeste";
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
+const API_ENDPOINT="/api/celeste";
+const logEl=document.getElementById("log");
+const inputEl=document.getElementById("input");
 
-let sending = false;
+let sending=false;
 
-/* 意味判定：全言語文字 or 数字 */
+const BORDER_GLOW_MS=1200;
+const BORDER_SETTLE_MS=250;
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// 🔑 全言語＋数字対応（Unicode）
 function isMeaningful(text){
-  const s = (text || "").trim();
-  if (!s) return false;
-  return /[\p{L}\p{N}]/u.test(s);
+  if(!text) return false;
+  return /[\p{L}\p{N}]/u.test(text.trim());
 }
 
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-/* turn */
 function addTurn(userText){
-  const turn = document.createElement("div");
-  turn.className = "turn";
+  const turn=document.createElement("div");
+  turn.className="turn";
 
-  const user = document.createElement("div");
-  user.className = "bubble user";
-  user.textContent = userText;
+  const u=document.createElement("div");
+  u.className="bubble user";
+  u.textContent=userText;
 
-  const assistant = document.createElement("div");
-  assistant.className = "bubble assistant";
+  const a=document.createElement("div");
+  a.className="bubble assistant";
 
-  turn.appendChild(user);
-  turn.appendChild(assistant);
+  turn.append(u,a);
   logEl.appendChild(turn);
-
   turn.scrollIntoView({behavior:"smooth",block:"center"});
-  return assistant;
+  return a;
 }
 
-/* intro */
-function showIntro(){
-  const intro = document.createElement("div");
-  intro.className = "bubble assistant intro";
-  intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
-  logEl.appendChild(intro);
-
-  requestAnimationFrame(()=>intro.classList.add("visible"));
-
-  setTimeout(()=>intro.classList.add("fadeout"),4000);
-  setTimeout(()=>{ intro.remove(); inputEl.focus(); },5400);
-}
-
-showIntro();
-
-/* timing */
-const BORDER_GLOW_MS = 1200;
-const BORDER_SETTLE_MS = 250;
+// Intro
+(function(){
+  const i=document.createElement("div");
+  i.className="bubble assistant intro";
+  i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
+  logEl.appendChild(i);
+  requestAnimationFrame(()=>i.classList.add("visible"));
+  setTimeout(()=>i.classList.add("fadeout"),4000);
+  setTimeout(()=>i.remove(),5400);
+})();
 
 async function sendMessage(){
-  if (sending) return;
+  if(sending) return;
+  sending=true;
 
-  const msg = (inputEl.value || "").trim();
-  if (!msg) return;
-
-  if (!isMeaningful(msg)){
-    inputEl.value = "";
+  const msg=inputEl.value.trim();
+  if(!msg){
+    sending=false;
     return;
   }
 
-  sending = true;
-  inputEl.disabled = true;
-  inputEl.value = "";
+  inputEl.value="";
 
-  const assistantSlot = addTurn(msg);
-
+  // 枠の反応は必ず行う
   inputEl.classList.add("received");
   await sleep(BORDER_GLOW_MS);
   inputEl.classList.remove("received");
   await sleep(BORDER_SETTLE_MS);
 
-  try{
-    const res = await fetch(API_ENDPOINT,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message: msg })
-    });
-
-    const data = await res.json().catch(()=>({}));
-    const reply = typeof data.reply==="string" ? data.reply.trim() : "";
-    assistantSlot.textContent = reply || "";
-
-    assistantSlot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch{
-    assistantSlot.textContent = "";
-  }finally{
-    sending = false;
-    inputEl.disabled = false;
+  // 意味がなければ沈黙
+  if(!isMeaningful(msg)){
     inputEl.focus();
+    sending=false;
+    return;
+  }
+
+  const slot=addTurn(msg);
+
+  try{
+    const res=await fetch(API_ENDPOINT,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:msg})
+    });
+    const data=await res.json().catch(()=>({}));
+    slot.textContent=(data.reply||"").trim();
+    slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
+  }finally{
+    inputEl.focus();
+    sending=false;
   }
 }
 
-/* Enter */
-inputEl.addEventListener("keydown",(e)=>{
-  if (e.key==="Enter"){
+inputEl.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
     e.preventDefault();
-    sendMessage();
-  }
-});
-
-/* iOS数字対策 */
-inputEl.addEventListener("blur",()=>{
-  if (inputEl.value.trim()){
     sendMessage();
   }
 });
