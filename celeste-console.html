@@ -58,7 +58,7 @@ body{
 .bubble{
   white-space:pre-wrap;
   word-break:break-word;
-  line-height:1.7;
+  line-height:1.65;
   font-size:16px;
 }
 
@@ -69,16 +69,6 @@ body{
 
 .bubble.assistant{
   color:var(--text);
-}
-
-.intro{
-  opacity:0;
-  transition:opacity 2.6s ease;
-}
-.intro.visible{ opacity:1; }
-.intro.fadeout{
-  opacity:0;
-  transition:opacity 1.4s ease;
 }
 
 .inputbar{
@@ -120,7 +110,7 @@ input.received{
     <div id="log" class="log"></div>
 
     <div class="inputbar">
-      <input id="input" placeholder="Write freely." />
+      <input id="input" placeholder="Write freely." autocomplete="off" />
     </div>
 
     <div class="foot">
@@ -150,34 +140,32 @@ function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 function addTurn(text){
   const t=document.createElement("div");
   t.className="turn";
+
   const u=document.createElement("div");
   u.className="bubble user";
   u.textContent=text;
+
   const a=document.createElement("div");
   a.className="bubble assistant";
+
   t.append(u,a);
   logEl.appendChild(t);
-  t.scrollIntoView({behavior:"smooth",block:"center"});
+
+  // ★ 安定スクロール（centerは使わない）
+  logEl.scrollTop = logEl.scrollHeight;
+
   return a;
 }
 
-function showIntro(){
-  const i=document.createElement("div");
-  i.className="bubble assistant intro";
-  i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
-  logEl.appendChild(i);
-  requestAnimationFrame(()=>i.classList.add("visible"));
-  setTimeout(()=>i.classList.add("fadeout"),4000);
-  setTimeout(()=>i.remove(),5400);
-}
-showIntro();
-
 async function send(){
-  const msg=inputEl.value.trim();
+  const msg = inputEl.value.trim();
   if(!msg) return;
 
   inputEl.value="";
+
+  // ★ 枠反応は必ず出す
   inputEl.classList.add("received");
+  void inputEl.offsetHeight; // PC 強制 reflow
   await sleep(1200);
   inputEl.classList.remove("received");
   await sleep(250);
@@ -187,19 +175,27 @@ async function send(){
     return;
   }
 
-  const slot=addTurn(msg);
+  const slot = addTurn(msg);
 
-  const res=await fetch(API,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({message:msg})
-  });
+  try{
+    const res = await fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:msg})
+    });
 
-  const data=await res.json();
-  slot.textContent=(data.reply||"").trim();
+    const data = await res.json();
+    slot.textContent = (data.reply || "").trim();
+    logEl.scrollTop = logEl.scrollHeight;
+
+  }catch{
+    slot.textContent = "";
+  }
+
+  inputEl.focus();
 }
 
-inputEl.addEventListener("keydown",e=>{
+inputEl.addEventListener("keydown", e=>{
   if(e.key==="Enter"){
     e.preventDefault();
     send();
