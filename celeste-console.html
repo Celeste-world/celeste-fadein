@@ -168,15 +168,16 @@
   const logEl = document.getElementById("log");
   const inputEl = document.getElementById("input");
 
-  // 記号だけ等を弾く（? や > 単体は無反応）
-  function isMeaningful(text){
-    const s = (text || "").trim();
-    if (!s) return false;
+  // ? や > 単体は無反応
+ function isMeaningful(text) {
+  if (!text) return false;
+  const s = text.trim();
+  if (!s) return false;
 
-    // 文字(ラテン/数字/かな/カナ/漢字/ハングル)が含まれる時だけ通す
-    const meaningful = /[A-Za-z0-9\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF]/.test(s);
-    return meaningful;
-  }
+  // 文字（全言語）または数字を含めば意味あり
+  return /[\p{L}\p{N}]/u.test(s);
+}
+
 
   function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
