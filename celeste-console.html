@@ -8,286 +8,268 @@
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
 <style>
-  :root{
-    --bg:#050811;
-    --text:#e8ebef;
-    --muted:#a9b3c7;
-    --accent:#9bbcff;
-    --panel: rgba(10, 14, 28, .72);
-    --panel2: rgba(255,255,255,.03);
-    --border: rgba(255,255,255,.10);
-    --radius: 18px;
-    --shadow: 0 24px 70px rgba(0,0,0,.52);
-    --glow: rgba(155,188,255,.85);
-  }
+:root{
+  --bg:#050811;
+  --text:#e8ebef;
+  --muted:#a9b3c7;
+  --accent:#9bbcff;
+  --panel: rgba(10,14,28,.72);
+  --panel2: rgba(255,255,255,.03);
+  --border: rgba(255,255,255,.10);
+  --radius:18px;
+  --shadow:0 24px 70px rgba(0,0,0,.52);
+}
 
-  *{ box-sizing:border-box; }
+/* reset */
+*{ box-sizing:border-box; }
 
-  body{
-    margin:0;
-    height:100vh;
-    overflow:hidden; /* ページ自体のスクロールを止める */
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:
-      radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.20), transparent 55%),
-      radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
-      radial-gradient(900px 700px at 55% 85%, rgba(40,160,255,.10), transparent 55%),
-      var(--bg);
-    color:var(--text);
-    font-family: ui-serif, Georgia, "Times New Roman", serif;
-    letter-spacing:.2px;
-    padding: 24px;
-  }
+body{
+  margin:0;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.20), transparent 55%),
+    radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
+    radial-gradient(900px 700px at 55% 85%, rgba(40,160,255,.10), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  letter-spacing:.2px;
+  padding:24px;
+}
 
-  .wrap{
-    width: min(760px, 100%);
-  }
+.wrap{
+  width:min(760px,100%);
+}
 
-  .panel{
-    background: linear-gradient(180deg, var(--panel2), rgba(255,255,255,.012));
-    border: 1px solid rgba(255,255,255,.08);
-    box-shadow: var(--shadow);
-    border-radius: var(--radius);
-    overflow:hidden;
-  }
+.panel{
+  background:linear-gradient(180deg,var(--panel2),rgba(255,255,255,.012));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
 
-  /* ログ領域：内部スクロール、バーは見せない */
-  .log{
-    padding: 22px 22px 16px;
-    max-height: min(62vh, 520px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-  .log::-webkit-scrollbar{ width:0; height:0; }
-  .log{ scrollbar-width:none; }
+/* log */
+.log{
+  padding:22px 22px 16px;
+  max-height:min(62vh,520px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.log::-webkit-scrollbar{ width:0;height:0; }
+.log{ scrollbar-width:none; }
 
-  /* 1ターン=1ブロック */
-  .turn{
-    margin: 0 0 16px;
-  }
-  .turn:last-child{ margin-bottom: 0; }
+/* turn */
+.turn{
+  margin-bottom:16px;
+}
+.turn:last-child{ margin-bottom:0; }
 
-  .bubble{
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.75;
-    font-size: 16px;
-  }
-  .bubble.user{
-    color: var(--accent);
-    margin-bottom: 10px; /* ユーザー→セレステの間：1行分の余韻 */
-  }
-  .bubble.assistant{
-    color: var(--text);
-  }
+.bubble{
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height:1.75;
+  font-size:16px;
+}
+.bubble.user{
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.bubble.assistant{
+  color:var(--text);
+}
 
-  /* intro */
-  .intro{
-    opacity:0;
-    transition: opacity 2.6s ease;
-  }
-  .intro.visible{ opacity:1; }
-  .intro.fadeout{
-    opacity:0;
-    transition: opacity 1.4s ease;
-  }
+/* intro */
+.intro{
+  opacity:0;
+  transition:opacity 2.6s ease;
+}
+.intro.visible{ opacity:1; }
+.intro.fadeout{
+  opacity:0;
+  transition:opacity 1.4s ease;
+}
 
-  .inputbar{
-    padding: 14px 16px 16px;
-    border-top: 1px solid rgba(255,255,255,.06);
-    background: rgba(0,0,0,.10);
-  }
+/* input */
+.inputbar{
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.10);
+}
 
-  input[type="text"]{
-    width: 100%;
-    padding: 14px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.22);
-    color: var(--text);
-    font-size: 15px;
-    outline: none;
+input[type="text"]{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.22);
+  color:var(--text);
+  font-size:15px;
+  outline:none;
+  transition:border-color 1.25s ease, box-shadow 1.25s ease;
+}
+input::placeholder{ color:rgba(169,179,199,.65); }
+input:disabled{ opacity:.72; }
 
-    /* 枠の余韻（ゆっくり戻る） */
-    transition: border-color 1.25s ease, box-shadow 1.25s ease;
-  }
-  input[type="text"]::placeholder{
-    color: rgba(169,179,199,.65);
-  }
-  input[type="text"]:disabled{
-    opacity:.72;
-  }
-  input[type="text"].received{
-    border-color: rgba(155,188,255,.95);
-    box-shadow: 0 0 0 3px rgba(155,188,255,.12);
-  }
+input.received{
+  border-color:rgba(155,188,255,.95);
+  box-shadow:0 0 0 3px rgba(155,188,255,.12);
+}
 
-  /* フッター：他ページ同様 右寄せ（勝手に左にしない） */
-  .foot{
-    padding: 12px 16px 14px;
-    display:flex;
-    justify-content:flex-end;
-    gap: 18px;
-    font-size: 12px;
-    color: rgba(169,179,199,.70);
-    background: rgba(0,0,0,.06);
-    border-top: 1px solid rgba(255,255,255,.04);
-  }
-  .foot a{
-    color: var(--accent);
-    text-decoration:none;
-    border-bottom: 1px solid rgba(155,188,255,.32);
-  }
-  .foot a:hover{
-    border-bottom-color: rgba(155,188,255,.78);
-  }
+/* footer */
+.foot{
+  padding:12px 16px 14px;
+  display:flex;
+  justify-content:flex-end;
+  gap:18px;
+  font-size:12px;
+  color:rgba(169,179,199,.70);
+  background:rgba(0,0,0,.06);
+  border-top:1px solid rgba(255,255,255,.04);
+}
+.foot a{
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px solid rgba(155,188,255,.32);
+}
+.foot a:hover{
+  border-bottom-color:rgba(155,188,255,.78);
+}
 </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="panel">
-      <div id="log" class="log" aria-live="polite"></div>
+<div class="wrap">
+  <div class="panel">
+    <div id="log" class="log" aria-live="polite"></div>
 
-      <div class="inputbar">
-        <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
-      </div>
+    <div class="inputbar">
+      <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
+    </div>
 
-      <div class="foot">
-        <a href="/about.html">Back to About</a>
-        <span>CELESTE v4.4A</span>
-      </div>
+    <div class="foot">
+      <a href="/about.html">Back to About</a>
+      <span>CELESTE v4.4A</span>
     </div>
   </div>
+</div>
 
 <script>
-  const API_ENDPOINT = "/api/celeste";
+const API_ENDPOINT = "/api/celeste";
+const logEl = document.getElementById("log");
+const inputEl = document.getElementById("input");
 
-  const logEl = document.getElementById("log");
-  const inputEl = document.getElementById("input");
+let sending = false;
 
-  // ? や > 単体は無反応
- function isMeaningful(text) {
-  if (!text) return false;
-  const s = text.trim();
+/* 意味判定：全言語文字 or 数字 */
+function isMeaningful(text){
+  const s = (text || "").trim();
   if (!s) return false;
-
-  // 文字（全言語）または数字を含めば意味あり
   return /[\p{L}\p{N}]/u.test(s);
 }
 
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+/* turn */
+function addTurn(userText){
+  const turn = document.createElement("div");
+  turn.className = "turn";
 
-  // 1ターン=1ブロックを作り、後でassistant部だけ差し替える
-  function addTurn(userText){
-    const turn = document.createElement("div");
-    turn.className = "turn";
+  const user = document.createElement("div");
+  user.className = "bubble user";
+  user.textContent = userText;
 
-    const user = document.createElement("div");
-    user.className = "bubble user";
-    user.textContent = userText;
+  const assistant = document.createElement("div");
+  assistant.className = "bubble assistant";
 
-    const assistant = document.createElement("div");
-    assistant.className = "bubble assistant";
-    assistant.textContent = ""; // 後で入れる
+  turn.appendChild(user);
+  turn.appendChild(assistant);
+  logEl.appendChild(turn);
 
-    turn.appendChild(user);
-    turn.appendChild(assistant);
-    logEl.appendChild(turn);
+  turn.scrollIntoView({behavior:"smooth",block:"center"});
+  return assistant;
+}
 
-    // センターへ
-    turn.scrollIntoView({ behavior: "smooth", block: "center" });
-    return assistant;
-  }
+/* intro */
+function showIntro(){
+  const intro = document.createElement("div");
+  intro.className = "bubble assistant intro";
+  intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
+  logEl.appendChild(intro);
 
-  // Intro（フェードアウト）
-  function showIntro(){
-    const intro = document.createElement("div");
-    intro.className = "bubble assistant intro";
-    intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
-    logEl.appendChild(intro);
+  requestAnimationFrame(()=>intro.classList.add("visible"));
 
-    requestAnimationFrame(() => intro.classList.add("visible"));
+  setTimeout(()=>intro.classList.add("fadeout"),4000);
+  setTimeout(()=>{ intro.remove(); inputEl.focus(); },5400);
+}
 
-    setTimeout(() => {
-      intro.classList.add("fadeout");
-    }, 4000);
+showIntro();
 
-    setTimeout(() => {
-      intro.remove();
-      inputEl.focus();
-    }, 5400);
-  }
+/* timing */
+const BORDER_GLOW_MS = 1200;
+const BORDER_SETTLE_MS = 250;
 
-  showIntro();
+async function sendMessage(){
+  if (sending) return;
 
-  // 重要：枠演出が「返答より前」に完了してから API を叩く
-  const BORDER_GLOW_MS = 1200;  // 余韻の長さ（ここで調整）
-  const BORDER_SETTLE_MS = 250; // 少しだけ間を置いて落ち着かせる
+  const msg = (inputEl.value || "").trim();
+  if (!msg) return;
 
-  async function sendMessage(){
-    const msg = (inputEl.value || "").trim();
-    if (!msg) return;
-
-    // 無効入力は「完全に何もしない」
-    if (!isMeaningful(msg)){
-      inputEl.value = "";
-      return;
-    }
-
+  if (!isMeaningful(msg)){
     inputEl.value = "";
-    inputEl.disabled = true;
-
-    const assistantSlot = addTurn(msg);
-
-    // 入力→枠の変化（余韻）→返答
-    inputEl.classList.add("received");
-    await sleep(BORDER_GLOW_MS);
-    inputEl.classList.remove("received");
-    await sleep(BORDER_SETTLE_MS);
-
-    try{
-      const res = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg })
-      });
-
-      const data = await res.json().catch(() => ({}));
-      const reply = (data && typeof data.reply === "string") ? data.reply.trim() : "";
-
-      // 返答の改行は「そのまま」表示（余計な行間を足さない）
-      assistantSlot.textContent = reply || "";
-
-      // 返答が出たところで再度センター
-      assistantSlot.parentElement.scrollIntoView({ behavior:"smooth", block:"center" });
-
-    } catch {
-      assistantSlot.textContent = "";
-    } finally {
-      inputEl.disabled = false;
-      inputEl.focus();
-    }
+    return;
   }
 
-  inputEl.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
+  sending = true;
+  inputEl.disabled = true;
+  inputEl.value = "";
+
+  const assistantSlot = addTurn(msg);
+
+  inputEl.classList.add("received");
+  await sleep(BORDER_GLOW_MS);
+  inputEl.classList.remove("received");
+  await sleep(BORDER_SETTLE_MS);
+
+  try{
+    const res = await fetch(API_ENDPOINT,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ message: msg })
+    });
+
+    const data = await res.json().catch(()=>({}));
+    const reply = typeof data.reply==="string" ? data.reply.trim() : "";
+    assistantSlot.textContent = reply || "";
+
+    assistantSlot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch{
+    assistantSlot.textContent = "";
+  }finally{
+    sending = false;
+    inputEl.disabled = false;
+    inputEl.focus();
+  }
+}
+
+/* Enter */
+inputEl.addEventListener("keydown",(e)=>{
+  if (e.key==="Enter"){
     e.preventDefault();
     sendMessage();
   }
 });
 
-// ★ iOS対策：数字入力確定時
-inputEl.addEventListener("blur", () => {
-  if (inputEl.value.trim()) {
+/* iOS数字対策 */
+inputEl.addEventListener("blur",()=>{
+  if (inputEl.value.trim()){
     sendMessage();
   }
 });
-
-  });
 </script>
 </body>
 </html>
