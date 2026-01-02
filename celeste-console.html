@@ -13,14 +13,13 @@
   --text:#e8ebef;
   --muted:#a9b3c7;
   --accent:#9bbcff;
-  --panel: rgba(10, 14, 28, .72);
+  --panel: rgba(10,14,28,.72);
   --panel2: rgba(255,255,255,.03);
-  --border: rgba(255,255,255,.10);
-  --radius: 18px;
-  --shadow: 0 24px 70px rgba(0,0,0,.52);
+  --radius:18px;
+  --shadow:0 24px 70px rgba(0,0,0,.52);
 }
 
-*{ box-sizing:border-box; }
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -36,10 +35,11 @@ body{
     var(--bg);
   color:var(--text);
   font-family: ui-serif, Georgia, "Times New Roman", serif;
-  padding:24px;
 }
 
-.wrap{ width:min(760px,100%); }
+.wrap{
+  width:min(760px,100%);
+}
 
 .panel{
   background: linear-gradient(180deg, var(--panel2), rgba(255,255,255,.012));
@@ -50,25 +50,43 @@ body{
 }
 
 .log{
-  padding:22px 22px 16px;
+  padding:22px;
   max-height:min(62vh,520px);
   overflow-y:auto;
   scrollbar-width:none;
 }
-.log::-webkit-scrollbar{ display:none; }
+.log::-webkit-scrollbar{width:0}
 
-.turn{ margin-bottom:16px; }
+.turn{
+  margin-bottom:18px;
+}
+
 .bubble{
   white-space:pre-wrap;
   word-break:break-word;
   line-height:1.75;
   font-size:16px;
 }
+
 .bubble.user{
   color:var(--accent);
   margin-bottom:10px;
 }
-.bubble.assistant{ color:var(--text); }
+
+.bubble.assistant{
+  color:var(--text);
+}
+
+/* intro */
+.intro{
+  opacity:0;
+  transition:opacity 2.6s ease;
+}
+.intro.visible{opacity:1}
+.intro.fadeout{
+  opacity:0;
+  transition:opacity 1.4s ease;
+}
 
 .inputbar{
   padding:14px 16px 16px;
@@ -87,6 +105,7 @@ input{
   outline:none;
   transition:border-color 1.2s ease, box-shadow 1.2s ease;
 }
+
 input.received{
   border-color:rgba(155,188,255,.95);
   box-shadow:0 0 0 3px rgba(155,188,255,.12);
@@ -99,6 +118,7 @@ input.received{
   gap:18px;
   font-size:12px;
   color:rgba(169,179,199,.7);
+  background:rgba(0,0,0,.06);
   border-top:1px solid rgba(255,255,255,.04);
 }
 .foot a{
@@ -115,7 +135,7 @@ input.received{
     <div id="log" class="log"></div>
 
     <div class="inputbar">
-      <input id="input" placeholder="Write freely." autocomplete="off" />
+      <input id="input" type="text" placeholder="Write freely." autocomplete="off">
     </div>
 
     <div class="foot">
@@ -127,89 +147,75 @@ input.received{
 
 <script>
 const API_ENDPOINT = "/api/celeste";
-const log = document.getElementById("log");
-const input = document.getElementById("input");
+const logEl = document.getElementById("log");
+const inputEl = document.getElementById("input");
 
-function isMeaningful(text){
-  if(!text) return false;
-  const s = text.trim();
-  if(!s) return false;
-  return /[A-Za-z0-9\u00A0-\uFFFF]/.test(s);
-}
-
-/* ★ ゆっくりスクロール */
-function smoothScrollToBottom(duration = 420){
-  const start = log.scrollTop;
-  const end = log.scrollHeight - log.clientHeight;
-  const change = end - start;
-  const startTime = performance.now();
-
-  function animate(now){
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const ease = progress * (2 - progress); // easeOut
-    log.scrollTop = start + change * ease;
-    if(progress < 1) requestAnimationFrame(animate);
-  }
-  requestAnimationFrame(animate);
-}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
 function addTurn(text){
-  const turn = document.createElement("div");
-  turn.className = "turn";
+  const turn=document.createElement("div");
+  turn.className="turn";
 
-  const u = document.createElement("div");
-  u.className = "bubble user";
-  u.textContent = text;
+  const user=document.createElement("div");
+  user.className="bubble user";
+  user.textContent=text;
 
-  const a = document.createElement("div");
-  a.className = "bubble assistant";
+  const assistant=document.createElement("div");
+  assistant.className="bubble assistant";
 
-  turn.append(u,a);
-  log.appendChild(turn);
-  smoothScrollToBottom();
-  return a;
+  turn.append(user,assistant);
+  logEl.appendChild(turn);
+
+  turn.scrollIntoView({behavior:"smooth",block:"center"});
+  return assistant;
 }
 
-async function send(){
-  const msg = input.value.trim();
+// Intro（必ず表示）
+(function showIntro(){
+  const intro=document.createElement("div");
+  intro.className="bubble assistant intro";
+  intro.textContent="Hello, I’m Celeste.\n\nWrite freely.";
+  logEl.appendChild(intro);
+
+  requestAnimationFrame(()=>intro.classList.add("visible"));
+
+  setTimeout(()=>intro.classList.add("fadeout"),4000);
+  setTimeout(()=>intro.remove(),5400);
+})();
+
+async function sendMessage(){
+  const msg=inputEl.value.trim();
   if(!msg) return;
 
-  input.value = "";
-  input.disabled = true;
+  inputEl.value="";
+  inputEl.disabled=true;
 
-  input.classList.add("received");
-  setTimeout(()=>input.classList.remove("received"),1200);
+  const slot=addTurn(msg);
 
-  if(!isMeaningful(msg)){
-    input.disabled = false;
-    input.focus();
-    return;
-  }
-
-  const slot = addTurn(msg);
+  inputEl.classList.add("received");
+  await sleep(1200);
+  inputEl.classList.remove("received");
+  await sleep(200);
 
   try{
-    const r = await fetch(API_ENDPOINT,{
+    const res=await fetch(API_ENDPOINT,{
       method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message: msg })
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:msg})
     });
-    const j = await r.json();
-    slot.textContent = j.reply || "";
-    smoothScrollToBottom();
-  }catch{
-    slot.textContent = "";
+    const data=await res.json();
+    slot.textContent=(data.reply||"").trim();
+    slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
   }finally{
-    input.disabled = false;
-    input.focus();
+    inputEl.disabled=false;
+    inputEl.focus();
   }
 }
 
-input.addEventListener("keydown", e=>{
+inputEl.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     e.preventDefault();
-    send();
+    sendMessage();
   }
 });
 </script>
