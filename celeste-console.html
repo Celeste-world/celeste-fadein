@@ -274,10 +274,19 @@
   }
 
   inputEl.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      sendMessage();
-    }
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// ★ iOS対策：数字入力確定時
+inputEl.addEventListener("blur", () => {
+  if (inputEl.value.trim()) {
+    sendMessage();
+  }
+});
+
   });
 </script>
 </body>
