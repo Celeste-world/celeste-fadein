@@ -16,12 +16,17 @@
   --panel2:rgba(255,255,255,.03);
   --radius:18px;
   --shadow:0 24px 70px rgba(0,0,0,.52);
+  --vh:100vh;
 }
 *{box-sizing:border-box;}
 
 body{
-  margin:0;height:100vh;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+  margin:0;
+  height:var(--vh);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background:
     radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.2), transparent 55%),
     var(--bg);
@@ -116,7 +121,16 @@ const inputEl=document.getElementById("input");
 let sessionLang="";
 let allowFocus=false;
 
-// ユーザー接触を記録（iOS対策）
+// iOS viewport fix
+function setVH(){
+  document.documentElement.style.setProperty(
+    "--vh", `${window.innerHeight}px`
+  );
+}
+setVH();
+window.addEventListener("resize", setVH);
+window.addEventListener("orientationchange", setVH);
+
 ["mousedown","touchstart","keydown"].forEach(ev=>{
   window.addEventListener(ev,()=>{allowFocus=true;},{once:true});
 });
@@ -131,22 +145,21 @@ function addTurn(text){
   u.textContent=text;
   const a=document.createElement("div");
   a.className="bubble assistant";
+  a.textContent="...";
   t.append(u,a);
   logEl.appendChild(t);
   t.scrollIntoView({behavior:"smooth",block:"center"});
   return a;
 }
 
-// Intro（PC/iPhone共通で確実に消える）
+// Intro
 async function showIntro(){
   const i=document.createElement("div");
   i.className="bubble assistant intro";
   i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
   logEl.appendChild(i);
 
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>i.classList.add("visible"));
-  });
+  requestAnimationFrame(()=>i.classList.add("visible"));
 
   await sleep(3600);
   i.classList.add("fadeout");
@@ -176,11 +189,15 @@ async function send(){
   }catch{
     slot.textContent="...";
   }
+
   if(allowFocus) inputEl.focus();
 }
 
 inputEl.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){e.preventDefault();send();}
+  if(e.key==="Enter"){
+    e.preventDefault();
+    send();
+  }
 });
 </script>
 </body>
