@@ -196,9 +196,10 @@ async function sendMessage(){
     });
 
     const data = await res.json();
-    if (data.lang && !sessionLang) {
-      sessionLang = data.lang;   // ← 初回のみ確定
-    }
+    if (typeof data.lang === "string" && data.lang.trim()) {
+  sessionLang = data.lang.trim();
+}
+
 
     slot.textContent = data.reply || "...";
     slot.parentElement.scrollIntoView({ behavior:"smooth", block:"center" });
