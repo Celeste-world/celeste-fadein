@@ -11,38 +11,29 @@
 :root{
   --bg:#050811;
   --text:#e8ebef;
-  --muted:#a9b3c7;
   --accent:#9bbcff;
-  --panel: rgba(10,14,28,.72);
-  --panel2: rgba(255,255,255,.03);
-  --border: rgba(255,255,255,.10);
-  --radius: 18px;
-  --shadow: 0 24px 70px rgba(0,0,0,.52);
+  --panel:rgba(10,14,28,.72);
+  --panel2:rgba(255,255,255,.03);
+  --radius:18px;
+  --shadow:0 24px 70px rgba(0,0,0,.52);
 }
-
-*{ box-sizing:border-box; }
+*{box-sizing:border-box;}
 
 body{
-  margin:0;
-  height:100vh;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  margin:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
   background:
-    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.20), transparent 55%),
-    radial-gradient(900px 700px at 80% 35%, rgba(120,80,255,.14), transparent 55%),
+    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.2), transparent 55%),
     var(--bg);
+  font-family:ui-serif, Georgia, "Times New Roman", serif;
   color:var(--text);
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
   padding:24px;
 }
 
-.wrap{ width:min(760px,100%); }
+.wrap{width:min(760px,100%);}
 
 .panel{
   background:linear-gradient(180deg,var(--panel2),rgba(255,255,255,.01));
-  border:1px solid rgba(255,255,255,.08);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   overflow:hidden;
@@ -50,34 +41,35 @@ body{
 
 .log{
   padding:22px;
-  max-height:min(62vh,520px);
+  max-height:62vh;
   overflow-y:auto;
   scrollbar-width:none;
 }
-.log::-webkit-scrollbar{ display:none; }
+.log::-webkit-scrollbar{display:none;}
 
-.turn{ margin-bottom:18px; }
+.turn{margin-bottom:18px;}
 
 .bubble{
   white-space:pre-wrap;
-  word-break:break-word;
   line-height:1.65;
   font-size:16px;
 }
+.user{color:var(--accent);margin-bottom:8px;}
+.assistant{color:var(--text);}
 
-.bubble.user{
-  color:var(--accent);
-  margin-bottom:8px;
+.intro{
+  opacity:0;
+  transition:opacity 1.8s ease;
 }
-
-.bubble.assistant{
-  color:var(--text);
+.intro.visible{opacity:1;}
+.intro.fadeout{
+  opacity:0;
+  transition:opacity 1.2s ease;
 }
 
 .inputbar{
   padding:14px 16px;
   border-top:1px solid rgba(255,255,255,.06);
-  background:rgba(0,0,0,.10);
 }
 
 input{
@@ -89,14 +81,6 @@ input{
   color:var(--text);
   font-size:15px;
   outline:none;
-  transition:border-color 1.2s ease, box-shadow 1.2s ease;
-}
-
-input::placeholder{ color:rgba(169,179,199,.65); }
-
-input.received{
-  border-color:rgba(155,188,255,.95);
-  box-shadow:0 0 0 3px rgba(155,188,255,.14);
 }
 
 .foot{
@@ -105,14 +89,8 @@ input.received{
   justify-content:flex-end;
   gap:18px;
   font-size:12px;
-  color:rgba(169,179,199,.7);
-  border-top:1px solid rgba(255,255,255,.04);
 }
-
-.foot a{
-  color:var(--accent);
-  text-decoration:none;
-}
+.foot a{color:var(--accent);text-decoration:none;}
 </style>
 </head>
 
@@ -120,11 +98,9 @@ input.received{
 <div class="wrap">
   <div class="panel">
     <div id="log" class="log"></div>
-
     <div class="inputbar">
-      <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
+      <input id="input" type="text" placeholder="Write freely." />
     </div>
-
     <div class="foot">
       <a href="/about.html">Back to About</a>
       <span>CELESTE v4.4A</span>
@@ -133,90 +109,78 @@ input.received{
 </div>
 
 <script>
-const API = "/api/celeste";
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
+const API="/api/celeste";
+const logEl=document.getElementById("log");
+const inputEl=document.getElementById("input");
 
-let sessionLang = "";        // ← LLMが決めた言語を保持
-let sessionId = crypto.randomUUID();
+let sessionLang="";
+let allowFocus=false;
 
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+// ユーザー接触を記録（iOS対策）
+["mousedown","touchstart","keydown"].forEach(ev=>{
+  window.addEventListener(ev,()=>{allowFocus=true;},{once:true});
+});
 
-function addTurn(userText){
-  const turn = document.createElement("div");
-  turn.className = "turn";
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-  const u = document.createElement("div");
-  u.className = "bubble user";
-  u.textContent = userText;
-
-  const a = document.createElement("div");
-  a.className = "bubble assistant";
-
-  turn.appendChild(u);
-  turn.appendChild(a);
-  logEl.appendChild(turn);
-
-  turn.scrollIntoView({ behavior:"smooth", block:"center" });
+function addTurn(text){
+  const t=document.createElement("div");
+  t.className="turn";
+  const u=document.createElement("div");
+  u.className="bubble user";
+  u.textContent=text;
+  const a=document.createElement("div");
+  a.className="bubble assistant";
+  t.append(u,a);
+  logEl.appendChild(t);
+  t.scrollIntoView({behavior:"smooth",block:"center"});
   return a;
 }
 
-// 初期表示
-(function intro(){
-  const t = document.createElement("div");
-  t.className = "bubble assistant";
-  t.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
-  logEl.appendChild(t);
-})();
+// Intro（PC/iPhone共通で確実に消える）
+async function showIntro(){
+  const i=document.createElement("div");
+  i.className="bubble assistant intro";
+  i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
+  logEl.appendChild(i);
 
-async function sendMessage(){
-  const msg = inputEl.value;
-  if (!msg) return;
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>i.classList.add("visible"));
+  });
 
-  inputEl.value = "";
-  inputEl.disabled = true;
+  await sleep(3600);
+  i.classList.add("fadeout");
+  await sleep(1300);
+  i.remove();
 
-  const slot = addTurn(msg);
+  if(allowFocus) inputEl.focus();
+}
+showIntro();
 
-  // 枠の余韻 → 返答
-  inputEl.classList.add("received");
-  await sleep(1100);
-  inputEl.classList.remove("received");
-  await sleep(200);
+async function send(){
+  const msg=inputEl.value;
+  if(!msg) return;
+  inputEl.value="";
+  const slot=addTurn(msg);
 
   try{
-    const res = await fetch(API,{
+    const res=await fetch(API,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        message: msg,
-        sessionId,
-        lang: sessionLang   // ← 固定言語（初回は空）
-      })
+      body:JSON.stringify({ message:msg, lang:sessionLang })
     });
-
-    const data = await res.json();
-    if (typeof data.lang === "string" && data.lang.trim()) {
-  sessionLang = data.lang.trim();
+    const data=await res.json();
+    if(data.lang) sessionLang=data.lang;
+    slot.textContent=data.reply||"...";
+    slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch{
+    slot.textContent="...";
+  }
+  if(allowFocus) inputEl.focus();
 }
 
-
-    slot.textContent = data.reply || "...";
-    slot.parentElement.scrollIntoView({ behavior:"smooth", block:"center" });
-
-  } catch {
-    slot.textContent = "...";
-  } finally {
-    inputEl.disabled = false;
-    inputEl.focus();
-  }
-}
-
-inputEl.addEventListener("keydown", e=>{
-  if (e.key === "Enter") {
-    e.preventDefault();
-    sendMessage();
-  }
+inputEl.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){e.preventDefault();send();}
 });
 </script>
 </body>
