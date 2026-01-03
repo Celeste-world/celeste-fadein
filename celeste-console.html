@@ -119,7 +119,9 @@ input{
    dev でも PROD と同じ Worker を使うため
    Pages Functions を完全にバイパスする
 ====================================================== */
-const API = "https://celeste-api.celeste.world"; // ← ★ここが最重要
+// ★ これ以外は使わない
+const API = "https://celeste-api.celeste.world";
+
 
 const logEl = document.getElementById("log");
 const inputEl = document.getElementById("input");
