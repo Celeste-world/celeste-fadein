@@ -108,32 +108,24 @@ input{
     </div>
     <div class="foot">
       <a href="/about.html">Back to About</a>
-      <span>CELESTE v4.4A (dev)</span>
+      <span>CELESTE v4.4A</span>
     </div>
   </div>
 </div>
 
 <script>
-/*
-  DEV IMPORTANT:
-  Pages Functions を完全に回避して Worker を直叩きする。
-  （これで pressure/response 旧API混入を強制的に断つ）
-*/
-const API = "https://celeste-api.celeste.world/api/celeste";
+const API="/api/celeste";
+const logEl=document.getElementById("log");
+const inputEl=document.getElementById("input");
 
-const logEl = document.getElementById("log");
-const inputEl = document.getElementById("input");
-
-let sessionLang = "";
-let allowFocus = false;
-
-// 会話履歴（user/assistant を交互に積む）
-const history = [];
-const HISTORY_LIMIT = 6; // worker は last 6 を採用している前提（user+assistant x3）
+let sessionLang="";
+let allowFocus=false;
 
 // iOS viewport fix
 function setVH(){
-  document.documentElement.style.setProperty("--vh", `${window.innerHeight}px`);
+  document.documentElement.style.setProperty(
+    "--vh", `${window.innerHeight}px`
+  );
 }
 setVH();
 window.addEventListener("resize", setVH);
@@ -148,15 +140,12 @@ function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 function addTurn(text){
   const t=document.createElement("div");
   t.className="turn";
-
   const u=document.createElement("div");
   u.className="bubble user";
   u.textContent=text;
-
   const a=document.createElement("div");
   a.className="bubble assistant";
   a.textContent="...";
-
   t.append(u,a);
   logEl.appendChild(t);
   t.scrollIntoView({behavior:"smooth",block:"center"});
@@ -181,13 +170,6 @@ async function showIntro(){
 }
 showIntro();
 
-function pushHistory(role, content){
-  history.push({ role, content });
-  if(history.length > HISTORY_LIMIT){
-    history.splice(0, history.length - HISTORY_LIMIT);
-  }
-}
-
 async function send(){
   const msg=inputEl.value;
   if(!msg) return;
@@ -198,27 +180,13 @@ async function send(){
     const res=await fetch(API,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        message: msg,
-        lang: sessionLang,
-        history: history
-      })
+      body:JSON.stringify({ message:msg, lang:sessionLang })
     });
-
     const data=await res.json();
-
-    // Worker 新API: { reply, lang }
-    if(data.lang) sessionLang = data.lang;
-    const reply = (data.reply || "").toString();
-
-    slot.textContent = reply || "...";
-
-    // 履歴に積む（UI表示したものだけを採用）
-    pushHistory("user", msg);
-    pushHistory("assistant", reply);
-
+    if(data.lang) sessionLang=data.lang;
+    slot.textContent=data.reply||"...";
     slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch(e){
+  }catch{
     slot.textContent="...";
   }
 
