@@ -59,13 +59,8 @@ body{
   line-height:1.65;
   font-size:16px;
 }
-.user{
-  color:var(--accent);
-  margin-bottom:8px;
-}
-.assistant{
-  color:var(--text);
-}
+.user{color:var(--accent);margin-bottom:8px;}
+.assistant{color:var(--text);}
 
 .intro{
   opacity:0;
@@ -100,10 +95,7 @@ input{
   gap:18px;
   font-size:12px;
 }
-.foot a{
-  color:var(--accent);
-  text-decoration:none;
-}
+.foot a{color:var(--accent);text-decoration:none;}
 </style>
 </head>
 
@@ -111,32 +103,31 @@ input{
 <div class="wrap">
   <div class="panel">
     <div id="log" class="log"></div>
-
     <div class="inputbar">
-      <input id="input" type="text" placeholder="Write freely." autocomplete="off" />
+      <input id="input" type="text" placeholder="Write freely." />
     </div>
-
     <div class="foot">
       <a href="/about.html">Back to About</a>
-      <span>CELESTE v4.4A-dev</span>
+      <span>CELESTE v4.4A (dev)</span>
     </div>
   </div>
 </div>
 
 <script>
-/* =====================
-   dev console (with history)
-   ===================== */
+/* ======================================================
+   IMPORTANT:
+   dev でも PROD と同じ Worker を使うため
+   Pages Functions を完全にバイパスする
+====================================================== */
+const API = "https://celeste-api.celeste.world"; // ← ★ここが最重要
 
-const API = "/api/celeste"; // dev: functions/api/celeste.js
 const logEl = document.getElementById("log");
 const inputEl = document.getElementById("input");
 
 let sessionLang = "";
-let history = [];          // ★ dev用：直近会話保持
 let allowFocus = false;
 
-/* ---- iOS viewport fix ---- */
+// iOS viewport fix
 function setVH(){
   document.documentElement.style.setProperty(
     "--vh", `${window.innerHeight}px`
@@ -146,43 +137,35 @@ setVH();
 window.addEventListener("resize", setVH);
 window.addEventListener("orientationchange", setVH);
 
-/* ---- ユーザー操作検知（iOS focus対策） ---- */
 ["mousedown","touchstart","keydown"].forEach(ev=>{
-  window.addEventListener(ev,()=>{ allowFocus = true; },{ once:true });
+  window.addEventListener(ev,()=>{allowFocus=true;},{once:true});
 });
 
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-/* ---- 1ターン描画 ---- */
 function addTurn(text){
-  const t = document.createElement("div");
-  t.className = "turn";
-
-  const u = document.createElement("div");
-  u.className = "bubble user";
-  u.textContent = text;
-
-  const a = document.createElement("div");
-  a.className = "bubble assistant";
-  a.textContent = "...";
-
+  const t=document.createElement("div");
+  t.className="turn";
+  const u=document.createElement("div");
+  u.className="bubble user";
+  u.textContent=text;
+  const a=document.createElement("div");
+  a.className="bubble assistant";
+  a.textContent="...";
   t.append(u,a);
   logEl.appendChild(t);
-
-  t.scrollIntoView({ behavior:"smooth", block:"center" });
+  t.scrollIntoView({behavior:"smooth",block:"center"});
   return a;
 }
 
-/* ---- Intro ---- */
+// Intro
 async function showIntro(){
-  const i = document.createElement("div");
-  i.className = "bubble assistant intro";
-  i.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
+  const i=document.createElement("div");
+  i.className="bubble assistant intro";
+  i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
   logEl.appendChild(i);
 
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=> i.classList.add("visible"));
-  });
+  requestAnimationFrame(()=>i.classList.add("visible"));
 
   await sleep(3600);
   i.classList.add("fadeout");
@@ -193,52 +176,31 @@ async function showIntro(){
 }
 showIntro();
 
-/* ---- send ---- */
 async function send(){
-  const msg = inputEl.value.trim();
+  const msg=inputEl.value;
   if(!msg) return;
-
-  inputEl.value = "";
-  const slot = addTurn(msg);
-
-  // --- history (dev) ---
-  history.push({ role:"user", content:msg });
-  history = history.slice(-6);
+  inputEl.value="";
+  const slot=addTurn(msg);
 
   try{
-    const res = await fetch(API,{
+    const res=await fetch(API,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({
-        message: msg,
-        lang: sessionLang,
-        history   // ★ devのみ
-      })
+      body:JSON.stringify({ message:msg, lang:sessionLang })
     });
-
-    const data = await res.json();
-    if(data.lang) sessionLang = data.lang;
-
-    const reply = data.reply || "...";
-    slot.textContent = reply;
-
-    if(reply){
-      history.push({ role:"assistant", content:reply });
-      history = history.slice(-6);
-    }
-
-    slot.parentElement.scrollIntoView({ behavior:"smooth", block:"center" });
-
-  }catch{
-    slot.textContent = "...";
+    const data=await res.json();
+    if(data.lang) sessionLang=data.lang;
+    slot.textContent=data.reply || "...";
+    slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch(e){
+    slot.textContent="...";
   }
 
   if(allowFocus) inputEl.focus();
 }
 
-/* ---- Enter ---- */
-inputEl.addEventListener("keydown", e=>{
-  if(e.key === "Enter"){
+inputEl.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
     e.preventDefault();
     send();
   }
