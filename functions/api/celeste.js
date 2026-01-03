@@ -1,57 +1,126 @@
-export async function onRequest({ request }) {
-  const text = await request.text();
-  const t = text.trim();
+// celeste.js
+const API = "/api/celeste";
 
-  // --- 圧力判定（言語・意味 非依存） ---
-  let pressure = 0;
-  if (t.length === 0) {
-    pressure = 0;
-  } else if (t.length < 12) {
-    pressure = 1;   // 短語・名詞・挨拶
-  } else if (t.length < 60) {
-    pressure = 2;   // 短文
-  } else {
-    pressure = 3;   // 展開・複文
-  }
+const logEl = document.getElementById("log");
+const inputEl = document.getElementById("input");
 
-  // --- 応答生成（v4.3A互換） ---
-  let response = "";
+let sessionLang = "";
+let allowFocus = false;
 
-  switch (pressure) {
-    case 0:
-    case 1:
-      response = ""; // 沈黙
-      break;
+// 直近3ターン（user + assistant）を保持
+const history = [];
 
-    case 2:
-      response = pick([
-        "今の言葉は、ここにあります。",
-        "少し間を置いても構いません。"
-      ]);
-      break;
-
-    case 3:
-      response = pick([
-        "ここで一度、区切れそうです。",
-        "もう十分に書かれています。"
-      ]);
-      break;
-  }
-
-  // --- JSON で返す（後方互換） ---
-  return new Response(
-    JSON.stringify({
-      response,   // v4.3A 用
-      pressure    // v5.0A 用
-    }),
-    {
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }
+// ========== iOS viewport fix ==========
+function setVH() {
+  document.documentElement.style.setProperty(
+    "--vh", `${window.innerHeight}px`
   );
 }
+setVH();
+window.addEventListener("resize", setVH);
+window.addEventListener("orientationchange", setVH);
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+// ========== focus control ==========
+["mousedown", "touchstart", "keydown"].forEach(ev => {
+  window.addEventListener(ev, () => {
+    allowFocus = true;
+  }, { once: true });
+});
+
+// ========== utilities ==========
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
 }
+
+function scrollToCenter(el) {
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// ========== turn handling ==========
+function addTurn(userText) {
+  const turn = document.createElement("div");
+  turn.className = "turn";
+
+  const user = document.createElement("div");
+  user.className = "bubble user";
+  user.textContent = userText;
+
+  const assistant = document.createElement("div");
+  assistant.className = "bubble assistant";
+  assistant.textContent = "...";
+
+  turn.append(user, assistant);
+  logEl.appendChild(turn);
+
+  scrollToCenter(turn);
+  return assistant;
+}
+
+function updateHistory(role, content) {
+  history.push({ role, content });
+  while (history.length > 6) history.shift(); // 3ターン分
+}
+
+// ========== intro ==========
+async function showIntro() {
+  const intro = document.createElement("div");
+  intro.className = "bubble assistant intro";
+  intro.textContent = "Hello, I’m Celeste.\n\nWrite freely.";
+  logEl.appendChild(intro);
+
+  requestAnimationFrame(() => intro.classList.add("visible"));
+
+  await sleep(3600);
+  intro.classList.add("fadeout");
+  await sleep(1300);
+  intro.remove();
+
+  if (allowFocus) inputEl.focus();
+}
+showIntro();
+
+// ========== send ==========
+async function sendMessage() {
+  const msg = inputEl.value.trim();
+  if (!msg) return;
+
+  inputEl.value = "";
+  const slot = addTurn(msg);
+
+  updateHistory("user", msg);
+
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: msg,
+        lang: sessionLang,
+        history: history
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.lang) sessionLang = data.lang;
+    const reply = data.reply || "...";
+
+    slot.textContent = reply;
+    updateHistory("assistant", reply);
+
+    scrollToCenter(slot.parentElement);
+
+  } catch {
+    slot.textContent = "...";
+  }
+
+  if (allowFocus) inputEl.focus();
+}
+
+// ========== event ==========
+inputEl.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendMessage();
+  }
+});
