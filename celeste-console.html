@@ -1,210 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Celeste – Console (dev)</title>
+  <meta charset="UTF-8" />
+  <title>Celeste – Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
-<style>
-:root{
-  --bg:#050811;
-  --text:#e8ebef;
-  --accent:#9bbcff;
-  --panel:rgba(10,14,28,.72);
-  --panel2:rgba(255,255,255,.03);
-  --radius:18px;
-  --shadow:0 24px 70px rgba(0,0,0,.52);
-  --vh:100vh;
-}
-*{box-sizing:border-box;}
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:rgba(17,22,35,.72);
+      --text:#e8ebef;
+      --accent:#9bbcff;
+      --radius:18px;
+      --shadow:0 24px 70px rgba(0,0,0,.55);
+      --vh:100vh;
+    }
 
-body{
-  margin:0;
-  height:var(--vh);
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:
-    radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.2), transparent 55%),
-    var(--bg);
-  font-family:ui-serif, Georgia, "Times New Roman", serif;
-  color:var(--text);
-  padding:24px;
-}
+    *{box-sizing:border-box}
 
-.wrap{width:min(760px,100%);}
+    body{
+      margin:0;
+      height:var(--vh);
+      background:
+        radial-gradient(1200px 800px at 35% 20%, rgba(80,120,255,.2), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      overflow:hidden;
+    }
 
-.panel{
-  background:linear-gradient(180deg,var(--panel2),rgba(255,255,255,.01));
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
+    .console{
+      width:100%;
+      max-width:820px;
+      background:var(--panel);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px 28px 22px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
 
-.log{
-  padding:22px;
-  max-height:62vh;
-  overflow-y:auto;
-  scrollbar-width:none;
-}
-.log::-webkit-scrollbar{display:none;}
+    .log{
+      flex:1;
+      overflow-y:auto;
+      white-space:pre-wrap;
+      line-height:1.6;
+      font-size:16px;
+    }
 
-.turn{margin-bottom:18px;}
+    .log p{
+      margin:0 0 12px;
+    }
 
-.bubble{
-  white-space:pre-wrap;
-  line-height:1.65;
-  font-size:16px;
-}
-.user{color:var(--accent);margin-bottom:8px;}
-.assistant{color:var(--text);}
+    .input-wrap{
+      display:flex;
+      gap:12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:14px;
+    }
 
-.intro{
-  opacity:0;
-  transition:opacity 1.8s ease;
-}
-.intro.visible{opacity:1;}
-.intro.fadeout{
-  opacity:0;
-  transition:opacity 1.2s ease;
-}
+    input{
+      flex:1;
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-size:16px;
+      font-family:inherit;
+    }
 
-.inputbar{
-  padding:14px 16px;
-  border-top:1px solid rgba(255,255,255,.06);
-}
+    input::placeholder{
+      color:rgba(232,235,239,.45);
+    }
 
-input{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.22);
-  color:var(--text);
-  font-size:15px;
-  outline:none;
-}
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      opacity:.6;
+      margin-top:4px;
+    }
 
-.foot{
-  padding:12px 16px;
-  display:flex;
-  justify-content:flex-end;
-  gap:18px;
-  font-size:12px;
-}
-.foot a{color:var(--accent);text-decoration:none;}
-</style>
+    a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="panel">
-    <div id="log" class="log"></div>
-    <div class="inputbar">
-      <input id="input" type="text" placeholder="Write freely." />
+  <div class="console">
+    <div id="log" class="log">
+      <p>こんにちは</p>
     </div>
-    <div class="foot">
+
+    <div class="input-wrap">
+      <input
+        id="input"
+        type="text"
+        placeholder="Write freely."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="footer">
       <a href="/about.html">Back to About</a>
-      <span>CELESTE v4.4A (dev)</span>
+      <span>CELESTE v4.4A</span>
     </div>
   </div>
-</div>
 
 <script>
-/* ======================================================
-   IMPORTANT:
-   dev でも PROD と同じ Worker を使うため
-   Pages Functions を完全にバイパスする
-====================================================== */
-// ★ これ以外は使わない
+/* =========================================================
+   Celeste Console – dev / prod unified
+   No pressure logic, no silence judgement on UI side
+   ========================================================= */
+
 const API = "https://celeste-api.celeste.world";
 
-
-const logEl = document.getElementById("log");
+const logEl   = document.getElementById("log");
 const inputEl = document.getElementById("input");
 
-let sessionLang = "";
-let allowFocus = false;
-
-// iOS viewport fix
+/* iOS viewport fix */
 function setVH(){
   document.documentElement.style.setProperty(
-    "--vh", `${window.innerHeight}px`
+    "--vh",
+    `${window.innerHeight}px`
   );
 }
 setVH();
 window.addEventListener("resize", setVH);
 window.addEventListener("orientationchange", setVH);
 
-["mousedown","touchstart","keydown"].forEach(ev=>{
-  window.addEventListener(ev,()=>{allowFocus=true;},{once:true});
-});
-
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
-function addTurn(text){
-  const t=document.createElement("div");
-  t.className="turn";
-  const u=document.createElement("div");
-  u.className="bubble user";
-  u.textContent=text;
-  const a=document.createElement("div");
-  a.className="bubble assistant";
-  a.textContent="...";
-  t.append(u,a);
-  logEl.appendChild(t);
-  t.scrollIntoView({behavior:"smooth",block:"center"});
-  return a;
+/* append line to log */
+function appendLine(text){
+  const p = document.createElement("p");
+  p.textContent = text;
+  logEl.appendChild(p);
+  logEl.scrollTop = logEl.scrollHeight;
 }
 
-// Intro
-async function showIntro(){
-  const i=document.createElement("div");
-  i.className="bubble assistant intro";
-  i.textContent="Hello, I’m Celeste.\n\nWrite freely.";
-  logEl.appendChild(i);
-
-  requestAnimationFrame(()=>i.classList.add("visible"));
-
-  await sleep(3600);
-  i.classList.add("fadeout");
-  await sleep(1300);
-  i.remove();
-
-  if(allowFocus) inputEl.focus();
-}
-showIntro();
-
-async function send(){
-  const msg=inputEl.value;
-  if(!msg) return;
-  inputEl.value="";
-  const slot=addTurn(msg);
-
+/* send text to API */
+async function send(text){
   try{
-    const res=await fetch(API,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:msg, lang:sessionLang })
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
     });
-    const data=await res.json();
-    if(data.lang) sessionLang=data.lang;
-    slot.textContent=data.reply || "...";
-    slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch(e){
-    slot.textContent="...";
-  }
 
-  if(allowFocus) inputEl.focus();
+    const data = await res.json();
+
+    // UI does NOT judge silence. API decides.
+    if (typeof data.response === "string") {
+      appendLine(data.response);
+    }
+
+  } catch (e){
+    console.error(e);
+  }
 }
 
-inputEl.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    e.preventDefault();
-    send();
+/* input handling */
+inputEl.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    appendLine(text);
+    inputEl.value = "";
+    send(text);
   }
 });
 </script>
