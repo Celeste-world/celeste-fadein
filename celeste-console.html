@@ -114,14 +114,16 @@ input{
 </div>
 
 <script>
-const "https://celeste.world/api/celeste";
-const logEl=document.getElementById("log");
-const inputEl=document.getElementById("input");
+/* === API ENDPOINT === */
+const API = "https://celeste.world/api/celeste";
 
-let sessionLang="";
-let allowFocus=false;
+const logEl = document.getElementById("log");
+const inputEl = document.getElementById("input");
 
-// iOS viewport fix
+let sessionLang = "";
+let allowFocus = false;
+
+/* iOS viewport fix */
 function setVH(){
   document.documentElement.style.setProperty(
     "--vh", `${window.innerHeight}px`
@@ -152,7 +154,7 @@ function addTurn(text){
   return a;
 }
 
-// Intro
+/* Intro */
 async function showIntro(){
   const i=document.createElement("div");
   i.className="bubble assistant intro";
@@ -184,9 +186,9 @@ async function send(){
     });
     const data=await res.json();
     if(data.lang) sessionLang=data.lang;
-    slot.textContent=data.reply||"...";
+    slot.textContent=data.reply || "...";
     slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch{
+  }catch(e){
     slot.textContent="...";
   }
 
