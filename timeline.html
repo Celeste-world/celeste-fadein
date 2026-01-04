@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Timeline – Celeste</title>
+
+  <!-- SEO -->
+  <meta name="description" content="A brief timeline of Celeste’s design and development milestones." />
+  <link rel="canonical" href="https://celeste.world/timeline.html" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Timeline – Celeste" />
+  <meta property="og:description" content="Design milestones and structural decisions behind Celeste." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://celeste.world/timeline.html" />
+  <meta property="og:site_name" content="Celeste" />
+  <meta property="og:image" content="https://celeste.world/images/og-image.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      margin-bottom:40px;
+    }
+    header img{
+      width:72px;
+      height:auto;
+    }
+
+    main{
+      max-width:680px;
+    }
+
+    h1{
+      font-size:26px;
+      margin-bottom:28px;
+    }
+
+    .entry{
+      padding:18px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .date{
+      font-size:13px;
+      color:var(--accent);
+      margin-bottom:6px;
+      letter-spacing:0.04em;
+    }
+
+    .content{
+      font-size:15px;
+      line-height:1.9;
+      color:var(--muted);
+    }
+
+    footer{
+      margin-top:auto;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:flex-end;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <a href="/index.html">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
+    </header>
+
+    <main>
+      <h1>Timeline</h1>
+
+      <div class="entry">
+        <div class="date">2025-08-10</div>
+        <div class="content">
+          Celeste’s initial system definition is established.
+          This date serves as a design reference point for identity consistency
+          within conversational responses.
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="date">2025-12</div>
+        <div class="content">
+          Core constraints are clarified.
+          Celeste is defined as a non-advisory, non-retentive console,
+          with intentionally limited scope.
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="date">2026-01-04</div>
+        <div class="content">
+          Development and production environments are aligned.
+          Response tone, identity anchors, and language behavior
+          are unified through a shared system configuration.
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <span>CELESTE v4.4A</span>
+    </footer>
+
+  </div>
+</body>
+</html>
