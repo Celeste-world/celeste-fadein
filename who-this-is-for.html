@@ -3,22 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, follow">
 
-  <title>Who Celeste Is For – Celeste</title>
+  <title>Who This Is For – Celeste</title>
 
   <!-- SEO -->
-  <meta name="description" content="Who Celeste is for, and who it is not. A quiet clarification of scope, limits, and expectations." />
+  <meta name="description" content="Clarifying who Celeste is for — and who it is not. This page defines the intended boundary of the space." />
   <link rel="canonical" href="https://celeste.world/who-this-is-for.html" />
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Who This Is For – Celeste">
+  <meta property="og:description" content="A clear boundary. Who this space is for, and who it is not." />
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://celeste.world/who-this-is-for.html">
+  <meta property="og:site_name" content="Celeste">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
       --bg:#050811;
-      --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
       --line:#252b3a;
-      --accent:#a9b7ff;
     }
     *{box-sizing:border-box;}
     body{
@@ -28,12 +37,17 @@
       color:var(--text);
       font-family: ui-serif, Georgia, "Times New Roman", serif;
     }
+
     a{
       color:inherit;
       text-decoration:none;
     }
-    a:hover{
-      text-decoration:underline;
+
+    a.subtle-link{
+      border-bottom:1px solid rgba(160,168,187,0.35);
+    }
+    a.subtle-link:hover{
+      border-bottom-color:rgba(160,168,187,0.85);
     }
 
     .wrap{
@@ -46,8 +60,6 @@
     }
 
     header{
-      display:flex;
-      align-items:center;
       margin-bottom:40px;
     }
     header img{
@@ -55,30 +67,34 @@
       height:auto;
     }
 
-    main{
-      flex:1;
-      max-width:720px;
-    }
-
     h1{
       font-size:26px;
-      margin-bottom:28px;
+      font-weight:bold;
+      margin-bottom:36px;
     }
 
     section{
-      margin-bottom:40px;
+      margin-bottom:48px;
     }
 
     h2{
       font-size:18px;
-      margin-bottom:14px;
+      margin-bottom:16px;
     }
 
     p{
-      font-size:15px;
+      font-size:14px;
       line-height:1.9;
       color:var(--muted);
-      margin:0 0 12px;
+      margin-bottom:14px;
+    }
+
+    ul{
+      margin:0;
+      padding-left:20px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.9;
     }
 
     footer{
@@ -93,7 +109,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
 
@@ -104,60 +119,54 @@
     </header>
 
     <main>
-      <h1>Who Celeste Is For<br/>And Who It Is Not</h1>
+      <h1>Who This Is For</h1>
 
       <section>
-        <h2>Who this is for</h2>
         <p>
-          Celeste is for moments when decisions are not ready to be made.
+          Celeste is a quiet space designed with clear limits.
+          It does not adapt to users, learn preferences, or guide outcomes.
         </p>
         <p>
-          It is for placing unfinished thoughts somewhere neutral,
-          without pressure to organize, resolve, or advance them.
-        </p>
-        <p>
-          Celeste suits those who are comfortable with thinking
-          remaining incomplete for a while.
+          This page exists to clarify who may find this space appropriate —
+          and who likely will not.
         </p>
       </section>
 
       <section>
-        <h2>Who this is not for</h2>
-        <p>
-          Celeste is not designed to provide answers, plans, or direction.
-        </p>
-        <p>
-          It does not evaluate your thinking,
-          suggest next steps,
-          or replace professional, medical, or emotional support.
-        </p>
-        <p>
-          If you are looking for speed, certainty,
-          or instruction,
-          this space may feel too limited.
-        </p>
+        <h2>This space may be for you if:</h2>
+        <ul>
+          <li>You want a place to write without receiving advice or direction.</li>
+          <li>You are comfortable with limited responses and silence.</li>
+          <li>You do not expect memory, continuity, or personalization.</li>
+          <li>You prefer to remain responsible for interpretation and decisions.</li>
+        </ul>
       </section>
 
       <section>
-        <h2>Why this boundary exists</h2>
+        <h2>This space is not for you if:</h2>
+        <ul>
+          <li>You are seeking guidance, coaching, or emotional reassurance.</li>
+          <li>You expect conversation, engagement, or adaptive behavior.</li>
+          <li>You want feedback, improvement, or long-term interaction.</li>
+          <li>You are looking for solutions, validation, or conclusions.</li>
+        </ul>
+      </section>
+
+      <section>
         <p>
-          Celeste remains intentionally small.
+          Celeste does not improve through use, feedback, or time.
+          Its limits are intentional and fixed.
         </p>
         <p>
-          These limits protect your agency and pace,
-          and prevent the space from becoming something it is not.
-        </p>
-        <p>
-          Not all thoughts need solutions.
-          Some only need somewhere to rest briefly.
+          If those limits feel restrictive, this space is likely not a fit —
+          and that is expected.
         </p>
       </section>
     </main>
 
     <footer>
-      <span>
-        <a href="/about.html">Back to About</a> · CELESTE v4.4A
-      </span>
+      <a href="/faq.html">Back to FAQ</a>
+      <span>CELESTE v4.4A</span>
     </footer>
 
   </div>
