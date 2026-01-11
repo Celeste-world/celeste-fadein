@@ -125,9 +125,7 @@ let allowFocus = false;
 
 /* iOS viewport fix */
 function setVH(){
-  document.documentElement.style.setProperty(
-    "--vh", `${window.innerHeight}px`
-  );
+  document.documentElement.style.setProperty("--vh", `${window.innerHeight}px`);
 }
 setVH();
 window.addEventListener("resize", setVH);
@@ -137,7 +135,7 @@ window.addEventListener("orientationchange", setVH);
   window.addEventListener(ev,()=>{allowFocus=true;},{once:true});
 });
 
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
 function addTurn(text){
   const t=document.createElement("div");
@@ -173,16 +171,20 @@ async function showIntro(){
 showIntro();
 
 async function send(){
-  const msg=inputEl.value;
+  const msg = inputEl.value.trim();
   if(!msg) return;
+
   inputEl.value="";
-  const slot=addTurn(msg);
+  const slot = addTurn(msg);
 
   try{
-    const res=await fetch(API,{
+    const res = await fetch(API,{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ message:msg, lang:sessionLang })
+      body:JSON.stringify({
+        message: msg,
+        lang: sessionLang
+      })
     });
     const data=await res.json();
     if(data.lang) sessionLang=data.lang;
