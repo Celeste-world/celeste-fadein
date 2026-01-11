@@ -114,15 +114,8 @@ input{
 </div>
 
 <script>
-/* ===============================
-   API ENDPOINT (SAFE AUTO SWITCH)
-   =============================== */
-const API =
-  location.hostname === "celeste.world"
-    ? "https://celeste.world/api/celeste"
-    : "https://dev.celeste.world/api/celeste";
-
-/* =============================== */
+/* === API ENDPOINT === */
+const API = "https://dev.celeste.world/api/celeste";
 
 const logEl = document.getElementById("log");
 const inputEl = document.getElementById("input");
@@ -130,7 +123,7 @@ const inputEl = document.getElementById("input");
 let sessionLang = "";
 let allowFocus = false;
 
-// iOS viewport fix
+/* iOS viewport fix */
 function setVH(){
   document.documentElement.style.setProperty("--vh", `${window.innerHeight}px`);
 }
@@ -159,7 +152,7 @@ function addTurn(text){
   return a;
 }
 
-// Intro
+/* Intro */
 async function showIntro(){
   const i=document.createElement("div");
   i.className="bubble assistant intro";
@@ -193,17 +186,11 @@ async function send(){
         lang: sessionLang
       })
     });
-
-    if(!res.ok){
-      slot.textContent="...";
-      return;
-    }
-
-    const data = await res.json();
-    if(data.lang) sessionLang = data.lang;
-    slot.textContent = data.reply || "...";
+    const data=await res.json();
+    if(data.lang) sessionLang=data.lang;
+    slot.textContent=data.reply || "...";
     slot.parentElement.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch{
+  }catch(e){
     slot.textContent="...";
   }
 
