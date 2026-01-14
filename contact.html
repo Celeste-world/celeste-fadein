@@ -14,6 +14,9 @@
   <meta property="og:site_name" content="Celeste" />
   <link rel="canonical" href="https://celeste.world/contact.html" />
 
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
   <style>
     :root{
       --bg:#050811;
@@ -56,10 +59,11 @@
       font-size:13px;
       color:var(--muted);
     }
-    .brand a{
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      font-size:13px;
+
+    .brand img{
+      width:64px;
+      height:auto;
+      display:block;
     }
 
     main{
@@ -116,7 +120,11 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand"><a href="/about.html">CELESTE</a></div>
+      <div class="brand">
+        <a href="/index.html">
+          <img src="/images/logo.svg" alt="Celeste logo">
+        </a>
+      </div>
       <div>Contact</div>
     </header>
 
@@ -131,11 +139,12 @@
         <p>
           For technical issues, operational notices, or brief feedback:
         </p>
-        <p class="mailto">
-          <a href="mailto:contact@celeste.world">contact [at] celeste.world</a>
-        </p>
+
+        <!-- Mail address will be injected by JavaScript -->
+        <p class="mailto" id="contact-email"></p>
+
         <p class="hint">
-          The address is displayed in a simple format to reduce automated harvesting.
+          The address is assembled client-side to reduce automated harvesting.
           Your mail client will open with the correct address.
         </p>
       </section>
@@ -153,5 +162,21 @@
       </div>
     </main>
   </div>
+
+  <!-- Email assembly script -->
+  <script>
+    (function () {
+      const user = "contact";
+      const domain = "celeste.world";
+      const address = user + "@" + domain;
+
+      const container = document.getElementById("contact-email");
+      const link = document.createElement("a");
+      link.href = "mailto:" + address;
+      link.textContent = user + " [at] " + domain;
+
+      container.appendChild(link);
+    })();
+  </script>
 </body>
 </html>
