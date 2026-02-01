@@ -123,11 +123,18 @@
       align-items:center;
     }
 
-    .console-link{
-      opacity:0.6;
+    .version{
+      opacity:0.75;
     }
-    .console-link:hover{
-      opacity:0.85;
+
+    .console-link a{
+      color:var(--accent);
+      opacity:0.9;
+      letter-spacing:0.04em;
+    }
+    .console-link a:hover{
+      opacity:1;
+      text-decoration:underline;
     }
   </style>
 </head>
@@ -175,7 +182,7 @@
     </main>
 
     <footer>
-      <span>CELESTE v4.4A</span>
+      <span class="version">CELESTE v4.4A</span>
       <span class="console-link">
         <a href="/celeste-console.html">Enter the console</a>
       </span>
