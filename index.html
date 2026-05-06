@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Celeste Harbor</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Celeste.world は、静かに航海を続けるための港です。航海記録、月夜の航海、そして小さな灯台。" />
+  <link rel="canonical" href="https://celeste.world/" />
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Celeste Harbor">
+  <meta property="og:description" content="静かな航海を続けるための港。">
+  <meta property="og:url" content="https://celeste.world/">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Celeste Harbor">
+  <meta name="twitter:description" content="静かな航海を続けるための港。">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family:
+        "Hiragino Mincho ProN",
+        "Yu Mincho",
+        "Noto Serif JP",
+        serif;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:60px;
+    }
+
+    header img{
+      width:72px;
+      height:auto;
+    }
+
+    .lang{
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:0.04em;
+    }
+
+    main{
+      flex:1;
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,1.1fr);
+      gap:48px;
+      align-items:center;
+    }
+
+    @media (max-width:860px){
+      main{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .hero-title{
+      font-size:34px;
+      line-height:1.8;
+      margin:0 0 24px;
+      font-weight:500;
+    }
+
+    .hero-sub{
+      font-size:15px;
+      line-height:2.1;
+      color:var(--muted);
+      margin-bottom:34px;
+      max-width:34rem;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-bottom:26px;
+    }
+
+    .btn-primary,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 20px;
+      border-radius:999px;
+      font-size:14px;
+      transition:0.2s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .btn-primary:hover{
+      opacity:0.92;
+      text-decoration:none;
+    }
+
+    .btn-ghost{
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,0.02);
+    }
+
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,0.4);
+      text-decoration:none;
+    }
+
+    .note{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.9;
+    }
+
+    .panel{
+      background:rgba(10,14,28,0.82);
+      border:1px solid rgba(70,84,132,0.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,0.45);
+    }
+
+    .panel-title{
+      font-size:13px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+
+    .panel-line{
+      font-size:14px;
+      line-height:2;
+      color:var(--text);
+      margin-bottom:12px;
+    }
+
+    .panel-meta{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.8;
+    }
+
+    footer{
+      margin-top:48px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <header>
+    <a href="/">
+      <img src="/images/logo.svg" alt="Celeste logo">
+    </a>
+
+    <div class="lang">
+      <a href="/en/">English</a>
+    </div>
+  </header>
+
+  <main>
+
+    <section>
+
+      <h1 class="hero-title">
+        船は、まだ進んでいる。
+      </h1>
+
+      <p class="hero-sub">
+        Celeste.world は、
+        静かに航海を続けるための港です。<br><br>
+
+        記録を残し、
+        深海を読み、
+        また戻ってくるための、
+        小さな場所。
+      </p>
+
+      <div class="hero-actions">
+        <a href="/log" class="btn-primary">
+          航海記録を残す
+        </a>
+
+        <a href="/voyage" class="btn-ghost">
+          月夜の航海を読む
+        </a>
+
+        <a href="/about.html" class="btn-ghost">
+          Archive
+        </a>
+      </div>
+
+      <p class="note">
+        すべてを残す必要はありません。<br>
+        ただ、航海を続けるための記録だけが残ります。
+      </p>
+
+    </section>
+
+    <aside class="panel">
+
+      <div class="panel-title">
+        Harbor
+      </div>
+
+      <p class="panel-line">
+        Voyage Log は、
+        あなた自身のための非公開航海記録です。
+      </p>
+
+      <p class="panel-line">
+        Fragment は、
+        月夜の航海から切り出された、
+        小さな深海の断片です。
+      </p>
+
+      <p class="panel-line">
+        Celeste は、
+        航海のための灯台として存在しています。
+      </p>
+
+      <div class="panel-meta">
+        <div>Moonlit Voyage</div>
+        <div>Voyage Log</div>
+        <div>Fragments</div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <footer>
+
+    <div class="footer-links">
+      <a href="/voyage">Voyage</a>
+      <a href="/fragments">Fragments</a>
+      <a href="/archive">Archive</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+
+    <div>
+      CELESTE HARBOR
+    </div>
+
+  </footer>
+
+</div>
+
+</body>
+</html>
