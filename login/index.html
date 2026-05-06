@@ -2,100 +2,260 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login – Celeste Harbor</title>
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voyage Log — Celeste Harbor</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body{
       margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:radial-gradient(circle at top,#1a2440 0,#050811 52%);
-      color:#e8ebef;
-      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      background:#020617;
+      color:#e2e8f0;
+      font-family:serif;
+      padding:40px;
     }
-    .panel{
-      width:min(520px,90%);
-      padding:32px;
-      border:1px solid rgba(70,84,132,.55);
-      border-radius:18px;
-      background:rgba(10,14,28,.82);
-      box-shadow:0 20px 48px rgba(0,0,0,.45);
+
+    .container{
+      max-width:720px;
+      margin:auto;
     }
+
     h1{
-      font-size:28px;
-      font-weight:500;
-      margin:0 0 18px;
-      line-height:1.7;
+      font-size:42px;
+      margin-bottom:12px;
     }
-    p{
-      color:#a0a8bb;
-      line-height:2;
-      font-size:14px;
-      margin:0 0 26px;
+
+    .sub{
+      color:#94a3b8;
+      margin-bottom:40px;
     }
-    button,a{
-      font-family:inherit;
-    }
-    button{
+
+    textarea{
       width:100%;
-      padding:13px 18px;
-      border:0;
-      border-radius:999px;
-      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
-      color:#050811;
-      font-size:15px;
-      cursor:pointer;
+      min-height:180px;
+      background:#0f172a;
+      border:1px solid #334155;
+      color:white;
+      padding:16px;
+      border-radius:12px;
+      font-size:16px;
+      margin-bottom:16px;
     }
-    .back{
-      display:block;
-      margin-top:18px;
-      text-align:center;
-      color:#a0a8bb;
-      font-size:13px;
-      text-decoration:none;
+
+    input{
+      width:100%;
+      background:#0f172a;
+      border:1px solid #334155;
+      color:white;
+      padding:12px;
+      border-radius:12px;
+      margin-bottom:16px;
+    }
+
+    button{
+      background:#cbd5ff;
+      color:#020617;
+      border:none;
+      padding:12px 20px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:16px;
+    }
+
+    .log{
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:24px;
+      margin-top:24px;
+      background:#0b1120;
+    }
+
+    .date{
+      color:#94a3b8;
+      margin-bottom:12px;
+      font-size:14px;
+    }
+
+    .tag{
+      display:inline-block;
+      border:1px solid #475569;
+      padding:6px 12px;
+      border-radius:999px;
+      margin-top:16px;
+      color:#cbd5e1;
+      font-size:14px;
+    }
+
+    .login{
+      margin-bottom:24px;
     }
   </style>
 </head>
 
 <body>
-  <div class="panel">
-    <h1>港へ帰る。</h1>
 
-    <p>
-      Googleアカウントでログインします。<br>
-      航海記録は、あなた自身のための非公開記録として扱われます。
-    </p>
+<div class="container">
 
-    <button id="login">Googleでログイン</button>
+  <h1>Voyage Log</h1>
 
-    <a class="back" href="/">港へ戻る</a>
+  <div class="sub">
+    夜の航海記録を静かに残す場所
   </div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  <div class="login">
+    <button id="loginBtn">
+      Googleでログイン
+    </button>
+  </div>
 
-    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
-    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+  <textarea
+    id="content"
+    placeholder="今日の航海を記録する..."
+  ></textarea>
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+  <input
+    id="tag"
+    placeholder="Tag 例: Fog"
+  />
 
-    document.getElementById("login").addEventListener("click", async () => {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "https://celeste.world/log/"
+  <button id="saveBtn">
+    Save Log
+  </button>
+
+  <div id="logs"></div>
+
+</div>
+
+<script>
+
+const supabaseUrl =
+  "https://okpsmmtdjtgrjxxocgrs.supabase.co"
+
+const supabaseKey =
+  "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO"
+
+const supabase =
+  window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+  )
+
+async function login(){
+
+  await supabase.auth.signInWithOAuth({
+    provider:'google',
+    options:{
+      redirectTo:'https://celeste.world/log/'
+    }
+  })
+
+}
+
+document
+  .getElementById('loginBtn')
+  .addEventListener('click', login)
+
+async function saveLog(){
+
+  const {
+    data:{user}
+  } = await supabase.auth.getUser()
+
+  if(!user){
+    alert('先にログインしてください')
+    return
+  }
+
+  const content =
+    document.getElementById('content').value
+
+  const tag =
+    document.getElementById('tag').value
+
+  const { error } =
+    await supabase
+      .from('voyage_logs')
+      .insert([
+        {
+          user_id:user.id,
+          content:content,
+          tag:tag
         }
-      });
+      ])
 
-      if (error) {
-        alert("ログインに失敗しました。時間を置いてもう一度お試しください。");
-        console.error(error);
-      }
-    });
-  </script>
+  if(error){
+    console.error(error)
+    alert('保存失敗')
+    return
+  }
+
+  alert('航海記録を保存しました')
+
+  document.getElementById('content').value=''
+  document.getElementById('tag').value=''
+
+  loadLogs()
+
+}
+
+document
+  .getElementById('saveBtn')
+  .addEventListener('click', saveLog)
+
+async function loadLogs(){
+
+  const { data, error } =
+    await supabase
+      .from('voyage_logs')
+      .select('*')
+      .order('created_at',{
+        ascending:false
+      })
+
+  if(error){
+    console.error(error)
+    return
+  }
+
+  const logs =
+    document.getElementById('logs')
+
+  logs.innerHTML=''
+
+  data.forEach(log=>{
+
+    const div =
+      document.createElement('div')
+
+    div.className='log'
+
+    div.innerHTML = `
+      <div class="date">
+        ${
+          new Date(log.created_at)
+          .toLocaleString()
+        }
+      </div>
+
+      <div>
+        ${log.content}
+      </div>
+
+      <div class="tag">
+        #${log.tag}
+      </div>
+    `
+
+    logs.appendChild(div)
+
+  })
+
+}
+
+loadLogs()
+
+</script>
+
 </body>
 </html>
