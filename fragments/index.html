@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fragments – Celeste Harbor</title>
+
+  <meta name="description" content="Fragments は、Moonlit Voyage からこぼれ落ちた小さな航海断片です。" />
+  <link rel="canonical" href="https://celeste.world/fragments/" />
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fragments – Celeste Harbor">
+  <meta property="og:description" content="月夜の航海からこぼれ落ちた、小さな深海の断片。">
+  <meta property="og:url" content="https://celeste.world/fragments/">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fragments – Celeste Harbor">
+  <meta name="twitter:description" content="月夜の航海からこぼれ落ちた、小さな深海の断片。">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      color:var(--text);
+      font-family:
+        "Hiragino Mincho ProN",
+        "Yu Mincho",
+        "Noto Serif JP",
+        serif;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:64px;
+    }
+
+    header img{
+      width:72px;
+      height:auto;
+    }
+
+    .nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    main{
+      flex:1;
+    }
+
+    .hero{
+      max-width:760px;
+      margin-bottom:56px;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-size:34px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 24px;
+    }
+
+    .lead{
+      font-size:15px;
+      line-height:2.1;
+      color:var(--muted);
+      max-width:42rem;
+      margin-bottom:26px;
+    }
+
+    .quote{
+      margin-top:34px;
+      padding-left:18px;
+      border-left:1px solid rgba(169,183,255,0.45);
+      color:var(--text);
+      font-size:15px;
+      line-height:2.1;
+    }
+
+    .section-title{
+      font-size:20px;
+      font-weight:500;
+      margin:0 0 22px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:18px;
+      max-width:760px;
+    }
+
+    .card{
+      background:rgba(10,14,28,0.82);
+      border:1px solid rgba(70,84,132,0.55);
+      border-radius:18px;
+      padding:26px;
+      box-shadow:0 18px 42px rgba(0,0,0,0.38);
+    }
+
+    .card-kicker{
+      font-size:12px;
+      color:var(--accent);
+      letter-spacing:0.13em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .card h2{
+      font-size:22px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 14px;
+    }
+
+    .card p{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0 0 18px;
+      max-width:40rem;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:20px 0 26px;
+    }
+
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,0.28);
+      border-radius:999px;
+      padding:6px 12px;
+      background:rgba(255,255,255,0.02);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .btn-primary,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:999px;
+      font-size:14px;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .btn-primary:hover{
+      opacity:0.92;
+      text-decoration:none;
+    }
+
+    .btn-ghost{
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,0.02);
+    }
+
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,0.4);
+      text-decoration:none;
+    }
+
+    .note{
+      margin-top:34px;
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      max-width:40rem;
+    }
+
+    footer{
+      margin-top:56px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,0.9);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <a href="/">
+        <img src="/images/logo.svg" alt="Celeste logo">
+      </a>
+
+      <nav class="nav">
+        <a href="/">Harbor</a>
+        <a href="/log">Voyage Log</a>
+        <a href="/voyage">Voyage</a>
+        <a href="/en/">English</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <section class="hero">
+        <div class="label">Fragments</div>
+
+        <h1>
+          航海からこぼれ落ちた、<br>
+          小さな深海の断片。
+        </h1>
+
+        <p class="lead">
+          Fragment は、
+          『Moonlit Voyage ― 月夜の航海 ―』本編には収まりきらなかった、
+          静かな余白の記録です。
+        </p>
+
+        <p class="lead">
+          それは説明ではありません。<br>
+          ただ、ある夜にもう少しだけ留まるためのものです。
+        </p>
+
+        <div class="quote">
+          もう少しだけ、深く沈む夜。
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Available Fragment</h2>
+
+        <div class="grid">
+
+          <article class="card">
+            <div class="card-kicker">Voyage Fragment 01</div>
+
+            <h2>
+              深海 — 458
+            </h2>
+
+            <p>
+              海が何も返さなくなる夜がある。
+            </p>
+
+            <p>
+              荒れるわけでもなく、
+              恐怖でもなく、
+              ただ終わりのない静けさだけが残る夜。
+            </p>
+
+            <p>
+              これは、『深海（458）』の少し先へ沈むための断片です。
+            </p>
+
+            <div class="meta">
+              <span class="tag">未公開テキスト</span>
+              <span class="tag">約1,000〜2,000文字</span>
+              <span class="tag">日本語</span>
+              <span class="tag">準備中</span>
+            </div>
+
+            <div class="actions">
+              <a class="btn-primary" href="/fragments/deep-sea-458/">
+                深海へ進む
+              </a>
+
+              <a class="btn-ghost" href="/voyage">
+                本編へ戻る
+              </a>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="note">
+          Fragment は、今後少しずつ追加されます。
+          すべてを急いで読む必要はありません。
+          必要な夜に、必要な断片だけを開いてください。
+        </p>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/">Harbor</a>
+        <a href="/log">Voyage Log</a>
+        <a href="/voyage">Voyage</a>
+        <a href="/archive">Archive</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+</body>
+</html>
