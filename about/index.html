@@ -6,7 +6,7 @@
 
   <title>About – Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港型Web空間です。" />
+  <meta name="description" content="Celeste Harbor は、航海記録、Harbor Cat、Moonlit Voyage、Fragments が静かに重なる帰港型Web空間です。" />
   <link rel="canonical" href="https://celeste.world/about/" />
   <meta name="robots" content="index, follow">
 
@@ -15,8 +15,10 @@
   <style>
     :root{
       --bg:#050811;
+      --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
+      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
     }
@@ -26,7 +28,9 @@
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top,#1a2440 0,#050811 52%);
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,#050811 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
@@ -37,7 +41,7 @@
     }
 
     .wrap{
-      max-width:820px;
+      max-width:860px;
       margin:0 auto;
       padding:48px 20px 60px;
     }
@@ -91,11 +95,11 @@
       line-height:2.2;
       color:var(--muted);
       max-width:44rem;
-      margin-bottom:48px;
+      margin-bottom:52px;
     }
 
     section{
-      margin-bottom:48px;
+      margin-bottom:52px;
     }
 
     h2{
@@ -118,14 +122,14 @@
       border-radius:18px;
       padding:24px;
       box-shadow:0 18px 42px rgba(0,0,0,.36);
-      margin:32px 0 48px;
+      margin:34px 0 52px;
     }
 
     .panel p{
       color:#dbe0ea;
     }
 
-    .links{
+    .map{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:16px;
@@ -137,17 +141,42 @@
       border:1px solid rgba(70,84,132,.45);
       border-radius:18px;
       padding:20px;
+      min-height:150px;
+      display:block;
+    }
+
+    .card:hover{
+      border-color:rgba(169,183,255,.45);
+    }
+
+    .card-kicker{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:9px;
     }
 
     .card-title{
       color:var(--text);
       font-size:16px;
+      line-height:1.7;
       margin-bottom:10px;
     }
 
     .card p{
       font-size:13px;
       margin:0;
+      line-height:2;
+    }
+
+    .note{
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.42);
+      padding-left:18px;
+      margin-top:28px;
     }
 
     footer{
@@ -173,7 +202,7 @@
     }
 
     @media(max-width:720px){
-      .links{
+      .map{
         grid-template-columns:1fr;
       }
     }
@@ -216,12 +245,13 @@
         <a href="/log/">Voyage Log</a>
         <a href="/fragments/">Fragments</a>
         <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/archive/">Archive</a>
       </nav>
     </header>
 
     <main>
 
-      <div class="label">About</div>
+      <div class="label">About / Lighthouse</div>
 
       <h1>
         Celeste Harbor は、<br>
@@ -245,17 +275,18 @@
 
         <p>
           記録は誰かに見せるためではなく、
-          自分がまだ進んでいることを確かめるためにあります。
+          自分がまだ進んでいることを静かに確かめるためにあります。
         </p>
 
         <p>
-          そして、ときどき港には、
-          小さな断片や、静かな灯りが漂着します。
+          保存された記録には、港のネコが短く反応します。
+          それは助言でも、診断でも、解決でもありません。
+          ただ、記録が届いたことを知らせる小さな気配です。
         </p>
       </section>
 
       <section>
-        <h2>AIについて</h2>
+        <h2>Presence AI について</h2>
 
         <p>
           Celeste Harbor におけるAIは、
@@ -268,9 +299,14 @@
         </p>
 
         <p>
-          これから実装される Cat Layer は、
-          航海記録に対して短い反応だけを返します。
-          解決よりも、余白を大切にします。
+          Harbor Cat は、航海記録に対して1〜2行の短い反応を返します。
+          会話を続けるためではなく、
+          記録が静かに受け取られたことを示すためにいます。
+        </p>
+
+        <p>
+          鳴き声ではなく、仕草や気配で応えるネコです。
+          ここでは、解決よりも余白を大切にします。
         </p>
       </section>
 
@@ -280,7 +316,7 @@
         </p>
 
         <p>
-          ただ、戻ってこられる場所があること。
+          ただ、戻ってこられる場所があること。<br>
           そのために、ここは静かに開いています。
         </p>
       </div>
@@ -288,27 +324,67 @@
       <section>
         <h2>この港にあるもの</h2>
 
-        <div class="links">
-          <a class="card" href="/log/">
-            <div class="card-title">Voyage Log</div>
-            <p>自分だけの非公開航海記録。</p>
+        <div class="map">
+
+          <a class="card" href="/">
+            <div class="card-kicker">Harbor</div>
+            <div class="card-title">港入口</div>
+            <p>
+              Celeste Harbor の入口です。
+              今夜の海と、静かな帰港の導線があります。
+            </p>
           </a>
 
-          <a class="card" href="/fragments/">
-            <div class="card-title">Fragments</div>
-            <p>港に漂着する短い航海断片。</p>
+          <a class="card" href="/log/">
+            <div class="card-kicker">Return</div>
+            <div class="card-title">Voyage Log</div>
+            <p>
+              自分だけの非公開航海記録。
+              保存後、Harbor Cat が短く反応します。
+            </p>
           </a>
 
           <a class="card" href="/voyage/">
+            <div class="card-kicker">Deep Sea</div>
             <div class="card-title">Moonlit Voyage</div>
-            <p>この海域の中心にある物語。</p>
+            <p>
+              Harbor の深海に置かれた航海記録。
+              月夜の海へ続く静かな入口です。
+            </p>
+          </a>
+
+          <a class="card" href="/fragments/">
+            <div class="card-kicker">Drift</div>
+            <div class="card-title">Fragments</div>
+            <p>
+              本編の切り抜きではなく、
+              同じ海域に漂着した別の夜です。
+            </p>
           </a>
 
           <a class="card" href="/archive/">
+            <div class="card-kicker">Old Lights</div>
             <div class="card-title">Archive</div>
-            <p>Celesteの旧航海記録。</p>
+            <p>
+              Celeste Harbor になる前の思想や構造を残す場所。
+              古い灯りを静かに保管しています。
+            </p>
           </a>
+
+          <a class="card" href="/about/">
+            <div class="card-kicker">Lighthouse</div>
+            <div class="card-title">About</div>
+            <p>
+              この港が何を大切にしているのかを示す灯台です。
+            </p>
+          </a>
+
         </div>
+
+        <p class="note">
+          Celeste Harbor は、SNSでも、終わらないチャットでもありません。<br>
+          記録し、漂着し、少し滞在し、また海へ戻るための静かな場所です。
+        </p>
       </section>
 
     </main>
@@ -317,6 +393,7 @@
       <div class="footer-links">
         <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
         <a href="/fragments/">Fragments</a>
         <a href="/archive/">Archive</a>
       </div>
