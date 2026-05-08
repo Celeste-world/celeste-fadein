@@ -7,22 +7,22 @@
   <title>About Celeste</title>
 
   <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet console designed as a temporary place for thoughts. It does not advise, decide, or retain.">
+  <meta name="description" content="Celeste is a quiet archived console concept designed as a temporary place for thoughts. It does not advise, decide, or retain.">
   <link rel="canonical" href="https://celeste.world/about.html" />
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph -->
   <meta property="og:title" content="About Celeste">
-  <meta property="og:description" content="A quiet, temporary space for thoughts. Nothing is stored. Nothing is decided.">
+  <meta property="og:description" content="An archived quiet space for thoughts. Nothing is stored. Nothing is decided.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://celeste.world/about.html">
-  <meta property="og:site_name" content="Celeste">
+  <meta property="og:site_name" content="Celeste Harbor">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About Celeste">
-  <meta name="twitter:description" content="A quiet, temporary space for thoughts.">
+  <meta name="twitter:description" content="An archived quiet space for thoughts.">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Structured Data -->
@@ -31,11 +31,11 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "About Celeste",
-    "description": "Celeste is a quiet console designed as a temporary place for thoughts. It does not advise, decide, or retain.",
+    "description": "Celeste is a quiet archived console concept designed as a temporary place for thoughts. It does not advise, decide, or retain.",
     "url": "https://celeste.world/about.html",
     "publisher": {
       "@type": "Organization",
-      "name": "Celeste"
+      "name": "Celeste Harbor"
     }
   }
   </script>
@@ -79,21 +79,49 @@
 
     header{
       display:flex;
+      justify-content:space-between;
       align-items:center;
+      gap:18px;
       margin-bottom:40px;
+      color:var(--muted);
+      font-size:13px;
     }
+
     header img{
       width:72px;
       height:auto;
+    }
+
+    .header-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .header-links a{
+      color:var(--muted);
+    }
+
+    .header-links a:hover{
+      color:var(--text);
     }
 
     main{
       max-width:640px;
     }
 
+    .archive-label{
+      font-size:12px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
+    }
+
     h1{
       font-size:26px;
       margin-bottom:28px;
+      font-weight:500;
     }
 
     p{
@@ -101,6 +129,20 @@
       line-height:1.9;
       color:var(--muted);
       margin-bottom:22px;
+    }
+
+    .notice{
+      margin:34px 0;
+      padding:18px 20px;
+      border-left:1px solid rgba(169,183,255,0.42);
+      background:rgba(255,255,255,0.025);
+      border-radius:14px;
+    }
+
+    .notice p{
+      margin:0;
+      font-size:13px;
+      line-height:2;
     }
 
     .links{
@@ -121,20 +163,29 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
     }
 
-    .version{
-      opacity:0.75;
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
     }
 
-    .console-link a{
+    .footer-links a{
       color:var(--accent);
       opacity:0.9;
       letter-spacing:0.04em;
     }
-    .console-link a:hover{
+
+    .footer-links a:hover{
       opacity:1;
       text-decoration:underline;
+    }
+
+    .version{
+      opacity:0.75;
     }
   </style>
 </head>
@@ -142,33 +193,49 @@
   <div class="wrap">
 
     <header>
-      <a href="/index.html">
+      <a href="/">
         <img src="/images/logo.svg" alt="Celeste logo">
       </a>
+
+      <nav class="header-links">
+        <a href="/">Harbor</a>
+        <a href="/archive/">Archive</a>
+        <a href="/about/">About Harbor</a>
+      </nav>
     </header>
 
     <main>
+      <div class="archive-label">Archived Record</div>
+
       <h1>About Celeste</h1>
 
       <p>
-        Celeste is a small, quiet console.
-        It exists as a temporary space where thoughts may appear,
+        Celeste was a small, quiet console.
+        It existed as a temporary space where thoughts could appear,
         without being evaluated or carried forward.
       </p>
 
       <p>
-        Celeste does not advise, optimize, or guide.
-        It does not attempt to connect ideas across time,
+        Celeste did not advise, optimize, or guide.
+        It did not attempt to connect ideas across time,
         or move conversations toward outcomes.
-        Its scope is intentionally limited.
+        Its scope was intentionally limited.
       </p>
 
       <p>
-        Silence is allowed.
-        Short responses are intentional.
-        Nothing is remembered.
-        Decisions remain yours.
+        Silence was allowed.
+        Short responses were intentional.
+        Nothing was remembered.
+        Decisions remained yours.
       </p>
+
+      <div class="notice">
+        <p>
+          This page is kept as an archived record of Celeste v4.4A.
+          The old console is no longer the main entrance.
+          The current harbor is Celeste Harbor.
+        </p>
+      </div>
 
       <div class="links">
         <a href="/philosophy.html">Philosophy</a>
@@ -182,12 +249,13 @@
     </main>
 
     <footer>
-      <span class="console-link">
-        <a href="/celeste-console.html">Enter the console</a>
-      </span>
-      <span class="version">CELESTE v4.4A</span>
-    </footer>
+      <div class="footer-links">
+        <a href="/archive/">Return to Archive</a>
+        <a href="/">Celeste Harbor</a>
+      </div>
 
+      <span class="version">CELESTE v4.4A / ARCHIVED</span>
+    </footer>
 
   </div>
 </body>
