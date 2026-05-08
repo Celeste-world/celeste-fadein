@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Harbor Map – Celeste Harbor</title>
+
+  <meta name="description" content="Celeste Harbor の海域図。港入口、帰港、深海、漂着、灯台、古い灯り、港の気配を静かに示す地図。" />
+  <link rel="canonical" href="https://celeste.world/map/" />
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Harbor Map – Celeste Harbor">
+  <meta property="og:description" content="Celeste Harbor の海域図。静かな帰港空間にある場所を示す地図。">
+  <meta property="og:url" content="https://celeste.world/map/">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Harbor Map – Celeste Harbor">
+  <meta name="twitter:description" content="Celeste Harbor の海域図。静かな帰港空間にある場所を示す地図。">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:68px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    main{
+      flex:1;
+    }
+
+    .hero{
+      max-width:760px;
+      margin-bottom:58px;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-size:36px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 24px;
+    }
+
+    .lead{
+      font-size:15px;
+      line-height:2.1;
+      color:var(--muted);
+      max-width:44rem;
+      margin-bottom:24px;
+    }
+
+    .map-panel{
+      position:relative;
+      background:rgba(10,14,28,.78);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      overflow:hidden;
+    }
+
+    .map-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(169,183,255,.12), transparent 28%),
+        radial-gradient(circle at 82% 72%, rgba(169,183,255,.08), transparent 30%);
+      pointer-events:none;
+    }
+
+    .map-grid{
+      position:relative;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+      z-index:1;
+    }
+
+    .place{
+      background:rgba(5,8,17,.58);
+      border:1px solid rgba(70,84,132,.44);
+      border-radius:18px;
+      padding:22px;
+      min-height:190px;
+      display:flex;
+      flex-direction:column;
+      transition:.18s ease;
+    }
+
+    .place:hover{
+      border-color:rgba(169,183,255,.48);
+      transform:translateY(-1px);
+    }
+
+    .place-kicker{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    .place h2{
+      font-size:19px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+      color:var(--text);
+    }
+
+    .place p{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0 0 18px;
+    }
+
+    .place-action{
+      margin-top:auto;
+      font-size:13px;
+      color:var(--dim);
+    }
+
+    .place:hover .place-action{
+      color:var(--accent);
+    }
+
+    .quiet-place{
+      opacity:.92;
+    }
+
+    .note{
+      max-width:760px;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.42);
+      padding-left:18px;
+      margin-top:34px;
+    }
+
+    footer{
+      margin-top:64px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:860px){
+      .map-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:48px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:31px;
+      }
+
+      .map-panel{
+        padding:20px;
+      }
+
+      .place{
+        padding:20px;
+        min-height:auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/about/">About</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <section class="hero">
+        <div class="label">Harbor Map</div>
+
+        <h1>
+          Celeste Harbor の、<br>
+          静かな海域図。
+        </h1>
+
+        <p class="lead">
+          Harbor Map は、機能の一覧ではありません。<br>
+          この港にある場所と、それぞれの役割を示すための小さな海図です。
+        </p>
+
+        <p class="lead">
+          帰港する場所、記録する場所、深く降りる場所、
+          そして古い灯りを残しておく場所。<br>
+          それらは、ひとつの海域としてつながっています。
+        </p>
+      </section>
+
+      <section class="map-panel" aria-label="Celeste Harbor map">
+
+        <div class="map-grid">
+
+          <a class="place" href="/">
+            <div class="place-kicker">Harbor / Entrance</div>
+            <h2>港入口</h2>
+            <p>
+              Celeste Harbor の入口です。
+              今夜の海と、静かな帰港の導線があります。
+            </p>
+            <div class="place-action">Harborへ戻る →</div>
+          </a>
+
+          <a class="place" href="/log/">
+            <div class="place-kicker">Return / Voyage Log</div>
+            <h2>帰港</h2>
+            <p>
+              今日の航海を残す場所です。
+              記録は非公開で保存され、港のネコが短く反応します。
+            </p>
+            <div class="place-action">航海記録へ →</div>
+          </a>
+
+          <a class="place" href="/voyage/">
+            <div class="place-kicker">Deep Sea / Moonlit Voyage</div>
+            <h2>深海</h2>
+            <p>
+              『Moonlit Voyage』へ続く入口です。
+              Harbor の沖にある、月夜の深い海です。
+            </p>
+            <div class="place-action">深海へ進む →</div>
+          </a>
+
+          <a class="place" href="/fragments/">
+            <div class="place-kicker">Drift / Fragments</div>
+            <h2>漂着</h2>
+            <p>
+              同じ海域に漂着した別の夜です。
+              本編の切り抜きではなく、港に残された短い断片です。
+            </p>
+            <div class="place-action">Fragmentsを見る →</div>
+          </a>
+
+          <a class="place" href="/about/">
+            <div class="place-kicker">Lighthouse / About</div>
+            <h2>灯台</h2>
+            <p>
+              この港が何を大切にしているのかを示す場所です。
+              Presence AI や Harbor の思想を静かに説明しています。
+            </p>
+            <div class="place-action">灯台を見る →</div>
+          </a>
+
+          <a class="place" href="/archive/">
+            <div class="place-kicker">Old Lights / Archive</div>
+            <h2>古い灯り</h2>
+            <p>
+              Celeste Harbor になる前の思想や構造を残す場所です。
+              旧Celesteの記録を、消さずに保管しています。
+            </p>
+            <div class="place-action">Archiveへ →</div>
+          </a>
+
+          <div class="place quiet-place">
+            <div class="place-kicker">Presence / Harbor Cat</div>
+            <h2>港の気配</h2>
+            <p>
+              航海記録に短く反応する、小さなPresenceです。
+              助言せず、診断せず、記録が届いたことだけを静かに示します。
+            </p>
+            <div class="place-action">Voyage Logの中にいます</div>
+          </div>
+
+          <div class="place quiet-place">
+            <div class="place-kicker">Tonight / Harbor Weather</div>
+            <h2>今夜の海</h2>
+            <p>
+              実際の天気ではなく、港の気配です。
+              TOPページで、その夜の海の状態を静かに知らせます。
+            </p>
+            <div class="place-action">Harborの入口にあります</div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <p class="note">
+        この地図は、目的地を急がせるためのものではありません。<br>
+        迷った時に、いま自分が港のどのあたりにいるのかを、
+        少しだけ確かめるためのものです。
+      </p>
+
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/archive/">Archive</a>
+      </div>
+
+      <div>CELESTE HARBOR MAP</div>
+    </footer>
+
+  </div>
+</body>
+</html>
