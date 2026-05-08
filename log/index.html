@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Voyage Log – Celeste Harbor</title>
-
-  <meta name="description" content="Celeste Harbor の航海記録。" />
   <meta name="robots" content="noindex, nofollow" />
-
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -40,22 +36,35 @@
       margin:0 auto;
     }
 
-    header{
+    .site-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
+      gap:18px;
       margin-bottom:44px;
       color:var(--muted);
       font-size:13px;
     }
 
-    a{
-      color:inherit;
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
       text-decoration:none;
     }
 
-    a:hover{
-      text-decoration:underline;
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
     }
 
     h1{
@@ -198,15 +207,55 @@
       flex-wrap:wrap;
       gap:14px;
     }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
 
-    <header>
-      <a href="/">Celeste Harbor</a>
-      <a href="/auth/">Login</a>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+      </nav>
     </header>
 
     <main>
@@ -242,9 +291,11 @@
       <div>
         <a href="/">Harbor</a>
         ・
-        <a href="/voyage/">Voyage</a>
+        <a href="/log/">Voyage Log</a>
         ・
         <a href="/fragments/">Fragments</a>
+        ・
+        <a href="/voyage/">Moonlit Voyage</a>
       </div>
       <div>CELESTE HARBOR</div>
     </footer>
