@@ -6,7 +6,7 @@
 
   <title>Fragments – Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor に漂着した、短い航海断片。" />
+  <meta name="description" content="Celeste Harbor に漂着した、短い航海断片。同じ海域で記録された、別の夜の小さな記録。" />
   <link rel="canonical" href="https://celeste.world/fragments/" />
   <meta name="robots" content="index, follow">
 
@@ -18,6 +18,7 @@
       --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
+      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
     }
@@ -83,7 +84,7 @@
 
     .hero{
       max-width:760px;
-      margin-bottom:52px;
+      margin-bottom:58px;
     }
 
     .label{
@@ -109,51 +110,54 @@
       margin-bottom:26px;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-      margin-bottom:48px;
+    section{
+      margin-bottom:58px;
     }
 
-    .card{
+    .section-title{
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 22px;
+    }
+
+    .featured{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
-      border-radius:18px;
-      padding:24px;
+      border-radius:22px;
+      padding:28px;
       box-shadow:0 18px 42px rgba(0,0,0,.38);
-      min-height:240px;
-      display:flex;
-      flex-direction:column;
+      max-width:860px;
     }
 
-    .card-kicker{
+    .featured-kicker{
       font-size:12px;
       color:var(--accent);
-      letter-spacing:.13em;
+      letter-spacing:.14em;
       text-transform:uppercase;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
 
-    .card h2{
-      font-size:21px;
+    .featured h2{
+      font-size:26px;
       line-height:1.7;
       font-weight:500;
-      margin:0 0 14px;
+      margin:0 0 16px;
     }
 
-    .card p{
+    .featured p{
       font-size:14px;
-      line-height:2;
+      line-height:2.05;
       color:var(--muted);
-      margin:0 0 18px;
+      max-width:42rem;
+      margin:0 0 20px;
     }
 
     .meta{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin:18px 0 24px;
+      margin:20px 0 26px;
     }
 
     .tag{
@@ -166,7 +170,6 @@
     }
 
     .actions{
-      margin-top:auto;
       display:flex;
       flex-wrap:wrap;
       gap:12px;
@@ -202,6 +205,67 @@
       color:var(--text);
     }
 
+    .archive-list{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      max-width:860px;
+    }
+
+    .archive-item{
+      display:grid;
+      grid-template-columns:80px minmax(0,1fr) auto;
+      gap:18px;
+      align-items:center;
+      padding:18px 20px;
+      background:rgba(10,14,28,.62);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      transition:.18s ease;
+    }
+
+    .archive-item:hover{
+      border-color:rgba(169,183,255,.45);
+      transform:translateY(-1px);
+    }
+
+    .fragment-number{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .fragment-title{
+      font-size:16px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .fragment-desc{
+      font-size:13px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    .fragment-tags{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .mini-tag{
+      font-size:11px;
+      color:var(--dim);
+      border:1px solid rgba(160,168,187,.22);
+      border-radius:999px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.018);
+      white-space:nowrap;
+    }
+
     .note{
       max-width:760px;
       font-size:13px;
@@ -235,9 +299,15 @@
       color:var(--text);
     }
 
-    @media(max-width:860px){
-      .grid{
+    @media(max-width:760px){
+      .archive-item{
         grid-template-columns:1fr;
+        gap:10px;
+        align-items:flex-start;
+      }
+
+      .fragment-tags{
+        justify-content:flex-start;
       }
     }
 
@@ -261,8 +331,12 @@
         font-size:30px;
       }
 
-      .card{
-        padding:20px;
+      .featured{
+        padding:22px;
+      }
+
+      .featured h2{
+        font-size:23px;
       }
     }
   </style>
@@ -307,67 +381,105 @@
         </p>
       </section>
 
-      <section class="grid">
+      <section aria-labelledby="featured-title">
+        <h2 class="section-title" id="featured-title">Featured Fragment</h2>
 
-        <article class="card">
-          <div class="card-kicker">Fragment 00</div>
+        <article class="featured">
+          <div class="featured-kicker">Fragment 02 / Presence Record</div>
 
           <h2>
-            The Harbor Remained Quiet
+            桟橋の足音
           </h2>
 
           <p>
-            今夜、港は静かだった。<br>
-            けれど、それは何も起きなかったという意味ではない。
+            その夜、桟橋には、
+            いつの間にか小さな足音がありました。
           </p>
-
-          <div class="meta">
-            <span class="tag">無料</span>
-            <span class="tag">短文</span>
-            <span class="tag">漂着済</span>
-          </div>
-
-          <div class="actions">
-            <a class="btn-primary" href="/fragments/harbor-remained-quiet/">
-              読む
-            </a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-kicker">Fragment 01</div>
-
-          <h2>
-            霧信号
-          </h2>
 
           <p>
-            霧の向こうで、
-            誰かが小さな信号を返した。<br>
-            それは航海の続きではなく、
-            別の夜の記録だった。
+            記録が置かれるたび、
+            その気配は少しだけ目を開けます。
+            何かを導くためではなく、
+            届いたものが届いたと知らせるために。
           </p>
 
           <div class="meta">
-            <span class="tag">新規短編</span>
+            <span class="tag">Harbor Cat</span>
+            <span class="tag">Presence</span>
             <span class="tag">本編未収録</span>
             <span class="tag">漂着済</span>
           </div>
 
           <div class="actions">
-            <a class="btn-primary" href="/fragments/fog-signal/">
-              霧信号を読む
+            <a class="btn-primary" href="/fragments/pier-footsteps/">
+              桟橋の足音を読む
             </a>
           </div>
         </article>
-
       </section>
 
-      <p class="note">
-        Fragment は、少しずつ増えていきます。<br>
-        すべてを急いで読む必要はありません。
-        必要な夜に、必要な断片だけを開いてください。
-      </p>
+      <section aria-labelledby="archive-title">
+        <h2 class="section-title" id="archive-title">Fragment Archive</h2>
+
+        <div class="archive-list">
+
+          <a class="archive-item" href="/fragments/harbor-remained-quiet/">
+            <div class="fragment-number">00</div>
+
+            <div>
+              <div class="fragment-title">The Harbor Remained Quiet</div>
+              <div class="fragment-desc">
+                港が静かだった夜に残された、最初の断片。
+              </div>
+            </div>
+
+            <div class="fragment-tags">
+              <span class="mini-tag">Harbor</span>
+              <span class="mini-tag">漂着済</span>
+            </div>
+          </a>
+
+          <a class="archive-item" href="/fragments/fog-signal/">
+            <div class="fragment-number">01</div>
+
+            <div>
+              <div class="fragment-title">霧信号</div>
+              <div class="fragment-desc">
+                霧の向こうから届いた、小さな信号の記録。
+              </div>
+            </div>
+
+            <div class="fragment-tags">
+              <span class="mini-tag">Fog Record</span>
+              <span class="mini-tag">漂着済</span>
+            </div>
+          </a>
+
+          <a class="archive-item" href="/fragments/pier-footsteps/">
+            <div class="fragment-number">02</div>
+
+            <div>
+              <div class="fragment-title">桟橋の足音</div>
+              <div class="fragment-desc">
+                港に現れた、小さな気配についての記録。
+              </div>
+            </div>
+
+            <div class="fragment-tags">
+              <span class="mini-tag">Presence</span>
+              <span class="mini-tag">Harbor Cat</span>
+              <span class="mini-tag">漂着済</span>
+            </div>
+          </a>
+
+        </div>
+
+        <p class="note">
+          Fragment は、少しずつ増えていきます。<br>
+          すべてを急いで読む必要はありません。
+          必要な夜に、必要な断片だけを開いてください。
+        </p>
+      </section>
 
     </main>
 
