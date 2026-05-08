@@ -6,20 +6,9 @@
 
   <title>Fragments – Celeste Harbor</title>
 
-  <meta name="description" content="Fragments は、Moonlit Voyage からこぼれ落ちた小さな航海断片です。" />
+  <meta name="description" content="Celeste Harbor に漂着した、短い航海断片。" />
   <link rel="canonical" href="https://celeste.world/fragments/" />
   <meta name="robots" content="index, follow">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Fragments – Celeste Harbor">
-  <meta property="og:description" content="月夜の航海からこぼれ落ちた、小さな深海の断片。">
-  <meta property="og:url" content="https://celeste.world/fragments/">
-  <meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fragments – Celeste Harbor">
-  <meta name="twitter:description" content="月夜の航海からこぼれ落ちた、小さな深海の断片。">
-  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
@@ -33,27 +22,19 @@
       --accent:#a9b7ff;
     }
 
-    *{box-sizing:border-box;}
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      background:radial-gradient(circle at top,#1a2440 0,var(--bg) 52%);
       color:var(--text);
-      font-family:
-        "Hiragino Mincho ProN",
-        "Yu Mincho",
-        "Noto Serif JP",
-        serif;
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
     a{
       color:inherit;
       text-decoration:none;
-    }
-
-    a:hover{
-      text-decoration:underline;
     }
 
     .wrap{
@@ -65,24 +46,33 @@
       flex-direction:column;
     }
 
-    header{
+    .site-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
+      gap:18px;
       margin-bottom:64px;
+      color:var(--muted);
+      font-size:13px;
     }
 
-    header img{
-      width:72px;
-      height:auto;
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
     }
 
     .nav{
       display:flex;
-      gap:16px;
+      gap:18px;
       flex-wrap:wrap;
-      font-size:13px;
+    }
+
+    .nav a{
       color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
     }
 
     main{
@@ -91,12 +81,12 @@
 
     .hero{
       max-width:760px;
-      margin-bottom:56px;
+      margin-bottom:52px;
     }
 
     .label{
       font-size:13px;
-      letter-spacing:0.18em;
+      letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--accent);
       margin-bottom:22px;
@@ -117,46 +107,34 @@
       margin-bottom:26px;
     }
 
-    .quote{
-      margin-top:34px;
-      padding-left:18px;
-      border-left:1px solid rgba(169,183,255,0.45);
-      color:var(--text);
-      font-size:15px;
-      line-height:2.1;
-    }
-
-    .section-title{
-      font-size:20px;
-      font-weight:500;
-      margin:0 0 22px;
-    }
-
     .grid{
       display:grid;
-      grid-template-columns:minmax(0,1fr);
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:18px;
-      max-width:760px;
+      margin-bottom:48px;
     }
 
     .card{
-      background:rgba(10,14,28,0.82);
-      border:1px solid rgba(70,84,132,0.55);
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
       border-radius:18px;
-      padding:26px;
-      box-shadow:0 18px 42px rgba(0,0,0,0.38);
+      padding:24px;
+      box-shadow:0 18px 42px rgba(0,0,0,.38);
+      min-height:240px;
+      display:flex;
+      flex-direction:column;
     }
 
     .card-kicker{
       font-size:12px;
       color:var(--accent);
-      letter-spacing:0.13em;
+      letter-spacing:.13em;
       text-transform:uppercase;
       margin-bottom:12px;
     }
 
     .card h2{
-      font-size:22px;
+      font-size:21px;
       line-height:1.7;
       font-weight:500;
       margin:0 0 14px;
@@ -167,30 +145,29 @@
       line-height:2;
       color:var(--muted);
       margin:0 0 18px;
-      max-width:40rem;
     }
 
     .meta{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin:20px 0 26px;
+      margin:18px 0 24px;
     }
 
     .tag{
       font-size:12px;
       color:var(--muted);
-      border:1px solid rgba(160,168,187,0.28);
+      border:1px solid rgba(160,168,187,.28);
       border-radius:999px;
       padding:6px 12px;
-      background:rgba(255,255,255,0.02);
+      background:rgba(255,255,255,.02);
     }
 
     .actions{
+      margin-top:auto;
       display:flex;
       flex-wrap:wrap;
-      gap:14px;
-      margin-top:18px;
+      gap:12px;
     }
 
     .btn-primary,
@@ -209,33 +186,34 @@
     }
 
     .btn-primary:hover{
-      opacity:0.92;
-      text-decoration:none;
+      opacity:.92;
     }
 
     .btn-ghost{
       border:1px solid var(--line);
       color:var(--muted);
-      background:rgba(255,255,255,0.02);
+      background:rgba(255,255,255,.02);
     }
 
     .btn-ghost:hover{
-      border-color:rgba(169,183,255,0.4);
-      text-decoration:none;
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
     }
 
     .note{
-      margin-top:34px;
+      max-width:760px;
       font-size:13px;
-      line-height:1.9;
+      line-height:2;
       color:var(--muted);
-      max-width:40rem;
+      border-left:1px solid rgba(169,183,255,.42);
+      padding-left:18px;
+      margin-top:34px;
     }
 
     footer{
       margin-top:56px;
       padding-top:18px;
-      border-top:1px solid rgba(37,43,58,0.9);
+      border-top:1px solid rgba(37,43,58,.9);
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -250,22 +228,55 @@
       gap:16px;
       flex-wrap:wrap;
     }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:860px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:44px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .card{
+        padding:20px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
 
-    <header>
-      <a href="/">
-        <img src="/images/logo.svg" alt="Celeste logo">
-      </a>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
         <a href="/">Harbor</a>
-        <a href="/log">Voyage Log</a>
-        <a href="/voyage">Voyage</a>
-        <a href="/en/">English</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/voyage/">Moonlit Voyage</a>
       </nav>
     </header>
 
@@ -275,88 +286,94 @@
         <div class="label">Fragments</div>
 
         <h1>
-          航海からこぼれ落ちた、<br>
-          小さな深海の断片。
+          港に漂着した、<br>
+          小さな航海断片。
         </h1>
 
         <p class="lead">
           Fragment は、
-          『Moonlit Voyage ― 月夜の航海 ―』本編には収まりきらなかった、
-          静かな余白の記録です。
+          『Moonlit Voyage』本編の切り売りではありません。<br>
+          同じ海域で記録された、
+          別の夜の短い航海です。
         </p>
 
         <p class="lead">
-          それは説明ではありません。<br>
-          ただ、ある夜にもう少しだけ留まるためのものです。
+          それは説明ではなく、
+          ただ少しだけ、
+          夜の海に留まるための記録です。
         </p>
-
-        <div class="quote">
-          もう少しだけ、深く沈む夜。
-        </div>
       </section>
 
-      <section>
-        <h2 class="section-title">Available Fragment</h2>
+      <section class="grid">
 
-        <div class="grid">
+        <article class="card">
+          <div class="card-kicker">Fragment 00</div>
 
-          <article class="card">
-            <div class="card-kicker">Voyage Fragment 01</div>
+          <h2>
+            The Harbor Remained Quiet
+          </h2>
 
-            <h2>
-              霧信号
-            </h2>
-
-            <p>
-              海が何も返さなくなる夜がある。
-            </p>
-
-            <p>
-              荒れるわけでもなく、
-              恐怖でもなく、
-              ただ終わりのない静けさだけが残る夜。
-            </p>
-
-           <p>
-            これは、『Moonlit Voyage』と同じ海域で記録された、
-            別の夜の断片です。
+          <p>
+            今夜、港は静かだった。<br>
+            けれど、それは何も起きなかったという意味ではない。
           </p>
 
-            <div class="meta">
-              <span class="tag">新規短編</span>
-              <span class="tag">本編未収録</span>
-              <span class="tag">日本語</span>
-              <span class="tag">準備中</span>
-            </div>
+          <div class="meta">
+            <span class="tag">無料</span>
+            <span class="tag">短文</span>
+            <span class="tag">Harbor</span>
+          </div>
 
-            <div class="actions">
-              <a class="btn-primary" href="/fragments/fog-signal/">
-                霧信号へ進む
-              </a>
+          <div class="actions">
+            <a class="btn-primary" href="/fragments/harbor-remained-quiet/">
+              読む
+            </a>
+          </div>
+        </article>
 
-              <a class="btn-ghost" href="/voyage">
-                本編へ戻る
-              </a>
-            </div>
-          </article>
+        <article class="card">
+          <div class="card-kicker">Fragment 01</div>
 
-        </div>
+          <h2>
+            霧信号
+          </h2>
 
-        <p class="note">
-          Fragment は、今後少しずつ追加されます。
-          すべてを急いで読む必要はありません。
-          必要な夜に、必要な断片だけを開いてください。
-        </p>
+          <p>
+            霧の向こうで、
+            誰かが小さな信号を返した。<br>
+            それは航海の続きではなく、
+            別の夜の記録だった。
+          </p>
+
+          <div class="meta">
+            <span class="tag">新規短編</span>
+            <span class="tag">本編未収録</span>
+            <span class="tag">準備中</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn-ghost" href="/fragments/fog-signal/">
+              霧信号へ進む
+            </a>
+          </div>
+        </article>
+
       </section>
+
+      <p class="note">
+        Fragment は、少しずつ増えていきます。<br>
+        すべてを急いで読む必要はありません。
+        必要な夜に、必要な断片だけを開いてください。
+      </p>
 
     </main>
 
     <footer>
       <div class="footer-links">
         <a href="/">Harbor</a>
-        <a href="/log">Voyage Log</a>
-        <a href="/voyage">Voyage</a>
-        <a href="/archive">Archive</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/archive/">Archive</a>
       </div>
 
       <div>CELESTE HARBOR</div>
