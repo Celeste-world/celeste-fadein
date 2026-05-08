@@ -25,7 +25,9 @@
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top,#1a2440 0,var(--bg) 52%);
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
       padding:40px 20px;
@@ -159,6 +161,55 @@
       color:var(--danger);
     }
 
+    .cat-reply{
+      display:none;
+      margin-top:18px;
+      padding:18px 18px 18px 20px;
+      border:1px solid rgba(169,183,255,.26);
+      border-left:1px solid rgba(169,183,255,.58);
+      background:rgba(255,255,255,.025);
+      border-radius:16px;
+    }
+
+    .cat-reply.visible{
+      display:block;
+    }
+
+    .cat-head{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .cat-mark{
+      width:30px;
+      height:30px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(169,183,255,.32);
+      background:rgba(169,183,255,.08);
+      color:var(--accent);
+      font-size:16px;
+      line-height:1;
+    }
+
+    .cat-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .cat-text{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:14px;
+      line-height:2;
+    }
+
     .user{
       color:var(--muted);
       font-size:13px;
@@ -282,6 +333,15 @@
         </div>
 
         <div class="status" id="status"></div>
+
+        <div class="cat-reply" id="catReply">
+          <div class="cat-head">
+            <div class="cat-mark" aria-hidden="true">ᓚᘏᗢ</div>
+            <div class="cat-label">Harbor Cat</div>
+          </div>
+
+          <div class="cat-text" id="catReplyText"></div>
+        </div>
       </section>
 
       <section id="logs"></section>
@@ -317,12 +377,25 @@
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const logsEl = document.getElementById("logs");
+    const catReply = document.getElementById("catReply");
+    const catReplyText = document.getElementById("catReplyText");
 
     let currentUser = null;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
+    }
+
+    function setCatReply(message){
+      if(!message){
+        catReply.classList.remove("visible");
+        catReplyText.textContent = "";
+        return;
+      }
+
+      catReplyText.textContent = message;
+      catReply.classList.add("visible");
     }
 
     function escapeHtml(str){
@@ -388,12 +461,30 @@
 
       currentUser = null;
       logsEl.innerHTML = "";
+      setCatReply("");
       userStatus.textContent = "未ログインです。";
       setStatus("ログアウトしました。");
     }
 
+    async function callCatReply(content, tag){
+      const { data, error } = await client.functions.invoke("cat-reply", {
+        body: {
+          content,
+          tag: tag || "Harbor"
+        }
+      });
+
+      if(error){
+        console.error("cat-reply invoke error:", error);
+        return null;
+      }
+
+      return data?.reply || null;
+    }
+
     async function saveLog(){
       setStatus("保存しています。");
+      setCatReply("");
       saveBtn.disabled = true;
 
       try{
@@ -426,10 +517,21 @@
           return;
         }
 
+        setStatus("航海記録を保存しました。港のネコが読んでいます。");
+
+        const reply = await callCatReply(content, tag);
+
+        if(reply){
+          setCatReply(reply);
+          setStatus("航海記録を保存しました。");
+        }else{
+          setCatReply("港のネコは、静かにその記録を受け取りました。");
+          setStatus("航海記録を保存しました。");
+        }
+
         document.getElementById("content").value = "";
         document.getElementById("tag").value = "";
 
-        setStatus("航海記録を保存しました。");
         await loadLogs();
 
       }catch(error){
