@@ -161,38 +161,81 @@
       color:var(--danger);
     }
 
-    .cat-reply{
-      display:none;
-      margin-top:18px;
-      padding:18px 18px 18px 20px;
-      border:1px solid rgba(169,183,255,.26);
-      border-left:1px solid rgba(169,183,255,.58);
-      background:rgba(255,255,255,.025);
-      border-radius:16px;
-    }
+    .cat-overlay{
+  position:fixed;
+  inset:0;
+  z-index:40;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at center, rgba(169,183,255,.08), transparent 36%),
+    rgba(3,5,11,.46);
+  backdrop-filter:blur(3px);
+}
 
-    .cat-reply.visible{
-      display:block;
+    .cat-overlay.visible{
+      display:flex;
     }
-
-    .cat-head{
+    
+    .cat-scroll{
+      width:min(680px, 100%);
+      position:relative;
+      padding:22px 24px 24px;
+      border-radius:20px;
+      border:1px solid rgba(169,183,255,.32);
+      background:
+        linear-gradient(180deg, rgba(18,22,36,.96), rgba(8,12,24,.96)),
+        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 36%);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      overflow:hidden;
+    }
+    
+    .cat-scroll::before,
+    .cat-scroll::after{
+      content:"";
+      position:absolute;
+      left:22px;
+      right:22px;
+      height:1px;
+      background:linear-gradient(
+        to right,
+        transparent,
+        rgba(169,183,255,.42),
+        transparent
+      );
+    }
+    
+    .cat-scroll::before{
+      top:10px;
+    }
+    
+    .cat-scroll::after{
+      bottom:10px;
+    }
+    
+    .cat-scroll-head{
       display:flex;
       align-items:center;
-      gap:10px;
-      margin-bottom:10px;
+      gap:14px;
+      margin-bottom:18px;
     }
-
-    .cat-mark{
-      min-width:32px;
-      height:32px;
+    
+    .cat-mark-large{
+      width:44px;
+      height:44px;
+      min-width:44px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border-radius:999px;
-      border:1px solid rgba(169,183,255,.32);
+      border:1px solid rgba(169,183,255,.34);
       background:rgba(169,183,255,.08);
       color:var(--accent);
-      font-size:15px;
+      font-size:20px;
       line-height:1;
       letter-spacing:-0.04em;
       transform:translateY(-1px);
@@ -203,21 +246,84 @@
         "Yu Mincho",
         serif;
     }
-
-    .cat-label{
+    
+    .cat-mark-large.reading{
+      animation:catBreath 1.8s ease-in-out infinite;
+    }
+    
+    @keyframes catBreath{
+      0%,100%{
+        transform:translateY(-1px) scale(1);
+        opacity:.82;
+      }
+      50%{
+        transform:translateY(-2px) scale(1.04);
+        opacity:1;
+      }
+    }
+    
+    .cat-scroll-label{
       font-size:12px;
       letter-spacing:.16em;
       text-transform:uppercase;
       color:var(--accent);
+      margin-bottom:4px;
     }
-
-    .cat-text{
+    
+    .cat-scroll-sub{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+    
+    .cat-close{
+      margin-left:auto;
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.24);
+      background:rgba(255,255,255,.025);
+      color:var(--muted);
+      font-size:18px;
+      line-height:1;
+      padding:0;
+    }
+    
+    .cat-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.42);
+    }
+    
+    .cat-scroll-text{
       white-space:pre-wrap;
       color:var(--text);
-      font-size:14px;
-      line-height:2;
+      font-size:15px;
+      line-height:2.05;
+      padding:2px 2px 0;
     }
-
+    
+    @media(max-width:640px){
+      .cat-overlay{
+        align-items:flex-start;
+        padding-top:120px;
+      }
+    
+      .cat-scroll{
+        padding:20px;
+      }
+    
+      .cat-mark-large{
+        width:40px;
+        height:40px;
+        min-width:40px;
+        font-size:18px;
+      }
+    
+      .cat-scroll-text{
+        font-size:14px;
+      }
+    }
+    
     .user{
       color:var(--muted);
       font-size:13px;
@@ -342,13 +448,23 @@
 
         <div class="status" id="status"></div>
 
-        <div class="cat-reply" id="catReply">
-          <div class="cat-head">
-            <div class="cat-mark" aria-hidden="true">ᓚᘏᗢ</div>
-            <div class="cat-label">Harbor Cat</div>
+        <div class="cat-overlay" id="catOverlay" aria-hidden="true">
+          <div class="cat-scroll" role="status" aria-live="polite">
+            <div class="cat-scroll-head">
+              <div class="cat-mark-large" id="catMarkLarge" aria-hidden="true">ᓚᘏᗢ</div>
+        
+              <div>
+                <div class="cat-scroll-label">Harbor Cat</div>
+                <div class="cat-scroll-sub" id="catScrollSub">Reading the voyage log</div>
+              </div>
+        
+              <button class="cat-close" id="catCloseBtn" type="button" aria-label="Close">
+                ×
+              </button>
+            </div>
+        
+            <div class="cat-scroll-text" id="catReplyText"></div>
           </div>
-
-          <div class="cat-text" id="catReplyText"></div>
         </div>
       </section>
 
@@ -385,8 +501,11 @@
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const logsEl = document.getElementById("logs");
-    const catReply = document.getElementById("catReply");
+    const catOverlay = document.getElementById("catOverlay");
     const catReplyText = document.getElementById("catReplyText");
+    const catMarkLarge = document.getElementById("catMarkLarge");
+    const catScrollSub = document.getElementById("catScrollSub");
+    const catCloseBtn = document.getElementById("catCloseBtn");
 
     let currentUser = null;
 
@@ -395,15 +514,43 @@
       statusEl.className = isError ? "status error" : "status";
     }
 
-    function setCatReply(message){
-      if(!message){
-        catReply.classList.remove("visible");
-        catReplyText.textContent = "";
-        return;
+    const catReadingMessages = [
+      "港のネコが、航海記録を読んでいます。\n静かな波の音の中で、少しだけ耳を動かしています。",
+      "港のネコが、桟橋の影で記録を読んでいます。\n灯台の光が、ゆっくり海をなぞっています。",
+      "港のネコが、足音を立てずに記録へ近づいています。\n少しだけ、港が静かになりました。"
+    ];
+    
+    const catMarks = [
+      "ᓚᘏᗢ",
+      "ᓚᘏᗢ",
+      "ᓚᘏᗢ"
+    ];
+    
+    function pickRandom(items){
+      return items[Math.floor(Math.random() * items.length)];
+    }
+    
+    function openCatScroll(message, mode = "reading"){
+      catReplyText.textContent = message || "";
+      catOverlay.classList.add("visible");
+      catOverlay.setAttribute("aria-hidden", "false");
+    
+      catMarkLarge.textContent = pickRandom(catMarks);
+    
+      if(mode === "reading"){
+        catScrollSub.textContent = "Reading the voyage log";
+        catMarkLarge.classList.add("reading");
+      }else{
+        catScrollSub.textContent = "A quiet reply from the harbor";
+        catMarkLarge.classList.remove("reading");
       }
-
-      catReplyText.textContent = message;
-      catReply.classList.add("visible");
+    }
+    
+    function closeCatScroll(){
+      catOverlay.classList.remove("visible");
+      catOverlay.setAttribute("aria-hidden", "true");
+      catReplyText.textContent = "";
+      catMarkLarge.classList.remove("reading");
     }
 
     function escapeHtml(str){
@@ -469,7 +616,7 @@
 
       currentUser = null;
       logsEl.innerHTML = "";
-      setCatReply("");
+      closeCatScroll();
       userStatus.textContent = "未ログインです。";
       setStatus("ログアウトしました。");
     }
@@ -492,7 +639,7 @@
 
     async function saveLog(){
       setStatus("保存しています。");
-      setCatReply("");
+      closeCatScroll();
       saveBtn.disabled = true;
 
       try{
@@ -527,13 +674,21 @@
 
         setStatus("航海記録を保存しました。港のネコが読んでいます。");
 
+        openCatScroll(
+          pickRandom(catReadingMessages),
+          "reading"
+        );
+        
         const reply = await callCatReply(content, tag);
-
+        
         if(reply){
-          setCatReply(reply);
+          openCatScroll(reply, "reply");
           setStatus("航海記録を保存しました。");
         }else{
-          setCatReply("港のネコは、静かにその記録を受け取りました。");
+          openCatScroll(
+            "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。",
+            "reply"
+          );
           setStatus("航海記録を保存しました。");
         }
 
@@ -603,6 +758,14 @@
         currentUser = session.user;
         userStatus.textContent = "ログイン中：" + currentUser.email;
         loadLogs();
+      }
+    });
+
+    catCloseBtn.addEventListener("click", closeCatScroll);
+    
+    catOverlay.addEventListener("click", function(event){
+      if(event.target === catOverlay){
+        closeCatScroll();
       }
     });
 
