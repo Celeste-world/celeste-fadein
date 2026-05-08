@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Login – Celeste Harbor</title>
+
+  <meta name="description" content="Celeste Harbor へログインします。" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top,#1a2440 0,var(--bg) 52%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .panel{
+      width:min(520px,100%);
+      padding:32px;
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      background:rgba(10,14,28,.82);
+      box-shadow:0 20px 48px rgba(0,0,0,.45);
+    }
+
+    h1{
+      font-size:28px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 18px;
+    }
+
+    p{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 26px;
+    }
+
+    button{
+      width:100%;
+      padding:13px 18px;
+      border:0;
+      border-radius:999px;
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+      font-size:15px;
+      cursor:pointer;
+      font-family:inherit;
+    }
+
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    .back{
+      display:block;
+      margin-top:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      text-decoration:none;
+    }
+
+    .back:hover{
+      text-decoration:underline;
+    }
+
+    .status{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      text-align:center;
+      min-height:1.8em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="panel">
+    <h1>港へ帰る。</h1>
+
+    <p>
+      Googleアカウントでログインします。<br>
+      航海記録は、あなた自身のための非公開記録として扱われます。
+    </p>
+
+    <button id="loginBtn">
+      Googleでログイン
+    </button>
+
+    <a class="back" href="/">
+      港へ戻る
+    </a>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const loginBtn = document.getElementById("loginBtn");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(message){
+      statusEl.textContent = message || "";
+    }
+
+    loginBtn.addEventListener("click", async function(){
+      try{
+        loginBtn.disabled = true;
+        setStatus("Googleログインへ進みます。");
+
+        const redirectUrl =
+          window.location.origin + "/log/";
+
+        const result = await client.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: redirectUrl,
+            queryParams: {
+              access_type: "offline",
+              prompt: "select_account"
+            }
+          }
+        });
+
+        if(result.error){
+          console.error(result.error);
+          setStatus("ログインに失敗しました。もう一度お試しください。");
+          loginBtn.disabled = false;
+        }
+
+      }catch(error){
+        console.error(error);
+        setStatus("ログイン処理でエラーが発生しました。");
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
