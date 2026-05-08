@@ -6,7 +6,7 @@
 
   <title>Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための港です。航海記録、月夜の航海、断片、そして灯台。" />
+  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための港です。航海記録、月夜の航海、断片、そして今夜の海。" />
   <link rel="canonical" href="https://celeste.world/" />
   <meta name="robots" content="index, follow">
 
@@ -29,8 +29,10 @@
       --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
+      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --accent-soft:rgba(169,183,255,.14);
     }
 
     *{ box-sizing:border-box; }
@@ -38,7 +40,9 @@
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top,#1a2440 0,var(--bg) 52%);
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
@@ -187,12 +191,59 @@
       margin-bottom:14px;
     }
 
-    .harbor-weather{
+    .weather-box{
       margin-top:24px;
       padding-top:18px;
       border-top:1px solid rgba(37,43,58,.9);
+    }
+
+    .weather-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:12px;
+    }
+
+    .weather-main{
+      font-size:14px;
+      line-height:2;
+      color:var(--text);
+      margin:0 0 12px;
+    }
+
+    .weather-sub{
       font-size:13px;
       line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .weather-meta{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .weather-chip{
+      border:1px solid rgba(70,84,132,.45);
+      background:rgba(255,255,255,.025);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .chip-label{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:6px;
+    }
+
+    .chip-value{
+      font-size:13px;
+      line-height:1.7;
       color:var(--muted);
     }
 
@@ -248,6 +299,10 @@
       .panel{
         padding:20px;
       }
+
+      .weather-meta{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
@@ -263,6 +318,7 @@
         <a href="/log/">Voyage Log</a>
         <a href="/fragments/">Fragments</a>
         <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/about/">About</a>
         <a href="/en/">English</a>
       </nav>
     </header>
@@ -313,7 +369,7 @@
 
       <aside class="panel">
         <div class="panel-title">
-          Tonight
+          Tonight's Harbor
         </div>
 
         <p class="panel-line">
@@ -326,12 +382,32 @@
         </p>
 
         <p class="panel-line">
-          帰港するなら、
-          ここから記録を残せます。
+          急ぐ必要はありません。<br>
+          帰港するなら、ここから記録を残せます。
         </p>
 
-        <div class="harbor-weather" id="harborWeather">
-          The harbor remained quiet tonight.
+        <div class="weather-box" id="harborWeather">
+          <div class="weather-label">Harbor Weather</div>
+
+          <p class="weather-main" id="weatherMain">
+            The harbor remained quiet tonight.
+          </p>
+
+          <p class="weather-sub" id="weatherSub">
+            You may stay here for a while.
+          </p>
+
+          <div class="weather-meta">
+            <div class="weather-chip">
+              <div class="chip-label">Sea</div>
+              <div class="chip-value" id="weatherSea">Quiet</div>
+            </div>
+
+            <div class="weather-chip">
+              <div class="chip-label">Light</div>
+              <div class="chip-value" id="weatherLight">Faint</div>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -354,16 +430,59 @@
   </div>
 
   <script>
-    const weatherLines = [
-      "Tonight: Fog drifting near the eastern lighthouse.",
-      "Tonight: The sea is calm, but not silent.",
-      "Tonight: A small light remains at the edge of the harbor.",
-      "Tonight: The tide is low, and the moon is clear.",
-      "Tonight: The harbor waited without asking anything."
+    const harborWeather = [
+      {
+        main: "Tonight: Fog drifts near the eastern lighthouse.",
+        sub: "The sea is unclear, but the harbor remains open.",
+        sea: "Foggy",
+        light: "Distant"
+      },
+      {
+        main: "Tonight: The sea is calm, but not silent.",
+        sub: "Small waves continue beneath the moonlight.",
+        sea: "Calm",
+        light: "Soft"
+      },
+      {
+        main: "Tonight: A small light remains at the edge of the harbor.",
+        sub: "No signal is needed. It is enough that it remains.",
+        sea: "Still",
+        light: "Faint"
+      },
+      {
+        main: "Tonight: The tide is low, and the moon is clear.",
+        sub: "There is room to breathe before the next voyage.",
+        sea: "Low tide",
+        light: "Clear"
+      },
+      {
+        main: "Tonight: The harbor waited without asking anything.",
+        sub: "You do not have to explain why you returned.",
+        sea: "Quiet",
+        light: "Waiting"
+      },
+      {
+        main: "Tonight: The lighthouse is visible through thin clouds.",
+        sub: "Not close, not far. Just enough to keep direction.",
+        sea: "Slow",
+        light: "Visible"
+      },
+      {
+        main: "Tonight: The water carries the sound of a distant voyage.",
+        sub: "Some ships are still moving beyond the dark.",
+        sea: "Moving",
+        light: "Far"
+      }
     ];
 
-    const index = new Date().getDate() % weatherLines.length;
-    document.getElementById("harborWeather").textContent = weatherLines[index];
+    const today = new Date();
+    const index = today.getDate() % harborWeather.length;
+    const weather = harborWeather[index];
+
+    document.getElementById("weatherMain").textContent = weather.main;
+    document.getElementById("weatherSub").textContent = weather.sub;
+    document.getElementById("weatherSea").textContent = weather.sea;
+    document.getElementById("weatherLight").textContent = weather.light;
   </script>
 </body>
 </html>
