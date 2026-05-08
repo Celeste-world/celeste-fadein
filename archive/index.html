@@ -6,19 +6,19 @@
 
   <title>Archive – Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Archive は、Celeste v4.4A 時代の思想と構造を保存する旧航海記録です。" />
+  <meta name="description" content="Celeste Archive は、Celeste Harbor へ至るまでの旧航海記録、思想、構造を静かに保存する場所です。" />
   <link rel="canonical" href="https://celeste.world/archive/" />
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Archive – Celeste Harbor">
-  <meta property="og:description" content="Celeste v4.4A 時代の思想と構造を保存する旧航海記録。">
+  <meta property="og:description" content="Celeste Harbor へ至るまでの旧航海記録、思想、構造を静かに保存する場所。">
   <meta property="og:url" content="https://celeste.world/archive/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Archive – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste v4.4A 時代の思想と構造を保存する旧航海記録。">
+  <meta name="twitter:description" content="Celeste Harbor へ至るまでの旧航海記録、思想、構造を静かに保存する場所。">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -27,8 +27,10 @@
     :root{
       --bg:#050811;
       --panel:#111623;
+      --panel-soft:rgba(10,14,28,0.64);
       --text:#e8ebef;
       --muted:#a0a8bb;
+      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
     }
@@ -38,7 +40,9 @@
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      background:
+        radial-gradient(circle at top, #1a2440 0, #0b1020 34%, var(--bg) 68%),
+        linear-gradient(180deg, #050811 0%, #03050b 100%);
       color:var(--text);
       font-family:
         "Hiragino Mincho ProN",
@@ -69,7 +73,8 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:64px;
+      gap:24px;
+      margin-bottom:72px;
     }
 
     header img{
@@ -81,13 +86,18 @@
       display:flex;
       gap:16px;
       flex-wrap:wrap;
+      justify-content:flex-end;
       font-size:13px;
       color:var(--muted);
     }
 
     main{
       flex:1;
-      max-width:780px;
+      max-width:860px;
+    }
+
+    .hero{
+      margin-bottom:58px;
     }
 
     .label{
@@ -109,8 +119,36 @@
       font-size:15px;
       line-height:2.1;
       color:var(--muted);
+      max-width:44rem;
+      margin:0 0 20px;
+    }
+
+    .quote{
+      margin-top:34px;
+      padding-left:18px;
+      border-left:1px solid rgba(169,183,255,0.42);
+      color:var(--text);
+      font-size:14px;
+      line-height:2.1;
       max-width:42rem;
-      margin-bottom:46px;
+    }
+
+    section{
+      margin-bottom:58px;
+    }
+
+    .section-title{
+      font-size:20px;
+      font-weight:500;
+      margin:0 0 22px;
+    }
+
+    .section-lead{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      max-width:44rem;
+      margin:0 0 26px;
     }
 
     .archive-grid{
@@ -127,11 +165,13 @@
       padding:22px 24px;
       box-shadow:0 16px 38px rgba(0,0,0,0.34);
       transition:0.2s ease;
+      display:block;
     }
 
     .archive-card:hover{
       border-color:rgba(169,183,255,0.45);
       transform:translateY(-1px);
+      text-decoration:none;
     }
 
     .archive-kicker{
@@ -157,6 +197,67 @@
       max-width:42rem;
     }
 
+    .current-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+    }
+
+    @media (max-width:860px){
+      .current-grid{
+        grid-template-columns:1fr;
+      }
+
+      header{
+        align-items:flex-start;
+      }
+    }
+
+    .current-card{
+      background:rgba(10,14,28,0.62);
+      border:1px solid rgba(70,84,132,0.45);
+      border-radius:18px;
+      padding:22px;
+      min-height:210px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .current-card h3{
+      font-size:17px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .current-card p{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0 0 18px;
+    }
+
+    .card-actions{
+      margin-top:auto;
+    }
+
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:999px;
+      font-size:13px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,0.02);
+    }
+
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,0.4);
+      text-decoration:none;
+    }
+
     .note{
       font-size:13px;
       line-height:2;
@@ -164,6 +265,7 @@
       border-left:1px solid rgba(169,183,255,0.42);
       padding-left:18px;
       margin-top:36px;
+      max-width:44rem;
     }
 
     footer{
@@ -191,122 +293,196 @@
   <div class="wrap">
 
     <header>
-      <a href="/">
+      <a href="/" aria-label="Celeste Harbor">
         <img src="/images/logo.svg" alt="Celeste logo">
       </a>
 
-      <nav class="nav">
+      <nav class="nav" aria-label="Main navigation">
         <a href="/">Harbor</a>
-        <a href="/log">Voyage Log</a>
-        <a href="/voyage">Voyage</a>
-        <a href="/fragments">Fragments</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/about/">About</a>
       </nav>
     </header>
 
     <main>
-      <div class="label">Archive</div>
 
-      <h1>
-        旧航海記録。
-      </h1>
+      <section class="hero">
+        <div class="label">Archive</div>
 
-      <p class="lead">
-        ここには、Celeste が Harbor へ向かう前に残していた、
-        静かな構造と思想の記録を保存しています。<br><br>
-        それらは過去のものではありますが、
-        消すべきものではありません。
-        航海には、通ってきた海があります。
-      </p>
+        <h1>
+          古い灯りを、<br>
+          ここに残しておく。
+        </h1>
 
-      <section class="archive-grid">
+        <p class="lead">
+          Archive は、Celeste Harbor になる前の記録や、
+          旧Celeste時代の思想、構造、言葉を静かに保存する場所です。
+        </p>
 
-        <a class="archive-card" href="/about.html">
-          <div class="archive-kicker">Foundation</div>
-          <h2>About Celeste</h2>
-          <p>
-            Celeste v4.4A の基本定義。
-            小さく、静かな一時空間としての Celeste。
-          </p>
-        </a>
+        <p class="lead">
+          それらは、現在の港そのものではありません。<br>
+          けれど、ここへ辿り着くまでに確かに灯っていた光です。
+        </p>
 
-        <a class="archive-card" href="/philosophy.html">
-          <div class="archive-kicker">Philosophy</div>
-          <h2>Philosophy</h2>
-          <p>
-            説得、最適化、進歩から距離を置くための思想。
-            言葉をただ一時的に置く場所について。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/silent-structure.html">
-          <div class="archive-kicker">Structure</div>
-          <h2>Silent Structure</h2>
-          <p>
-            記憶しないこと、介入しないこと、
-            沈黙を構造として扱うための記録。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/vision.html">
-          <div class="archive-kicker">Vision</div>
-          <h2>Vision</h2>
-          <p>
-            大きくなることではなく、
-            小さく留まることを選んだ Celeste の長期視点。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/who-i-am.html">
-          <div class="archive-kicker">Presence</div>
-          <h2>Who I Am</h2>
-          <p>
-            Celeste が何者ではないのか。
-            人格ではなく、一時的な構造として存在するという定義。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/who-this-is-for.html">
-          <div class="archive-kicker">Boundary</div>
-          <h2>Who This Is For</h2>
-          <p>
-            この空間に合う人、合わない人。
-            Celeste の境界を明確にするための記録。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/faq.html">
-          <div class="archive-kicker">Clarification</div>
-          <h2>FAQ</h2>
-          <p>
-            Celeste の構造、制約、記憶、助言しない姿勢についての整理。
-          </p>
-        </a>
-
-        <a class="archive-card" href="/timeline.html">
-          <div class="archive-kicker">Timeline</div>
-          <h2>Timeline</h2>
-          <p>
-            Celeste の初期設計と、構造が形になっていった記録。
-          </p>
-        </a>
-
+        <div class="quote">
+          航海には、通ってきた海があります。
+        </div>
       </section>
 
-      <p class="note">
-        Archive は、現在の Harbor とは別の時代の記録です。<br>
-        ここにある思想は、
-        そのまま現在へ戻すものではなく、
-        Celeste がどこから来たのかを静かに示すために残されています。
-      </p>
+      <section aria-labelledby="old-records-title">
+        <h2 class="section-title" id="old-records-title">旧Celeste記録</h2>
+
+        <p class="section-lead">
+          Celeste v4.4A 時代の思想と構造を保存しています。
+          現在の Harbor とは役割が異なりますが、その根にある静けさはここから続いています。
+        </p>
+
+        <div class="archive-grid">
+
+          <a class="archive-card" href="/about.html">
+            <div class="archive-kicker">Foundation</div>
+            <h2>About Celeste</h2>
+            <p>
+              Celeste v4.4A の基本定義。
+              小さく、静かな一時空間としての Celeste。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/philosophy.html">
+            <div class="archive-kicker">Philosophy</div>
+            <h2>Philosophy</h2>
+            <p>
+              説得、最適化、進歩から距離を置くための思想。
+              言葉をただ一時的に置く場所について。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/silent-structure.html">
+            <div class="archive-kicker">Structure</div>
+            <h2>Silent Structure</h2>
+            <p>
+              記憶しないこと、介入しないこと、
+              沈黙を構造として扱うための記録。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/vision.html">
+            <div class="archive-kicker">Vision</div>
+            <h2>Vision</h2>
+            <p>
+              大きくなることではなく、
+              小さく留まることを選んだ Celeste の長期視点。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/who-i-am.html">
+            <div class="archive-kicker">Presence</div>
+            <h2>Who I Am</h2>
+            <p>
+              Celeste が何者ではないのか。
+              人格ではなく、一時的な構造として存在するという定義。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/who-this-is-for.html">
+            <div class="archive-kicker">Boundary</div>
+            <h2>Who This Is For</h2>
+            <p>
+              この空間に合う人、合わない人。
+              Celeste の境界を明確にするための記録。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/faq.html">
+            <div class="archive-kicker">Clarification</div>
+            <h2>FAQ</h2>
+            <p>
+              Celeste の構造、制約、記憶、助言しない姿勢についての整理。
+            </p>
+          </a>
+
+          <a class="archive-card" href="/timeline.html">
+            <div class="archive-kicker">Timeline</div>
+            <h2>Timeline</h2>
+            <p>
+              Celeste の初期設計と、構造が形になっていった記録。
+            </p>
+          </a>
+
+        </div>
+
+        <p class="note">
+          Archive にある記録は、現在の Harbor へそのまま戻すためのものではありません。<br>
+          ここに残しておくことで、Celeste がどこから来たのかを静かに示しています。
+        </p>
+      </section>
+
+      <section aria-labelledby="current-harbor-title">
+        <h2 class="section-title" id="current-harbor-title">現在の港へ</h2>
+
+        <p class="section-lead">
+          古い記録を見たあと、現在の Celeste Harbor へ戻るための導線です。
+          Harbor は、旧Celesteの思想を受け継ぎながら、より広い海域へ進み始めています。
+        </p>
+
+        <div class="current-grid">
+
+          <article class="current-card">
+            <h3>Harbor</h3>
+            <p>
+              現在の入口。
+              静かな帰港空間としての Celeste Harbor へ戻ります。
+            </p>
+
+            <div class="card-actions">
+              <a class="btn-ghost" href="/">
+                Harborへ
+              </a>
+            </div>
+          </article>
+
+          <article class="current-card">
+            <h3>Moonlit Voyage</h3>
+            <p>
+              Harbor の深海に置かれた航海記録。
+              月夜の海へ続く静かな入口です。
+            </p>
+
+            <div class="card-actions">
+              <a class="btn-ghost" href="/voyage/">
+                Voyageへ
+              </a>
+            </div>
+          </article>
+
+          <article class="current-card">
+            <h3>Fragments</h3>
+            <p>
+              同じ海域に漂着した別の夜。
+              Harbor の余白に置かれた短い断片です。
+            </p>
+
+            <div class="card-actions">
+              <a class="btn-ghost" href="/fragments/">
+                Fragmentsへ
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </section>
 
     </main>
 
     <footer>
       <div class="footer-links">
         <a href="/">Harbor</a>
-        <a href="/log">Voyage Log</a>
-        <a href="/voyage">Voyage</a>
-        <a href="/fragments">Fragments</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/about/">About</a>
       </div>
 
       <div>CELESTE ARCHIVE</div>
