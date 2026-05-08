@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Celeste – A Quiet Space for Your Thoughts</title>
+
+  <title>Celeste Harbor – Quiet Reflective Web</title>
 
   <!-- Favicon -->
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <!-- SEO -->
-  <meta name="description" content="Celeste is a quiet, minimal space to place thoughts temporarily. Nothing is stored. Nothing is decided for you.">
+  <meta name="description" content="Celeste Harbor is a quiet reflective web space for returning, recording, and staying with small fragments from the same sea.">
   <link rel="canonical" href="https://celeste.world/en/" />
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Celeste – A Quiet Space for Your Thoughts">
-  <meta property="og:description" content="A quiet space where thoughts may appear briefly. Nothing is retained.">
+  <meta property="og:title" content="Celeste Harbor – Quiet Reflective Web">
+  <meta property="og:description" content="A quiet harbor for recording a voyage, reading Moonlit Voyage, and returning when needed.">
   <meta property="og:url" content="https://celeste.world/en/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Celeste – A Quiet Space for Your Thoughts">
-  <meta name="twitter:description" content="A quiet space where thoughts may appear briefly. Nothing more.">
+  <meta name="twitter:title" content="Celeste Harbor – Quiet Reflective Web">
+  <meta name="twitter:description" content="A quiet harbor for recording a voyage, reading Moonlit Voyage, and returning when needed.">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Structured Data -->
@@ -31,9 +32,9 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Celeste",
+    "name": "Celeste Harbor",
     "url": "https://celeste.world/",
-    "description": "A quiet, minimal space where thoughts may appear briefly. Nothing is stored. Nothing is decided."
+    "description": "Celeste Harbor is a quiet reflective web space for returning, recording, and staying with small fragments from the same sea."
   }
   </script>
 
@@ -46,18 +47,24 @@
       --line:#252b3a;
       --accent:#a9b7ff;
     }
+
     *{box-sizing:border-box;}
+
     body{
       margin:0;
       min-height:100vh;
-      background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
+      background:
+        radial-gradient(circle at top, #1a2440 0, #0b1020 34%, var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family: ui-serif, Georgia, "Times New Roman", serif;
     }
+
     a{
       color:inherit;
       text-decoration:none;
     }
+
     a:hover{
       text-decoration:underline;
     }
@@ -73,21 +80,41 @@
 
     header{
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      margin-bottom:40px;
+      gap:18px;
+      margin-bottom:56px;
+      color:var(--muted);
+      font-size:13px;
     }
+
     header img{
       width:72px;
       height:auto;
+    }
+
+    .nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
     }
 
     main{
       flex:1;
       display:grid;
       grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);
-      gap:40px;
+      gap:44px;
       align-items:center;
     }
+
     @media (max-width:800px){
       main{
         grid-template-columns:1fr;
@@ -95,90 +122,125 @@
       }
     }
 
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:22px;
+    }
+
     .hero-title{
-      font-size:30px;
-      line-height:1.5;
-      margin:0 0 18px;
+      font-size:34px;
+      line-height:1.6;
+      font-weight:500;
+      margin:0 0 22px;
     }
+
     .hero-sub{
-      margin:0 0 26px;
+      margin:0 0 28px;
       font-size:15px;
+      line-height:2;
       color:var(--muted);
-      max-width:32rem;
+      max-width:36rem;
     }
+
     .hero-sub span{
       display:block;
-      margin-top:6px;
+      margin-top:8px;
     }
 
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
       gap:14px;
-      margin-bottom:18px;
+      margin-bottom:22px;
     }
+
     .btn-primary,
     .btn-ghost{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:10px 18px;
+      padding:11px 18px;
       border-radius:999px;
       font-size:14px;
       border:1px solid transparent;
     }
+
     .btn-primary{
       background:linear-gradient(135deg,#a9b7ff,#c3d2ff);
       color:#050814;
       border-color:#c3d2ff;
     }
+
+    .btn-primary:hover{
+      opacity:.92;
+      text-decoration:none;
+    }
+
     .btn-ghost{
       border-color:var(--line);
       color:var(--muted);
       background:rgba(5,8,20,0.7);
     }
 
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+      text-decoration:none;
+    }
+
     .note{
       font-size:12px;
+      line-height:1.9;
       color:var(--muted);
       margin-top:14px;
     }
+
     .note + .note{
       margin-top:10px;
     }
 
     .panel{
       background:rgba(10,14,28,0.9);
-      border-radius:16px;
-      padding:22px 20px 24px;
+      border-radius:18px;
+      padding:24px 22px 26px;
       border:1px solid rgba(70,84,132,0.65);
       box-shadow:0 18px 38px rgba(0,0,0,0.5);
     }
+
     .panel-title{
-      font-size:14px;
+      font-size:13px;
       letter-spacing:0.18em;
       text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:14px;
+      color:var(--accent);
+      margin-bottom:16px;
     }
+
     .panel-line{
       font-size:14px;
-      line-height:1.9;
+      line-height:1.95;
+      color:var(--muted);
     }
+
     .panel-line + .panel-line{
-      margin-top:6px;
+      margin-top:10px;
     }
+
     .panel-meta{
-      margin-top:16px;
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
       color:var(--muted);
       display:flex;
       flex-direction:column;
-      gap:4px;
+      gap:6px;
     }
 
     footer{
-      margin-top:40px;
+      margin-top:56px;
       padding-top:18px;
       border-top:1px solid rgba(37,43,58,0.9);
       font-size:12px;
@@ -188,66 +250,129 @@
       flex-wrap:wrap;
       gap:16px;
     }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:44px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      .hero-title{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
 
     <header>
-      <a href="/en/index.html">
-        <img src="/images/logo.svg" alt="Celeste logo">
+      <a href="/en/" aria-label="Celeste Harbor English">
+        <img src="/images/logo.svg" alt="Celeste Harbor logo">
       </a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="/">JP Harbor</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/map/">Map</a>
+      </nav>
     </header>
 
     <main>
       <section>
+        <div class="label">Celeste Harbor</div>
+
         <h1 class="hero-title">
-          A small, quiet console<br/>
-          where thoughts may rest.
+          A quiet harbor<br>
+          for returning.
         </h1>
 
         <p class="hero-sub">
-          Celeste does not decide.
-          <span>What appears here remains only briefly.</span>
+          Celeste Harbor is a quiet reflective web space.
+          <span>It is not a social feed, an endless chat, or a place that asks you to become more.</span>
+        </p>
+
+        <p class="hero-sub">
+          Here, a voyage may be recorded, a fragment may be found,
+          and Moonlit Voyage may be read as a deeper sea beyond the harbor.
         </p>
 
         <div class="hero-actions">
-          <a href="/celeste-console.html" class="btn-primary">Open console</a>
-          <a href="/about.html" class="btn-ghost">About Celeste</a>
+          <a href="/" class="btn-primary">Enter Japanese Harbor</a>
+          <a href="/voyage/" class="btn-ghost">Read Moonlit Voyage</a>
+          <a href="/fragments/" class="btn-ghost">View Fragments</a>
         </div>
 
         <p class="note">
-          No accounts. No memory. Nothing is carried over.
+          The original Celeste console has been archived.
+          The current entrance is Celeste Harbor.
         </p>
+
         <p class="note">
-          When you leave, the space closes.
+          Harbor Cat and Voyage Log are currently available in Japanese.
         </p>
-        
-        <p class="note">
-          Japanese Harbor available.
-          <a href="/">Enter JP Harbor</a>
-        </p>
-        
       </section>
 
       <aside class="panel">
         <div class="panel-title">What this is</div>
+
         <p class="panel-line">
-          A single page where words may appear, in any language.
+          A small harbor for quiet records, fragments, and return.
         </p>
+
         <p class="panel-line">
-          Celeste does not guide, advise, or conclude.
+          Celeste Harbor does not aim to optimize, persuade, or keep you scrolling.
         </p>
+
+        <p class="panel-line">
+          It offers a place to leave a record, read a quiet voyage,
+          and come back when the night needs a harbor.
+        </p>
+
         <div class="panel-meta">
-          <span>Decisions remain yours.</span>
-          <span>Celeste remains small by design.</span>
+          <span>Quiet Reflective Web</span>
+          <span>Digital Sanctuary</span>
+          <span>Presence AI, kept small by design</span>
         </div>
       </aside>
     </main>
 
     <footer>
-      <span>© Celeste.world</span>
-      <span>CELESTE v4.4A</span>
+      <div class="footer-links">
+        <a href="/">Harbor</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/map/">Map</a>
+        <a href="/archive/">Archive</a>
+      </div>
+
+      <span>CELESTE HARBOR</span>
     </footer>
 
   </div>
