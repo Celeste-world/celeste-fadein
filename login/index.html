@@ -7,9 +7,9 @@
   <title>Login – Celeste Harbor</title>
 
   <meta name="description" content="Celeste Harbor へログインします。" />
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="robots" content="noindex, nofollow" />
 
-  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
@@ -69,6 +69,11 @@
       font-family:inherit;
     }
 
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
     .back{
       display:block;
       margin-top:18px;
@@ -88,6 +93,7 @@
       font-size:12px;
       line-height:1.8;
       text-align:center;
+      min-height:1.8em;
     }
   </style>
 </head>
@@ -101,7 +107,7 @@
       航海記録は、あなた自身のための非公開記録として扱われます。
     </p>
 
-    <button id="login">
+    <button id="loginBtn">
       Googleでログイン
     </button>
 
@@ -112,29 +118,51 @@
     <div class="status" id="status"></div>
   </div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
+  <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
 
-    const status = document.getElementById("status");
+    const loginBtn = document.getElementById("loginBtn");
+    const statusEl = document.getElementById("status");
 
-    document.getElementById("login").addEventListener("click", async () => {
-      status.textContent = "Googleログインへ進みます。";
+    function setStatus(message){
+      statusEl.textContent = message || "";
+    }
 
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + '/log/'
+    loginBtn.addEventListener("click", async function(){
+      try{
+        loginBtn.disabled = true;
+        setStatus("Googleログインへ進みます。");
+
+        const redirectUrl =
+          window.location.origin + "/log/";
+
+        const result = await client.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: redirectUrl,
+            queryParams: {
+              access_type: "offline",
+              prompt: "select_account"
+            }
+          }
+        });
+
+        if(result.error){
+          console.error(result.error);
+          setStatus("ログインに失敗しました。もう一度お試しください。");
+          loginBtn.disabled = false;
         }
-      });
 
-      if (error) {
+      }catch(error){
         console.error(error);
-        status.textContent = "ログインに失敗しました。時間を置いてもう一度お試しください。";
+        setStatus("ログイン処理でエラーが発生しました。");
+        loginBtn.disabled = false;
       }
     });
   </script>
