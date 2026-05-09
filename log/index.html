@@ -749,6 +749,25 @@
       }
     }
 
+    function appendCatScrollNotice(message, label = "Drift Ticket"){
+      const current = catReplyText.textContent.trim();
+    
+      const notice = [
+        "── " + label + " ──",
+        message
+      ].join("\n\n");
+    
+      catReplyText.textContent = current
+        ? current + "\n\n" + notice
+        : notice;
+    
+      catOverlay.classList.add("visible");
+      catOverlay.setAttribute("aria-hidden", "false");
+    
+      catScrollSub.textContent = "A quiet reply from the harbor";
+      catIconWrap.classList.remove("reading");
+    }
+
     function closeCatScroll(){
       catOverlay.classList.remove("visible");
       catOverlay.setAttribute("aria-hidden", "true");
@@ -926,13 +945,14 @@
         }
         
         const driftResult = await callGrantDriftTicket();
-        
+
         if(driftResult && driftResult.granted){
-          openCatScroll(
+          appendCatScrollNotice(
             driftResult.message ||
               "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。",
-            "fallback"
+            "Drift Ticket"
           );
+        
           setStatus("航海記録を保存しました。漂着チケットが届きました。");
         }
 
