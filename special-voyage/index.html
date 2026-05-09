@@ -279,6 +279,11 @@
       margin:0 0 18px;
     }
 
+    #remainingTime{
+      color:var(--accent);
+      letter-spacing:.06em;
+    }
+
     .note{
       max-width:760px;
       font-size:13px;
@@ -370,7 +375,7 @@
 
       <p class="lead">
         この入口では、まず有効な航海券があるかを確認します。<br>
-        本格的な特別航海の開始は、次の段階で実装します。
+        本格的な特別航海のAI本体は、次の段階で実装します。
       </p>
 
       <section class="panel">
@@ -391,26 +396,51 @@
       <section>
         <div id="ticketArea"></div>
 
+        <!-- 有効チケットがある場合に表示される、特別航海の入口 -->
         <div class="voyage-box" id="voyageBox">
           <h2 class="voyage-title">特別航海の入口</h2>
 
           <p class="voyage-text">
             有効な航海券が確認されました。<br>
-            この先では、時間制の特別航海を開始できるようになります。
+            この先では、時間制の特別航海を開始できます。
           </p>
 
           <p class="voyage-text">
-            現在はまだ準備中です。<br>
-            チケットはこのまま Account に残ります。
+            開始すると、航海券は使用済みになります。<br>
+            現在は、特別航海AIの本体はまだ準備中です。
           </p>
 
           <div class="actions">
-            <button class="primary disabled" type="button" disabled>
-              特別航海を開始する（準備中）
+            <button class="primary" id="startVoyageBtn" type="button">
+              特別航海を開始する
             </button>
 
             <a class="btn-ghost" href="/account/">
               チケットを確認する
+            </a>
+          </div>
+        </div>
+
+        <!-- チケット使用後、active session が始まった時に表示される -->
+        <div class="voyage-box" id="activeVoyageBox">
+          <h2 class="voyage-title">特別航海中</h2>
+
+          <p class="voyage-text" id="activeVoyageMessage">
+            特別航海が始まりました。
+          </p>
+
+          <p class="voyage-text">
+            残り時間：
+            <span id="remainingTime">--:--</span>
+          </p>
+
+          <div class="actions">
+            <button class="primary disabled" type="button" disabled>
+              特別航海AIは準備中
+            </button>
+
+            <a class="btn-ghost" href="/account/">
+              Accountへ
             </a>
           </div>
         </div>
@@ -452,8 +482,14 @@
     const logoutBtn = document.getElementById("logoutBtn");
     const ticketArea = document.getElementById("ticketArea");
     const voyageBox = document.getElementById("voyageBox");
+    const activeVoyageBox = document.getElementById("activeVoyageBox");
+    const startVoyageBtn = document.getElementById("startVoyageBtn");
+    const activeVoyageMessage = document.getElementById("activeVoyageMessage");
+    const remainingTime = document.getElementById("remainingTime");
 
     let currentUser = null;
+    let activeSession = null;
+    let countdownTimer = null;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -529,6 +565,7 @@
           </div>
         `;
         voyageBox.classList.remove("visible");
+        activeVoyageBox.classList.remove("visible");
         setStatus("ログインが必要です。");
         updateAuthUI();
       }
@@ -563,6 +600,13 @@
       }
 
       currentUser = null;
+      activeSession = null;
+
+      if(countdownTimer){
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+
       userStatus.textContent = "未ログインです。";
       ticketArea.innerHTML = `
         <div class="empty">
@@ -570,6 +614,7 @@
         </div>
       `;
       voyageBox.classList.remove("visible");
+      activeVoyageBox.classList.remove("visible");
       setStatus("ログアウトしました。");
       updateAuthUI();
     }
@@ -600,6 +645,7 @@
     function renderTicket(tickets){
       ticketArea.innerHTML = "";
       voyageBox.classList.remove("visible");
+      activeVoyageBox.classList.remove("visible");
 
       const now = new Date();
 
@@ -654,8 +700,87 @@
       voyageBox.classList.add("visible");
     }
 
+    async function startSpecialVoyage(){
+      setStatus("特別航海を開始しています。");
+
+      if(startVoyageBtn){
+        startVoyageBtn.disabled = true;
+      }
+
+      try{
+        const { data, error } = await client.functions.invoke("start-special-voyage", {
+          body: {}
+        });
+
+        if(error){
+          console.error("start-special-voyage invoke error:", error);
+          setStatus("特別航海の開始に失敗しました：" + error.message, true);
+          return;
+        }
+
+        if(!data || !data.started){
+          setStatus(data?.message || "使用できる航海券がありません。", true);
+          return;
+        }
+
+        activeSession = data.session;
+
+        ticketArea.innerHTML = "";
+        voyageBox.classList.remove("visible");
+
+        activeVoyageMessage.textContent =
+          data.message ||
+          "特別航海が始まりました。\nこの海は、少しだけ深く静かです。";
+
+        activeVoyageBox.classList.add("visible");
+        setStatus("特別航海が始まりました。");
+
+        startCountdown(activeSession.ends_at);
+
+      }catch(error){
+        console.error("startSpecialVoyage catch:", error);
+        setStatus("特別航海の開始処理でエラーが発生しました：" + error.message, true);
+      }finally{
+        if(startVoyageBtn){
+          startVoyageBtn.disabled = false;
+        }
+      }
+    }
+
+    function startCountdown(endsAt){
+      if(countdownTimer){
+        clearInterval(countdownTimer);
+      }
+
+      function update(){
+        const end = new Date(endsAt).getTime();
+        const now = Date.now();
+        const diff = Math.max(0, end - now);
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+        remainingTime.textContent = minutes + ":" + seconds;
+
+        if(diff <= 0){
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          remainingTime.textContent = "00:00";
+          setStatus("特別航海の時間が終了しました。");
+        }
+      }
+
+      update();
+      countdownTimer = setInterval(update, 1000);
+    }
+
     loginBtn.addEventListener("click", login);
     logoutBtn.addEventListener("click", logout);
+
+    if(startVoyageBtn){
+      startVoyageBtn.addEventListener("click", startSpecialVoyage);
+    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
