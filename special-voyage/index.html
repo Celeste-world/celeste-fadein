@@ -895,6 +895,32 @@
       }
     }
 
+    async function expireActiveSession(){
+      if(!activeSession || !activeSession.id){
+        return;
+      }
+    
+      try{
+        const { data, error } = await client.functions.invoke("expire-voyage-session", {
+          body: {
+            session_id: activeSession.id
+          }
+        });
+    
+        if(error){
+          console.error("expire-voyage-session invoke error:", error);
+          return;
+        }
+    
+        if(data && data.expired){
+          console.log("Special voyage expired:", data.message);
+        }
+    
+      }catch(error){
+        console.error("expireActiveSession catch:", error);
+      }
+    }
+
     function startCountdown(endsAt){
       if(countdownTimer){
         clearInterval(countdownTimer);
@@ -916,7 +942,6 @@
           countdownTimer = null;
         
           remainingTime.textContent = "00:00";
-          activeSession = null;
         
           sendSpecialBtn.disabled = true;
           specialMessage.disabled = true;
@@ -930,6 +955,9 @@
             "この航海はここで閉じられました。\nまた必要な夜に、港へ戻ってきてください。";
         
           setStatus("特別航海の時間が終了しました。");
+        
+          expireActiveSession();
+          activeSession = null;
         }
       }
 
