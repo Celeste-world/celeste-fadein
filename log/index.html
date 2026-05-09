@@ -671,6 +671,8 @@
       "港のネコが、足音を立てずに記録へ近づいています。\n少しだけ、港が静かになりました。"
     ];
 
+    const driftTicketTitle = "Drift Ticket";
+
     const catIcons = {
       reading: [
         "/images/harbor-cat/cat-reading-map.png"
@@ -850,6 +852,19 @@
       return data?.reply || null;
     }
 
+    async function callGrantDriftTicket(){
+      const { data, error } = await client.functions.invoke("grant-drift-ticket", {
+        body: {}
+      });
+    
+      if(error){
+        console.error("grant-drift-ticket invoke error:", error);
+        return null;
+      }
+    
+      return data || null;
+    }
+
     async function saveLog(){
       setStatus("保存しています。");
       closeCatScroll();
@@ -908,6 +923,17 @@
             "fallback"
           );
           setStatus("航海記録を保存しました。");
+        }
+        
+        const driftResult = await callGrantDriftTicket();
+        
+        if(driftResult && driftResult.granted){
+          openCatScroll(
+            driftResult.message ||
+              "今夜、港に小さな航海券が漂着しました。\n10分だけ、少し深い海へ降りられます。",
+            "fallback"
+          );
+          setStatus("航海記録を保存しました。漂着チケットが届きました。");
         }
 
         contentEl.value = "";
