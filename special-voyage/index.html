@@ -952,17 +952,39 @@
         
           specialReply.style.display = "block";
           specialReplyText.textContent =
-            "この航海はここで閉じられました。\nまた必要な夜に、港へ戻ってきてください。";
-        
-          setStatus("特別航海の時間が終了しました。");
-        
+            "この航海はここで閉じられました。\n8秒後に、Voyage Log へ戻ります。";
+          
+          setStatus("特別航海の時間が終了しました。Voyage Logへ戻ります。");
+          
           expireActiveSession();
           activeSession = null;
+          
+          startReturnCountdown();
         }
       }
 
       update();
       countdownTimer = setInterval(update, 1000);
+    }
+
+    function startReturnCountdown(){
+      let seconds = 8;
+    
+      const returnTimer = setInterval(function(){
+        seconds -= 1;
+    
+        if(seconds > 0){
+          specialReplyText.textContent =
+            "この航海はここで閉じられました。\n" +
+            seconds +
+            "秒後に、Voyage Log へ戻ります。";
+        }
+    
+        if(seconds <= 0){
+          clearInterval(returnTimer);
+          window.location.href = "/log/";
+        }
+      }, 1000);
     }
 
     function updateSpecialCount(){
