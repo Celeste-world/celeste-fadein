@@ -571,17 +571,26 @@
         const div = document.createElement("div");
         div.className = "ticket";
     
+        const sourceLabel =
+          ticket.source === "random_drift"
+            ? "漂着した航海券"
+            : ticket.source === "purchase"
+              ? "購入した航海券"
+              : ticket.source === "admin_grant"
+                ? "港から届いた航海券"
+                : "航海券";
+    
         div.innerHTML = `
           <div class="ticket-top">
             <div>
               <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
               <p class="ticket-line">
-                ${escapeHtml(ticket.duration_minutes)}分の航海券です。
+                ${escapeHtml(ticket.duration_minutes)}分の特別航海に使える航海券です。
               </p>
             </div>
     
             <div class="ticket-status">
-              ${escapeHtml(ticket.status || "available")}
+              使用できます
             </div>
           </div>
     
@@ -590,8 +599,14 @@
           </p>
     
           <div class="ticket-meta">
-            <span class="tag">source: ${escapeHtml(ticket.source || "-")}</span>
-            <span class="tag">created: ${escapeHtml(formatDate(ticket.created_at))}</span>
+            <span class="tag">${escapeHtml(sourceLabel)}</span>
+            <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
+          </div>
+    
+          <div class="actions">
+            <a class="btn-primary" href="/special-voyage/">
+              特別航海へ進む
+            </a>
           </div>
         `;
     
