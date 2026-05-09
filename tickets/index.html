@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Voyage Tickets – Celeste Harbor</title>
+
+  <meta name="description" content="Celeste Harbor の航海チケットについて。漂着チケット、特別航海チケット、深海チケットの位置づけを静かに案内します。" />
+  <link rel="canonical" href="https://celeste.world/tickets/" />
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Voyage Tickets – Celeste Harbor">
+  <meta property="og:description" content="漂着チケット、特別航海チケット、深海チケット。Celeste Harbor の深い航海へ降りるための小さな案内。">
+  <meta property="og:url" content="https://celeste.world/tickets/">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Voyage Tickets – Celeste Harbor">
+  <meta name="twitter:description" content="Celeste Harbor の航海チケットについて。">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:68px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    main{
+      flex:1;
+    }
+
+    .hero{
+      max-width:760px;
+      margin-bottom:58px;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-size:36px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 24px;
+    }
+
+    .lead{
+      font-size:15px;
+      line-height:2.1;
+      color:var(--muted);
+      max-width:44rem;
+      margin-bottom:24px;
+    }
+
+    .ticket-map{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+      margin-bottom:58px;
+      max-width:860px;
+    }
+
+    .ticket{
+      background:rgba(10,14,28,.78);
+      border:1px solid rgba(70,84,132,.52);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 18px 42px rgba(0,0,0,.34);
+    }
+
+    .ticket-kicker{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    .ticket h2{
+      font-size:21px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 14px;
+    }
+
+    .ticket p{
+      font-size:14px;
+      line-height:2.05;
+      color:var(--muted);
+      margin:0 0 16px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:6px 12px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .flow{
+      max-width:860px;
+      background:rgba(10,14,28,.62);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:20px;
+      padding:24px;
+      margin-bottom:48px;
+    }
+
+    .flow h2{
+      font-size:20px;
+      font-weight:500;
+      margin:0 0 18px;
+      line-height:1.7;
+    }
+
+    .flow-line{
+      font-size:14px;
+      line-height:2.1;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .note{
+      max-width:760px;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.42);
+      padding-left:18px;
+      margin-top:34px;
+    }
+
+    .actions{
+      margin-top:28px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:999px;
+      font-size:14px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+    }
+
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+    }
+
+    footer{
+      margin-top:64px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:48px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:31px;
+      }
+
+      .ticket,
+      .flow{
+        padding:20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/map/">Map</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <section class="hero">
+        <div class="label">Voyage Tickets</div>
+
+        <h1>
+          深い海へ降りるための、<br>
+          小さな航海券。
+        </h1>
+
+        <p class="lead">
+          Celeste Harbor には、常に開いている港と、
+          必要な夜だけ少し深く降りる航海があります。
+        </p>
+
+        <p class="lead">
+          Harbor Cat は無料の短い気配です。<br>
+          チケットは、より深い航海へ一時的に入るためのものです。
+        </p>
+      </section>
+
+      <section class="ticket-map">
+
+        <article class="ticket">
+          <div class="ticket-kicker">Free / Presence</div>
+          <h2>Harbor Cat</h2>
+          <p>
+            航海記録を保存したあとに、港のネコが短く反応します。
+            助言や診断ではなく、記録が届いたことを示す小さなPresenceです。
+          </p>
+          <div class="meta">
+            <span class="tag">無料</span>
+            <span class="tag">1〜2行</span>
+            <span class="tag">常設</span>
+          </div>
+        </article>
+
+        <article class="ticket">
+          <div class="ticket-kicker">Drift / Free Ticket</div>
+          <h2>Drift Ticket（漂着チケット）</h2>
+          <p>
+            ときどき、港に小さな航海券が漂着します。
+            無料で使える短い特別航海で、深い海の入口を少しだけ試すためのものです。
+          </p>
+          <p>
+            販売のための強い導線ではなく、必要な夜にだけ届く小さな贈り物として扱います。
+          </p>
+          <div class="meta">
+            <span class="tag">無料配布</span>
+            <span class="tag">10分程度</span>
+            <span class="tag">不定期</span>
+            <span class="tag">保持1枚まで</span>
+          </div>
+        </article>
+
+        <article class="ticket">
+          <div class="ticket-kicker">Paid / Special Voyage</div>
+          <h2>Special Voyage Ticket（特別航海チケット）</h2>
+          <p>
+            ユーザーが自分で選んで入る、時間制の特別航海です。
+            答えを急ぐためではなく、言葉を少し深く整えるための短い時間です。
+          </p>
+          <div class="meta">
+            <span class="tag">有料予定</span>
+            <span class="tag">10分</span>
+            <span class="tag">15分</span>
+            <span class="tag">30分</span>
+            <span class="tag">複数保持不可</span>
+          </div>
+        </article>
+
+        <article class="ticket">
+          <div class="ticket-kicker">Limited / Deep Sea</div>
+          <h2>Deep Sea Ticket（深海チケット）</h2>
+          <p>
+            特に深い夜のための、限定的な航海券です。
+            通常の特別航海よりも静かに、深く降りるためのものとして扱います。
+          </p>
+          <p>
+            常設販売ではなく、必要な時期にだけ開く深い海として設計します。
+          </p>
+          <div class="meta">
+            <span class="tag">限定</span>
+            <span class="tag">上位航海</span>
+            <span class="tag">常設しない</span>
+          </div>
+        </article>
+
+      </section>
+
+      <section class="flow">
+        <h2>位置関係</h2>
+
+        <p class="flow-line">
+          Harbor Cat<br>
+          ↓<br>
+          Drift Ticket（漂着チケット）<br>
+          ↓<br>
+          Special Voyage Ticket（特別航海チケット）<br>
+          ↓<br>
+          Deep Sea Ticket（深海チケット）
+        </p>
+
+        <p class="note">
+          Harbor Cat は日常の港です。<br>
+          Drift Ticket は、たまに漂着する無料の小舟です。<br>
+          Special Voyage Ticket は、自分で選んで入る特別航海です。<br>
+          Deep Sea Ticket は、限定的に降りる深海です。
+        </p>
+
+        <div class="actions">
+          <a class="btn-ghost" href="/log/">
+            Voyage Logへ
+          </a>
+
+          <a class="btn-ghost" href="/map/">
+            Harbor Mapへ
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/map/">Map</a>
+        <a href="/archive/">Archive</a>
+      </div>
+
+      <div>CELESTE VOYAGE TICKETS</div>
+    </footer>
+
+  </div>
+</body>
+</html>
