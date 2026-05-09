@@ -651,7 +651,12 @@
         userStatus.textContent = "ログイン中：" + currentUser.email;
         setStatus("航海券を確認しています。");
         updateAuthUI();
-        await loadAvailableTicket();
+        
+        const hasActiveSession = await loadActiveSession();
+        
+        if(!hasActiveSession){
+          await loadAvailableTicket();
+        }        
       }else{
         currentUser = null;
         userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
@@ -713,6 +718,51 @@
       activeVoyageBox.classList.remove("visible");
       setStatus("ログアウトしました。");
       updateAuthUI();
+    }
+
+    async function loadActiveSession(){
+      if(!currentUser){
+        return false;
+      }
+    
+      const now = new Date().toISOString();
+    
+      const { data, error } = await client
+        .from("voyage_sessions")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .eq("status", "active")
+        .gt("ends_at", now)
+        .order("created_at", { ascending:false })
+        .limit(1);
+    
+      if(error){
+        console.error("active session load error:", error);
+        setStatus("特別航海中の記録確認に失敗しました：" + error.message, true);
+        return false;
+      }
+    
+      if(!data || data.length === 0){
+        return false;
+      }
+    
+      activeSession = data[0];
+    
+      ticketArea.innerHTML = "";
+      voyageBox.classList.remove("visible");
+    
+      activeVoyageMessage.textContent =
+        "特別航海は、まだ静かに続いています。";
+    
+      activeVoyageBox.classList.add("visible");
+      specialMessage.disabled = false;
+      sendSpecialBtn.disabled = false;
+      startCountdown(activeSession.ends_at);
+      
+    
+      setStatus("特別航海中です。");
+    
+      return true;
     }
 
     async function loadAvailableTicket(){
@@ -829,8 +879,10 @@
           "特別航海が始まりました。\nこの海は、少しだけ深く静かです。";
 
         activeVoyageBox.classList.add("visible");
+        specialMessage.disabled = false;
+        sendSpecialBtn.disabled = false;
         setStatus("特別航海が始まりました。");
-
+        
         startCountdown(activeSession.ends_at);
 
       }catch(error){
@@ -863,6 +915,9 @@
           clearInterval(countdownTimer);
           countdownTimer = null;
           remainingTime.textContent = "00:00";
+          activeSession = null;
+          sendSpecialBtn.disabled = true;
+          specialMessage.disabled = true;
           setStatus("特別航海の時間が終了しました。");
         }
       }
@@ -963,7 +1018,13 @@
         currentUser = session.user;
         userStatus.textContent = "ログイン中：" + currentUser.email;
         updateAuthUI();
-        loadAvailableTicket();
+        
+        loadActiveSession().then(function(hasActiveSession){
+          if(!hasActiveSession){
+            loadAvailableTicket();
+          }
+        });
+        
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
         updateAuthUI();
