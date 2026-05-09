@@ -914,10 +914,21 @@
         if(diff <= 0){
           clearInterval(countdownTimer);
           countdownTimer = null;
+        
           remainingTime.textContent = "00:00";
           activeSession = null;
+        
           sendSpecialBtn.disabled = true;
           specialMessage.disabled = true;
+          specialMessage.placeholder = "特別航海の時間は終了しました。";
+        
+          activeVoyageMessage.textContent =
+            "特別航海の時間が終了しました。\n港は、静かに航海を閉じました。";
+        
+          specialReply.style.display = "block";
+          specialReplyText.textContent =
+            "この航海はここで閉じられました。\nまた必要な夜に、港へ戻ってきてください。";
+        
           setStatus("特別航海の時間が終了しました。");
         }
       }
