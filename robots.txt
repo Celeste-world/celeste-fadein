@@ -1,7 +1,10 @@
 User-agent: *
+
 Allow: /
 
+Disallow: /log/
+Disallow: /auth/
+Disallow: /login/
 Disallow: /celeste-console.html
-Disallow: /workers.js
 
 Sitemap: https://celeste.world/sitemap.xml
