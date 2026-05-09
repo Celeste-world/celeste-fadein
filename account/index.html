@@ -393,247 +393,251 @@
   </div>
 
   <script>
-    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
-    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+  const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+  const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
 
-    const client = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
-    );
+  const client = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+  );
 
-    const userStatus = document.getElementById("userStatus");
-    const statusEl = document.getElementById("status");
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const ticketsEl = document.getElementById("tickets");
+  const userStatus = document.getElementById("userStatus");
+  const statusEl = document.getElementById("status");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const ticketsEl = document.getElementById("tickets");
 
-    let currentUser = null;
+  let currentUser = null;
 
-    function setStatus(message, isError = false){
-      statusEl.textContent = message || "";
-      statusEl.className = isError ? "status error" : "status";
+  function setStatus(message, isError = false){
+    statusEl.textContent = message || "";
+    statusEl.className = isError ? "status error" : "status";
+  }
+
+  function escapeHtml(str){
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatDate(value){
+    if(!value){
+      return "期限なし";
     }
 
-    function escapeHtml(str){
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    return new Date(value).toLocaleString("ja-JP");
+  }
+
+  function ticketLabel(type){
+    if(type === "drift"){
+      return "Drift Ticket（漂着チケット）";
     }
 
-    function formatDate(value){
-      if(!value){
-        return "期限なし";
-      }
-
-      return new Date(value).toLocaleString("ja-JP");
+    if(type === "special"){
+      return "Special Voyage Ticket（特別航海チケット）";
     }
 
-    function ticketLabel(type){
-      if(type === "drift"){
-        return "Drift Ticket（漂着チケット）";
-      }
-
-      if(type === "special"){
-        return "Special Voyage Ticket（特別航海チケット）";
-      }
-
-      if(type === "deep_sea"){
-        return "Deep Sea Ticket（深海チケット）";
-      }
-
-      return type || "Voyage Ticket";
+    if(type === "deep_sea"){
+      return "Deep Sea Ticket（深海チケット）";
     }
 
-    function updateAuthUI(){
-      const loggedIn = Boolean(currentUser);
+    return type || "Voyage Ticket";
+  }
 
-      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
-      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
-    }
+  function updateAuthUI(){
+    const loggedIn = Boolean(currentUser);
 
-    async function checkSession(){
-      setStatus("ログイン状態を確認しています。");
+    loginBtn.style.display = loggedIn ? "none" : "inline-flex";
+    logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
+  }
 
-      const { data, error } = await client.auth.getSession();
+  async function checkSession(){
+    setStatus("ログイン状態を確認しています。");
 
-      if(error){
-        console.error("getSession error:", error);
-        currentUser = null;
-        userStatus.textContent = "ログイン状態の確認に失敗しました。";
-        setStatus(error.message, true);
-        updateAuthUI();
-        return;
-      }
+    const { data, error } = await client.auth.getSession();
 
-      if(data.session && data.session.user){
-        currentUser = data.session.user;
-        userStatus.textContent = "ログイン中：" + currentUser.email;
-        setStatus("港の記録を確認しています。");
-        updateAuthUI();
-        await loadTickets();
-      }else{
-        currentUser = null;
-        userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
-        ticketsEl.innerHTML = `
-          <div class="empty">
-            ログインすると、港に残っている航海券を確認できます。
-          </div>
-        `;
-        setStatus("ログインが必要です。");
-        updateAuthUI();
-      }
-    }
-
-    async function login(){
-      setStatus("Googleログインへ進みます。");
-
-      const { error } = await client.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/account/",
-          queryParams: {
-            prompt: "select_account"
-          }
-        }
-      });
-
-      if(error){
-        console.error("login error:", error);
-        setStatus(error.message, true);
-      }
-    }
-
-    async function logout(){
-      const { error } = await client.auth.signOut();
-
-      if(error){
-        console.error("logout error:", error);
-        setStatus(error.message, true);
-        return;
-      }
-
+    if(error){
+      console.error("getSession error:", error);
       currentUser = null;
-      userStatus.textContent = "未ログインです。";
+      userStatus.textContent = "ログイン状態の確認に失敗しました。";
+      setStatus(error.message, true);
+      updateAuthUI();
+      return;
+    }
+
+    if(data.session && data.session.user){
+      currentUser = data.session.user;
+      userStatus.textContent = "ログイン中：" + currentUser.email;
+      setStatus("港の記録を確認しています。");
+      updateAuthUI();
+      await loadTickets();
+    }else{
+      currentUser = null;
+      userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
       ticketsEl.innerHTML = `
         <div class="empty">
           ログインすると、港に残っている航海券を確認できます。
         </div>
       `;
-      setStatus("ログアウトしました。");
+      setStatus("ログインが必要です。");
       updateAuthUI();
     }
+  }
 
-    async function loadTickets(){
-      if(!currentUser){
-        return;
-      }
+  async function login(){
+    setStatus("Googleログインへ進みます。");
 
-      const { data, error } = await client
-        .from("voyage_tickets")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .eq("status", "available")
-        .order("created_at", { ascending:false });
-
-      if(error){
-        console.error("ticket load error:", error);
-        setStatus("航海券の読み込みに失敗しました：" + error.message, true);
-        return;
-      }
-
-      renderTickets(data || []);
-      setStatus("航海券を確認しました。");
-    }
-
-    ffunction renderTickets(tickets){
-      ticketsEl.innerHTML = "";
-    
-      const now = new Date();
-    
-      const validTickets = (tickets || []).filter(ticket => {
-        if(!ticket.expires_at){
-          return true;
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/account/",
+        queryParams: {
+          prompt: "select_account"
         }
-    
-        return new Date(ticket.expires_at) > now;
-      });
-    
-      if(validTickets.length === 0){
-        ticketsEl.innerHTML = `
-          <div class="empty">
-            現在、有効な航海券はありません。<br>
-            ときどき、港に小さな航海券が漂着することがあります。
-          </div>
-        `;
-        return;
-      }
-    
-      validTickets.forEach(ticket => {
-        const div = document.createElement("div");
-        div.className = "ticket";
-    
-        const sourceLabel =
-          ticket.source === "random_drift"
-            ? "漂着した航海券"
-            : ticket.source === "purchase"
-              ? "購入した航海券"
-              : ticket.source === "admin_grant"
-                ? "港から届いた航海券"
-                : "航海券";
-    
-        div.innerHTML = `
-          <div class="ticket-top">
-            <div>
-              <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
-              <p class="ticket-line">
-                ${escapeHtml(ticket.duration_minutes)}分の特別航海に使える航海券です。
-              </p>
-            </div>
-    
-            <div class="ticket-status">
-              使用できます
-            </div>
-          </div>
-    
-          <p class="ticket-line">
-            期限：${escapeHtml(formatDate(ticket.expires_at))}
-          </p>
-    
-          <div class="ticket-meta">
-            <span class="tag">${escapeHtml(sourceLabel)}</span>
-            <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
-          </div>
-    
-          <div class="actions">
-            <a class="btn-primary" href="/special-voyage/">
-              特別航海へ進む
-            </a>
-          </div>
-        `;
-    
-        ticketsEl.appendChild(div);
-      });
-    }
-    loginBtn.addEventListener("click", login);
-    logoutBtn.addEventListener("click", logout);
-
-    client.auth.onAuthStateChange(function(event, session){
-      if(session && session.user){
-        currentUser = session.user;
-        userStatus.textContent = "ログイン中：" + currentUser.email;
-        updateAuthUI();
-        loadTickets();
-      }else if(event === "SIGNED_OUT"){
-        currentUser = null;
-        updateAuthUI();
       }
     });
 
+    if(error){
+      console.error("login error:", error);
+      setStatus(error.message, true);
+    }
+  }
+
+  async function logout(){
+    setStatus("ログアウトしています。");
+
+    const { error } = await client.auth.signOut();
+
+    if(error){
+      console.error("logout error:", error);
+      setStatus(error.message, true);
+      return;
+    }
+
+    currentUser = null;
+    userStatus.textContent = "未ログインです。";
+    ticketsEl.innerHTML = `
+      <div class="empty">
+        ログインすると、港に残っている航海券を確認できます。
+      </div>
+    `;
+    setStatus("ログアウトしました。");
     updateAuthUI();
-    checkSession();
-  </script>
+  }
+
+  async function loadTickets(){
+    if(!currentUser){
+      return;
+    }
+
+    const { data, error } = await client
+      .from("voyage_tickets")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .eq("status", "available")
+      .order("created_at", { ascending:false });
+
+    if(error){
+      console.error("ticket load error:", error);
+      setStatus("航海券の読み込みに失敗しました：" + error.message, true);
+      return;
+    }
+
+    renderTickets(data || []);
+    setStatus("航海券を確認しました。");
+  }
+
+  function renderTickets(tickets){
+    ticketsEl.innerHTML = "";
+
+    const now = new Date();
+
+    const validTickets = (tickets || []).filter(ticket => {
+      if(!ticket.expires_at){
+        return true;
+      }
+
+      return new Date(ticket.expires_at) > now;
+    });
+
+    if(validTickets.length === 0){
+      ticketsEl.innerHTML = `
+        <div class="empty">
+          現在、有効な航海券はありません。<br>
+          ときどき、港に小さな航海券が漂着することがあります。
+        </div>
+      `;
+      return;
+    }
+
+    validTickets.forEach(ticket => {
+      const div = document.createElement("div");
+      div.className = "ticket";
+
+      const sourceLabel =
+        ticket.source === "random_drift"
+          ? "漂着した航海券"
+          : ticket.source === "purchase"
+            ? "購入した航海券"
+            : ticket.source === "admin_grant"
+              ? "港から届いた航海券"
+              : "航海券";
+
+      div.innerHTML = `
+        <div class="ticket-top">
+          <div>
+            <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
+            <p class="ticket-line">
+              ${escapeHtml(ticket.duration_minutes)}分の特別航海に使える航海券です。
+            </p>
+          </div>
+
+          <div class="ticket-status">
+            使用できます
+          </div>
+        </div>
+
+        <p class="ticket-line">
+          期限：${escapeHtml(formatDate(ticket.expires_at))}
+        </p>
+
+        <div class="ticket-meta">
+          <span class="tag">${escapeHtml(sourceLabel)}</span>
+          <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
+        </div>
+
+        <div class="actions">
+          <a class="btn-primary" href="/special-voyage/">
+            特別航海へ進む
+          </a>
+        </div>
+      `;
+
+      ticketsEl.appendChild(div);
+    });
+  }
+
+  loginBtn.addEventListener("click", login);
+  logoutBtn.addEventListener("click", logout);
+
+  client.auth.onAuthStateChange(function(event, session){
+    if(session && session.user){
+      currentUser = session.user;
+      userStatus.textContent = "ログイン中：" + currentUser.email;
+      updateAuthUI();
+      loadTickets();
+    }else if(event === "SIGNED_OUT"){
+      currentUser = null;
+      updateAuthUI();
+    }
+  });
+
+  updateAuthUI();
+  checkSession();
+</script>
+  
 </body>
 </html>
