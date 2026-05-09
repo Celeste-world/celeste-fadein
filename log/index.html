@@ -224,31 +224,58 @@
       margin-bottom:18px;
     }
     
-    .cat-mark-large{
-      width:44px;
-      height:44px;
-      min-width:44px;
+    .cat-icon-wrap{
+      width:64px;
+      height:64px;
+      min-width:64px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border-radius:999px;
-      border:1px solid rgba(169,183,255,.34);
-      background:rgba(169,183,255,.08);
-      color:var(--accent);
-      font-size:20px;
-      line-height:1;
-      letter-spacing:-0.04em;
-      transform:translateY(-1px);
-      font-family:
-        "Segoe UI Symbol",
-        "Noto Sans Symbols",
-        "Hiragino Mincho ProN",
-        "Yu Mincho",
-        serif;
+      border-radius:18px;
+      border:1px solid rgba(169,183,255,.28);
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 62%),
+        rgba(255,255,255,.025);
+      overflow:hidden;
     }
     
-    .cat-mark-large.reading{
+    .cat-icon{
+      width:58px;
+      height:58px;
+      object-fit:contain;
+      display:block;
+      filter:
+        drop-shadow(0 0 10px rgba(169,183,255,.16))
+        drop-shadow(0 8px 18px rgba(0,0,0,.28));
+    }
+    
+    .cat-icon-wrap.reading{
       animation:catBreath 1.8s ease-in-out infinite;
+    }
+    
+    @keyframes catBreath{
+      0%,100%{
+        transform:translateY(0) scale(1);
+        opacity:.88;
+      }
+      50%{
+        transform:translateY(-2px) scale(1.035);
+        opacity:1;
+      }
+    }
+    
+    @media(max-width:640px){
+      .cat-icon-wrap{
+        width:58px;
+        height:58px;
+        min-width:58px;
+        border-radius:16px;
+      }
+    
+      .cat-icon{
+        width:52px;
+        height:52px;
+      }
     }
     
     @keyframes catBreath{
@@ -451,7 +478,14 @@
         <div class="cat-overlay" id="catOverlay" aria-hidden="true">
           <div class="cat-scroll" role="status" aria-live="polite">
             <div class="cat-scroll-head">
-              <div class="cat-mark-large" id="catMarkLarge" aria-hidden="true">ᓚᘏᗢ</div>
+              <div class="cat-icon-wrap" id="catIconWrap" aria-hidden="true">
+                <img
+                  class="cat-icon"
+                  id="catIcon"
+                  src="/images/harbor-cat/cat-harbor-main.png"
+                  alt=""
+                >
+              </div>
         
               <div>
                 <div class="cat-scroll-label">Harbor Cat</div>
@@ -503,7 +537,8 @@
     const logsEl = document.getElementById("logs");
     const catOverlay = document.getElementById("catOverlay");
     const catReplyText = document.getElementById("catReplyText");
-    const catMarkLarge = document.getElementById("catMarkLarge");
+    const catIconWrap = document.getElementById("catIconWrap");
+    const catIcon = document.getElementById("catIcon");
     const catScrollSub = document.getElementById("catScrollSub");
     const catCloseBtn = document.getElementById("catCloseBtn");
 
@@ -520,29 +555,50 @@
       "港のネコが、足音を立てずに記録へ近づいています。\n少しだけ、港が静かになりました。"
     ];
     
-    const catMarks = [
-      "ᓚᘏᗢ",
-      "ᓚᘏᗢ",
-      "ᓚᘏᗢ"
-    ];
+   const catIcons = {
+      reading: [
+        "/images/harbor-cat/cat-reading-map.png"
+      ],
+      reply: [
+        "/images/harbor-cat/cat-harbor-main.png",
+        "/images/harbor-cat/cat-looking-lighthouse.png"
+      ],
+      fallback: [
+        "/images/harbor-cat/cat-looking-lighthouse.png"
+      ]
+    };
     
     function pickRandom(items){
       return items[Math.floor(Math.random() * items.length)];
     }
     
+   function setCatIcon(mode){
+  let icons = catIcons.reply;
+
+  if(mode === "reading"){
+    icons = catIcons.reading;
+  }
+
+  if(mode === "fallback"){
+    icons = catIcons.fallback;
+  }
+
+  catIcon.src = pickRandom(icons);
+}
+
     function openCatScroll(message, mode = "reading"){
       catReplyText.textContent = message || "";
       catOverlay.classList.add("visible");
       catOverlay.setAttribute("aria-hidden", "false");
     
-      catMarkLarge.textContent = pickRandom(catMarks);
+      setCatIcon(mode);
     
       if(mode === "reading"){
         catScrollSub.textContent = "Reading the voyage log";
-        catMarkLarge.classList.add("reading");
+        catIconWrap.classList.add("reading");
       }else{
         catScrollSub.textContent = "A quiet reply from the harbor";
-        catMarkLarge.classList.remove("reading");
+        catIconWrap.classList.remove("reading");
       }
     }
     
@@ -550,7 +606,7 @@
       catOverlay.classList.remove("visible");
       catOverlay.setAttribute("aria-hidden", "true");
       catReplyText.textContent = "";
-      catMarkLarge.classList.remove("reading");
+      catIconWrap.classList.remove("reading");
     }
 
     function escapeHtml(str){
@@ -687,7 +743,7 @@
         }else{
           openCatScroll(
             "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。",
-            "reply"
+            "fallback"
           );
           setStatus("航海記録を保存しました。");
         }
