@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Account – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      max-width:860px;
+      margin:0 auto;
+      padding:48px 20px 40px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:64px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    main{
+      flex:1;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-size:36px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 24px;
+    }
+
+    .lead{
+      font-size:15px;
+      line-height:2.1;
+      color:var(--muted);
+      max-width:44rem;
+      margin-bottom:34px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:20px;
+    }
+
+    button,
+    .btn-primary,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:11px 18px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    button{
+      border:0;
+    }
+
+    .btn-primary,
+    .primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+      border:1px solid transparent;
+    }
+
+    .btn-ghost,
+    .ghost{
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    .btn-ghost:hover,
+    .ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .status{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .section-title{
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 18px;
+    }
+
+    .ticket{
+      background:rgba(10,14,28,.68);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .ticket-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      margin-bottom:14px;
+    }
+
+    .ticket-type{
+      font-size:17px;
+      line-height:1.7;
+      color:var(--text);
+    }
+
+    .ticket-status{
+      font-size:12px;
+      color:var(--accent);
+      border:1px solid rgba(169,183,255,.32);
+      border-radius:999px;
+      padding:5px 11px;
+      background:rgba(169,183,255,.06);
+    }
+
+    .ticket-line{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .ticket-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:6px 12px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .empty{
+      background:rgba(10,14,28,.52);
+      border:1px solid rgba(70,84,132,.35);
+      border-radius:18px;
+      padding:20px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    .note{
+      max-width:760px;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.42);
+      padding-left:18px;
+      margin-top:30px;
+    }
+
+    footer{
+      margin-top:64px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:44px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:31px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/map/">Map</a>
+        <a href="/about/">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="label">Account</div>
+
+      <h1>
+        港に残っている、<br>
+        航海券を確認する場所。
+      </h1>
+
+      <p class="lead">
+        ここでは、あなたのアカウントに残っている航海券を確認できます。<br>
+        漂着チケット、特別航海チケット、深海チケットは、
+        すべて一時的な航海のために置かれます。
+      </p>
+
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="loginBtn">Googleでログイン</button>
+          <button class="ghost" id="logoutBtn">ログアウト</button>
+          <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Available Tickets</h2>
+
+        <div id="tickets"></div>
+
+        <p class="note">
+          現在は、チケットの確認のみできます。<br>
+          特別航海の開始、課金、キャンセル管理は次の段階で実装します。
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/">Harbor</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">Fragments</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/archive/">Archive</a>
+      </div>
+
+      <div>CELESTE ACCOUNT</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const ticketsEl = document.getElementById("tickets");
+
+    let currentUser = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "期限なし";
+      }
+
+      return new Date(value).toLocaleString("ja-JP");
+    }
+
+    function ticketLabel(type){
+      if(type === "drift"){
+        return "Drift Ticket（漂着チケット）";
+      }
+
+      if(type === "special"){
+        return "Special Voyage Ticket（特別航海チケット）";
+      }
+
+      if(type === "deep_sea"){
+        return "Deep Sea Ticket（深海チケット）";
+      }
+
+      return type || "Voyage Ticket";
+    }
+
+    function updateAuthUI(){
+      const loggedIn = Boolean(currentUser);
+
+      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
+      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
+    }
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        currentUser = null;
+        userStatus.textContent = "ログイン状態の確認に失敗しました。";
+        setStatus(error.message, true);
+        updateAuthUI();
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        userStatus.textContent = "ログイン中：" + currentUser.email;
+        setStatus("港の記録を確認しています。");
+        updateAuthUI();
+        await loadTickets();
+      }else{
+        currentUser = null;
+        userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
+        ticketsEl.innerHTML = `
+          <div class="empty">
+            ログインすると、港に残っている航海券を確認できます。
+          </div>
+        `;
+        setStatus("ログインが必要です。");
+        updateAuthUI();
+      }
+    }
+
+    async function login(){
+      setStatus("Googleログインへ進みます。");
+
+      const { error } = await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/account/",
+          queryParams: {
+            prompt: "select_account"
+          }
+        }
+      });
+
+      if(error){
+        console.error("login error:", error);
+        setStatus(error.message, true);
+      }
+    }
+
+    async function logout(){
+      const { error } = await client.auth.signOut();
+
+      if(error){
+        console.error("logout error:", error);
+        setStatus(error.message, true);
+        return;
+      }
+
+      currentUser = null;
+      userStatus.textContent = "未ログインです。";
+      ticketsEl.innerHTML = `
+        <div class="empty">
+          ログインすると、港に残っている航海券を確認できます。
+        </div>
+      `;
+      setStatus("ログアウトしました。");
+      updateAuthUI();
+    }
+
+    async function loadTickets(){
+      if(!currentUser){
+        return;
+      }
+
+      const { data, error } = await client
+        .from("voyage_tickets")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .eq("status", "available")
+        .order("created_at", { ascending:false });
+
+      if(error){
+        console.error("ticket load error:", error);
+        setStatus("航海券の読み込みに失敗しました：" + error.message, true);
+        return;
+      }
+
+      renderTickets(data || []);
+      setStatus("航海券を確認しました。");
+    }
+
+    function renderTickets(tickets){
+      ticketsEl.innerHTML = "";
+
+      const now = new Date();
+
+      const validTickets = tickets.filter(ticket => {
+        if(!ticket.expires_at){
+          return true;
+        }
+
+        return new Date(ticket.expires_at) > now;
+      });
+
+      if(validTickets.length === 0){
+        ticketsEl.innerHTML = `
+          <div class="empty">
+            現在、有効な航海券はありません。<br>
+            ときどき、港に小さな航海券が漂着することがあります。
+          </div>
+        `;
+        return;
+      }
+
+      validTickets.forEach(ticket => {
+        const div = document.createElement("div");
+        div.className = "ticket";
+
+        div.innerHTML = `
+          <div class="ticket-top">
+            <div>
+              <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
+              <p class="ticket-line">
+                ${escapeHtml(ticket.duration_minutes)}分の航海券です。
+              </p>
+            </div>
+
+            <div class="ticket-status">
+              ${escapeHtml(ticket.status || "available")}
+            </div>
+          </div>
+
+          <p class="ticket-line">
+            期限：${escapeHtml(formatDate(ticket.expires_at))}
+          </p>
+
+          <div class="ticket-meta">
+            <span class="tag">source: ${escapeHtml(ticket.source || "-")}</span>
+            <span class="tag">created: ${escapeHtml(formatDate(ticket.created_at))}</span>
+          </div>
+        `;
+
+        ticketsEl.appendChild(div);
+      });
+    }
+
+    loginBtn.addEventListener("click", login);
+    logoutBtn.addEventListener("click", logout);
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+        userStatus.textContent = "ログイン中：" + currentUser.email;
+        updateAuthUI();
+        loadTickets();
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        updateAuthUI();
+      }
+    });
+
+    updateAuthUI();
+    checkSession();
+  </script>
+</body>
+</html>
