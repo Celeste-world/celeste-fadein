@@ -22,6 +22,8 @@
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
   
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
 
   <style>
     :root{
@@ -356,7 +358,7 @@
             断片を見る
           </a>
 
-          <a href="/auth/" class="btn-ghost">
+          <a href="/auth/" class="btn-ghost" id="loginStatusLink">
             ログイン
           </a>
         </div>
@@ -486,6 +488,57 @@
     document.getElementById("weatherSub").textContent = weather.sub;
     document.getElementById("weatherSea").textContent = weather.sea;
     document.getElementById("weatherLight").textContent = weather.light;
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+    
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+    
+    const loginStatusLink = document.getElementById("loginStatusLink");
+    
+    async function handleAuthCallback(){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+    
+      if(code){
+        const { error } = await client.auth.exchangeCodeForSession(code);
+    
+        if(error){
+          console.error("exchangeCodeForSession error:", error);
+          return;
+        }
+    
+        window.history.replaceState({}, document.title, "/harbor/");
+      }
+    }
+    
+    async function updateLoginStatus(){
+      const { data, error } = await client.auth.getSession();
+    
+      if(error){
+        console.error("getSession error:", error);
+        return;
+      }
+    
+      if(data.session && data.session.user){
+        loginStatusLink.textContent = "航海記録へ";
+        loginStatusLink.href = "/log/";
+      }else{
+        loginStatusLink.textContent = "ログイン";
+        loginStatusLink.href = "/auth/";
+      }
+    }
+    
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        loginStatusLink.textContent = "航海記録へ";
+        loginStatusLink.href = "/log/";
+      }
+    });
+    
+    handleAuthCallback().then(updateLoginStatus);
   </script>
 </body>
 </html>
