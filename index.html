@@ -73,11 +73,12 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(5,8,17,.02) 0%,
-          rgba(5,8,17,.04) 46%,
-          rgba(5,8,17,.62) 100%
+          rgba(5,8,17,.00) 0%,
+          rgba(5,8,17,.02) 48%,
+          rgba(5,8,17,.40) 100%
         ),
-        url("/images/harbor-entrance.png") center center / cover no-repeat;
+        url("/images/harbor-entrance.png") center center / contain no-repeat,
+        #050811;
     }
 
     .entrance::before{
@@ -98,8 +99,8 @@
         linear-gradient(
           to bottom,
           rgba(3,5,11,.00) 0%,
-          rgba(3,5,11,.04) 45%,
-          rgba(3,5,11,.60) 100%
+          rgba(3,5,11,.02) 50%,
+          rgba(3,5,11,.46) 100%
         );
       pointer-events:none;
     }
@@ -114,10 +115,10 @@
       padding:14px;
       border-radius:22px;
       border:1px solid rgba(169,183,255,.18);
-      background:rgba(5,8,17,.42);
+      background:rgba(5,8,17,.38);
       backdrop-filter:blur(8px);
       box-shadow:
-        0 18px 48px rgba(0,0,0,.30),
+        0 18px 48px rgba(0,0,0,.28),
         inset 0 0 0 1px rgba(255,255,255,.018);
       text-align:center;
     }
@@ -197,10 +198,11 @@
           linear-gradient(
             to bottom,
             rgba(5,8,17,.00) 0%,
-            rgba(5,8,17,.08) 45%,
-            rgba(5,8,17,.70) 100%
+            rgba(5,8,17,.04) 52%,
+            rgba(5,8,17,.48) 100%
           ),
-          url("/images/harbor-entrance.png") center top / cover no-repeat;
+          url("/images/harbor-entrance.png") center center / contain no-repeat,
+          #050811;
       }
 
       .entrance::after{
@@ -208,8 +210,8 @@
           linear-gradient(
             to bottom,
             rgba(3,5,11,.00) 0%,
-            rgba(3,5,11,.06) 48%,
-            rgba(3,5,11,.68) 100%
+            rgba(3,5,11,.04) 52%,
+            rgba(3,5,11,.52) 100%
           );
       }
 
@@ -218,7 +220,7 @@
         width:calc(100% - 20px);
         border-radius:18px;
         padding:12px;
-        background:rgba(5,8,17,.40);
+        background:rgba(5,8,17,.36);
       }
 
       .brand{
