@@ -6,16 +6,16 @@
 
   <title>Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港空間です。航海記録、月夜の航海、Fragments、Harbor Cat が静かに重なります。" />
+  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港空間です。月夜の港から、航海記録、Fragments、Moonlit Voyage へ。" />
   <link rel="canonical" href="https://celeste.world/" />
   <meta name="robots" content="index, follow">
-  
+
   <meta property="og:type" content="website">
   <meta property="og:title" content="Celeste Harbor">
   <meta property="og:description" content="静かに航海を続けるための、小さなWebの港。">
   <meta property="og:url" content="https://celeste.world/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
-  
+
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Celeste Harbor">
   <meta name="twitter:description" content="静かに航海を続けるための、小さなWebの港。">
@@ -26,25 +26,26 @@
   <style>
     :root{
       --bg:#050811;
-      --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
-      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
-      --accent-soft:rgba(169,183,255,.14);
     }
 
-    *{ box-sizing:border-box; }
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
       min-height:100vh;
-      background:
-        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
-        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
-      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      font-family:
+        "Hiragino Mincho ProN",
+        "Yu Mincho",
+        "Noto Serif JP",
+        serif;
+      background:#050811;
     }
 
     a{
@@ -52,38 +53,77 @@
       text-decoration:none;
     }
 
-    a:hover{
-      text-decoration:none;
+    .entrance{
+      min-height:100vh;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:42px 20px;
+      overflow:hidden;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(5,8,17,.94) 0%,
+          rgba(5,8,17,.78) 38%,
+          rgba(5,8,17,.42) 100%
+        ),
+        url("/images/harbor-entrance.png") center / cover no-repeat;
+    }
+
+    .entrance::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(169,183,255,.14), transparent 32%),
+        radial-gradient(circle at 72% 72%, rgba(169,183,255,.10), transparent 34%),
+        rgba(3,5,11,.18);
+      pointer-events:none;
+    }
+
+    .entrance::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        to bottom,
+        rgba(5,8,17,.08),
+        rgba(5,8,17,.22) 48%,
+        rgba(5,8,17,.74)
+      );
+      pointer-events:none;
     }
 
     .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding:48px 20px 40px;
-      min-height:100vh;
+      width:min(980px, 100%);
+      position:relative;
+      z-index:1;
+      min-height:calc(100vh - 84px);
       display:flex;
       flex-direction:column;
     }
 
-    .site-header{
+    header{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:18px;
-      margin-bottom:70px;
       color:var(--muted);
       font-size:13px;
+      margin-bottom:auto;
     }
 
     .brand{
       color:var(--text);
-      letter-spacing:.04em;
+      letter-spacing:.06em;
     }
 
     .nav{
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
     .nav a{
@@ -95,11 +135,8 @@
     }
 
     main{
-      flex:1;
-      display:grid;
-      grid-template-columns:minmax(0,2fr) minmax(0,1.1fr);
-      gap:48px;
-      align-items:center;
+      max-width:560px;
+      padding:76px 0 86px;
     }
 
     .label{
@@ -111,8 +148,8 @@
     }
 
     h1{
-      font-size:36px;
-      line-height:1.8;
+      font-size:42px;
+      line-height:1.65;
       font-weight:500;
       margin:0 0 24px;
     }
@@ -121,15 +158,15 @@
       font-size:15px;
       line-height:2.1;
       color:var(--muted);
-      max-width:36rem;
-      margin-bottom:34px;
+      max-width:34rem;
+      margin:0 0 32px;
     }
 
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:14px;
-      margin-bottom:28px;
+      margin-bottom:24px;
     }
 
     .btn-primary,
@@ -145,6 +182,7 @@
     .btn-primary{
       background:linear-gradient(135deg,#a9b7ff,#d4dcff);
       color:#050811;
+      box-shadow:0 14px 34px rgba(0,0,0,.34);
     }
 
     .btn-primary:hover{
@@ -152,105 +190,30 @@
     }
 
     .btn-ghost{
-      border:1px solid var(--line);
+      border:1px solid rgba(169,183,255,.24);
       color:var(--muted);
-      background:rgba(255,255,255,.02);
+      background:rgba(5,8,17,.48);
+      backdrop-filter:blur(6px);
     }
 
     .btn-ghost:hover{
-      border-color:rgba(169,183,255,.4);
+      border-color:rgba(169,183,255,.48);
       color:var(--text);
     }
 
     .note{
       font-size:13px;
-      line-height:1.9;
-      color:var(--muted);
-    }
-
-    .panel{
-      background:rgba(10,14,28,.82);
-      border:1px solid rgba(70,84,132,.55);
-      border-radius:18px;
-      padding:24px;
-      box-shadow:0 20px 48px rgba(0,0,0,.45);
-    }
-
-    .panel-title{
-      font-size:13px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:18px;
-    }
-
-    .panel-line{
-      font-size:14px;
       line-height:2;
       color:var(--muted);
-      margin-bottom:14px;
-    }
-
-    .weather-box{
-      margin-top:24px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-    }
-
-    .weather-label{
-      font-size:12px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color:var(--dim);
-      margin-bottom:12px;
-    }
-
-    .weather-main{
-      font-size:14px;
-      line-height:2;
-      color:var(--text);
-      margin:0 0 12px;
-    }
-
-    .weather-sub{
-      font-size:13px;
-      line-height:1.9;
-      color:var(--muted);
-      margin:0;
-    }
-
-    .weather-meta{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .weather-chip{
-      border:1px solid rgba(70,84,132,.45);
-      background:rgba(255,255,255,.025);
-      border-radius:14px;
-      padding:12px;
-    }
-
-    .chip-label{
-      font-size:11px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--dim);
-      margin-bottom:6px;
-    }
-
-    .chip-value{
-      font-size:13px;
-      line-height:1.7;
-      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.38);
+      padding-left:16px;
+      max-width:34rem;
     }
 
     footer{
-      margin-top:60px;
+      margin-top:auto;
       padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
+      border-top:1px solid rgba(169,183,255,.16);
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -270,221 +233,131 @@
       color:var(--text);
     }
 
-    @media(max-width:860px){
-      main{
-        grid-template-columns:1fr;
+    @media(max-width:760px){
+      .entrance{
+        align-items:flex-start;
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(5,8,17,.88) 0%,
+            rgba(5,8,17,.68) 48%,
+            rgba(5,8,17,.92) 100%
+          ),
+          url("/images/harbor-entrance.png") center top / cover no-repeat;
       }
-    }
 
-    @media(max-width:640px){
       .wrap{
-        padding:36px 16px 32px;
+        min-height:calc(100vh - 84px);
       }
 
-      .site-header{
+      header{
         align-items:flex-start;
         flex-direction:column;
-        margin-bottom:52px;
       }
 
       .nav{
         gap:12px;
         font-size:12px;
+        justify-content:flex-start;
+      }
+
+      main{
+        padding:70px 0 70px;
       }
 
       h1{
-        font-size:31px;
+        font-size:34px;
+      }
+    }
+
+    @media(max-width:480px){
+      h1{
+        font-size:30px;
       }
 
-      .panel{
-        padding:20px;
+      .lead{
+        font-size:14px;
       }
 
-      .weather-meta{
-        grid-template-columns:1fr;
+      .actions{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .btn-primary,
+      .btn-ghost{
+        width:100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <div class="entrance">
+    <div class="wrap">
 
-    <header class="site-header">
-      <a class="brand" href="/">Celeste Harbor</a>
+      <header>
+        <a class="brand" href="/">
+          Celeste Harbor
+        </a>
 
-      <nav class="nav">
-        <a href="/">Harbor</a>
-        <a href="/log/">Voyage Log</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/about/">About</a>
-        <a href="/en/">English</a>
-      </nav>
-    </header>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="/harbor/">Harbor</a>
+          <a href="/log/">Voyage Log</a>
+          <a href="/voyage/">Moonlit Voyage</a>
+          <a href="/fragments/">Fragments</a>
+          <a href="/map/">Map</a>
+        </nav>
+      </header>
 
-    <main>
-
-      <section>
-        <div class="label">Harbor</div>
+      <main>
+        <div class="label">Quiet Reflective Web</div>
 
         <h1>
-          船は、<br>
-          まだ進んでいる。
+          月夜の港へ、<br>
+          静かに帰る。
         </h1>
 
         <p class="lead">
           Celeste Harbor は、
-          静かに航海を続けるための港です。<br><br>
-
-          今日の記録を残し、
-          月夜の航海を読み、
-          必要な夜にまた戻ってくるための、
-          小さな場所。
+          航海を続けるための小さな帰港空間です。<br>
+          記録を残し、断片に触れ、
+          必要な夜にまた戻ってくるために。
         </p>
 
         <div class="actions">
-          <a href="/log/" class="btn-primary">
+          <a class="btn-primary" href="/harbor/">
+            港へ入る
+          </a>
+
+          <a class="btn-ghost" href="/log/">
             航海記録を残す
           </a>
 
-          <a href="/voyage/" class="btn-ghost">
-            月夜の航海を読む
-          </a>
-
-          <a href="/fragments/" class="btn-ghost">
-            断片を見る
-          </a>
-
-          <a href="/auth/" class="btn-ghost">
-            ログイン
+          <a class="btn-ghost" href="/voyage/">
+            月夜の航海へ
           </a>
         </div>
 
-        <p class="note">
-          すべてを残す必要はありません。<br>
-          ただ、航海を続けるための記録だけが残ります。
-        </p>
-      </section>
-
-      <aside class="panel">
-        <div class="panel-title">
-          Tonight's Harbor
-        </div>
-
-        <p class="panel-line">
-          今夜の港は静かです。
-        </p>
-
-        <p class="panel-line">
-          灯台の光は遠く、
-          海はまだ閉じていません。
-        </p>
-
-        <p class="panel-line">
+        <div class="note">
           急ぐ必要はありません。<br>
-          帰港するなら、ここから記録を残せます。
-        </p>
-
-        <div class="weather-box" id="harborWeather">
-          <div class="weather-label">Harbor Weather</div>
-
-          <p class="weather-main" id="weatherMain">
-            The harbor remained quiet tonight.
-          </p>
-
-          <p class="weather-sub" id="weatherSub">
-            You may stay here for a while.
-          </p>
-
-          <div class="weather-meta">
-            <div class="weather-chip">
-              <div class="chip-label">Sea</div>
-              <div class="chip-value" id="weatherSea">Quiet</div>
-            </div>
-
-            <div class="weather-chip">
-              <div class="chip-label">Light</div>
-              <div class="chip-value" id="weatherLight">Faint</div>
-            </div>
-          </div>
+          今夜の港は、静かに開いています。
         </div>
-      </aside>
+      </main>
 
-    </main>
+      <footer>
+        <div class="footer-links">
+          <a href="/harbor/">Harbor</a>
+          <a href="/log/">Voyage Log</a>
+          <a href="/fragments/">Fragments</a>
+          <a href="/tickets/">Tickets</a>
+          <a href="/archive/">Archive</a>
+        </div>
 
-    <footer>
-         <div class="footer-links">
-            <a href="/log/">Voyage Log</a>
-            <a href="/voyage/">Moonlit Voyage</a>
-            <a href="/fragments/">Fragments</a>
-            <a href="/map/">Map</a>
-            <a href="/tickets/">Tickets</a>
-            <a href="/archive/">Archive</a>
-            <a href="/auth/">Login</a>
-          </div>
+        <div>CELESTE HARBOR</div>
+      </footer>
 
-      <div>
-        CELESTE HARBOR
-      </div>
-    </footer>
-
+    </div>
   </div>
-
-  <script>
-    const harborWeather = [
-      {
-        main: "Tonight: Fog drifts near the eastern lighthouse.",
-        sub: "The sea is unclear, but the harbor remains open.",
-        sea: "Foggy",
-        light: "Distant"
-      },
-      {
-        main: "Tonight: The sea is calm, but not silent.",
-        sub: "Small waves continue beneath the moonlight.",
-        sea: "Calm",
-        light: "Soft"
-      },
-      {
-        main: "Tonight: A small light remains at the edge of the harbor.",
-        sub: "No signal is needed. It is enough that it remains.",
-        sea: "Still",
-        light: "Faint"
-      },
-      {
-        main: "Tonight: The tide is low, and the moon is clear.",
-        sub: "There is room to breathe before the next voyage.",
-        sea: "Low tide",
-        light: "Clear"
-      },
-      {
-        main: "Tonight: The harbor waited without asking anything.",
-        sub: "You do not have to explain why you returned.",
-        sea: "Quiet",
-        light: "Waiting"
-      },
-      {
-        main: "Tonight: The lighthouse is visible through thin clouds.",
-        sub: "Not close, not far. Just enough to keep direction.",
-        sea: "Slow",
-        light: "Visible"
-      },
-      {
-        main: "Tonight: The water carries the sound of a distant voyage.",
-        sub: "Some ships are still moving beyond the dark.",
-        sea: "Moving",
-        light: "Far"
-      }
-    ];
-
-    const today = new Date();
-    const index = today.getDate() % harborWeather.length;
-    const weather = harborWeather[index];
-
-    document.getElementById("weatherMain").textContent = weather.main;
-    document.getElementById("weatherSub").textContent = weather.sub;
-    document.getElementById("weatherSea").textContent = weather.sea;
-    document.getElementById("weatherLight").textContent = weather.light;
-  </script>
 </body>
 </html>
