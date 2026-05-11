@@ -66,19 +66,21 @@
     }
 
     .entrance{
-      position:relative;
-      min-height:100vh;
-      width:100%;
-      overflow:hidden;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(5,8,17,.00) 0%,
-          rgba(5,8,17,.03) 46%,
-          rgba(5,8,17,.46) 100%
-        ),
-        url("/images/harbor-entrance.png") center / cover no-repeat;
-    }
+      .entrance{
+          position:relative;
+          min-height:100vh;
+          width:100%;
+          overflow:hidden;
+          background:
+            linear-gradient(
+              to bottom,
+              rgba(5,8,17,.00) 0%,
+              rgba(5,8,17,.02) 46%,
+              rgba(5,8,17,.42) 100%
+            ),
+            url("/images/harbor-entrance.png") center center / contain no-repeat,
+            #050811;
+        }
 
     .entrance::before{
       content:"";
@@ -209,11 +211,13 @@
           linear-gradient(
             to bottom,
             rgba(5,8,17,.00) 0%,
-            rgba(5,8,17,.05) 46%,
-            rgba(5,8,17,.48) 100%
+            rgba(5,8,17,.04) 46%,
+            rgba(5,8,17,.50) 100%
           ),
-          url("/images/harbor-entrance.png") center top / cover no-repeat;
+          url("/images/harbor-entrance.png") center center / contain no-repeat,
+          #050811;
       }
+    }
 
       .entrance::after{
         background:
