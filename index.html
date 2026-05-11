@@ -23,21 +23,30 @@
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root{
       --bg:#050811;
       --text:#e8ebef;
       --muted:#a0a8bb;
+      --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --panel:rgba(5,8,17,.58);
     }
 
     *{
       box-sizing:border-box;
     }
 
+    html,
     body{
       margin:0;
+      min-height:100%;
+    }
+
+    body{
       min-height:100vh;
       color:var(--text);
       font-family:
@@ -53,20 +62,24 @@
       text-decoration:none;
     }
 
+    button{
+      font-family:inherit;
+    }
+
     .entrance{
       min-height:100vh;
       position:relative;
       display:flex;
-      align-items:center;
+      align-items:stretch;
       justify-content:center;
-      padding:42px 20px;
+      padding:34px 20px;
       overflow:hidden;
       background:
         linear-gradient(
-          90deg,
-          rgba(5,8,17,.94) 0%,
-          rgba(5,8,17,.78) 38%,
-          rgba(5,8,17,.42) 100%
+          to bottom,
+          rgba(5,8,17,.16) 0%,
+          rgba(5,8,17,.22) 46%,
+          rgba(5,8,17,.82) 100%
         ),
         url("/images/harbor-entrance.png") center / cover no-repeat;
     }
@@ -76,9 +89,8 @@
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 22% 18%, rgba(169,183,255,.14), transparent 32%),
-        radial-gradient(circle at 72% 72%, rgba(169,183,255,.10), transparent 34%),
-        rgba(3,5,11,.18);
+        radial-gradient(circle at 50% 18%, rgba(169,183,255,.14), transparent 30%),
+        radial-gradient(circle at 72% 78%, rgba(169,183,255,.08), transparent 34%);
       pointer-events:none;
     }
 
@@ -86,20 +98,21 @@
       content:"";
       position:absolute;
       inset:0;
-      background:linear-gradient(
-        to bottom,
-        rgba(5,8,17,.08),
-        rgba(5,8,17,.22) 48%,
-        rgba(5,8,17,.74)
-      );
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(3,5,11,.06) 0%,
+          rgba(3,5,11,.08) 48%,
+          rgba(3,5,11,.86) 100%
+        );
       pointer-events:none;
     }
 
     .wrap{
-      width:min(980px, 100%);
+      width:min(980px,100%);
+      min-height:calc(100vh - 68px);
       position:relative;
       z-index:1;
-      min-height:calc(100vh - 84px);
       display:flex;
       flex-direction:column;
     }
@@ -111,12 +124,12 @@
       gap:18px;
       color:var(--muted);
       font-size:13px;
-      margin-bottom:auto;
     }
 
     .brand{
       color:var(--text);
       letter-spacing:.06em;
+      text-shadow:0 2px 18px rgba(0,0,0,.55);
     }
 
     .nav{
@@ -128,6 +141,7 @@
 
     .nav a{
       color:var(--muted);
+      text-shadow:0 2px 18px rgba(0,0,0,.55);
     }
 
     .nav a:hover{
@@ -135,38 +149,57 @@
     }
 
     main{
-      max-width:560px;
-      padding:76px 0 86px;
+      margin-top:auto;
+      padding:42px 0 30px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .gate{
+      width:min(620px,100%);
+      text-align:center;
+      padding:26px 24px 24px;
+      border:1px solid rgba(169,183,255,.20);
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(5,8,17,.42), rgba(5,8,17,.70)),
+        rgba(5,8,17,.38);
+      backdrop-filter:blur(8px);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,.42),
+        inset 0 0 0 1px rgba(255,255,255,.025);
     }
 
     .label{
-      font-size:13px;
+      font-size:12px;
       letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:22px;
+      margin-bottom:14px;
     }
 
     h1{
-      font-size:42px;
+      font-size:34px;
       line-height:1.65;
       font-weight:500;
-      margin:0 0 24px;
+      margin:0 0 18px;
+      text-shadow:0 2px 22px rgba(0,0,0,.48);
     }
 
     .lead{
-      font-size:15px;
-      line-height:2.1;
+      font-size:14px;
+      line-height:2;
       color:var(--muted);
+      margin:0 auto 24px;
       max-width:34rem;
-      margin:0 0 32px;
     }
 
     .actions{
       display:flex;
+      justify-content:center;
       flex-wrap:wrap;
       gap:14px;
-      margin-bottom:24px;
+      margin-bottom:16px;
     }
 
     .btn-primary,
@@ -174,12 +207,15 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      min-width:190px;
       padding:12px 20px;
       border-radius:999px;
       font-size:14px;
+      cursor:pointer;
     }
 
     .btn-primary{
+      border:1px solid transparent;
       background:linear-gradient(135deg,#a9b7ff,#d4dcff);
       color:#050811;
       box-shadow:0 14px 34px rgba(0,0,0,.34);
@@ -190,10 +226,9 @@
     }
 
     .btn-ghost{
-      border:1px solid rgba(169,183,255,.24);
+      border:1px solid rgba(169,183,255,.26);
       color:var(--muted);
-      background:rgba(5,8,17,.48);
-      backdrop-filter:blur(6px);
+      background:rgba(255,255,255,.025);
     }
 
     .btn-ghost:hover{
@@ -201,18 +236,23 @@
       color:var(--text);
     }
 
+    .status{
+      min-height:1.8em;
+      font-size:12px;
+      line-height:1.8;
+      color:var(--dim);
+      margin-top:8px;
+    }
+
     .note{
-      font-size:13px;
-      line-height:2;
-      color:var(--muted);
-      border-left:1px solid rgba(169,183,255,.38);
-      padding-left:16px;
-      max-width:34rem;
+      margin-top:12px;
+      font-size:12px;
+      line-height:1.8;
+      color:var(--dim);
     }
 
     footer{
-      margin-top:auto;
-      padding-top:18px;
+      padding-top:16px;
       border-top:1px solid rgba(169,183,255,.16);
       display:flex;
       justify-content:space-between;
@@ -221,6 +261,7 @@
       gap:14px;
       font-size:12px;
       color:var(--muted);
+      text-shadow:0 2px 18px rgba(0,0,0,.55);
     }
 
     .footer-links{
@@ -235,19 +276,19 @@
 
     @media(max-width:760px){
       .entrance{
-        align-items:flex-start;
+        padding:28px 16px;
         background:
           linear-gradient(
             to bottom,
-            rgba(5,8,17,.88) 0%,
-            rgba(5,8,17,.68) 48%,
-            rgba(5,8,17,.92) 100%
+            rgba(5,8,17,.08) 0%,
+            rgba(5,8,17,.24) 42%,
+            rgba(5,8,17,.88) 100%
           ),
           url("/images/harbor-entrance.png") center top / cover no-repeat;
       }
 
       .wrap{
-        min-height:calc(100vh - 84px);
+        min-height:calc(100vh - 56px);
       }
 
       header{
@@ -262,31 +303,40 @@
       }
 
       main{
-        padding:70px 0 70px;
+        padding:36px 0 26px;
+      }
+
+      .gate{
+        padding:22px 18px 20px;
+        border-radius:20px;
       }
 
       h1{
-        font-size:34px;
-      }
-    }
-
-    @media(max-width:480px){
-      h1{
-        font-size:30px;
+        font-size:29px;
       }
 
       .lead{
-        font-size:14px;
+        font-size:13px;
       }
 
       .actions{
         flex-direction:column;
-        align-items:flex-start;
+        align-items:stretch;
       }
 
       .btn-primary,
       .btn-ghost{
         width:100%;
+      }
+    }
+
+    @media(max-width:420px){
+      h1{
+        font-size:27px;
+      }
+
+      .gate{
+        padding:20px 16px;
       }
     }
   </style>
@@ -311,38 +361,35 @@
       </header>
 
       <main>
-        <div class="label">Quiet Reflective Web</div>
+        <section class="gate" aria-label="Celeste Harbor entrance">
+          <div class="label">Quiet Reflective Web</div>
 
-        <h1>
-          月夜の港へ、<br>
-          静かに帰る。
-        </h1>
+          <h1>
+            月夜の港へ、<br>
+            静かに帰る。
+          </h1>
 
-        <p class="lead">
-          Celeste Harbor は、
-          航海を続けるための小さな帰港空間です。<br>
-          記録を残し、断片に触れ、
-          必要な夜にまた戻ってくるために。
-        </p>
+          <p class="lead">
+            航海記録を残し、港のネコに受け取られ、
+            必要な夜にまた戻ってくるための小さな港です。
+          </p>
 
-        <div class="actions">
-          <a class="btn-primary" href="/harbor/">
-            港へ入る
-          </a>
+          <div class="actions">
+            <button class="btn-primary" id="loginBtn" type="button">
+              Googleでログインして帰港する
+            </button>
 
-          <a class="btn-ghost" href="/log/">
-            航海記録を残す
-          </a>
+            <a class="btn-ghost" href="/harbor/">
+              ログインせず港を見る
+            </a>
+          </div>
 
-          <a class="btn-ghost" href="/voyage/">
-            月夜の航海へ
-          </a>
-        </div>
+          <div class="status" id="status"></div>
 
-        <div class="note">
-          急ぐ必要はありません。<br>
-          今夜の港は、静かに開いています。
-        </div>
+          <div class="note">
+            ログインすると、Voyage Log と Harbor Cat が使えるようになります。
+          </div>
+        </section>
       </main>
 
       <footer>
@@ -359,5 +406,61 @@
 
     </div>
   </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const loginBtn = document.getElementById("loginBtn");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(message){
+      statusEl.textContent = message || "";
+    }
+
+    async function checkSession(){
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        return;
+      }
+
+      if(data.session && data.session.user){
+        loginBtn.textContent = "港へ入る";
+        loginBtn.addEventListener("click", function(){
+          window.location.href = "/harbor/";
+        });
+      }else{
+        loginBtn.addEventListener("click", login);
+      }
+    }
+
+    async function login(){
+      setStatus("Googleログインへ進みます。");
+
+      const { error } = await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/harbor/",
+          queryParams: {
+            prompt: "select_account"
+          }
+        }
+      });
+
+      if(error){
+        console.error("login error:", error);
+        setStatus(error.message);
+      }
+    }
+
+    checkSession();
+  </script>
 </body>
 </html>
