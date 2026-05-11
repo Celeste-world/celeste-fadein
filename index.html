@@ -22,7 +22,6 @@
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -31,9 +30,7 @@
       --text:#e8ebef;
       --muted:#a0a8bb;
       --dim:#747f96;
-      --line:#252b3a;
       --accent:#a9b7ff;
-      --panel:rgba(5,8,17,.58);
     }
 
     *{
@@ -43,18 +40,20 @@
     html,
     body{
       margin:0;
+      width:100%;
       min-height:100%;
     }
 
     body{
       min-height:100vh;
+      background:#050811;
       color:var(--text);
       font-family:
         "Hiragino Mincho ProN",
         "Yu Mincho",
         "Noto Serif JP",
         serif;
-      background:#050811;
+      overflow:hidden;
     }
 
     a{
@@ -67,19 +66,16 @@
     }
 
     .entrance{
-      min-height:100vh;
       position:relative;
-      display:flex;
-      align-items:stretch;
-      justify-content:center;
-      padding:34px 20px;
+      min-height:100vh;
+      width:100%;
       overflow:hidden;
       background:
         linear-gradient(
           to bottom,
-          rgba(5,8,17,.16) 0%,
-          rgba(5,8,17,.22) 46%,
-          rgba(5,8,17,.82) 100%
+          rgba(5,8,17,.02) 0%,
+          rgba(5,8,17,.04) 46%,
+          rgba(5,8,17,.70) 100%
         ),
         url("/images/harbor-entrance.png") center / cover no-repeat;
     }
@@ -89,117 +85,58 @@
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 50% 18%, rgba(169,183,255,.14), transparent 30%),
-        radial-gradient(circle at 72% 78%, rgba(169,183,255,.08), transparent 34%);
+        radial-gradient(circle at 50% 18%, rgba(169,183,255,.10), transparent 30%),
+        linear-gradient(to bottom, rgba(3,5,11,.03), rgba(3,5,11,.36));
       pointer-events:none;
-    }
-
-    .entrance::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(3,5,11,.06) 0%,
-          rgba(3,5,11,.08) 48%,
-          rgba(3,5,11,.86) 100%
-        );
-      pointer-events:none;
-    }
-
-    .wrap{
-      width:min(980px,100%);
-      min-height:calc(100vh - 68px);
-      position:relative;
-      z-index:1;
-      display:flex;
-      flex-direction:column;
-    }
-
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .brand{
-      color:var(--text);
-      letter-spacing:.06em;
-      text-shadow:0 2px 18px rgba(0,0,0,.55);
-    }
-
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .nav a{
-      color:var(--muted);
-      text-shadow:0 2px 18px rgba(0,0,0,.55);
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
-    main{
-      margin-top:auto;
-      padding:42px 0 30px;
-      display:flex;
-      justify-content:center;
     }
 
     .gate{
-      width:min(620px,100%);
-      text-align:center;
-      padding:26px 24px 24px;
-      border:1px solid rgba(169,183,255,.20);
+      position:absolute;
+      left:50%;
+      bottom:32px;
+      transform:translateX(-50%);
+      z-index:2;
+      width:min(760px, calc(100% - 32px));
+      padding:18px 20px;
       border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(5,8,17,.42), rgba(5,8,17,.70)),
-        rgba(5,8,17,.38);
-      backdrop-filter:blur(8px);
+      border:1px solid rgba(169,183,255,.20);
+      background:rgba(5,8,17,.56);
+      backdrop-filter:blur(10px);
       box-shadow:
-        0 24px 70px rgba(0,0,0,.42),
+        0 24px 70px rgba(0,0,0,.46),
         inset 0 0 0 1px rgba(255,255,255,.025);
+      text-align:center;
     }
 
-    .label{
-      font-size:12px;
+    .brand{
+      font-size:13px;
       letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:14px;
+      margin-bottom:8px;
     }
 
     h1{
-      font-size:34px;
-      line-height:1.65;
+      margin:0 0 10px;
+      font-size:24px;
       font-weight:500;
-      margin:0 0 18px;
-      text-shadow:0 2px 22px rgba(0,0,0,.48);
+      line-height:1.55;
+      text-shadow:0 2px 18px rgba(0,0,0,.45);
     }
 
     .lead{
-      font-size:14px;
-      line-height:2;
+      margin:0 auto 16px;
+      max-width:36rem;
+      font-size:13px;
+      line-height:1.9;
       color:var(--muted);
-      margin:0 auto 24px;
-      max-width:34rem;
     }
 
     .actions{
       display:flex;
       justify-content:center;
       flex-wrap:wrap;
-      gap:14px;
-      margin-bottom:16px;
+      gap:12px;
     }
 
     .btn-primary,
@@ -208,9 +145,9 @@
       align-items:center;
       justify-content:center;
       min-width:190px;
-      padding:12px 20px;
+      padding:11px 18px;
       border-radius:999px;
-      font-size:14px;
+      font-size:13px;
       cursor:pointer;
     }
 
@@ -218,7 +155,7 @@
       border:1px solid transparent;
       background:linear-gradient(135deg,#a9b7ff,#d4dcff);
       color:#050811;
-      box-shadow:0 14px 34px rgba(0,0,0,.34);
+      box-shadow:0 12px 30px rgba(0,0,0,.32);
     }
 
     .btn-primary:hover{
@@ -226,7 +163,7 @@
     }
 
     .btn-ghost{
-      border:1px solid rgba(169,183,255,.26);
+      border:1px solid rgba(169,183,255,.28);
       color:var(--muted);
       background:rgba(255,255,255,.025);
     }
@@ -237,106 +174,66 @@
     }
 
     .status{
-      min-height:1.8em;
-      font-size:12px;
-      line-height:1.8;
-      color:var(--dim);
+      min-height:1.5em;
       margin-top:8px;
-    }
-
-    .note{
-      margin-top:12px;
       font-size:12px;
-      line-height:1.8;
+      line-height:1.5;
       color:var(--dim);
-    }
-
-    footer{
-      padding-top:16px;
-      border-top:1px solid rgba(169,183,255,.16);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-      font-size:12px;
-      color:var(--muted);
-      text-shadow:0 2px 18px rgba(0,0,0,.55);
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    footer a:hover{
-      color:var(--text);
     }
 
     @media(max-width:760px){
       .entrance{
-        padding:28px 16px;
         background:
           linear-gradient(
             to bottom,
-            rgba(5,8,17,.08) 0%,
-            rgba(5,8,17,.24) 42%,
-            rgba(5,8,17,.88) 100%
+            rgba(5,8,17,.00) 0%,
+            rgba(5,8,17,.10) 48%,
+            rgba(5,8,17,.78) 100%
           ),
           url("/images/harbor-entrance.png") center top / cover no-repeat;
       }
 
-      .wrap{
-        min-height:calc(100vh - 56px);
-      }
-
-      header{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-
-      .nav{
-        gap:12px;
-        font-size:12px;
-        justify-content:flex-start;
-      }
-
-      main{
-        padding:36px 0 26px;
-      }
-
       .gate{
-        padding:22px 18px 20px;
+        bottom:22px;
+        width:calc(100% - 24px);
+        padding:16px 16px;
         border-radius:20px;
       }
 
       h1{
-        font-size:29px;
+        font-size:21px;
       }
 
       .lead{
-        font-size:13px;
+        font-size:12px;
+        line-height:1.8;
       }
 
       .actions{
         flex-direction:column;
-        align-items:stretch;
+        gap:10px;
       }
 
       .btn-primary,
       .btn-ghost{
         width:100%;
+        min-width:0;
       }
     }
 
-    @media(max-width:420px){
-      h1{
-        font-size:27px;
+    @media(max-height:620px){
+      .gate{
+        bottom:14px;
+        padding:14px;
       }
 
-      .gate{
-        padding:20px 16px;
+      h1{
+        font-size:20px;
+        margin-bottom:6px;
+      }
+
+      .lead{
+        display:none;
       }
     }
   </style>
@@ -344,67 +241,30 @@
 
 <body>
   <div class="entrance">
-    <div class="wrap">
+    <section class="gate" aria-label="Celeste Harbor entrance">
+      <div class="brand">Celeste Harbor</div>
 
-      <header>
-        <a class="brand" href="/">
-          Celeste Harbor
+      <h1>
+        月夜の港へ、静かに帰る。
+      </h1>
+
+      <p class="lead">
+        航海記録を残し、港のネコに受け取られ、
+        必要な夜にまた戻ってくるための小さな港です。
+      </p>
+
+      <div class="actions">
+        <button class="btn-primary" id="loginBtn" type="button">
+          Googleでログインして帰港する
+        </button>
+
+        <a class="btn-ghost" href="/harbor/">
+          ログインせず港を見る
         </a>
+      </div>
 
-        <nav class="nav" aria-label="Main navigation">
-          <a href="/harbor/">Harbor</a>
-          <a href="/log/">Voyage Log</a>
-          <a href="/voyage/">Moonlit Voyage</a>
-          <a href="/fragments/">Fragments</a>
-          <a href="/map/">Map</a>
-        </nav>
-      </header>
-
-      <main>
-        <section class="gate" aria-label="Celeste Harbor entrance">
-          <div class="label">Quiet Reflective Web</div>
-
-          <h1>
-            月夜の港へ、<br>
-            静かに帰る。
-          </h1>
-
-          <p class="lead">
-            航海記録を残し、港のネコに受け取られ、
-            必要な夜にまた戻ってくるための小さな港です。
-          </p>
-
-          <div class="actions">
-            <button class="btn-primary" id="loginBtn" type="button">
-              Googleでログインして帰港する
-            </button>
-
-            <a class="btn-ghost" href="/harbor/">
-              ログインせず港を見る
-            </a>
-          </div>
-
-          <div class="status" id="status"></div>
-
-          <div class="note">
-            ログインすると、Voyage Log と Harbor Cat が使えるようになります。
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div class="footer-links">
-          <a href="/harbor/">Harbor</a>
-          <a href="/log/">Voyage Log</a>
-          <a href="/fragments/">Fragments</a>
-          <a href="/tickets/">Tickets</a>
-          <a href="/archive/">Archive</a>
-        </div>
-
-        <div>CELESTE HARBOR</div>
-      </footer>
-
-    </div>
+      <div class="status" id="status"></div>
+    </section>
   </div>
 
   <script>
