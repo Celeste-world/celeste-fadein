@@ -66,21 +66,19 @@
     }
 
     .entrance{
-      .entrance{
-          position:relative;
-          min-height:100vh;
-          width:100%;
-          overflow:hidden;
-          background:
-            linear-gradient(
-              to bottom,
-              rgba(5,8,17,.00) 0%,
-              rgba(5,8,17,.02) 46%,
-              rgba(5,8,17,.42) 100%
-            ),
-            url("/images/harbor-entrance.png") center center / contain no-repeat,
-            #050811;
-        }
+      position:relative;
+      min-height:100vh;
+      width:100%;
+      overflow:hidden;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(5,8,17,.02) 0%,
+          rgba(5,8,17,.04) 46%,
+          rgba(5,8,17,.62) 100%
+        ),
+        url("/images/harbor-entrance.png") center center / cover no-repeat;
+    }
 
     .entrance::before{
       content:"";
@@ -100,8 +98,8 @@
         linear-gradient(
           to bottom,
           rgba(3,5,11,.00) 0%,
-          rgba(3,5,11,.02) 45%,
-          rgba(3,5,11,.52) 100%
+          rgba(3,5,11,.04) 45%,
+          rgba(3,5,11,.60) 100%
         );
       pointer-events:none;
     }
@@ -112,25 +110,16 @@
       bottom:18px;
       transform:translateX(-50%);
       z-index:2;
-      width:min(760px, calc(100% - 28px));
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:12px 14px;
-      border-radius:999px;
+      width:min(520px, calc(100% - 28px));
+      padding:14px;
+      border-radius:22px;
       border:1px solid rgba(169,183,255,.18);
-      background:rgba(5,8,17,.34);
+      background:rgba(5,8,17,.42);
       backdrop-filter:blur(8px);
       box-shadow:
         0 18px 48px rgba(0,0,0,.30),
         inset 0 0 0 1px rgba(255,255,255,.018);
-    }
-
-    .gate-text{
-      min-width:0;
-      text-align:left;
-      padding-left:6px;
+      text-align:center;
     }
 
     .brand{
@@ -140,32 +129,31 @@
       color:var(--accent);
       white-space:nowrap;
       text-shadow:0 2px 14px rgba(0,0,0,.5);
+      margin-bottom:4px;
     }
 
     .subline{
-      margin-top:2px;
       font-size:12px;
       color:var(--muted);
       white-space:nowrap;
       text-shadow:0 2px 14px rgba(0,0,0,.5);
+      margin-bottom:12px;
     }
 
     .actions{
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
       gap:10px;
-      width:360px;
-      max-width:100%;
-      flex-shrink:0;
+      width:100%;
     }
-    
+
     .btn-primary,
     .btn-ghost{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       width:100%;
-      padding:9px 14px;
+      padding:9px 12px;
       border-radius:999px;
       font-size:12px;
       cursor:pointer;
@@ -195,10 +183,8 @@
     }
 
     .status{
-      position:absolute;
-      left:20px;
-      bottom:-24px;
-      min-height:1.5em;
+      min-height:1.4em;
+      margin-top:8px;
       font-size:11px;
       line-height:1.5;
       color:var(--dim);
@@ -211,38 +197,28 @@
           linear-gradient(
             to bottom,
             rgba(5,8,17,.00) 0%,
-            rgba(5,8,17,.04) 46%,
-            rgba(5,8,17,.50) 100%
+            rgba(5,8,17,.08) 45%,
+            rgba(5,8,17,.70) 100%
           ),
-          url("/images/harbor-entrance.png") center center / contain no-repeat,
-          #050811;
+          url("/images/harbor-entrance.png") center top / cover no-repeat;
       }
-    }
 
       .entrance::after{
         background:
           linear-gradient(
             to bottom,
             rgba(3,5,11,.00) 0%,
-            rgba(3,5,11,.04) 48%,
-            rgba(3,5,11,.56) 100%
+            rgba(3,5,11,.06) 48%,
+            rgba(3,5,11,.68) 100%
           );
       }
 
       .gate{
-        bottom:14px;
+        bottom:12px;
         width:calc(100% - 20px);
         border-radius:18px;
-        flex-direction:column;
-        align-items:stretch;
-        gap:10px;
         padding:12px;
-        background:rgba(5,8,17,.32);
-      }
-
-      .gate-text{
-        text-align:center;
-        padding-left:0;
+        background:rgba(5,8,17,.40);
       }
 
       .brand{
@@ -254,24 +230,14 @@
       }
 
       .actions{
-        width:100%;
         grid-template-columns:1fr;
         gap:8px;
       }
-      
+
       .btn-primary,
       .btn-ghost{
-        width:100%;
-        min-width:0;
         padding:9px 10px;
         font-size:12px;
-      }
-
-      .status{
-        position:static;
-        text-align:center;
-        font-size:11px;
-        margin-top:-4px;
       }
     }
 
@@ -307,20 +273,17 @@
 <body>
   <div class="entrance">
     <section class="gate" aria-label="Celeste Harbor entrance">
-      <div class="gate-text">
-        <div class="brand">Celeste Harbor</div>
-        <div class="subline">月夜の港へ、静かに帰る。</div>
-      </div>
+      <div class="brand">Celeste Harbor</div>
+      <div class="subline">月夜の港へ、静かに帰る。</div>
 
       <div class="actions">
         <button class="btn-primary" id="loginBtn" type="button">
           Googleでログイン
         </button>
 
-      <a class="btn-ghost" href="/harbor/">
-        ログインせずに港を見る
-      </a>
-        
+        <a class="btn-ghost" href="/harbor/">
+          ログインせずに港を見る
+        </a>
       </div>
 
       <div class="status" id="status"></div>
