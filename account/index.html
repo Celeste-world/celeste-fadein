@@ -582,33 +582,71 @@
   }
 
   async function ensureUserVessel(){
-    if(!currentUser){
+  if(!currentUser){
+    return;
+  }
+
+  vesselEl.innerHTML = `
+    <div class="empty">
+      船室を確認しています...
+    </div>
+  `;
+
+  try{
+    const sessionResult = await client.auth.getSession();
+    const session = sessionResult?.data?.session;
+
+    if(!session || !session.access_token){
+      vesselEl.innerHTML = `
+        <div class="empty">
+          ログイン情報を確認できませんでした。<br>
+          もう一度ログインしてください。
+        </div>
+      `;
+      setStatus("ログイン情報を確認できませんでした。", true);
       return;
     }
 
-    vesselEl.innerHTML = `
-      <div class="empty">
-        船室を確認しています...
-      </div>
-    `;
+    const response = await fetch(
+      supabaseUrl + "/rest/v1/rpc/ensure_user_vessel",
+      {
+        method: "POST",
+        headers: {
+          "apikey": supabaseKey,
+          "Authorization": "Bearer " + session.access_token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+      }
+    );
 
-    const { data, error } = await client.rpc("ensure_user_vessel");
+    const result = await response.json();
 
-    if(error){
-      console.error("ensure_user_vessel error:", error);
+    if(!response.ok){
+      console.error("ensure_user_vessel fetch error:", result);
       vesselEl.innerHTML = `
         <div class="empty">
           船室の確認に失敗しました。<br>
           少し時間を置いて、もう一度お試しください。
         </div>
       `;
-      setStatus("船室の確認に失敗しました：" + error.message, true);
+      setStatus("船室の確認に失敗しました。", true);
       return;
     }
 
-    currentVessel = data;
+    currentVessel = result;
     renderVessel(currentVessel);
+  }catch(error){
+    console.error("ensure_user_vessel unexpected error:", error);
+    vesselEl.innerHTML = `
+      <div class="empty">
+        船室の確認中にエラーが発生しました。<br>
+        少し時間を置いて、もう一度お試しください。
+      </div>
+    `;
+    setStatus("船室の確認中にエラーが発生しました：" + error.message, true);
   }
+}
 
   function renderVessel(vessel){
     if(!vessel){
