@@ -304,6 +304,7 @@
       color:var(--muted);
       font-size:14px;
       line-height:2;
+      margin-bottom:16px;
     }
 
     .note{
@@ -314,6 +315,7 @@
       border-left:1px solid rgba(169,183,255,.42);
       padding-left:18px;
       margin-top:30px;
+      margin-bottom:34px;
     }
 
     footer{
@@ -413,7 +415,11 @@
       <section>
         <h2 class="section-title">My Vessel</h2>
 
-        <div id="vessel"></div>
+        <div id="vessel">
+          <div class="empty">
+            船室を確認しています...
+          </div>
+        </div>
 
         <p class="note">
           船は、航海記録と漂着物によって少しずつ整っていきます。<br>
@@ -467,6 +473,7 @@
 
   let currentUser = null;
   let currentVessel = null;
+  let currentAccessToken = null;
 
   function setStatus(message, isError = false){
     statusEl.textContent = message || "";
@@ -533,40 +540,9 @@
     logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
   }
 
-  async function checkSession(){
-    setStatus("ログイン状態を確認しています。");
-
-    const { data, error } = await client.auth.getSession();
-
-    if(error){
-      console.error("getSession error:", error);
-      currentUser = null;
-      userStatus.textContent = "ログイン状態の確認に失敗しました。";
-      setStatus(error.message, true);
-      updateAuthUI();
-      renderLoggedOutState();
-      return;
-    }
-
-    if(data.session && data.session.user){
-      currentUser = data.session.user;
-      userStatus.textContent = "ログイン中：" + currentUser.email;
-      setStatus("港の記録を確認しています。");
-      updateAuthUI();
-
-      await ensureUserVessel();
-      await loadTickets();
-    }else{
-      currentUser = null;
-      userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
-      renderLoggedOutState();
-      setStatus("ログインが必要です。");
-      updateAuthUI();
-    }
-  }
-
   function renderLoggedOutState(){
     currentVessel = null;
+    currentAccessToken = null;
 
     vesselEl.innerHTML = `
       <div class="empty">
@@ -581,22 +557,48 @@
     `;
   }
 
-  async function ensureUserVessel(){
-  if(!currentUser){
-    return;
+  async function checkSession(){
+    setStatus("ログイン状態を確認しています。");
+
+    const { data, error } = await client.auth.getSession();
+
+    if(error){
+      console.error("getSession error:", error);
+      currentUser = null;
+      currentAccessToken = null;
+      userStatus.textContent = "ログイン状態の確認に失敗しました。";
+      setStatus(error.message, true);
+      updateAuthUI();
+      renderLoggedOutState();
+      return;
+    }
+
+    if(data.session && data.session.user){
+      currentUser = data.session.user;
+      currentAccessToken = data.session.access_token;
+
+      userStatus.textContent = "ログイン中：" + currentUser.email;
+      setStatus("港の記録を確認しています。");
+      updateAuthUI();
+
+      await ensureUserVessel();
+      await loadTickets();
+    }else{
+      currentUser = null;
+      currentAccessToken = null;
+      userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
+      renderLoggedOutState();
+      setStatus("ログインが必要です。");
+      updateAuthUI();
+    }
   }
 
-  vesselEl.innerHTML = `
-    <div class="empty">
-      船室を確認しています...
-    </div>
-  `;
+  async function ensureUserVessel(){
+    if(!currentUser){
+      return;
+    }
 
-  try{
-    const sessionResult = await client.auth.getSession();
-    const session = sessionResult?.data?.session;
-
-    if(!session || !session.access_token){
+    if(!currentAccessToken){
       vesselEl.innerHTML = `
         <div class="empty">
           ログイン情報を確認できませんでした。<br>
@@ -607,46 +609,77 @@
       return;
     }
 
-    const response = await fetch(
-      supabaseUrl + "/rest/v1/rpc/ensure_user_vessel",
-      {
-        method: "POST",
-        headers: {
-          "apikey": supabaseKey,
-          "Authorization": "Bearer " + session.access_token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({})
+    vesselEl.innerHTML = `
+      <div class="empty">
+        船室を確認しています...
+      </div>
+    `;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(function(){
+      controller.abort();
+    }, 12000);
+
+    try{
+      const response = await fetch(
+        supabaseUrl + "/rest/v1/rpc/ensure_user_vessel",
+        {
+          method: "POST",
+          headers: {
+            "apikey": supabaseKey,
+            "Authorization": "Bearer " + currentAccessToken,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({}),
+          signal: controller.signal
+        }
+      );
+
+      clearTimeout(timeoutId);
+
+      let result = null;
+
+      try{
+        result = await response.json();
+      }catch(jsonError){
+        result = null;
       }
-    );
 
-    const result = await response.json();
+      if(!response.ok){
+        console.error("ensure_user_vessel fetch error:", result);
 
-    if(!response.ok){
-      console.error("ensure_user_vessel fetch error:", result);
+        vesselEl.innerHTML = `
+          <div class="empty">
+            船室の確認に失敗しました。<br>
+            少し時間を置いて、もう一度お試しください。
+          </div>
+        `;
+
+        setStatus(
+          "船室の確認に失敗しました：" + ((result && result.message) ? result.message : "unknown error"),
+          true
+        );
+
+        return;
+      }
+
+      currentVessel = result;
+      renderVessel(currentVessel);
+    }catch(error){
+      clearTimeout(timeoutId);
+
+      console.error("ensure_user_vessel unexpected error:", error);
+
       vesselEl.innerHTML = `
         <div class="empty">
-          船室の確認に失敗しました。<br>
+          船室の確認中にエラーが発生しました。<br>
           少し時間を置いて、もう一度お試しください。
         </div>
       `;
-      setStatus("船室の確認に失敗しました。", true);
-      return;
-    }
 
-    currentVessel = result;
-    renderVessel(currentVessel);
-  }catch(error){
-    console.error("ensure_user_vessel unexpected error:", error);
-    vesselEl.innerHTML = `
-      <div class="empty">
-        船室の確認中にエラーが発生しました。<br>
-        少し時間を置いて、もう一度お試しください。
-      </div>
-    `;
-    setStatus("船室の確認中にエラーが発生しました：" + error.message, true);
+      setStatus("船室の確認中にエラーが発生しました：" + error.message, true);
+    }
   }
-}
 
   function renderVessel(vessel){
     if(!vessel){
@@ -722,6 +755,7 @@
 
     currentUser = null;
     currentVessel = null;
+    currentAccessToken = null;
     userStatus.textContent = "未ログインです。";
     renderLoggedOutState();
     setStatus("ログアウトしました。");
@@ -823,17 +857,23 @@
   loginBtn.addEventListener("click", login);
   logoutBtn.addEventListener("click", logout);
 
-  client.auth.onAuthStateChange(async function(event, session){
+  client.auth.onAuthStateChange(function(event, session){
     if(session && session.user){
       currentUser = session.user;
+      currentAccessToken = session.access_token;
+
       userStatus.textContent = "ログイン中：" + currentUser.email;
       updateAuthUI();
 
-      await ensureUserVessel();
-      await loadTickets();
+      setTimeout(function(){
+        ensureUserVessel();
+        loadTickets();
+      }, 0);
     }else if(event === "SIGNED_OUT"){
       currentUser = null;
       currentVessel = null;
+      currentAccessToken = null;
+
       updateAuthUI();
       renderLoggedOutState();
     }
