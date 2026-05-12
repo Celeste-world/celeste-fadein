@@ -79,9 +79,7 @@
       color:var(--text);
     }
 
-    main{
-      flex:1;
-    }
+    main{ flex:1; }
 
     .label{
       font-size:13px;
@@ -144,9 +142,7 @@
       text-decoration:none;
     }
 
-    button{
-      border:0;
-    }
+    button{ border:0; }
 
     .btn-primary,
     .primary{
@@ -181,9 +177,7 @@
       min-height:1.8em;
     }
 
-    .status.error{
-      color:var(--danger);
-    }
+    .status.error{ color:var(--danger); }
 
     .section-title{
       font-size:20px;
@@ -192,12 +186,54 @@
       margin:0 0 18px;
     }
 
-    .vessel-card{
+    .vessel-card,
+    .finds-card{
       background:rgba(10,14,28,.68);
       border:1px solid rgba(70,84,132,.45);
       border-radius:18px;
       padding:22px;
       margin-bottom:16px;
+    }
+
+    .vessel-layout{
+      display:grid;
+      grid-template-columns:180px 1fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .image-box{
+      width:100%;
+      aspect-ratio:1 / 1;
+      border-radius:18px;
+      border:1px solid rgba(169,183,255,.2);
+      background:
+        radial-gradient(circle at top,rgba(169,183,255,.14),rgba(255,255,255,.02) 55%),
+        rgba(5,8,17,.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.7;
+      text-align:center;
+      padding:14px;
+    }
+
+    .image-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .image-box.small{
+      width:92px;
+      min-width:92px;
+      height:92px;
+      aspect-ratio:auto;
+      border-radius:16px;
     }
 
     .vessel-top{
@@ -231,7 +267,8 @@
       background:rgba(169,183,255,.06);
     }
 
-    .vessel-line{
+    .vessel-line,
+    .find-line{
       font-size:14px;
       line-height:2;
       color:var(--muted);
@@ -254,17 +291,25 @@
     }
 
     .next-box{
-      margin-top:18px;
+      margin-top:22px;
       padding:18px;
       border-radius:18px;
       background:rgba(169,183,255,.045);
       border:1px solid rgba(169,183,255,.22);
     }
 
+    .next-head{
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:16px;
+      align-items:start;
+      margin-bottom:16px;
+    }
+
     .next-title{
       font-size:16px;
       line-height:1.8;
-      margin-bottom:10px;
+      margin-bottom:8px;
       color:var(--text);
     }
 
@@ -306,12 +351,43 @@
       color:var(--muted);
       border:1px solid rgba(160,168,187,.28);
       background:rgba(255,255,255,.02);
+      min-width:54px;
+      text-align:center;
     }
 
     .requirement-count.ready{
       color:var(--ready);
       border-color:rgba(185,246,202,.35);
       background:rgba(185,246,202,.06);
+    }
+
+    .finds-grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .find-item{
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:16px;
+      padding:16px;
+      border-radius:16px;
+      background:rgba(10,14,28,.62);
+      border:1px solid rgba(70,84,132,.38);
+    }
+
+    .find-name{
+      font-size:16px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .find-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
     }
 
     .ticket{
@@ -360,9 +436,7 @@
       margin-top:16px;
     }
 
-    .ticket .actions{
-      margin-top:20px;
-    }
+    .ticket .actions{ margin-top:20px; }
 
     .tag{
       font-size:12px;
@@ -371,6 +445,12 @@
       border-radius:999px;
       padding:6px 12px;
       background:rgba(255,255,255,.02);
+    }
+
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
     }
 
     .empty{
@@ -414,14 +494,10 @@
       flex-wrap:wrap;
     }
 
-    footer a:hover{
-      color:var(--text);
-    }
+    footer a:hover{ color:var(--text); }
 
-    @media(max-width:640px){
-      .wrap{
-        padding:36px 16px 32px;
-      }
+    @media(max-width:700px){
+      .wrap{ padding:36px 16px 32px; }
 
       .site-header{
         align-items:flex-start;
@@ -434,12 +510,20 @@
         font-size:12px;
       }
 
-      h1{
-        font-size:31px;
+      h1{ font-size:31px; }
+
+      .panel{ padding:20px; }
+
+      .vessel-layout,
+      .next-head,
+      .find-item{
+        grid-template-columns:1fr;
       }
 
-      .panel{
-        padding:20px;
+      .image-box.small{
+        width:100%;
+        height:auto;
+        aspect-ratio:1 / 1;
       }
 
       .requirement{
@@ -509,6 +593,21 @@
       </section>
 
       <section>
+        <h2 class="section-title">Harbor Finds</h2>
+
+        <div id="harborFinds">
+          <div class="empty">
+            漂着物を確認しています...
+          </div>
+        </div>
+
+        <p class="note">
+          Harbor Finds は、航海記録のあとに港へ流れ着く小さなものです。<br>
+          それぞれの漂着物は、次の出航準備に静かにつながっていきます。
+        </p>
+      </section>
+
+      <section>
         <h2 class="section-title">Available Tickets</h2>
 
         <div id="tickets"></div>
@@ -550,6 +649,7 @@
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
   const vesselEl = document.getElementById("vessel");
+  const harborFindsEl = document.getElementById("harborFinds");
   const ticketsEl = document.getElementById("tickets");
 
   let currentUser = null;
@@ -607,6 +707,31 @@
     return type || "Voyage Ticket";
   }
 
+  function imageBox(imagePath, label, small = false){
+    const safeLabel = escapeHtml(label || "Image");
+    const sizeClass = small ? " image-box small" : "image-box";
+
+    if(!imagePath){
+      return `
+        <div class="${sizeClass}">
+          ${safeLabel}<br>
+          image pending
+        </div>
+      `;
+    }
+
+    return `
+      <div class="${sizeClass}">
+        <img
+          src="${escapeHtml(imagePath)}"
+          alt="${safeLabel}"
+          loading="lazy"
+          onerror="this.style.display='none'; this.parentElement.innerHTML='${safeLabel}<br>image pending';"
+        >
+      </div>
+    `;
+  }
+
   function updateAuthUI(){
     const loggedIn = Boolean(currentUser);
 
@@ -620,6 +745,12 @@
     vesselEl.innerHTML = `
       <div class="empty">
         ログインすると、あなたの船が港に用意されます。
+      </div>
+    `;
+
+    harborFindsEl.innerHTML = `
+      <div class="empty">
+        ログインすると、港に漂着したものを確認できます。
       </div>
     `;
 
@@ -691,6 +822,7 @@
 
       await ensureUserVessel();
       await loadVesselDisplay();
+      await loadHarborFinds();
       await loadTickets();
     }else{
       currentUser = null;
@@ -786,6 +918,7 @@
     if(requirements && requirements.length > 0){
       const nextName = requirements[0].next_vessel_name_ja || "次の船";
       const nextDescription = requirements[0].next_vessel_description || "";
+      const nextImagePath = requirements[0].next_vessel_image_path || "";
 
       const itemsHtml = requirements.map(item => {
         const readyClass = item.is_ready ? " ready" : "";
@@ -809,13 +942,19 @@
 
       nextHtml = `
         <div class="next-box">
-          <div class="next-title">
-            次の船：${escapeHtml(nextName)}
-          </div>
+          <div class="next-head">
+            ${imageBox(nextImagePath, nextName, true)}
 
-          <p class="vessel-line">
-            ${escapeHtml(nextDescription)}
-          </p>
+            <div>
+              <div class="next-title">
+                次の船：${escapeHtml(nextName)}
+              </div>
+
+              <p class="vessel-line">
+                ${escapeHtml(nextDescription)}
+              </p>
+            </div>
+          </div>
 
           <div class="requirements">
             ${itemsHtml}
@@ -838,34 +977,108 @@
 
     vesselEl.innerHTML = `
       <div class="vessel-card">
-        <div class="vessel-top">
+        <div class="vessel-layout">
+          ${imageBox(vessel.image_path, vessel.name_ja)}
+
           <div>
-            <div class="vessel-name">${escapeHtml(vessel.name_ja)}</div>
-            <div class="vessel-key">${escapeHtml(vessel.vessel_key)}</div>
+            <div class="vessel-top">
+              <div>
+                <div class="vessel-name">${escapeHtml(vessel.name_ja)}</div>
+                <div class="vessel-key">${escapeHtml(vessel.vessel_key)}</div>
+              </div>
+
+              <div class="vessel-status">
+                ${escapeHtml(vesselStatus)}
+              </div>
+            </div>
+
+            <p class="vessel-line">
+              ${escapeHtml(vessel.description)}
+            </p>
+
+            <div class="cabin-box">
+              <div class="cabin-title">Cabin</div>
+              <p class="vessel-line">
+                ${escapeHtml(vessel.cabin_description)}
+              </p>
+            </div>
+
+            <div class="ticket-meta">
+              <span class="tag">My Vessel</span>
+              <span class="tag">${vessel.is_current ? "Current" : "Owned"}</span>
+            </div>
           </div>
-
-          <div class="vessel-status">
-            ${escapeHtml(vesselStatus)}
-          </div>
-        </div>
-
-        <p class="vessel-line">
-          ${escapeHtml(vessel.description)}
-        </p>
-
-        <div class="cabin-box">
-          <div class="cabin-title">Cabin</div>
-          <p class="vessel-line">
-            ${escapeHtml(vessel.cabin_description)}
-          </p>
-        </div>
-
-        <div class="ticket-meta">
-          <span class="tag">My Vessel</span>
-          <span class="tag">${vessel.is_current ? "Current" : "Owned"}</span>
         </div>
 
         ${nextHtml}
+      </div>
+    `;
+  }
+
+  async function loadHarborFinds(){
+    if(!currentUser || !currentAccessToken){
+      return;
+    }
+
+    try{
+      const userId = encodeURIComponent(currentUser.id);
+
+      const finds = await fetchSupabase(
+        "/rest/v1/user_harbor_items_view?user_id=eq." + userId + "&select=*&order=name_ja.asc"
+      );
+
+      renderHarborFinds(Array.isArray(finds) ? finds : []);
+    }catch(error){
+      console.error("load harbor finds error:", error);
+
+      harborFindsEl.innerHTML = `
+        <div class="empty">
+          漂着物を読み込めませんでした。<br>
+          ${escapeHtml(error.message)}
+        </div>
+      `;
+
+      setStatus("漂着物を読み込めませんでした：" + error.message, true);
+    }
+  }
+
+  function renderHarborFinds(finds){
+    if(!finds || finds.length === 0){
+      harborFindsEl.innerHTML = `
+        <div class="empty">
+          まだ港に漂着物はありません。<br>
+          航海記録を残したあと、何かが流れ着くことがあります。
+        </div>
+      `;
+      return;
+    }
+
+    const itemsHtml = finds.map(item => {
+      return `
+        <div class="find-item">
+          ${imageBox(item.image_path, item.name_ja, true)}
+
+          <div>
+            <div class="find-name">${escapeHtml(item.name_ja)}</div>
+            <p class="find-line">
+              ${escapeHtml(item.origin_text || item.description)}
+            </p>
+
+            <div class="find-meta">
+              <span class="tag">数量：${escapeHtml(item.quantity)}</span>
+              <span class="tag">${escapeHtml(item.rarity)}</span>
+              <span class="tag">${escapeHtml(item.area_hint)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    harborFindsEl.innerHTML = `
+      <div class="finds-card">
+        <div class="finds-grid">
+          ${itemsHtml}
+        </div>
       </div>
     `;
   }
@@ -1012,6 +1225,7 @@
       setTimeout(function(){
         ensureUserVessel()
           .then(loadVesselDisplay)
+          .then(loadHarborFinds)
           .then(loadTickets)
           .catch(function(error){
             console.error("auth state load error:", error);
