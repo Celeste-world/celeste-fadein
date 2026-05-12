@@ -483,6 +483,12 @@
       background:rgba(169,183,255,.05);
     }
 
+    .read-more-wrap{
+      display:flex;
+      justify-content:center;
+      margin-top:18px;
+    }
+
     .ticket{
       background:rgba(10,14,28,.68);
       border:1px solid rgba(70,84,132,.45);
@@ -763,6 +769,8 @@
 
   let currentUser = null;
   let currentAccessToken = null;
+  let allTimelineEvents = [];
+  let showAllTimeline = false;
 
   function setStatus(message, isError = false){
     statusEl.textContent = message || "";
@@ -888,6 +896,8 @@
 
   function renderLoggedOutState(){
     currentAccessToken = null;
+    allTimelineEvents = [];
+    showAllTimeline = false;
 
     vesselEl.innerHTML = `
       <div class="empty">
@@ -1374,7 +1384,10 @@
         "/rest/v1/user_timeline_events_view?user_id=eq." + userId + "&select=*&order=created_at.desc&limit=10"
       );
 
-      renderTimeline(Array.isArray(events) ? events : []);
+      allTimelineEvents = Array.isArray(events) ? events : [];
+      showAllTimeline = false;
+
+      renderTimeline();
     }catch(error){
       console.error("load timeline error:", error);
 
@@ -1389,8 +1402,8 @@
     }
   }
 
-  function renderTimeline(events){
-    if(!events || events.length === 0){
+  function renderTimeline(){
+    if(!allTimelineEvents || allTimelineEvents.length === 0){
       timelineEl.innerHTML = `
         <div class="empty">
           まだ港に残った記録はありません。<br>
@@ -1399,6 +1412,10 @@
       `;
       return;
     }
+
+    const events = showAllTimeline
+      ? allTimelineEvents
+      : allTimelineEvents.slice(0, 3);
 
     const itemsHtml = events.map(event => {
       return `
@@ -1424,11 +1441,22 @@
       `;
     }).join("");
 
+    const toggleHtml = allTimelineEvents.length > 3
+      ? `
+        <div class="read-more-wrap">
+          <button class="btn-ghost" id="timelineToggleBtn" type="button">
+            ${showAllTimeline ? "Show less" : "Read more"}
+          </button>
+        </div>
+      `
+      : "";
+
     timelineEl.innerHTML = `
       <div class="timeline-card">
         <div class="timeline-list">
           ${itemsHtml}
         </div>
+        ${toggleHtml}
       </div>
     `;
   }
@@ -1572,6 +1600,17 @@
     }
 
     checkAndUnlockNextVessel();
+  });
+
+  timelineEl.addEventListener("click", function(event){
+    const button = event.target.closest("#timelineToggleBtn");
+
+    if(!button){
+      return;
+    }
+
+    showAllTimeline = !showAllTimeline;
+    renderTimeline();
   });
 
   client.auth.onAuthStateChange(function(event, session){
