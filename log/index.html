@@ -654,6 +654,7 @@
 
     const maxContentLength = 1500;
     let currentUser = null;
+    let currentAccessToken = null;
     let allLogs = [];
     let showAllLogs = false;
 
@@ -670,8 +671,6 @@
       "港のネコが、桟橋の影で記録を読んでいます。\n灯台の光が、ゆっくり海をなぞっています。",
       "港のネコが、足音を立てずに記録へ近づいています。\n少しだけ、港が静かになりました。"
     ];
-
-    const driftTicketTitle = "Drift Ticket";
 
     const catIcons = {
       reading: [
@@ -693,6 +692,20 @@
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
     }
 
     function updateCharCount(){
@@ -749,21 +762,21 @@
       }
     }
 
-    function appendCatScrollNotice(message, label = "Drift Ticket"){
+    function appendCatScrollNotice(message, label = "Harbor Find"){
       const current = catReplyText.textContent.trim();
-    
+
       const notice = [
         "── " + label + " ──",
         message
       ].join("\n\n");
-    
+
       catReplyText.textContent = current
         ? current + "\n\n" + notice
         : notice;
-    
+
       catOverlay.classList.add("visible");
       catOverlay.setAttribute("aria-hidden", "false");
-    
+
       catScrollSub.textContent = "A quiet reply from the harbor";
       catIconWrap.classList.remove("reading");
     }
@@ -784,6 +797,41 @@
         .replaceAll("'", "&#039;");
     }
 
+    async function fetchSupabase(path, options = {}){
+      if(!currentAccessToken){
+        throw new Error("Missing access token");
+      }
+
+      const response = await fetch(
+        supabaseUrl + path,
+        {
+          method: options.method || "GET",
+          headers: {
+            "apikey": supabaseKey,
+            "Authorization": "Bearer " + currentAccessToken,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: options.body ? JSON.stringify(options.body) : undefined
+        }
+      );
+
+      let result = null;
+
+      try{
+        result = await response.json();
+      }catch(error){
+        result = null;
+      }
+
+      if(!response.ok){
+        console.error("Supabase fetch error:", result);
+        throw new Error((result && result.message) ? result.message : "Supabase request failed");
+      }
+
+      return result;
+    }
+
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
 
@@ -791,6 +839,8 @@
 
       if(error){
         console.error("getSession error:", error);
+        currentUser = null;
+        currentAccessToken = null;
         userStatus.textContent = "ログイン状態の確認に失敗しました。";
         setStatus(error.message, true);
         updateAuthUI();
@@ -799,12 +849,14 @@
 
       if(data.session && data.session.user){
         currentUser = data.session.user;
-        userStatus.textContent = "ログイン中：" + currentUser.email;
+        currentAccessToken = data.session.access_token;
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("港へ戻りました。");
         updateAuthUI();
         await loadLogs();
       }else{
         currentUser = null;
+        currentAccessToken = null;
         allLogs = [];
         userStatus.textContent = "未ログインです。先にGoogleでログインしてください。";
         setStatus("ログインすると航海記録を保存できます。");
@@ -844,6 +896,7 @@
       }
 
       currentUser = null;
+      currentAccessToken = null;
       allLogs = [];
       showAllLogs = false;
       logsEl.innerHTML = "";
@@ -875,13 +928,30 @@
       const { data, error } = await client.functions.invoke("grant-drift-ticket", {
         body: {}
       });
-    
+
       if(error){
         console.error("grant-drift-ticket invoke error:", error);
         return null;
       }
-    
+
       return data || null;
+    }
+
+    async function callGrantHarborFind(){
+      try{
+        const result = await fetchSupabase(
+          "/rest/v1/rpc/grant_random_harbor_find",
+          {
+            method: "POST",
+            body: {}
+          }
+        );
+
+        return result || null;
+      }catch(error){
+        console.error("grant_random_harbor_find error:", error);
+        return null;
+      }
     }
 
     async function saveLog(){
@@ -943,7 +1013,19 @@
           );
           setStatus("航海記録を保存しました。");
         }
-        
+
+        const harborFindResult = await callGrantHarborFind();
+
+        if(harborFindResult && harborFindResult.found){
+          appendCatScrollNotice(
+            harborFindResult.message ||
+              "今夜、港に小さな漂着物が流れ着きました。",
+            "Harbor Find"
+          );
+
+          setStatus("航海記録を保存しました。港に漂着物が届きました。");
+        }
+
         const driftResult = await callGrantDriftTicket();
 
         if(driftResult && driftResult.granted){
@@ -952,7 +1034,7 @@
               "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。",
             "Drift Ticket"
           );
-        
+
           setStatus("航海記録を保存しました。漂着チケットが届きました。");
         }
 
@@ -1142,11 +1224,13 @@
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
         currentUser = session.user;
-        userStatus.textContent = "ログイン中：" + currentUser.email;
+        currentAccessToken = session.access_token;
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
         loadLogs();
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
+        currentAccessToken = null;
         updateAuthUI();
       }
     });
