@@ -191,6 +191,52 @@
       margin:0 0 18px;
     }
 
+    .vessel-card{
+      background:rgba(10,14,28,.68);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .vessel-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      margin-bottom:14px;
+    }
+
+    .vessel-name{
+      font-size:18px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .vessel-key{
+      font-size:12px;
+      color:var(--dim);
+      letter-spacing:.08em;
+    }
+
+    .vessel-status{
+      font-size:12px;
+      color:var(--accent);
+      border:1px solid rgba(169,183,255,.32);
+      border-radius:999px;
+      padding:5px 11px;
+      background:rgba(169,183,255,.06);
+    }
+
+    .vessel-line{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0;
+    }
+
     .ticket{
       background:rgba(10,14,28,.68);
       border:1px solid rgba(70,84,132,.45);
@@ -365,11 +411,22 @@
       </section>
 
       <section>
+        <h2 class="section-title">My Vessel</h2>
+
+        <div id="vessel"></div>
+
+        <p class="note">
+          船は、航海記録と漂着物によって少しずつ整っていきます。<br>
+          最初の船は、小さな港から出るための静かな小舟です。
+        </p>
+      </section>
+
+      <section>
         <h2 class="section-title">Available Tickets</h2>
 
         <div id="tickets"></div>
 
-         <p class="note">
+        <p class="note">
           航海券は、必要な夜に少し深い海へ降りるためのものです。<br>
           有効な航海券がある場合は、ここから特別航海へ進めます。
         </p>
@@ -405,9 +462,11 @@
   const statusEl = document.getElementById("status");
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+  const vesselEl = document.getElementById("vessel");
   const ticketsEl = document.getElementById("tickets");
 
   let currentUser = null;
+  let currentVessel = null;
 
   function setStatus(message, isError = false){
     statusEl.textContent = message || "";
@@ -447,6 +506,26 @@
     return type || "Voyage Ticket";
   }
 
+  function vesselLabel(vesselKey){
+    if(vesselKey === "small_boat"){
+      return "小舟";
+    }
+
+    if(vesselKey === "yacht"){
+      return "ヨット";
+    }
+
+    if(vesselKey === "the_celeste"){
+      return "The Celeste";
+    }
+
+    if(vesselKey === "deep_sea_vessel"){
+      return "Deep Sea Vessel";
+    }
+
+    return vesselKey || "Unknown Vessel";
+  }
+
   function updateAuthUI(){
     const loggedIn = Boolean(currentUser);
 
@@ -465,6 +544,7 @@
       userStatus.textContent = "ログイン状態の確認に失敗しました。";
       setStatus(error.message, true);
       updateAuthUI();
+      renderLoggedOutState();
       return;
     }
 
@@ -473,18 +553,103 @@
       userStatus.textContent = "ログイン中：" + currentUser.email;
       setStatus("港の記録を確認しています。");
       updateAuthUI();
+
+      await ensureUserVessel();
       await loadTickets();
     }else{
       currentUser = null;
       userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
-      ticketsEl.innerHTML = `
-        <div class="empty">
-          ログインすると、港に残っている航海券を確認できます。
-        </div>
-      `;
+      renderLoggedOutState();
       setStatus("ログインが必要です。");
       updateAuthUI();
     }
+  }
+
+  function renderLoggedOutState(){
+    currentVessel = null;
+
+    vesselEl.innerHTML = `
+      <div class="empty">
+        ログインすると、あなたの船が港に用意されます。
+      </div>
+    `;
+
+    ticketsEl.innerHTML = `
+      <div class="empty">
+        ログインすると、港に残っている航海券を確認できます。
+      </div>
+    `;
+  }
+
+  async function ensureUserVessel(){
+    if(!currentUser){
+      return;
+    }
+
+    vesselEl.innerHTML = `
+      <div class="empty">
+        船室を確認しています...
+      </div>
+    `;
+
+    const { data, error } = await client.rpc("ensure_user_vessel");
+
+    if(error){
+      console.error("ensure_user_vessel error:", error);
+      vesselEl.innerHTML = `
+        <div class="empty">
+          船室の確認に失敗しました。<br>
+          少し時間を置いて、もう一度お試しください。
+        </div>
+      `;
+      setStatus("船室の確認に失敗しました：" + error.message, true);
+      return;
+    }
+
+    currentVessel = data;
+    renderVessel(currentVessel);
+  }
+
+  function renderVessel(vessel){
+    if(!vessel){
+      vesselEl.innerHTML = `
+        <div class="empty">
+          まだ船が用意されていません。
+        </div>
+      `;
+      return;
+    }
+
+    const vesselName = vesselLabel(vessel.vessel_key);
+    const vesselStatus = vessel.status === "owned" ? "航海可能" : vessel.status;
+
+    vesselEl.innerHTML = `
+      <div class="vessel-card">
+        <div class="vessel-top">
+          <div>
+            <div class="vessel-name">${escapeHtml(vesselName)}</div>
+            <div class="vessel-key">${escapeHtml(vessel.vessel_key)}</div>
+          </div>
+
+          <div class="vessel-status">
+            ${escapeHtml(vesselStatus)}
+          </div>
+        </div>
+
+        <p class="vessel-line">
+          現在の船：${escapeHtml(vesselName)}
+        </p>
+
+        <p class="vessel-line">
+          この船から、静かな航海が始まります。
+        </p>
+
+        <div class="ticket-meta">
+          <span class="tag">My Vessel</span>
+          <span class="tag">${vessel.is_current ? "Current" : "Owned"}</span>
+        </div>
+      </div>
+    `;
   }
 
   async function login(){
@@ -518,12 +683,9 @@
     }
 
     currentUser = null;
+    currentVessel = null;
     userStatus.textContent = "未ログインです。";
-    ticketsEl.innerHTML = `
-      <div class="empty">
-        ログインすると、港に残っている航海券を確認できます。
-      </div>
-    `;
+    renderLoggedOutState();
     setStatus("ログアウトしました。");
     updateAuthUI();
   }
@@ -623,15 +785,19 @@
   loginBtn.addEventListener("click", login);
   logoutBtn.addEventListener("click", logout);
 
-  client.auth.onAuthStateChange(function(event, session){
+  client.auth.onAuthStateChange(async function(event, session){
     if(session && session.user){
       currentUser = session.user;
       userStatus.textContent = "ログイン中：" + currentUser.email;
       updateAuthUI();
-      loadTickets();
+
+      await ensureUserVessel();
+      await loadTickets();
     }else if(event === "SIGNED_OUT"){
       currentUser = null;
+      currentVessel = null;
       updateAuthUI();
+      renderLoggedOutState();
     }
   });
 
