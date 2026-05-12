@@ -21,6 +21,7 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
     }
 
     *{ box-sizing:border-box; }
@@ -195,7 +196,7 @@
       background:rgba(10,14,28,.68);
       border:1px solid rgba(70,84,132,.45);
       border-radius:18px;
-      padding:20px;
+      padding:22px;
       margin-bottom:16px;
     }
 
@@ -205,11 +206,11 @@
       gap:14px;
       flex-wrap:wrap;
       align-items:flex-start;
-      margin-bottom:14px;
+      margin-bottom:16px;
     }
 
     .vessel-name{
-      font-size:18px;
+      font-size:21px;
       line-height:1.7;
       color:var(--text);
       margin-bottom:4px;
@@ -234,7 +235,83 @@
       font-size:14px;
       line-height:2;
       color:var(--muted);
-      margin:0;
+      margin:0 0 10px;
+    }
+
+    .cabin-box{
+      margin-top:18px;
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.025);
+      border:1px solid rgba(160,168,187,.18);
+    }
+
+    .cabin-title{
+      font-size:13px;
+      color:var(--accent);
+      letter-spacing:.12em;
+      margin-bottom:8px;
+    }
+
+    .next-box{
+      margin-top:18px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(169,183,255,.045);
+      border:1px solid rgba(169,183,255,.22);
+    }
+
+    .next-title{
+      font-size:16px;
+      line-height:1.8;
+      margin-bottom:10px;
+      color:var(--text);
+    }
+
+    .requirements{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .requirement{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      padding:14px;
+      border-radius:14px;
+      background:rgba(5,8,17,.48);
+      border:1px solid rgba(70,84,132,.4);
+    }
+
+    .requirement-name{
+      font-size:14px;
+      line-height:1.7;
+      color:var(--text);
+    }
+
+    .requirement-desc{
+      font-size:12px;
+      line-height:1.8;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .requirement-count{
+      flex:0 0 auto;
+      font-size:13px;
+      border-radius:999px;
+      padding:6px 11px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.02);
+    }
+
+    .requirement-count.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
     }
 
     .ticket{
@@ -364,6 +441,10 @@
       .panel{
         padding:20px;
       }
+
+      .requirement{
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -392,9 +473,9 @@
       </h1>
 
       <p class="lead">
-        ここでは、あなたのアカウントに残っている航海券を確認できます。<br>
-        漂着チケット、特別航海チケット、深海チケットは、
-        すべて一時的な航海のために置かれます。
+        ここでは、あなたのアカウントに残っている航海券と、
+        いま港に置かれている船を確認できます。<br>
+        航海記録と漂着物は、少しずつ次の出航準備へつながっていきます。
       </p>
 
       <section class="panel">
@@ -472,7 +553,6 @@
   const ticketsEl = document.getElementById("tickets");
 
   let currentUser = null;
-  let currentVessel = null;
   let currentAccessToken = null;
 
   function setStatus(message, isError = false){
@@ -497,6 +577,20 @@
     return new Date(value).toLocaleString("ja-JP");
   }
 
+  function accountDisplayName(user){
+    if(!user){
+      return "Guest";
+    }
+
+    return (
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.user_metadata?.display_name ||
+      user.email ||
+      "Account"
+    );
+  }
+
   function ticketLabel(type){
     if(type === "drift"){
       return "Drift Ticket（漂着チケット）";
@@ -513,40 +607,6 @@
     return type || "Voyage Ticket";
   }
 
-  function vesselLabel(vesselKey){
-    if(vesselKey === "small_boat"){
-      return "小舟";
-    }
-
-    if(vesselKey === "yacht"){
-      return "ヨット";
-    }
-
-    if(vesselKey === "the_celeste"){
-      return "The Celeste";
-    }
-
-    if(vesselKey === "deep_sea_vessel"){
-      return "Deep Sea Vessel";
-    }
-
-    return vesselKey || "Unknown Vessel";
-  }
-
-  function accountDisplayName(user){
-    if(!user){
-      return "Guest";
-    }
-  
-    return (
-      user.user_metadata?.full_name ||
-      user.user_metadata?.name ||
-      user.user_metadata?.display_name ||
-      user.email ||
-      "Account"
-    );
-  }
-
   function updateAuthUI(){
     const loggedIn = Boolean(currentUser);
 
@@ -555,7 +615,6 @@
   }
 
   function renderLoggedOutState(){
-    currentVessel = null;
     currentAccessToken = null;
 
     vesselEl.innerHTML = `
@@ -569,6 +628,41 @@
         ログインすると、港に残っている航海券を確認できます。
       </div>
     `;
+  }
+
+  async function fetchSupabase(path, options = {}){
+    if(!currentAccessToken){
+      throw new Error("Missing access token");
+    }
+
+    const response = await fetch(
+      supabaseUrl + path,
+      {
+        method: options.method || "GET",
+        headers: {
+          "apikey": supabaseKey,
+          "Authorization": "Bearer " + currentAccessToken,
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined
+      }
+    );
+
+    let result = null;
+
+    try{
+      result = await response.json();
+    }catch(error){
+      result = null;
+    }
+
+    if(!response.ok){
+      console.error("Supabase fetch error:", result);
+      throw new Error((result && result.message) ? result.message : "Supabase request failed");
+    }
+
+    return result;
   }
 
   async function checkSession(){
@@ -596,6 +690,7 @@
       updateAuthUI();
 
       await ensureUserVessel();
+      await loadVesselDisplay();
       await loadTickets();
     }else{
       currentUser = null;
@@ -608,18 +703,7 @@
   }
 
   async function ensureUserVessel(){
-    if(!currentUser){
-      return;
-    }
-
-    if(!currentAccessToken){
-      vesselEl.innerHTML = `
-        <div class="empty">
-          ログイン情報を確認できませんでした。<br>
-          もう一度ログインしてください。
-        </div>
-      `;
-      setStatus("ログイン情報を確認できませんでした。", true);
+    if(!currentUser || !currentAccessToken){
       return;
     }
 
@@ -629,73 +713,63 @@
       </div>
     `;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(function(){
-      controller.abort();
-    }, 12000);
-
     try{
-      const response = await fetch(
-        supabaseUrl + "/rest/v1/rpc/ensure_user_vessel",
+      await fetchSupabase(
+        "/rest/v1/rpc/ensure_user_vessel",
         {
           method: "POST",
-          headers: {
-            "apikey": supabaseKey,
-            "Authorization": "Bearer " + currentAccessToken,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({}),
-          signal: controller.signal
+          body: {}
         }
       );
-
-      clearTimeout(timeoutId);
-
-      let result = null;
-
-      try{
-        result = await response.json();
-      }catch(jsonError){
-        result = null;
-      }
-
-      if(!response.ok){
-        console.error("ensure_user_vessel fetch error:", result);
-
-        vesselEl.innerHTML = `
-          <div class="empty">
-            船室の確認に失敗しました。<br>
-            少し時間を置いて、もう一度お試しください。
-          </div>
-        `;
-
-        setStatus(
-          "船室の確認に失敗しました：" + ((result && result.message) ? result.message : "unknown error"),
-          true
-        );
-
-        return;
-      }
-
-      currentVessel = result;
-      renderVessel(currentVessel);
     }catch(error){
-      clearTimeout(timeoutId);
-
-      console.error("ensure_user_vessel unexpected error:", error);
+      console.error("ensure_user_vessel error:", error);
 
       vesselEl.innerHTML = `
         <div class="empty">
-          船室の確認中にエラーが発生しました。<br>
-          少し時間を置いて、もう一度お試しください。
+          船室の確認に失敗しました。<br>
+          ${escapeHtml(error.message)}
         </div>
       `;
 
-      setStatus("船室の確認中にエラーが発生しました：" + error.message, true);
+      setStatus("船室の確認に失敗しました：" + error.message, true);
     }
   }
 
-  function renderVessel(vessel){
+  async function loadVesselDisplay(){
+    if(!currentUser || !currentAccessToken){
+      return;
+    }
+
+    try{
+      const userId = encodeURIComponent(currentUser.id);
+
+      const vesselRows = await fetchSupabase(
+        "/rest/v1/user_current_vessel_view?user_id=eq." + userId + "&select=*&limit=1"
+      );
+
+      const requirementRows = await fetchSupabase(
+        "/rest/v1/next_vessel_requirements_view?user_id=eq." + userId + "&select=*&order=item_name_ja.asc"
+      );
+
+      const vessel = Array.isArray(vesselRows) ? vesselRows[0] : null;
+      const requirements = Array.isArray(requirementRows) ? requirementRows : [];
+
+      renderVessel(vessel, requirements);
+    }catch(error){
+      console.error("load vessel display error:", error);
+
+      vesselEl.innerHTML = `
+        <div class="empty">
+          船の情報を読み込めませんでした。<br>
+          ${escapeHtml(error.message)}
+        </div>
+      `;
+
+      setStatus("船の情報を読み込めませんでした：" + error.message, true);
+    }
+  }
+
+  function renderVessel(vessel, requirements){
     if(!vessel){
       vesselEl.innerHTML = `
         <div class="empty">
@@ -705,14 +779,68 @@
       return;
     }
 
-    const vesselName = vesselLabel(vessel.vessel_key);
     const vesselStatus = vessel.status === "owned" ? "航海可能" : vessel.status;
+
+    let nextHtml = "";
+
+    if(requirements && requirements.length > 0){
+      const nextName = requirements[0].next_vessel_name_ja || "次の船";
+      const nextDescription = requirements[0].next_vessel_description || "";
+
+      const itemsHtml = requirements.map(item => {
+        const readyClass = item.is_ready ? " ready" : "";
+        const itemDescription = item.item_description || item.origin_text || "";
+
+        return `
+          <div class="requirement">
+            <div>
+              <div class="requirement-name">${escapeHtml(item.item_name_ja)}</div>
+              <div class="requirement-desc">
+                ${escapeHtml(itemDescription)}
+              </div>
+            </div>
+
+            <div class="requirement-count${readyClass}">
+              ${escapeHtml(item.owned_count)} / ${escapeHtml(item.required_count)}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      nextHtml = `
+        <div class="next-box">
+          <div class="next-title">
+            次の船：${escapeHtml(nextName)}
+          </div>
+
+          <p class="vessel-line">
+            ${escapeHtml(nextDescription)}
+          </p>
+
+          <div class="requirements">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    }else{
+      nextHtml = `
+        <div class="next-box">
+          <div class="next-title">
+            次の船は、まだ霧の向こうにあります。
+          </div>
+
+          <p class="vessel-line">
+            いま見えている航路は、ここまでです。
+          </p>
+        </div>
+      `;
+    }
 
     vesselEl.innerHTML = `
       <div class="vessel-card">
         <div class="vessel-top">
           <div>
-            <div class="vessel-name">${escapeHtml(vesselName)}</div>
+            <div class="vessel-name">${escapeHtml(vessel.name_ja)}</div>
             <div class="vessel-key">${escapeHtml(vessel.vessel_key)}</div>
           </div>
 
@@ -722,17 +850,22 @@
         </div>
 
         <p class="vessel-line">
-          現在の船：${escapeHtml(vesselName)}
+          ${escapeHtml(vessel.description)}
         </p>
 
-        <p class="vessel-line">
-          この船から、静かな航海が始まります。
-        </p>
+        <div class="cabin-box">
+          <div class="cabin-title">Cabin</div>
+          <p class="vessel-line">
+            ${escapeHtml(vessel.cabin_description)}
+          </p>
+        </div>
 
         <div class="ticket-meta">
           <span class="tag">My Vessel</span>
           <span class="tag">${vessel.is_current ? "Current" : "Owned"}</span>
         </div>
+
+        ${nextHtml}
       </div>
     `;
   }
@@ -768,7 +901,6 @@
     }
 
     currentUser = null;
-    currentVessel = null;
     currentAccessToken = null;
     userStatus.textContent = "未ログインです。";
     renderLoggedOutState();
@@ -777,25 +909,23 @@
   }
 
   async function loadTickets(){
-    if(!currentUser){
+    if(!currentUser || !currentAccessToken){
       return;
     }
 
-    const { data, error } = await client
-      .from("voyage_tickets")
-      .select("*")
-      .eq("user_id", currentUser.id)
-      .eq("status", "available")
-      .order("created_at", { ascending:false });
+    try{
+      const userId = encodeURIComponent(currentUser.id);
 
-    if(error){
+      const data = await fetchSupabase(
+        "/rest/v1/voyage_tickets?user_id=eq." + userId + "&status=eq.available&select=*&order=created_at.desc"
+      );
+
+      renderTickets(Array.isArray(data) ? data : []);
+      setStatus("港の記録を確認しました。");
+    }catch(error){
       console.error("ticket load error:", error);
       setStatus("航海券の読み込みに失敗しました：" + error.message, true);
-      return;
     }
-
-    renderTickets(data || []);
-    setStatus("航海券を確認しました。");
   }
 
   function renderTickets(tickets){
@@ -880,12 +1010,15 @@
       updateAuthUI();
 
       setTimeout(function(){
-        ensureUserVessel();
-        loadTickets();
+        ensureUserVessel()
+          .then(loadVesselDisplay)
+          .then(loadTickets)
+          .catch(function(error){
+            console.error("auth state load error:", error);
+          });
       }, 0);
     }else if(event === "SIGNED_OUT"){
       currentUser = null;
-      currentVessel = null;
       currentAccessToken = null;
 
       updateAuthUI();
