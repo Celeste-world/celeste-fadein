@@ -855,13 +855,19 @@
           "/rest/v1/next_vessel_requirements_view?user_id=eq." + userId + "&select=*&order=item_name_ja.asc"
         );
 
-        const collectionRows = await fetchSupabase(
-          "/rest/v1/user_vessels_collection_view?select=*&order=stage_order.asc"
+        const collectionResult = await fetchSupabase(
+          "/rest/v1/rpc/get_user_vessels_collection",
+          {
+            method: "POST",
+            body: {}
+          }
         );
 
         const vessel = Array.isArray(vesselRows) ? vesselRows[0] : null;
         const requirements = Array.isArray(requirementRows) ? requirementRows : [];
-        const collection = Array.isArray(collectionRows) ? collectionRows : [];
+        const collection = collectionResult && Array.isArray(collectionResult.vessels)
+          ? collectionResult.vessels
+          : [];
 
         renderVessel(vessel, requirements, collection);
         setStatus("船室を確認しました。");
