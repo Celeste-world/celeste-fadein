@@ -421,6 +421,15 @@
       background:rgba(255,255,255,.015);
     }
 
+    .collection-panel{
+      margin-top:42px;
+    }
+
+    .collection-panel .section-title{
+      border-top:1px solid rgba(169,183,255,.18);
+      padding-top:24px;
+    }
+
     .collection-grid{
       display:grid;
       gap:16px;
@@ -1017,7 +1026,7 @@
       if(!collection || collection.length === 0){
         return `
           <div class="collection-panel">
-            <h2 class="section-title">Owned Vessels</h2>
+            <h2 class="section-title">船の記録</h2>
             <div class="empty">
               船の一覧を確認できませんでした。
             </div>
@@ -1110,7 +1119,7 @@
 
       return `
         <div class="collection-panel">
-          <h2 class="section-title">Owned Vessels</h2>
+          <h2 class="section-title">船の記録</h2>
 
           <div class="collection-grid">
             ${cardsHtml}
