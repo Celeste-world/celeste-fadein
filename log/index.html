@@ -694,26 +694,12 @@
       return items[Math.floor(Math.random() * items.length)];
     }
 
-    async function withTimeout(promise, ms, fallbackValue = null){
-      let timeoutId;
-    
-      const timeoutPromise = new Promise(resolve => {
-        timeoutId = setTimeout(() => {
-          resolve(fallbackValue);
-        }, ms);
-      });
-    
-      const result = await Promise.race([
-        promise,
-        timeoutPromise
-      ]);
-    
-      clearTimeout(timeoutId);
-      return result;
-    }
-
     function sleep(ms){
       return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function holdCatText(ms = 2200){
+      await sleep(ms);
     }
 
     async function fadeCatTextTo(message){
@@ -728,6 +714,24 @@
       });
 
       await sleep(420);
+    }
+
+    async function fetchWithTimeout(url, options = {}, timeoutMs = 8000){
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+      try{
+        const response = await fetch(url, {
+          ...options,
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+        return response;
+      }catch(error){
+        clearTimeout(timeoutId);
+        throw error;
+      }
     }
 
     function setStatus(message, isError = false){
@@ -878,24 +882,6 @@
       return result;
     }
 
-    async function fetchWithTimeout(url, options = {}, timeoutMs = 8000){
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-    
-      try{
-        const response = await fetch(url, {
-          ...options,
-          signal: controller.signal
-        });
-    
-        clearTimeout(timeoutId);
-        return response;
-      }catch(error){
-        clearTimeout(timeoutId);
-        throw error;
-      }
-    }
-
     async function ensureUserVessel(){
       try{
         await fetchSupabase(
@@ -988,7 +974,7 @@
       updateAuthUI();
     }
 
-   async function callCatReply(content, tag){
+    async function callCatReply(content, tag){
       try{
         const response = await fetchWithTimeout(
           supabaseUrl + "/functions/v1/cat-reply",
@@ -1006,22 +992,22 @@
           },
           8000
         );
-    
+
         let data = null;
-    
+
         try{
           data = await response.json();
         }catch(error){
           data = null;
         }
-    
+
         if(!response.ok){
           console.error("cat-reply fetch error:", data);
           return null;
         }
-    
+
         return data?.reply || null;
-    
+
       }catch(error){
         console.error("cat-reply timeout/fetch error:", error);
         return null;
@@ -1043,28 +1029,28 @@
           },
           8000
         );
-    
+
         let data = null;
-    
+
         try{
           data = await response.json();
         }catch(error){
           data = null;
         }
-    
+
         if(!response.ok){
           console.error("grant-drift-ticket fetch error:", data);
           return null;
         }
-    
+
         return data || null;
-    
+
       }catch(error){
         console.error("grant-drift-ticket timeout/fetch error:", error);
         return null;
       }
     }
-    
+
     async function callGrantHarborFind(tag, context = "voyage_log", force = false){
       try{
         const result = await fetchSupabase(
@@ -1113,22 +1099,22 @@
         await ensureUserVessel();
 
         try{
-        await fetchSupabase(
-          "/rest/v1/voyage_logs",
-          {
-            method: "POST",
-            body: {
-              user_id: currentUser.id,
-              content: content,
-              tag: tag
+          await fetchSupabase(
+            "/rest/v1/voyage_logs",
+            {
+              method: "POST",
+              body: {
+                user_id: currentUser.id,
+                content: content,
+                tag: tag
+              }
             }
-          }
-        );
-      }catch(error){
-        console.error("insert voyage_logs error:", error);
-        setStatus("保存失敗：" + error.message, true);
-        return;
-      }
+          );
+        }catch(error){
+          console.error("insert voyage_logs error:", error);
+          setStatus("保存失敗：" + error.message, true);
+          return;
+        }
 
         setStatus("航海記録を保存しました。Harbor Cat が、巻物を読んでいます。");
 
@@ -1136,6 +1122,8 @@
           "Harbor Cat が、巻物を読んでいます…",
           "reading"
         );
+
+        await holdCatText(1200);
 
         const reply = await callCatReply(content, tag);
 
@@ -1145,6 +1133,8 @@
           catIconWrap.classList.remove("reading");
 
           await fadeCatTextTo(reply);
+          await holdCatText(2400);
+
           setStatus("航海記録を保存しました。");
         }else{
           setCatIcon("fallback");
@@ -1154,6 +1144,8 @@
           await fadeCatTextTo(
             "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。"
           );
+
+          await holdCatText(2400);
 
           setStatus("航海記録を保存しました。");
         }
@@ -1165,6 +1157,8 @@
             harborFindResult.hint_message,
             "漂着の気配"
           );
+
+          await holdCatText(2200);
         }
 
         if(harborFindResult && harborFindResult.found){
@@ -1173,6 +1167,8 @@
               "今夜、港に小さな漂着物が流れ着きました。",
             "Harbor Find"
           );
+
+          await holdCatText(2400);
 
           setStatus("航海記録を保存しました。港に漂着物が届きました。");
         }
@@ -1185,6 +1181,8 @@
               "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。",
             "Drift Ticket"
           );
+
+          await holdCatText(2400);
 
           setStatus("航海記録を保存しました。漂着チケットが届きました。");
         }
@@ -1209,20 +1207,23 @@
         return;
       }
 
-      const { data, error } = await client
-        .from("voyage_logs")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .order("created_at", { ascending:false });
+      try{
+        const data = await fetchSupabase(
+          "/rest/v1/voyage_logs?user_id=eq." +
+            encodeURIComponent(currentUser.id) +
+            "&select=*&order=created_at.desc",
+          {
+            method: "GET"
+          }
+        );
 
-      if(error){
+        allLogs = data || [];
+        renderLogs();
+
+      }catch(error){
         console.error("load error:", error);
         setStatus("読み込み失敗：" + error.message, true);
-        return;
       }
-
-      allLogs = data || [];
-      renderLogs();
     }
 
     function renderLogs(){
@@ -1290,20 +1291,24 @@
 
       setStatus("削除しています。");
 
-      const { error } = await client
-        .from("voyage_logs")
-        .delete()
-        .eq("id", logId)
-        .eq("user_id", currentUser.id);
+      try{
+        await fetchSupabase(
+          "/rest/v1/voyage_logs?id=eq." +
+            encodeURIComponent(logId) +
+            "&user_id=eq." +
+            encodeURIComponent(currentUser.id),
+          {
+            method: "DELETE"
+          }
+        );
 
-      if(error){
+        setStatus("航海記録を削除しました。");
+        await loadLogs();
+
+      }catch(error){
         console.error("delete error:", error);
         setStatus("削除失敗：" + error.message, true);
-        return;
       }
-
-      setStatus("航海記録を削除しました。");
-      await loadLogs();
     }
 
     async function deleteAllLogs(){
@@ -1326,21 +1331,24 @@
 
       setStatus("すべての航海記録を削除しています。");
 
-      const { error } = await client
-        .from("voyage_logs")
-        .delete()
-        .eq("user_id", currentUser.id);
+      try{
+        await fetchSupabase(
+          "/rest/v1/voyage_logs?user_id=eq." +
+            encodeURIComponent(currentUser.id),
+          {
+            method: "DELETE"
+          }
+        );
 
-      if(error){
+        allLogs = [];
+        showAllLogs = false;
+        renderLogs();
+        setStatus("すべての航海記録を削除しました。");
+
+      }catch(error){
         console.error("delete all error:", error);
         setStatus("全削除失敗：" + error.message, true);
-        return;
       }
-
-      allLogs = [];
-      showAllLogs = false;
-      renderLogs();
-      setStatus("すべての航海記録を削除しました。");
     }
 
     loginBtn.addEventListener("click", login);
