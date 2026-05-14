@@ -438,6 +438,11 @@
     .chart-panel{
       overflow-x:auto;
       padding:18px;
+      background:rgba(10,14,28,.82);
+    }
+  
+    .chart-panel::before{
+      display:none;
     }
   
     .sea-grid{
@@ -446,6 +451,18 @@
       grid-template-columns:repeat(12, minmax(0, 1fr));
       grid-template-rows:repeat(6, minmax(72px, auto));
       min-height:560px;
+      border-radius:22px;
+      padding:18px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(5,8,17,.18),
+          rgba(5,8,17,.38)
+        ),
+        url("/images/sea-chart-z.png");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
     }
   
     .sea-card{
