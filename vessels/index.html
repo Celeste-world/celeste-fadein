@@ -931,15 +931,30 @@
           if(messageEl){
             messageEl.innerHTML = `
               <div class="unlock-message success">
-                ${escapeHtml(result.message || "新しい船が整いました。")}
+                ${escapeHtml(result.message || "新しい船が整いました。")}<br>
+                <a href="/map/" style="color:#b9f6ca;text-decoration:underline;">
+                  海図を確認する
+                </a>
               </div>
             `;
           }
-
+        
           setStatus(result.message || "新しい船が整いました。");
-
+        
+          try{
+            await fetchSupabase(
+              "/rest/v1/rpc/check_and_unlock_sea_areas",
+              {
+                method: "POST",
+                body: {}
+              }
+            );
+          }catch(seaError){
+            console.error("check_and_unlock_sea_areas error:", seaError);
+          }
+        
           await loadVesselDisplay();
-
+        
           return;
         }
 
