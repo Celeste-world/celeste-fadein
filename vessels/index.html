@@ -21,6 +21,7 @@
       --accent:#a9b7ff;
       --danger:#ff9b9b;
       --ready:#b9f6ca;
+      --fog:#6f7689;
     }
 
     *{ box-sizing:border-box; }
@@ -41,7 +42,7 @@
     }
 
     .wrap{
-      max-width:900px;
+      max-width:940px;
       margin:0 auto;
       padding:48px 20px 40px;
       min-height:100vh;
@@ -104,7 +105,8 @@
     }
 
     .panel,
-    .vessel-card{
+    .vessel-card,
+    .collection-panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
       border-radius:20px;
@@ -179,6 +181,14 @@
 
     .status.error{
       color:var(--danger);
+    }
+
+    .section-title{
+      font-size:20px;
+      line-height:1.7;
+      font-weight:500;
+      margin:0 0 18px;
+      color:var(--text);
     }
 
     .vessel-layout{
@@ -393,6 +403,92 @@
       background:rgba(255,255,255,.02);
     }
 
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
+    .tag.current{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.4);
+      background:rgba(169,183,255,.07);
+    }
+
+    .tag.fog{
+      color:var(--fog);
+      border-color:rgba(111,118,137,.24);
+      background:rgba(255,255,255,.015);
+    }
+
+    .collection-grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .collection-card{
+      display:grid;
+      grid-template-columns:112px 1fr;
+      gap:18px;
+      align-items:start;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(5,8,17,.45);
+      border:1px solid rgba(70,84,132,.42);
+    }
+
+    .collection-card.owned{
+      border-color:rgba(185,246,202,.28);
+      background:
+        radial-gradient(circle at top left,rgba(185,246,202,.06),transparent 44%),
+        rgba(5,8,17,.48);
+    }
+
+    .collection-card.current{
+      border-color:rgba(169,183,255,.52);
+      background:
+        radial-gradient(circle at top left,rgba(169,183,255,.10),transparent 44%),
+        rgba(5,8,17,.55);
+    }
+
+    .collection-card.locked{
+      opacity:.72;
+      filter:saturate(.72);
+      border-color:rgba(160,168,187,.18);
+    }
+
+    .collection-name{
+      font-size:17px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .collection-card.locked .collection-name{
+      color:#9aa1b4;
+    }
+
+    .collection-key{
+      font-size:12px;
+      color:var(--dim);
+      letter-spacing:.08em;
+      margin-bottom:10px;
+    }
+
+    .collection-desc{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .collection-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
     .empty{
       background:rgba(10,14,28,.52);
       border:1px solid rgba(70,84,132,.35);
@@ -453,12 +549,14 @@
       h1{ font-size:31px; }
 
       .panel,
-      .vessel-card{
+      .vessel-card,
+      .collection-panel{
         padding:20px;
       }
 
       .vessel-layout,
-      .next-head{
+      .next-head,
+      .collection-card{
         grid-template-columns:1fr;
       }
 
@@ -513,6 +611,7 @@
           <button class="primary" id="loginBtn">Googleでログイン</button>
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/items/">Itemsへ</a>
+          <a class="btn-ghost" href="/map/">Mapへ</a>
           <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
         </div>
 
@@ -756,10 +855,15 @@
           "/rest/v1/next_vessel_requirements_view?user_id=eq." + userId + "&select=*&order=item_name_ja.asc"
         );
 
+        const collectionRows = await fetchSupabase(
+          "/rest/v1/user_vessels_collection_view?select=*&order=stage_order.asc"
+        );
+
         const vessel = Array.isArray(vesselRows) ? vesselRows[0] : null;
         const requirements = Array.isArray(requirementRows) ? requirementRows : [];
+        const collection = Array.isArray(collectionRows) ? collectionRows : [];
 
-        renderVessel(vessel, requirements);
+        renderVessel(vessel, requirements, collection);
         setStatus("船室を確認しました。");
       }catch(error){
         console.error("load vessel display error:", error);
@@ -775,7 +879,7 @@
       }
     }
 
-    function renderVessel(vessel, requirements){
+    function renderVessel(vessel, requirements, collection){
       if(!vessel){
         vesselEl.innerHTML = `
           <div class="empty">
@@ -887,12 +991,124 @@
 
               <div class="ticket-meta">
                 <span class="tag">My Vessel</span>
-                <span class="tag">${vessel.is_current ? "Current" : "Owned"}</span>
+                <span class="tag current">${vessel.is_current ? "Current" : "Owned"}</span>
               </div>
             </div>
           </div>
 
           ${nextHtml}
+        </div>
+
+        ${renderVesselCollection(collection)}
+      `;
+    }
+
+    function normalizeBoolean(value){
+      return value === true || value === "true" || value === 1 || value === "1";
+    }
+
+    function renderVesselCollection(collection){
+      if(!collection || collection.length === 0){
+        return `
+          <div class="collection-panel">
+            <h2 class="section-title">Owned Vessels</h2>
+            <div class="empty">
+              船の一覧を確認できませんでした。
+            </div>
+          </div>
+        `;
+      }
+
+      const cardsHtml = collection.map(row => {
+        const owned =
+          normalizeBoolean(row.is_owned) ||
+          row.status === "owned" ||
+          Boolean(row.user_vessel_id);
+
+        const current =
+          normalizeBoolean(row.is_current) ||
+          normalizeBoolean(row.is_current_vessel);
+
+        const cardClass = current
+          ? "collection-card current"
+          : owned
+            ? "collection-card owned"
+            : "collection-card locked";
+
+        const displayName = owned
+          ? (row.name_ja || row.name_en || row.vessel_key)
+          : "霧の向こう";
+
+        const displayDesc = owned
+          ? (row.description || "")
+          : "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。";
+
+        const displayCabin = owned
+          ? (row.cabin_description || "")
+          : "";
+
+        const statusText = current
+          ? "Current"
+          : owned
+            ? "Owned"
+            : (row.display_status_ja || "霧の向こう");
+
+        const statusClass = current
+          ? "tag current"
+          : owned
+            ? "tag ready"
+            : "tag fog";
+
+        return `
+          <div class="${cardClass}">
+            ${imageBox(owned ? row.image_path : "", displayName, true)}
+
+            <div>
+              <div class="collection-name">
+                ${escapeHtml(displayName)}
+              </div>
+
+              <div class="collection-key">
+                ${escapeHtml(row.vessel_key || "")}
+              </div>
+
+              <p class="collection-desc">
+                ${escapeHtml(displayDesc)}
+              </p>
+
+              ${
+                displayCabin
+                  ? `
+                    <div class="cabin-box">
+                      <div class="cabin-title">Cabin</div>
+                      <p class="vessel-line">
+                        ${escapeHtml(displayCabin)}
+                      </p>
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div class="collection-meta">
+                <span class="${statusClass}">
+                  ${escapeHtml(statusText)}
+                </span>
+                <span class="tag">
+                  Stage ${escapeHtml(row.stage_order || "")}
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="collection-panel">
+          <h2 class="section-title">Owned Vessels</h2>
+
+          <div class="collection-grid">
+            ${cardsHtml}
+          </div>
         </div>
       `;
     }
@@ -928,37 +1144,37 @@
         );
 
         if(result && result.unlocked){
-            setStatus(result.message || "新しい船が整いました。");
-          
-            try{
-              await fetchSupabase(
-                "/rest/v1/rpc/check_and_unlock_sea_areas",
-                {
-                  method: "POST",
-                  body: {}
-                }
-              );
-            }catch(seaError){
-              console.error("check_and_unlock_sea_areas error:", seaError);
-            }
-          
-            if(messageEl){
-              messageEl.innerHTML = `
-                <div class="unlock-message success">
-                  ${escapeHtml(result.message || "新しい船が整いました。")}<br>
-                  <a href="/map/" style="color:#b9f6ca;text-decoration:underline;">
-                    海図を確認する
-                  </a>
-                </div>
-              `;
-            }
-          
-            if(button){
-              button.style.display = "none";
-            }
-          
-            return;
+          setStatus(result.message || "新しい船が整いました。");
+
+          try{
+            await fetchSupabase(
+              "/rest/v1/rpc/check_and_unlock_sea_areas",
+              {
+                method: "POST",
+                body: {}
+              }
+            );
+          }catch(seaError){
+            console.error("check_and_unlock_sea_areas error:", seaError);
           }
+
+          if(messageEl){
+            messageEl.innerHTML = `
+              <div class="unlock-message success">
+                ${escapeHtml(result.message || "新しい船が整いました。")}<br>
+                <a href="/map/" style="color:#b9f6ca;text-decoration:underline;">
+                  海図を確認する
+                </a>
+              </div>
+            `;
+          }
+
+          if(button){
+            button.style.display = "none";
+          }
+
+          return;
+        }
 
         if(result && result.reason === "requirements_not_met"){
           const missing = Array.isArray(result.missing_items)
