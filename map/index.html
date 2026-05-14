@@ -774,10 +774,18 @@
       try{
         const userId = encodeURIComponent(currentUser.id);
 
+        await fetchSupabase(
+          "/rest/v1/rpc/check_and_unlock_sea_areas",
+          {
+            method: "POST",
+            body: {}
+          }
+        );
+        
         const seaAreas = await fetchSupabase(
           "/rest/v1/sea_areas?select=*&order=sort_order.asc"
         );
-
+        
         const userAreas = await fetchSupabase(
           "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
         );
