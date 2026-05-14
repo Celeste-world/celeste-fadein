@@ -4,34 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Harbor Map – Celeste Harbor</title>
-  
-  <meta name="description" content="Celeste Harbor の海域図。港入口、帰港、深海、漂着、灯台、古い灯り、港の気配を静かに示す地図。" />
-  <link rel="canonical" href="https://celeste.world/map/" />
-  <meta name="robots" content="index, follow">
-  
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Harbor Map – Celeste Harbor">
-  <meta property="og:description" content="Celeste Harbor にある場所と、それぞれの役割を示す静かな海図。">
-  <meta property="og:url" content="https://celeste.world/map/">
-  <meta property="og:image" content="https://celeste.world/images/og-image.png">
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Harbor Map – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste Harbor にある場所と、それぞれの役割を示す静かな海図。">
-  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+  <title>Sea Chart – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
       --bg:#050811;
-      --panel:#111623;
       --text:#e8ebef;
       --muted:#a0a8bb;
       --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --fog:#6f7689;
     }
 
     *{ box-sizing:border-box; }
@@ -52,7 +42,7 @@
     }
 
     .wrap{
-      max-width:980px;
+      max-width:1040px;
       margin:0 auto;
       padding:48px 20px 40px;
       min-height:100vh;
@@ -65,7 +55,7 @@
       justify-content:space-between;
       align-items:center;
       gap:18px;
-      margin-bottom:68px;
+      margin-bottom:64px;
       color:var(--muted);
       font-size:13px;
     }
@@ -93,11 +83,6 @@
       flex:1;
     }
 
-    .hero{
-      max-width:760px;
-      margin-bottom:58px;
-    }
-
     .label{
       font-size:13px;
       letter-spacing:.18em;
@@ -117,89 +102,269 @@
       font-size:15px;
       line-height:2.1;
       color:var(--muted);
-      max-width:44rem;
+      max-width:46rem;
+      margin-bottom:34px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
       margin-bottom:24px;
     }
 
-    .map-panel{
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:20px;
+    }
+
+    button,
+    .btn-primary,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:11px 18px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    button{ border:0; }
+
+    .primary,
+    .btn-primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+      border:1px solid transparent;
+    }
+
+    .ghost,
+    .btn-ghost{
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    .ghost:hover,
+    .btn-ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+    }
+
+    .status{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .chart-panel{
       position:relative;
-      background:rgba(10,14,28,.78);
+      background:
+        radial-gradient(circle at 20% 22%, rgba(169,183,255,.12), transparent 24%),
+        radial-gradient(circle at 78% 72%, rgba(169,183,255,.08), transparent 28%),
+        rgba(10,14,28,.78);
       border:1px solid rgba(70,84,132,.55);
-      border-radius:24px;
+      border-radius:26px;
       padding:28px;
       box-shadow:0 20px 48px rgba(0,0,0,.42);
       overflow:hidden;
+      margin-bottom:28px;
     }
 
-    .map-panel::before{
+    .chart-panel::before{
       content:"";
       position:absolute;
       inset:0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(169,183,255,.12), transparent 28%),
-        radial-gradient(circle at 82% 72%, rgba(169,183,255,.08), transparent 30%);
+      background-image:
+        linear-gradient(rgba(169,183,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(169,183,255,.04) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:radial-gradient(circle at center, black 0%, transparent 78%);
       pointer-events:none;
     }
 
-    .map-grid{
-      position:relative;
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-      z-index:1;
+    .chart-panel::after{
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(169,183,255,.08);
+      border-radius:22px;
+      pointer-events:none;
     }
 
-    .place{
-      background:rgba(5,8,17,.58);
-      border:1px solid rgba(70,84,132,.44);
-      border-radius:18px;
-      padding:22px;
-      min-height:190px;
+    .sea-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0, 1fr));
+      grid-template-rows:repeat(5, minmax(72px, auto));
+      gap:14px;
+      min-height:520px;
+    }
+
+    .sea-card{
+      position:relative;
+      min-height:148px;
+      border-radius:20px;
+      padding:18px;
+      background:rgba(5,8,17,.62);
+      border:1px solid rgba(70,84,132,.46);
+      box-shadow:0 12px 28px rgba(0,0,0,.24);
+      overflow:hidden;
       display:flex;
       flex-direction:column;
       transition:.18s ease;
     }
 
-    .place:hover{
+    .sea-card.open{
       border-color:rgba(169,183,255,.48);
-      transform:translateY(-1px);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.12), transparent 55%),
+        rgba(5,8,17,.62);
     }
 
-    .place-kicker{
-      font-size:12px;
+    .sea-card.locked{
+      border-color:rgba(111,118,137,.24);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.025), rgba(255,255,255,.01)),
+        rgba(5,8,17,.44);
+      color:var(--fog);
+      filter:saturate(.72);
+    }
+
+    .sea-card.open:hover{
+      transform:translateY(-2px);
+      border-color:rgba(169,183,255,.72);
+    }
+
+    .sea-card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle, rgba(169,183,255,.08), transparent 46%);
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    .sea-card.locked::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(115deg, transparent 0%, rgba(200,210,255,.05) 42%, transparent 72%),
+        radial-gradient(circle at 30% 25%, rgba(180,190,220,.08), transparent 32%);
+      pointer-events:none;
+    }
+
+    .sea-kicker{
+      position:relative;
+      z-index:1;
+      font-size:11px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:12px;
+      margin-bottom:10px;
     }
 
-    .place h2{
-      font-size:19px;
-      font-weight:500;
+    .sea-card.locked .sea-kicker{
+      color:var(--fog);
+    }
+
+    .sea-name{
+      position:relative;
+      z-index:1;
+      font-size:18px;
       line-height:1.7;
-      margin:0 0 12px;
       color:var(--text);
+      margin-bottom:8px;
     }
 
-    .place p{
+    .sea-card.locked .sea-name{
+      color:#9aa1b4;
+    }
+
+    .sea-desc{
+      position:relative;
+      z-index:1;
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0 0 16px;
+    }
+
+    .sea-card.locked .sea-desc{
+      color:#7f8799;
+    }
+
+    .sea-meta{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:auto;
+    }
+
+    .tag{
+      font-size:11px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .tag.open{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
+    .tag.locked{
+      color:#8b92a3;
+      border-color:rgba(139,146,163,.22);
+      background:rgba(255,255,255,.015);
+    }
+
+    .pos-harbor{ grid-column:1 / span 2; grid-row:3; }
+    .pos-tide{ grid-column:3 / span 2; grid-row:2; }
+    .pos-moon{ grid-column:5 / span 2; grid-row:1; }
+    .pos-fog{ grid-column:4 / span 2; grid-row:4; }
+    .pos-lighthouse{ grid-column:6 / span 2; grid-row:3; }
+    .pos-deep{ grid-column:2 / span 2; grid-row:5; }
+    .pos-outer{ grid-column:5 / span 2; grid-row:5; }
+
+    .empty{
+      background:rgba(10,14,28,.52);
+      border:1px solid rgba(70,84,132,.35);
+      border-radius:18px;
+      padding:20px;
+      color:var(--muted);
       font-size:14px;
       line-height:2;
-      color:var(--muted);
-      margin:0 0 18px;
-    }
-
-    .place-action{
-      margin-top:auto;
-      font-size:13px;
-      color:var(--dim);
-    }
-
-    .place:hover .place-action{
-      color:var(--accent);
-    }
-
-    .quiet-place{
-      opacity:.92;
+      margin-bottom:16px;
     }
 
     .note{
@@ -209,7 +374,8 @@
       color:var(--muted);
       border-left:1px solid rgba(169,183,255,.42);
       padding-left:18px;
-      margin-top:34px;
+      margin-top:30px;
+      margin-bottom:34px;
     }
 
     footer{
@@ -236,8 +402,17 @@
     }
 
     @media(max-width:860px){
-      .map-grid{
+      .sea-grid{
+        display:grid;
         grid-template-columns:1fr;
+        grid-template-rows:auto;
+        min-height:auto;
+      }
+
+      .sea-card{
+        grid-column:auto !important;
+        grid-row:auto !important;
+        min-height:auto;
       }
     }
 
@@ -249,7 +424,7 @@
       .site-header{
         align-items:flex-start;
         flex-direction:column;
-        margin-bottom:48px;
+        margin-bottom:44px;
       }
 
       .nav{
@@ -261,13 +436,9 @@
         font-size:31px;
       }
 
-      .map-panel{
+      .panel,
+      .chart-panel{
         padding:20px;
-      }
-
-      .place{
-        padding:20px;
-        min-height:auto;
       }
     }
   </style>
@@ -280,176 +451,509 @@
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav" aria-label="Main navigation">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/about/">About</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
     <main>
+      <div class="label">Sea Chart</div>
 
-      <section class="hero">
-        <div class="label">Harbor Map</div>
+      <h1>
+        Celeste Harbor の、<br>
+        霧を含んだ海図。
+      </h1>
 
-        <h1>
-          Celeste Harbor の、<br>
-          静かな海域図。
-        </h1>
+      <p class="lead">
+        ここでは、いま開いている海域と、まだ霧の向こうにある海域を確認できます。<br>
+        すべての海が最初から見えているわけではありません。
+        航海記録と漂着物が、少しずつ次の海を開いていきます。
+      </p>
 
-        <p class="lead">
-          Harbor Map は、機能の一覧ではありません。<br>
-          この港にある場所と、それぞれの役割を示すための小さな海図です。
-        </p>
-
-        <p class="lead">
-          帰港する場所、記録する場所、深く降りる場所、
-          そして古い灯りを残しておく場所。<br>
-          それらは、ひとつの海域としてつながっています。
-        </p>
-      </section>
-
-      <section class="map-panel" aria-label="Celeste Harbor map">
-
-        <div class="map-grid">
-
-          <!-- 港入口：Celeste Harbor のTOPページ -->
-          <a class="place" href="/">
-            <div class="place-kicker">Harbor / Entrance</div>
-            <h2>港入口</h2>
-            <p>
-              Celeste Harbor の入口です。
-              今夜の海と、静かな帰港の導線があります。
-            </p>
-            <div class="place-action">Harborへ戻る →</div>
-          </a>
-        
-          <!-- 帰港：航海記録を残す場所 -->
-          <a class="place" href="/log/">
-            <div class="place-kicker">Return / Voyage Log</div>
-            <h2>帰港</h2>
-            <p>
-              今日の航海を残す場所です。
-              記録は非公開で保存され、港のネコが短く反応します。
-            </p>
-            <div class="place-action">航海記録へ →</div>
-          </a>
-        
-          <!-- 深海：Moonlit Voyage への入口 -->
-          <a class="place" href="/voyage/">
-            <div class="place-kicker">Deep Sea / Moonlit Voyage</div>
-            <h2>深海</h2>
-            <p>
-              『Moonlit Voyage』へ続く入口です。
-              Harbor の沖にある、月夜の深い海です。
-            </p>
-            <div class="place-action">深海へ進む →</div>
-          </a>
-        
-          <!-- 漂着：Fragments 一覧 -->
-          <a class="place" href="/fragments/">
-            <div class="place-kicker">Drift / Fragments</div>
-            <h2>漂着</h2>
-            <p>
-              同じ海域に漂着した別の夜です。
-              本編の切り抜きではなく、港に残された短い断片です。
-            </p>
-            <div class="place-action">Fragmentsを見る →</div>
-          </a>
-        
-          <!-- 灯台：Harbor の思想説明 -->
-          <a class="place" href="/about/">
-            <div class="place-kicker">Lighthouse / About</div>
-            <h2>灯台</h2>
-            <p>
-              この港が何を大切にしているのかを示す場所です。
-              Presence AI や Harbor の思想を静かに説明しています。
-            </p>
-            <div class="place-action">灯台を見る →</div>
-          </a>
-        
-          <!-- 古い灯り：旧Celeste資産の保管場所 -->
-          <a class="place" href="/archive/">
-            <div class="place-kicker">Old Lights / Archive</div>
-            <h2>古い灯り</h2>
-            <p>
-              Celeste Harbor になる前の思想や構造を残す場所です。
-              旧Celesteの記録を、消さずに保管しています。
-            </p>
-            <div class="place-action">Archiveへ →</div>
-          </a>
-        
-          <!-- 航海券：深い航海へ降りるためのチケット案内 -->
-          <a class="place" href="/tickets/">
-            <div class="place-kicker">Tickets / Deeper Voyage</div>
-            <h2>航海券</h2>
-            <p>
-              漂着チケット、特別航海チケット、深海チケットの位置関係を示す場所です。
-              深い海へ一時的に降りるための小さな案内です。
-            </p>
-            <div class="place-action">Ticketsを見る →</div>
-          </a>
-
-                    <!-- Account：現在残っている航海券を確認する場所 -->
-          <a class="place" href="/account/">
-            <div class="place-kicker">Account / Ticket Harbor</div>
-            <h2>航海券の保管場所</h2>
-            <p>
-              現在残っている航海券を確認する場所です。
-              Drift Ticket や Special Voyage Ticket は、ここで静かに保管されます。
-            </p>
-            <div class="place-action">Accountへ →</div>
-          </a>
-        
-          <!-- 港の気配：Voyage Log 内で反応する Harbor Cat -->
-          <div class="place quiet-place">
-            <div class="place-kicker">Presence / Harbor Cat</div>
-            <h2>港の気配</h2>
-            <p>
-              航海記録に短く反応する、小さなPresenceです。
-              助言せず、診断せず、記録が届いたことだけを静かに示します。
-            </p>
-            <div class="place-action">Voyage Logの中にいます</div>
-          </div>
-        
-          <!-- 今夜の海：TOPページにある Harbor Weather -->
-          <div class="place quiet-place">
-            <div class="place-kicker">Tonight / Harbor Weather</div>
-            <h2>今夜の海</h2>
-            <p>
-              実際の天気ではなく、港の気配です。
-              TOPページで、その夜の海の状態を静かに知らせます。
-            </p>
-            <div class="place-action">Harborの入口にあります</div>
-          </div>
-        
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
         </div>
 
+        <div class="actions">
+          <button class="primary" id="loginBtn">Googleでログイン</button>
+          <button class="ghost" id="logoutBtn">ログアウト</button>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+          <a class="btn-ghost" href="/vessels/">Vesselsへ</a>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+
+      <section id="mapArea">
+        <div class="empty">
+          海図を確認しています...
+        </div>
       </section>
 
       <p class="note">
-        この地図は、目的地を急がせるためのものではありません。<br>
-        迷った時に、いま自分が港のどのあたりにいるのかを、
-        少しだけ確かめるためのものです。
+        未開放の海域は、名前や詳細をすべて明かしません。<br>
+        霧の向こうにある、ということだけが今の港に見えています。
       </p>
-
     </main>
 
     <footer>
-     <div class="footer-links">
-        <a href="/">Harbor</a>
+      <div class="footer-links">
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/fragments/">Fragments</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/archive/">Archive</a>
+        <a href="/account/">Account</a>
       </div>
 
-      <div>CELESTE HARBOR MAP</div>
+      <div>CELESTE SEA CHART</div>
     </footer>
 
   </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const mapArea = document.getElementById("mapArea");
+
+    let currentUser = null;
+    let currentAccessToken = null;
+
+    const fallbackAreas = [
+      {
+        area_key:"harbor",
+        name_ja:"港",
+        description:"最初に開いている静かな海域です。Voyage Log はここから始まります。",
+        sort_order:1,
+        position_class:"pos-harbor"
+      },
+      {
+        area_key:"tide",
+        name_ja:"潮の流れ",
+        description:"流れが少しずつ変わる海域です。",
+        sort_order:2,
+        position_class:"pos-tide"
+      },
+      {
+        area_key:"moonlit",
+        name_ja:"月明かりの海",
+        description:"月の光が細く続く海域です。",
+        sort_order:3,
+        position_class:"pos-moon"
+      },
+      {
+        area_key:"fog",
+        name_ja:"霧の海",
+        description:"視界が閉じ、まだ先が見えない海域です。",
+        sort_order:4,
+        position_class:"pos-fog"
+      },
+      {
+        area_key:"lighthouse",
+        name_ja:"灯台沖",
+        description:"遠くに小さな灯りが見える海域です。",
+        sort_order:5,
+        position_class:"pos-lighthouse"
+      },
+      {
+        area_key:"deep_sea",
+        name_ja:"深海",
+        description:"静かで深い海域です。",
+        sort_order:6,
+        position_class:"pos-deep"
+      },
+      {
+        area_key:"outer_sea",
+        name_ja:"外海",
+        description:"まだ名前のない航路へ続く海域です。",
+        sort_order:7,
+        position_class:"pos-outer"
+      }
+    ];
+
+    const positionClasses = [
+      "pos-harbor",
+      "pos-tide",
+      "pos-moon",
+      "pos-fog",
+      "pos-lighthouse",
+      "pos-deep",
+      "pos-outer"
+    ];
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    function updateAuthUI(){
+      const loggedIn = Boolean(currentUser);
+
+      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
+      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
+    }
+
+    function renderLoggedOutState(){
+      currentAccessToken = null;
+
+      mapArea.innerHTML = `
+        <div class="empty">
+          ログインすると、あなたの海図を確認できます。<br>
+          開いている海域と、まだ霧の向こうにある海域がここに表示されます。
+        </div>
+      `;
+    }
+
+    async function fetchSupabase(path, options = {}){
+      if(!currentAccessToken){
+        throw new Error("Missing access token");
+      }
+
+      const response = await fetch(
+        supabaseUrl + path,
+        {
+          method: options.method || "GET",
+          headers: {
+            "apikey": supabaseKey,
+            "Authorization": "Bearer " + currentAccessToken,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+          },
+          body: options.body ? JSON.stringify(options.body) : undefined
+        }
+      );
+
+      let result = null;
+
+      try{
+        result = await response.json();
+      }catch(error){
+        result = null;
+      }
+
+      if(!response.ok){
+        console.error("Supabase fetch error:", result);
+        throw new Error((result && result.message) ? result.message : "Supabase request failed");
+      }
+
+      return result;
+    }
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        currentUser = null;
+        currentAccessToken = null;
+        userStatus.textContent = "ログイン状態の確認に失敗しました。";
+        setStatus(error.message, true);
+        updateAuthUI();
+        renderLoggedOutState();
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        currentAccessToken = data.session.access_token;
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        setStatus("海図を確認しています。");
+        updateAuthUI();
+
+        await loadSeaChart();
+      }else{
+        currentUser = null;
+        currentAccessToken = null;
+        userStatus.textContent = "未ログインです。Googleでログインすると、海図を確認できます。";
+        renderLoggedOutState();
+        setStatus("ログインが必要です。");
+        updateAuthUI();
+      }
+    }
+
+    async function loadSeaChart(){
+      if(!currentUser || !currentAccessToken){
+        return;
+      }
+
+      try{
+        const userId = encodeURIComponent(currentUser.id);
+
+        const seaAreas = await fetchSupabase(
+          "/rest/v1/sea_areas?select=*&order=sort_order.asc"
+        );
+
+        const userAreas = await fetchSupabase(
+          "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+        );
+
+        const areas = Array.isArray(seaAreas) && seaAreas.length > 0
+          ? seaAreas
+          : fallbackAreas;
+
+        const unlockedMap = buildUnlockedMap(Array.isArray(userAreas) ? userAreas : []);
+
+        renderSeaChart(areas, unlockedMap);
+        setStatus("海図を確認しました。");
+      }catch(error){
+        console.error("load sea chart error:", error);
+
+        mapArea.innerHTML = `
+          <div class="empty">
+            海図を読み込めませんでした。<br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+
+        setStatus("海図を読み込めませんでした：" + error.message, true);
+      }
+    }
+
+    function buildUnlockedMap(userAreas){
+      const map = new Map();
+
+      userAreas.forEach(row => {
+        const key =
+          row.area_key ||
+          row.sea_area_key ||
+          row.area_id ||
+          row.sea_area_id;
+
+        const status =
+          row.status ||
+          row.unlock_status ||
+          row.state ||
+          "open";
+
+        if(key){
+          map.set(String(key), status);
+        }
+      });
+
+      return map;
+    }
+
+    function normalizeArea(area, index){
+      return {
+        area_key:
+          area.area_key ||
+          area.key ||
+          area.slug ||
+          area.id ||
+          fallbackAreas[index]?.area_key ||
+          "area_" + index,
+
+        name_ja:
+          area.name_ja ||
+          area.title_ja ||
+          area.name ||
+          fallbackAreas[index]?.name_ja ||
+          "霧の向こう",
+
+        description:
+          area.description ||
+          area.description_ja ||
+          area.body ||
+          fallbackAreas[index]?.description ||
+          "",
+
+        sort_order:
+          area.sort_order ||
+          area.order_index ||
+          area.display_order ||
+          index + 1,
+
+        position_class:
+          area.position_class ||
+          fallbackAreas[index]?.position_class ||
+          positionClasses[index % positionClasses.length]
+      };
+    }
+
+    function isAreaOpen(area, unlockedMap){
+      const key = String(area.area_key);
+
+      if(unlockedMap.has(key)){
+        const status = String(unlockedMap.get(key));
+        return status === "open" || status === "unlocked" || status === "active";
+      }
+
+      return key === "harbor";
+    }
+
+    function renderSeaChart(rawAreas, unlockedMap){
+      const normalized = rawAreas
+        .map((area, index) => normalizeArea(area, index))
+        .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0))
+        .slice(0, 7);
+
+      if(normalized.length === 0){
+        mapArea.innerHTML = `
+          <div class="empty">
+            まだ海図に表示できる海域がありません。
+          </div>
+        `;
+        return;
+      }
+
+      const cardsHtml = normalized.map((area, index) => {
+        const open = isAreaOpen(area, unlockedMap);
+        const stateClass = open ? "open" : "locked";
+        const positionClass = area.position_class || positionClasses[index % positionClasses.length];
+
+        const displayName = open ? area.name_ja : "霧の向こう";
+        const displayDesc = open
+          ? area.description
+          : "まだ開かれていない海域です。記録と漂着物が積もるまで、詳細は霧に包まれています。";
+
+        const kicker = open
+          ? "Open Sea Area"
+          : "Beyond the Fog";
+
+        const tagText = open
+          ? "開放中"
+          : "未開放";
+
+        return `
+          <article class="sea-card ${stateClass} ${positionClass}">
+            <div class="sea-kicker">${escapeHtml(kicker)}</div>
+
+            <div class="sea-name">
+              ${escapeHtml(displayName)}
+            </div>
+
+            <p class="sea-desc">
+              ${escapeHtml(displayDesc)}
+            </p>
+
+            <div class="sea-meta">
+              <span class="tag ${stateClass}">
+                ${escapeHtml(tagText)}
+              </span>
+              <span class="tag">
+                Sea ${escapeHtml(index + 1)} / 7
+              </span>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      mapArea.innerHTML = `
+        <section class="chart-panel" aria-label="Celeste Harbor sea chart">
+          <div class="sea-grid">
+            ${cardsHtml}
+          </div>
+        </section>
+      `;
+    }
+
+    async function login(){
+      setStatus("Googleログインへ進みます。");
+
+      const { error } = await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/map/",
+          queryParams: {
+            prompt: "select_account"
+          }
+        }
+      });
+
+      if(error){
+        console.error("login error:", error);
+        setStatus(error.message, true);
+      }
+    }
+
+    async function logout(){
+      setStatus("ログアウトしています。");
+
+      const { error } = await client.auth.signOut();
+
+      if(error){
+        console.error("logout error:", error);
+        setStatus(error.message, true);
+        return;
+      }
+
+      currentUser = null;
+      currentAccessToken = null;
+      userStatus.textContent = "未ログインです。";
+      renderLoggedOutState();
+      setStatus("ログアウトしました。");
+      updateAuthUI();
+    }
+
+    loginBtn.addEventListener("click", login);
+    logoutBtn.addEventListener("click", logout);
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+        currentAccessToken = session.access_token;
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        updateAuthUI();
+
+        setTimeout(function(){
+          loadSeaChart().catch(function(error){
+            console.error("auth state sea chart load error:", error);
+          });
+        }, 0);
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        currentAccessToken = null;
+
+        updateAuthUI();
+        renderLoggedOutState();
+      }
+    });
+
+    updateAuthUI();
+    checkSession();
+  </script>
+
 </body>
 </html>
