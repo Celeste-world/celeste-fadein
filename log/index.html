@@ -694,6 +694,24 @@
       return items[Math.floor(Math.random() * items.length)];
     }
 
+    async function withTimeout(promise, ms, fallbackValue = null){
+      let timeoutId;
+    
+      const timeoutPromise = new Promise(resolve => {
+        timeoutId = setTimeout(() => {
+          resolve(fallbackValue);
+        }, ms);
+      });
+    
+      const result = await Promise.race([
+        promise,
+        timeoutPromise
+      ]);
+    
+      clearTimeout(timeoutId);
+      return result;
+    }
+
     function sleep(ms){
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -953,34 +971,54 @@
     }
 
     async function callCatReply(content, tag){
-      const { data, error } = await client.functions.invoke("cat-reply", {
-        body: {
-          content,
-          tag: tag || "Harbor"
+      try{
+        const result = await withTimeout(
+          client.functions.invoke("cat-reply", {
+            body: {
+              content,
+              tag: tag || "Harbor"
+            }
+          }),
+          8000,
+          { data: null, error: new Error("cat-reply timeout") }
+        );
+    
+        if(result.error){
+          console.error("cat-reply invoke error:", result.error);
+          return null;
         }
-      });
-
-      if(error){
-        console.error("cat-reply invoke error:", error);
+    
+        return result.data?.reply || null;
+    
+      }catch(error){
+        console.error("cat-reply catch error:", error);
         return null;
       }
-
-      return data?.reply || null;
     }
 
     async function callGrantDriftTicket(){
-      const { data, error } = await client.functions.invoke("grant-drift-ticket", {
-        body: {}
-      });
-
-      if(error){
-        console.error("grant-drift-ticket invoke error:", error);
+      try{
+        const result = await withTimeout(
+          client.functions.invoke("grant-drift-ticket", {
+            body: {}
+          }),
+          8000,
+          { data: null, error: new Error("grant-drift-ticket timeout") }
+        );
+    
+        if(result.error){
+          console.error("grant-drift-ticket invoke error:", result.error);
+          return null;
+        }
+    
+        return result.data || null;
+    
+      }catch(error){
+        console.error("grant-drift-ticket catch error:", error);
         return null;
       }
-
-      return data || null;
     }
-
+    
     async function callGrantHarborFind(tag, context = "voyage_log", force = false){
       try{
         const result = await fetchSupabase(
