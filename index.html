@@ -6,7 +6,7 @@
 
   <title>Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港空間です。月夜の港から、航海記録、Fragments、Moonlit Voyage へ。" />
+  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港空間です。Googleログインで港へ入り、航海記録を残していきます。" />
   <link rel="canonical" href="https://celeste.world/" />
   <meta name="robots" content="index, follow">
 
@@ -31,6 +31,7 @@
       --muted:#a0a8bb;
       --dim:#747f96;
       --accent:#a9b7ff;
+      --danger:#ff9b9b;
     }
 
     *{
@@ -192,6 +193,10 @@
       text-shadow:0 2px 12px rgba(0,0,0,.55);
     }
 
+    .status.error{
+      color:var(--danger);
+    }
+
     @media(max-width:760px){
       .entrance{
         background:
@@ -283,8 +288,8 @@
           Googleでログイン
         </button>
 
-        <a class="btn-ghost" href="/harbor/">
-          ログインせずに港を見る
+        <a class="btn-ghost" href="/about/">
+          このサイトについて
         </a>
       </div>
 
@@ -304,8 +309,9 @@
     const loginBtn = document.getElementById("loginBtn");
     const statusEl = document.getElementById("status");
 
-    function setStatus(message){
+    function setStatus(message, isError = false){
       statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
     }
 
     async function checkSession(){
@@ -313,15 +319,18 @@
 
       if(error){
         console.error("getSession error:", error);
+        setStatus("ログイン状態を確認できませんでした。", true);
+        loginBtn.addEventListener("click", login);
         return;
       }
 
       if(data.session && data.session.user){
         loginBtn.textContent = "港へ入る";
         loginBtn.addEventListener("click", function(){
-          window.location.href = "/harbor/";
+          window.location.href = "/log/";
         });
       }else{
+        loginBtn.textContent = "Googleでログイン";
         loginBtn.addEventListener("click", login);
       }
     }
@@ -332,7 +341,7 @@
       const { error } = await client.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin + "/harbor/",
+          redirectTo: window.location.origin + "/log/",
           queryParams: {
             prompt: "select_account"
           }
@@ -341,7 +350,7 @@
 
       if(error){
         console.error("login error:", error);
-        setStatus(error.message);
+        setStatus(error.message, true);
       }
     }
 
