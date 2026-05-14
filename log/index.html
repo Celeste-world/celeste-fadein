@@ -1028,21 +1028,23 @@
 
         await ensureUserVessel();
 
-        const { error } = await client
-          .from("voyage_logs")
-          .insert([
-            {
+        try{
+        await fetchSupabase(
+          "/rest/v1/voyage_logs",
+          {
+            method: "POST",
+            body: {
               user_id: currentUser.id,
               content: content,
               tag: tag
             }
-          ]);
-
-        if(error){
-          console.error("insert error:", error);
-          setStatus("保存失敗：" + error.message, true);
-          return;
-        }
+          }
+        );
+      }catch(error){
+        console.error("insert voyage_logs error:", error);
+        setStatus("保存失敗：" + error.message, true);
+        return;
+      }
 
         setStatus("航海記録を保存しました。Harbor Cat が、巻物を読んでいます。");
 
