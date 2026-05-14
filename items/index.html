@@ -20,6 +20,8 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --fog:#6f7689;
     }
 
     *{ box-sizing:border-box; }
@@ -40,7 +42,7 @@
     }
 
     .wrap{
-      max-width:860px;
+      max-width:900px;
       margin:0 auto;
       padding:48px 20px 40px;
       min-height:100vh;
@@ -102,8 +104,7 @@
       margin-bottom:34px;
     }
 
-    .panel,
-    .finds-card{
+    .panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
       border-radius:20px;
@@ -173,6 +174,77 @@
 
     .status.error{
       color:var(--danger);
+    }
+
+    .area-section{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 20px 48px rgba(0,0,0,.32);
+      margin-bottom:18px;
+    }
+
+    .area-section.locked{
+      opacity:.72;
+      border-color:rgba(160,168,187,.18);
+      background:rgba(10,14,28,.48);
+    }
+
+    .area-head{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .area-title{
+      font-size:20px;
+      line-height:1.7;
+      color:var(--text);
+    }
+
+    .area-kicker{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+
+    .area-desc{
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .area-status{
+      font-size:12px;
+      color:var(--accent);
+      border:1px solid rgba(169,183,255,.32);
+      border-radius:999px;
+      padding:5px 11px;
+      background:rgba(169,183,255,.06);
+    }
+
+    .area-section.locked .area-title,
+    .area-section.locked .area-kicker,
+    .area-section.locked .area-desc{
+      color:#7f8799;
+    }
+
+    .area-empty{
+      margin-top:12px;
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.025);
+      border:1px solid rgba(160,168,187,.18);
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
     }
 
     .finds-grid{
@@ -247,6 +319,18 @@
       background:rgba(255,255,255,.02);
     }
 
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
+    .tag.fog{
+      color:var(--fog);
+      border-color:rgba(111,118,137,.26);
+      background:rgba(255,255,255,.015);
+    }
+
     .empty{
       background:rgba(10,14,28,.52);
       border:1px solid rgba(70,84,132,.35);
@@ -307,7 +391,7 @@
       h1{ font-size:31px; }
 
       .panel,
-      .finds-card{
+      .area-section{
         padding:20px;
       }
 
@@ -344,13 +428,13 @@
       <div class="label">Items</div>
 
       <h1>
-        港へ流れ着いた、<br>
-        小さなものたち。
+        海域ごとに残る、<br>
+        小さな漂着物。
       </h1>
 
       <p class="lead">
-        ここでは、これまでに見つかった Harbor Finds を確認できます。<br>
-        それぞれの漂着物は、次の船を整えるための静かな材料になります。
+        ここでは、これまでに見つかった Harbor Finds を海域ごとに確認できます。<br>
+        開いた海から届いたものだけが、静かに港へ積もっていきます。
       </p>
 
       <section class="panel">
@@ -363,6 +447,7 @@
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/vessels/">Vesselsへ</a>
+          <a class="btn-ghost" href="/map/">Mapへ</a>
         </div>
 
         <div class="status" id="status"></div>
@@ -376,8 +461,8 @@
         </div>
 
         <p class="note">
-          未発見のものは、まだ霧の向こうにあります。<br>
-          この場所には、すでにあなたの港へ届いたものだけが並びます。
+          未発見のものは表示されません。<br>
+          未開放の海域は、まだ霧の向こうにあります。
         </p>
       </section>
     </main>
@@ -562,11 +647,29 @@
       try{
         const userId = encodeURIComponent(currentUser.id);
 
+        const seaAreas = await fetchSupabase(
+          "/rest/v1/sea_areas?select=*&order=sort_order.asc"
+        );
+
+        const userAreas = await fetchSupabase(
+          "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+        );
+
         const finds = await fetchSupabase(
           "/rest/v1/user_harbor_items_view?user_id=eq." + userId + "&select=*&order=name_ja.asc"
         );
 
-        renderHarborFinds(Array.isArray(finds) ? finds : []);
+        const pools = await fetchSupabase(
+          "/rest/v1/area_item_pools?select=area_key,item_key,is_active&is_active=eq.true"
+        );
+
+        renderHarborFindsByArea(
+          Array.isArray(seaAreas) ? seaAreas : [],
+          Array.isArray(userAreas) ? userAreas : [],
+          Array.isArray(finds) ? finds : [],
+          Array.isArray(pools) ? pools : []
+        );
+
         setStatus("漂着物を確認しました。");
       }catch(error){
         console.error("load harbor finds error:", error);
@@ -582,46 +685,165 @@
       }
     }
 
-    function renderHarborFinds(finds){
-      if(!finds || finds.length === 0){
+    function buildOpenAreaMap(userAreas){
+      const map = new Map();
+
+      (userAreas || []).forEach(row => {
+        const key =
+          row.area_key ||
+          row.sea_area_key ||
+          row.area_id ||
+          row.sea_area_id;
+
+        const status =
+          row.status ||
+          row.unlock_status ||
+          row.state ||
+          "open";
+
+        if(key){
+          map.set(String(key), status);
+        }
+      });
+
+      return map;
+    }
+
+    function buildItemAreaMap(pools){
+      const map = new Map();
+
+      (pools || []).forEach(row => {
+        if(!row.item_key || !row.area_key){
+          return;
+        }
+
+        if(!map.has(row.item_key)){
+          map.set(row.item_key, row.area_key);
+        }
+      });
+
+      return map;
+    }
+
+    function areaIsOpen(areaKey, openMap){
+      if(openMap.has(areaKey)){
+        const status = String(openMap.get(areaKey));
+        return status === "open" || status === "unlocked" || status === "active";
+      }
+
+      return areaKey === "harbor";
+    }
+
+    function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
+      const openMap = buildOpenAreaMap(userAreas);
+      const itemAreaMap = buildItemAreaMap(pools);
+
+      const areas = (seaAreas || [])
+        .slice()
+        .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+
+      if(areas.length === 0){
         harborFindsEl.innerHTML = `
           <div class="empty">
-            まだ港に漂着物はありません。<br>
-            Voyage Log を残したあと、何かが流れ着くことがあります。
+            まだ海域情報がありません。
           </div>
         `;
         return;
       }
 
-      const itemsHtml = finds.map(item => {
+      const grouped = new Map();
+
+      (finds || []).forEach(item => {
+        const areaKey =
+          item.area_key ||
+          item.sea_area_key ||
+          itemAreaMap.get(item.item_key) ||
+          "harbor";
+
+        if(!grouped.has(areaKey)){
+          grouped.set(areaKey, []);
+        }
+
+        grouped.get(areaKey).push(item);
+      });
+
+      const sectionsHtml = areas.map(area => {
+        const areaKey = area.area_key || area.key || area.id;
+        const open = areaIsOpen(areaKey, openMap);
+        const areaItems = grouped.get(areaKey) || [];
+
+        if(!open){
+          return `
+            <section class="area-section locked">
+              <div class="area-head">
+                <div>
+                  <div class="area-kicker">Beyond the Fog</div>
+                  <div class="area-title">霧の向こう</div>
+                  <p class="area-desc">
+                    まだ開かれていない海域です。漂着物の記録も、今は霧の中にあります。
+                  </p>
+                </div>
+
+                <div class="area-status">
+                  未開放
+                </div>
+              </div>
+            </section>
+          `;
+        }
+
+        const itemsHtml = areaItems.length
+          ? areaItems.map(item => {
+              return `
+                <div class="find-item">
+                  ${imageBox(item.image_path, item.name_ja)}
+
+                  <div>
+                    <div class="find-name">${escapeHtml(item.name_ja)}</div>
+
+                    <p class="find-line">
+                      ${escapeHtml(item.origin_text || item.description)}
+                    </p>
+
+                    <div class="find-meta">
+                      <span class="tag">数量：${escapeHtml(item.quantity)}</span>
+                      <span class="tag">${escapeHtml(item.rarity)}</span>
+                      <span class="tag">${escapeHtml(item.area_hint)}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join("")
+          : `
+            <div class="area-empty">
+              この海域から届いた漂着物は、まだありません。
+            </div>
+          `;
+
         return `
-          <div class="find-item">
-            ${imageBox(item.image_path, item.name_ja)}
+          <section class="area-section">
+            <div class="area-head">
+              <div>
+                <div class="area-kicker">Open Sea Area</div>
+                <div class="area-title">${escapeHtml(area.name_ja || area.name || areaKey)}</div>
+                <p class="area-desc">
+                  ${escapeHtml(area.description || area.description_ja || "")}
+                </p>
+              </div>
 
-            <div>
-              <div class="find-name">${escapeHtml(item.name_ja)}</div>
-
-              <p class="find-line">
-                ${escapeHtml(item.origin_text || item.description)}
-              </p>
-
-              <div class="find-meta">
-                <span class="tag">数量：${escapeHtml(item.quantity)}</span>
-                <span class="tag">${escapeHtml(item.rarity)}</span>
-                <span class="tag">${escapeHtml(item.area_hint)}</span>
+              <div class="area-status">
+                開放中
               </div>
             </div>
-          </div>
+
+            <div class="finds-grid">
+              ${itemsHtml}
+            </div>
+          </section>
         `;
       }).join("");
 
-      harborFindsEl.innerHTML = `
-        <div class="finds-card">
-          <div class="finds-grid">
-            ${itemsHtml}
-          </div>
-        </div>
-      `;
+      harborFindsEl.innerHTML = sectionsHtml;
     }
 
     async function login(){
