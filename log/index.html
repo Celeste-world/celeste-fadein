@@ -335,6 +335,16 @@
       font-size:15px;
       line-height:2.05;
       padding:2px 2px 0;
+      opacity:1;
+      transform:translateY(0);
+      transition:
+        opacity .42s ease,
+        transform .42s ease;
+    }
+
+    .cat-scroll-text.fading{
+      opacity:0;
+      transform:translateY(4px);
     }
 
     .user{
@@ -514,7 +524,7 @@
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
-        <a href="/">Harbor</a>
+        <a href="/harbor/">Harbor</a>
         <a href="/log/">Voyage Log</a>
         <a href="/fragments/">Fragments</a>
         <a href="/voyage/">Moonlit Voyage</a>
@@ -541,19 +551,20 @@
         ></textarea>
 
         <div class="field-row">
-          <div class="field-note">今夜の海に近い言葉を選んでください。</div>
+          <div class="field-note">この記録に近い気配を選んでください。</div>
           <div class="char-count" id="charCount">0 / 1500</div>
         </div>
 
         <select id="tag">
           <option value="Harbor">Harbor（港）</option>
-          <option value="Calm Tide">Calm Tide（穏やかな潮）</option>
-          <option value="Fog">Fog（霧）</option>
-          <option value="Deep Sea">Deep Sea（深海）</option>
-          <option value="Lighthouse">Lighthouse（灯台）</option>
-          <option value="Storm">Storm（嵐）</option>
-          <option value="Drift">Drift（漂着）</option>
           <option value="Return">Return（帰港）</option>
+          <option value="Calm Tide">Calm Tide（静かな潮）</option>
+          <option value="Lighthouse">Lighthouse（灯台）</option>
+          <option value="Fog">Fog（霧）</option>
+          <option value="Drift">Drift（漂流）</option>
+          <option value="Moonlit">Moonlit（月夜）</option>
+          <option value="Deep Current">Deep Current（深潮）</option>
+          <option value="Storm">Storm（嵐）</option>
         </select>
 
         <div class="actions">
@@ -579,7 +590,7 @@
 
               <div>
                 <div class="cat-scroll-label">Harbor Cat</div>
-                <div class="cat-scroll-sub" id="catScrollSub">Reading the voyage log</div>
+                <div class="cat-scroll-sub" id="catScrollSub">Harbor Cat が、巻物を読んでいます…</div>
               </div>
 
               <button class="cat-close" id="catCloseBtn" type="button" aria-label="Close">
@@ -608,7 +619,7 @@
 
     <footer>
       <div>
-        <a href="/">Harbor</a>
+        <a href="/harbor/">Harbor</a>
         ・
         <a href="/log/">Voyage Log</a>
         ・
@@ -666,12 +677,6 @@
       "今夜、船に残っていたものを記録する..."
     ];
 
-    const catReadingMessages = [
-      "港のネコが、航海記録を読んでいます。\n静かな波の音の中で、少しだけ耳を動かしています。",
-      "港のネコが、桟橋の影で記録を読んでいます。\n灯台の光が、ゆっくり海をなぞっています。",
-      "港のネコが、足音を立てずに記録へ近づいています。\n少しだけ、港が静かになりました。"
-    ];
-
     const catIcons = {
       reading: [
         "/images/harbor-cat/cat-reading-map.png"
@@ -687,6 +692,24 @@
 
     function pickRandom(items){
       return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function sleep(ms){
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fadeCatTextTo(message){
+      catReplyText.classList.add("fading");
+
+      await sleep(420);
+
+      catReplyText.textContent = message || "";
+
+      requestAnimationFrame(function(){
+        catReplyText.classList.remove("fading");
+      });
+
+      await sleep(420);
     }
 
     function setStatus(message, isError = false){
@@ -748,21 +771,23 @@
 
     function openCatScroll(message, mode = "reading"){
       catReplyText.textContent = message || "";
+      catReplyText.classList.remove("fading");
+
       catOverlay.classList.add("visible");
       catOverlay.setAttribute("aria-hidden", "false");
 
       setCatIcon(mode);
 
       if(mode === "reading"){
-        catScrollSub.textContent = "Reading the voyage log";
+        catScrollSub.textContent = "Harbor Cat が、巻物を読んでいます…";
         catIconWrap.classList.add("reading");
       }else{
-        catScrollSub.textContent = "A quiet reply from the harbor";
+        catScrollSub.textContent = "港からの静かな返事";
         catIconWrap.classList.remove("reading");
       }
     }
 
-    function appendCatScrollNotice(message, label = "Harbor Find"){
+    async function appendCatScrollNotice(message, label = "Harbor Find"){
       const current = catReplyText.textContent.trim();
 
       const notice = [
@@ -770,21 +795,24 @@
         message
       ].join("\n\n");
 
-      catReplyText.textContent = current
+      const nextText = current
         ? current + "\n\n" + notice
         : notice;
 
       catOverlay.classList.add("visible");
       catOverlay.setAttribute("aria-hidden", "false");
 
-      catScrollSub.textContent = "A quiet reply from the harbor";
+      catScrollSub.textContent = "港からの静かな返事";
       catIconWrap.classList.remove("reading");
+
+      await fadeCatTextTo(nextText);
     }
 
     function closeCatScroll(){
       catOverlay.classList.remove("visible");
       catOverlay.setAttribute("aria-hidden", "true");
       catReplyText.textContent = "";
+      catReplyText.classList.remove("fading");
       catIconWrap.classList.remove("reading");
     }
 
@@ -832,6 +860,20 @@
       return result;
     }
 
+    async function ensureUserVessel(){
+      try{
+        await fetchSupabase(
+          "/rest/v1/rpc/ensure_user_vessel",
+          {
+            method: "POST",
+            body: {}
+          }
+        );
+      }catch(error){
+        console.error("ensure_user_vessel error:", error);
+      }
+    }
+
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
 
@@ -853,6 +895,8 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("港へ戻りました。");
         updateAuthUI();
+
+        await ensureUserVessel();
         await loadLogs();
       }else{
         currentUser = null;
@@ -937,13 +981,17 @@
       return data || null;
     }
 
-    async function callGrantHarborFind(){
+    async function callGrantHarborFind(tag, context = "voyage_log", force = false){
       try{
         const result = await fetchSupabase(
           "/rest/v1/rpc/grant_random_harbor_find",
           {
             method: "POST",
-            body: {}
+            body: {
+              p_tag: tag || "Harbor",
+              p_context: context,
+              p_force: force
+            }
           }
         );
 
@@ -978,6 +1026,8 @@
           return;
         }
 
+        await ensureUserVessel();
+
         const { error } = await client
           .from("voyage_logs")
           .insert([
@@ -994,30 +1044,45 @@
           return;
         }
 
-        setStatus("航海記録を保存しました。港のネコが読んでいます。");
+        setStatus("航海記録を保存しました。Harbor Cat が、巻物を読んでいます。");
 
         openCatScroll(
-          pickRandom(catReadingMessages),
+          "Harbor Cat が、巻物を読んでいます…",
           "reading"
         );
 
         const reply = await callCatReply(content, tag);
 
         if(reply){
-          openCatScroll(reply, "reply");
+          setCatIcon("reply");
+          catScrollSub.textContent = "港からの静かな返事";
+          catIconWrap.classList.remove("reading");
+
+          await fadeCatTextTo(reply);
           setStatus("航海記録を保存しました。");
         }else{
-          openCatScroll(
-            "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。",
-            "fallback"
+          setCatIcon("fallback");
+          catScrollSub.textContent = "港からの静かな返事";
+          catIconWrap.classList.remove("reading");
+
+          await fadeCatTextTo(
+            "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。"
           );
+
           setStatus("航海記録を保存しました。");
         }
 
-        const harborFindResult = await callGrantHarborFind();
+        const harborFindResult = await callGrantHarborFind(tag, "voyage_log", false);
+
+        if(harborFindResult && harborFindResult.hint_message){
+          await appendCatScrollNotice(
+            harborFindResult.hint_message,
+            "漂着の気配"
+          );
+        }
 
         if(harborFindResult && harborFindResult.found){
-          appendCatScrollNotice(
+          await appendCatScrollNotice(
             harborFindResult.message ||
               "今夜、港に小さな漂着物が流れ着きました。",
             "Harbor Find"
@@ -1029,7 +1094,7 @@
         const driftResult = await callGrantDriftTicket();
 
         if(driftResult && driftResult.granted){
-          appendCatScrollNotice(
+          await appendCatScrollNotice(
             driftResult.message ||
               "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。",
             "Drift Ticket"
@@ -1221,13 +1286,15 @@
 
     contentEl.addEventListener("input", updateCharCount);
 
-    client.auth.onAuthStateChange(function(event, session){
+    client.auth.onAuthStateChange(async function(event, session){
       if(session && session.user){
         currentUser = session.user;
         currentAccessToken = session.access_token;
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
-        loadLogs();
+
+        await ensureUserVessel();
+        await loadLogs();
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
         currentAccessToken = null;
