@@ -34,6 +34,10 @@
       padding:40px 20px;
     }
 
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
     .wrap{
       max-width:760px;
       margin:0 auto;
@@ -517,17 +521,19 @@
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
-        <a href="/harbor/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
@@ -618,15 +624,19 @@
     </main>
 
     <footer>
-      <div>
-        <a href="/harbor/">Harbor</a>
-        ・
-        <a href="/log/">Voyage Log</a>
-        ・
-        <a href="/fragments/">Fragments</a>
-        ・
-        <a href="/voyage/">Moonlit Voyage</a>
-      </div>
+        <div>
+          <a href="/log/">Voyage Log</a>
+          ・
+          <a href="/timeline/">Cabin Log</a>
+          ・
+          <a href="/items/">Items</a>
+          ・
+          <a href="/vessels/">Vessels</a>
+          ・
+          <a href="/map/">Map</a>
+          ・
+          <a href="/account/">Account</a>
+        </div>
       <div>CELESTE HARBOR</div>
     </footer>
 
@@ -898,38 +908,30 @@
 
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
-
+    
       const { data, error } = await client.auth.getSession();
-
+    
       if(error){
         console.error("getSession error:", error);
-        currentUser = null;
-        currentAccessToken = null;
-        userStatus.textContent = "ログイン状態の確認に失敗しました。";
-        setStatus(error.message, true);
-        updateAuthUI();
+        window.location.replace("/");
         return;
       }
-
+    
       if(data.session && data.session.user){
         currentUser = data.session.user;
         currentAccessToken = data.session.access_token;
+    
+        document.body.classList.remove("auth-locked");
+    
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("港へ戻りました。");
         updateAuthUI();
-
+    
         await ensureUserVessel();
         await loadLogs();
       }else{
-        currentUser = null;
-        currentAccessToken = null;
-        allLogs = [];
-        userStatus.textContent = "未ログインです。先にGoogleでログインしてください。";
-        setStatus("ログインすると航海記録を保存できます。");
-        logsEl.innerHTML = "";
-        logsCount.textContent = "";
-        readMoreWrap.style.display = "none";
-        updateAuthUI();
+        window.location.replace("/");
+        return;
       }
     }
 
@@ -954,24 +956,20 @@
 
     async function logout(){
       const { error } = await client.auth.signOut();
-
+    
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-
+    
       currentUser = null;
       currentAccessToken = null;
       allLogs = [];
       showAllLogs = false;
-      logsEl.innerHTML = "";
-      logsCount.textContent = "";
-      readMoreWrap.style.display = "none";
       closeCatScroll();
-      userStatus.textContent = "未ログインです。";
-      setStatus("ログアウトしました。");
-      updateAuthUI();
+    
+      window.location.replace("/");
     }
 
     async function callCatReply(content, tag){
@@ -1384,15 +1382,18 @@
       if(session && session.user){
         currentUser = session.user;
         currentAccessToken = session.access_token;
+    
+        document.body.classList.remove("auth-locked");
+    
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
-
+    
         await ensureUserVessel();
         await loadLogs();
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
         currentAccessToken = null;
-        updateAuthUI();
+        window.location.replace("/");
       }
     });
 
