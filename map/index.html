@@ -775,50 +775,55 @@
     }
 
     function normalizeArea(area, index){
+      const key =
+        area.area_key ||
+        area.key ||
+        area.slug ||
+        area.id ||
+        fallbackAreas[index]?.area_key ||
+        "area_" + index;
+    
+      const fallback = fallbackAreas.find(item => item.area_key === key) || fallbackAreas[index];
+    
       return {
-        area_key:
-          area.area_key ||
-          area.key ||
-          area.slug ||
-          area.id ||
-          fallbackAreas[index]?.area_key ||
-          "area_" + index,
-
+        area_key: key,
+    
         name_ja:
           area.name_ja ||
           area.title_ja ||
           area.name ||
-          fallbackAreas[index]?.name_ja ||
+          fallback?.name_ja ||
           "霧の向こう",
-
+    
         description:
           area.description ||
           area.description_ja ||
           area.body ||
-          fallbackAreas[index]?.description ||
+          fallback?.description ||
           "",
-
+    
         sort_order:
           area.sort_order ||
           area.order_index ||
           area.display_order ||
+          fallback?.sort_order ||
           index + 1,
-
+    
         position_class:
           area.position_class ||
-          fallbackAreas[index]?.position_class ||
+          fallback?.position_class ||
           positionClasses[index % positionClasses.length]
       };
     }
-
+    
     function isAreaOpen(area, unlockedMap){
       const key = String(area.area_key);
-
+    
       if(unlockedMap.has(key)){
         const status = String(unlockedMap.get(key));
         return status === "open" || status === "unlocked" || status === "active";
       }
-
+    
       return key === "harbor";
     }
 
