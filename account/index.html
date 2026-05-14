@@ -36,6 +36,10 @@
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
     a{
       color:inherit;
       text-decoration:none;
@@ -302,7 +306,7 @@
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
     <header class="site-header">
@@ -337,7 +341,6 @@
         </div>
 
         <div class="actions">
-          <button class="primary" id="loginBtn">Googleでログイン</button>
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
           <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
@@ -388,7 +391,6 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const ticketsEl = document.getElementById("tickets");
 
@@ -447,23 +449,6 @@
       return type || "Voyage Ticket";
     }
 
-    function updateAuthUI(){
-      const loggedIn = Boolean(currentUser);
-
-      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
-      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
-    }
-
-    function renderLoggedOutState(){
-      currentAccessToken = null;
-
-      ticketsEl.innerHTML = `
-        <div class="empty">
-          ログインすると、港に残っている航海券を確認できます。
-        </div>
-      `;
-    }
-
     async function fetchSupabase(path, options = {}){
       if(!currentAccessToken){
         throw new Error("Missing access token");
@@ -500,18 +485,11 @@
     }
 
     async function checkSession(){
-      setStatus("ログイン状態を確認しています。");
-
       const { data, error } = await client.auth.getSession();
 
       if(error){
         console.error("getSession error:", error);
-        currentUser = null;
-        currentAccessToken = null;
-        userStatus.textContent = "ログイン状態の確認に失敗しました。";
-        setStatus(error.message, true);
-        updateAuthUI();
-        renderLoggedOutState();
+        window.location.replace("/");
         return;
       }
 
@@ -519,37 +497,15 @@
         currentUser = data.session.user;
         currentAccessToken = data.session.access_token;
 
+        document.body.classList.remove("auth-locked");
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("航海券を確認しています。");
-        updateAuthUI();
 
         await loadTickets();
       }else{
-        currentUser = null;
-        currentAccessToken = null;
-        userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
-        renderLoggedOutState();
-        setStatus("ログインが必要です。");
-        updateAuthUI();
-      }
-    }
-
-    async function login(){
-      setStatus("Googleログインへ進みます。");
-
-      const { error } = await client.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/account/",
-          queryParams: {
-            prompt: "select_account"
-          }
-        }
-      });
-
-      if(error){
-        console.error("login error:", error);
-        setStatus(error.message, true);
+        window.location.replace("/");
+        return;
       }
     }
 
@@ -566,10 +522,8 @@
 
       currentUser = null;
       currentAccessToken = null;
-      userStatus.textContent = "未ログインです。";
-      renderLoggedOutState();
-      setStatus("ログアウトしました。");
-      updateAuthUI();
+
+      window.location.replace("/");
     }
 
     async function loadTickets(){
@@ -668,32 +622,16 @@
       });
     }
 
-    loginBtn.addEventListener("click", login);
     logoutBtn.addEventListener("click", logout);
 
     client.auth.onAuthStateChange(function(event, session){
-      if(session && session.user){
-        currentUser = session.user;
-        currentAccessToken = session.access_token;
-
-        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        updateAuthUI();
-
-        setTimeout(function(){
-          loadTickets().catch(function(error){
-            console.error("auth state ticket load error:", error);
-          });
-        }, 0);
-      }else if(event === "SIGNED_OUT"){
+      if(event === "SIGNED_OUT"){
         currentUser = null;
         currentAccessToken = null;
-
-        updateAuthUI();
-        renderLoggedOutState();
+        window.location.replace("/");
       }
     });
 
-    updateAuthUI();
     checkSession();
   </script>
 
