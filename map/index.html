@@ -721,7 +721,7 @@
         const userId = encodeURIComponent(currentUser.id);
 
         const seaAreas = await fetchSupabase(
-          "/rest/v1/sea_areas?select=*&order=sort_order.asc"
+          "/rest/v1/sea_areas?select=*"
         );
 
         const userAreas = await fetchSupabase(
