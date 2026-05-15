@@ -221,11 +221,17 @@
       padding:14px;
       cursor:pointer;
       transition:.18s ease;
+      position:relative;
     }
 
     .image-box:hover{
       border-color:rgba(169,183,255,.48);
       transform:translateY(-1px);
+    }
+
+    .image-box:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:3px;
     }
 
     .image-box img{
@@ -241,6 +247,22 @@
       height:92px;
       aspect-ratio:auto;
       border-radius:16px;
+    }
+
+    .image-fallback{
+      display:none;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.7;
+      text-align:center;
+    }
+
+    .image-box.image-missing .image-fallback{
+      display:block;
+    }
+
+    .image-box.image-missing{
+      cursor:default;
     }
 
     .vessel-top{
@@ -819,13 +841,16 @@
 
     function imageBox(imagePath, label, small = false){
       const safeLabel = escapeHtml(label || "Image");
+      const safeImagePath = escapeHtml(imagePath || "");
       const sizeClass = small ? "image-box small" : "image-box";
 
       if(!imagePath){
         return `
-          <div class="${sizeClass}">
-            ${safeLabel}<br>
-            image pending
+          <div class="${sizeClass} image-missing" aria-label="${safeLabel} image pending">
+            <span class="image-fallback">
+              ${safeLabel}<br>
+              image pending
+            </span>
           </div>
         `;
       }
@@ -833,18 +858,22 @@
       return `
         <div
           class="${sizeClass}"
-          data-image-src="${escapeHtml(imagePath)}"
+          data-image-src="${safeImagePath}"
           data-image-label="${safeLabel}"
           role="button"
           tabindex="0"
           aria-label="${safeLabel} を拡大表示"
         >
           <img
-            src="${escapeHtml(imagePath)}"
+            src="${safeImagePath}"
             alt="${safeLabel}"
             loading="lazy"
-            onerror="this.style.display='none'; this.parentElement.innerHTML='${safeLabel}<br>image pending';"
+            onerror="this.remove(); this.parentElement.classList.add('image-missing'); this.parentElement.removeAttribute('data-image-src'); this.parentElement.removeAttribute('data-image-label'); this.parentElement.removeAttribute('role'); this.parentElement.removeAttribute('tabindex');"
           >
+          <span class="image-fallback">
+            ${safeLabel}<br>
+            image pending
+          </span>
         </div>
       `;
     }
@@ -1235,6 +1264,7 @@
       imageModalCaption.textContent = label || "";
       imageModal.classList.add("visible");
       imageModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
     }
 
     function closeImageModal(){
@@ -1247,6 +1277,7 @@
       imageModalImg.src = "";
       imageModalImg.alt = "";
       imageModalCaption.textContent = "";
+      document.body.style.overflow = "";
     }
 
     async function checkAndUnlockNextVessel(){
@@ -1309,6 +1340,7 @@
             button.style.display = "none";
           }
 
+          await loadVesselDisplay();
           return;
         }
 
@@ -1428,12 +1460,15 @@
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
         closeImageModal();
+        return;
       }
 
       if(event.key === "Enter" || event.key === " "){
         const imageBoxEl = document.activeElement?.closest?.("[data-image-src]");
+
         if(imageBoxEl){
           event.preventDefault();
+
           openImageModal(
             imageBoxEl.dataset.imageSrc,
             imageBoxEl.dataset.imageLabel
