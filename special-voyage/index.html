@@ -21,6 +21,9 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --ticket:#d7c4ff;
+      --deep:#8fb7ff;
     }
 
     *{ box-sizing:border-box; }
@@ -198,6 +201,27 @@
       margin-bottom:20px;
     }
 
+    .ticket.drift{
+      border-color:rgba(185,246,202,.28);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
+    .ticket.special{
+      border-color:rgba(215,196,255,.28);
+      background:
+        radial-gradient(circle at top left, rgba(215,196,255,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
+    .ticket.deep-sea{
+      border-color:rgba(143,183,255,.28);
+      background:
+        radial-gradient(circle at top left, rgba(143,183,255,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
     .ticket-top{
       display:flex;
       justify-content:space-between;
@@ -222,6 +246,12 @@
       background:rgba(169,183,255,.06);
     }
 
+    .ticket-status.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
     .ticket-line{
       font-size:14px;
       line-height:2;
@@ -243,6 +273,12 @@
       border-radius:999px;
       padding:6px 12px;
       background:rgba(255,255,255,.02);
+    }
+
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
     }
 
     .empty{
@@ -448,7 +484,7 @@
 
       <p class="lead">
         この入口では、まず有効な航海券があるかを確認します。<br>
-        航海券がある場合だけ、時間制の特別航海へ進めます。
+        航海券がある場合だけ、時間制の航海へ進めます。
       </p>
 
       <section class="panel">
@@ -470,21 +506,21 @@
         <div id="ticketArea"></div>
 
         <div class="voyage-box" id="voyageBox">
-          <h2 class="voyage-title">特別航海の入口</h2>
+          <h2 class="voyage-title" id="voyageEntryTitle">航海の入口</h2>
 
-          <p class="voyage-text">
+          <p class="voyage-text" id="voyageEntryLead">
             有効な航海券が確認されました。<br>
-            この先では、時間制の特別航海を開始できます。
+            この先では、時間制の航海を開始できます。
           </p>
 
-          <p class="voyage-text">
+          <p class="voyage-text" id="voyageEntryNote">
             開始すると、航海券は使用済みになります。<br>
             時間内だけ、少し深い海へ降りることができます。
           </p>
 
           <div class="actions">
             <button class="primary" id="startVoyageBtn" type="button">
-              特別航海を開始する
+              航海を開始する
             </button>
 
             <a class="btn-ghost" href="/account/">
@@ -494,10 +530,10 @@
         </div>
 
         <div class="voyage-box" id="activeVoyageBox">
-          <h2 class="voyage-title">特別航海中</h2>
+          <h2 class="voyage-title">航海中</h2>
 
           <p class="voyage-text" id="activeVoyageMessage">
-            特別航海が始まりました。
+            航海が始まりました。
           </p>
 
           <p class="voyage-text">
@@ -537,9 +573,9 @@
         </div>
 
         <p class="note">
+          Special Voyage Ticket は、10分 または 20分の特別航海に使えます。<br>
           Drift Ticket は、港にたまたま漂着する無料の短い航海券です。<br>
-          Special Voyage Ticket では、10分 または 20分の特別航海に入ることができます。<br>
-          Deep Sea Ticket は、さらに深い海へ降りるための航海券です。
+          Deep Sea Ticket は、さらに深い海へ降りたいときのための航海券です。
         </p>
       </section>
     </main>
@@ -572,7 +608,12 @@
     const statusEl = document.getElementById("status");
     const logoutBtn = document.getElementById("logoutBtn");
     const ticketArea = document.getElementById("ticketArea");
+
     const voyageBox = document.getElementById("voyageBox");
+    const voyageEntryTitle = document.getElementById("voyageEntryTitle");
+    const voyageEntryLead = document.getElementById("voyageEntryLead");
+    const voyageEntryNote = document.getElementById("voyageEntryNote");
+
     const activeVoyageBox = document.getElementById("activeVoyageBox");
     const startVoyageBtn = document.getElementById("startVoyageBtn");
     const activeVoyageMessage = document.getElementById("activeVoyageMessage");
@@ -589,6 +630,7 @@
     let currentUser = null;
     let activeSession = null;
     let countdownTimer = null;
+    let selectedTicket = null;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -612,20 +654,132 @@
       return new Date(value).toLocaleString("ja-JP");
     }
 
+    function normalizeTicketType(type){
+      return String(type || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll("-", "_");
+    }
+
     function ticketLabel(type){
-      if(type === "drift"){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
         return "Drift Ticket（漂着チケット）";
       }
 
-      if(type === "special"){
+      if(normalized === "special"){
         return "Special Voyage Ticket（特別航海チケット）";
       }
 
-      if(type === "deep_sea"){
+      if(normalized === "deep_sea"){
         return "Deep Sea Ticket（深海チケット）";
       }
 
       return type || "Voyage Ticket";
+    }
+
+    function ticketCardClass(type){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
+        return "ticket drift";
+      }
+
+      if(normalized === "special"){
+        return "ticket special";
+      }
+
+      if(normalized === "deep_sea"){
+        return "ticket deep-sea";
+      }
+
+      return "ticket";
+    }
+
+    function ticketDescription(ticket){
+      const normalized = normalizeTicketType(ticket.ticket_type);
+      const minutes = ticket.duration_minutes || "";
+
+      if(normalized === "drift"){
+        return `港に流れ着いた、${minutes}分だけ深い海へ降りるための航海券です。`;
+      }
+
+      if(normalized === "special"){
+        return `${minutes}分の特別航海に使える航海券です。`;
+      }
+
+      if(normalized === "deep_sea"){
+        return `${minutes}分、さらに深い海へ降りるための航海券です。`;
+      }
+
+      return `${minutes}分の航海券です。`;
+    }
+
+    function sourceLabel(source){
+      if(source === "random_drift"){
+        return "港に漂着";
+      }
+
+      if(source === "purchase"){
+        return "購入した航海券";
+      }
+
+      if(source === "admin_grant"){
+        return "港から届いた航海券";
+      }
+
+      return "航海券";
+    }
+
+    function voyageEntryContent(ticket){
+      const normalized = normalizeTicketType(ticket?.ticket_type);
+
+      if(normalized === "drift"){
+        return {
+          title: "漂着チケットの入口",
+          lead:
+            "有効な Drift Ticket が確認されました。<br>" +
+            "この先では、5分だけ少し深い海へ降りることができます。",
+          note:
+            "開始すると、この漂着チケットは使用済みになります。<br>" +
+            "短い航海なので、今置きたい言葉だけを静かに持って入ってください。",
+          button: "漂着チケットで航海を開始する"
+        };
+      }
+
+      if(normalized === "deep_sea"){
+        return {
+          title: "深海航海の入口",
+          lead:
+            "有効な Deep Sea Ticket が確認されました。<br>" +
+            "この先では、さらに深い海へ降りる航海を開始できます。",
+          note:
+            "開始すると、この深海チケットは使用済みになります。<br>" +
+            "必要な言葉だけを持って、静かに進んでください。",
+          button: "深海航海を開始する"
+        };
+      }
+
+      return {
+        title: "特別航海の入口",
+        lead:
+          "有効な Special Voyage Ticket が確認されました。<br>" +
+          "この先では、時間制の特別航海を開始できます。",
+        note:
+          "開始すると、この航海券は使用済みになります。<br>" +
+          "時間内だけ、少し深い海へ降りることができます。",
+        button: "特別航海を開始する"
+      };
+    }
+
+    function applyVoyageEntryContent(ticket){
+      const content = voyageEntryContent(ticket);
+
+      voyageEntryTitle.textContent = content.title;
+      voyageEntryLead.innerHTML = content.lead;
+      voyageEntryNote.innerHTML = content.note;
+      startVoyageBtn.textContent = content.button;
     }
 
     async function checkSession(){
@@ -669,6 +823,7 @@
 
       currentUser = null;
       activeSession = null;
+      selectedTicket = null;
 
       if(countdownTimer){
         clearInterval(countdownTimer);
@@ -696,7 +851,7 @@
 
       if(error){
         console.error("active session load error:", error);
-        setStatus("特別航海中の記録確認に失敗しました：" + error.message, true);
+        setStatus("航海中の記録確認に失敗しました：" + error.message, true);
         return false;
       }
 
@@ -710,14 +865,14 @@
       voyageBox.classList.remove("visible");
 
       activeVoyageMessage.textContent =
-        "特別航海は、まだ静かに続いています。";
+        "航海は、まだ静かに続いています。";
 
       activeVoyageBox.classList.add("visible");
       specialMessage.disabled = false;
       sendSpecialBtn.disabled = false;
       startCountdown(activeSession.ends_at);
 
-      setStatus("特別航海中です。");
+      setStatus("航海中です。");
 
       return true;
     }
@@ -749,6 +904,7 @@
       ticketArea.innerHTML = "";
       voyageBox.classList.remove("visible");
       activeVoyageBox.classList.remove("visible");
+      selectedTicket = null;
 
       const now = new Date();
 
@@ -763,7 +919,7 @@
       if(validTickets.length === 0){
         ticketArea.innerHTML = `
           <div class="empty">
-            現在、特別航海に使える有効な航海券はありません。<br>
+            現在、航海に使える有効な航海券はありません。<br>
             ときどき、Voyage Log のあとに小さな航海券が漂着することがあります。
           </div>
         `;
@@ -771,20 +927,21 @@
       }
 
       const ticket = validTickets[0];
+      selectedTicket = ticket;
 
       const div = document.createElement("div");
-      div.className = "ticket";
+      div.className = ticketCardClass(ticket.ticket_type);
 
       div.innerHTML = `
         <div class="ticket-top">
           <div>
             <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
             <p class="ticket-line">
-              ${escapeHtml(ticket.duration_minutes)}分の航海券です。
+              ${escapeHtml(ticketDescription(ticket))}
             </p>
           </div>
 
-          <div class="ticket-status">
+          <div class="ticket-status ready">
             ${escapeHtml(ticket.status || "available")}
           </div>
         </div>
@@ -794,17 +951,19 @@
         </p>
 
         <div class="ticket-meta">
-          <span class="tag">source: ${escapeHtml(ticket.source || "-")}</span>
-          <span class="tag">created: ${escapeHtml(formatDate(ticket.created_at))}</span>
+          <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
+          <span class="tag">届いた日：${escapeHtml(formatDate(ticket.created_at))}</span>
+          <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
         </div>
       `;
 
       ticketArea.appendChild(div);
+      applyVoyageEntryContent(ticket);
       voyageBox.classList.add("visible");
     }
 
     async function startSpecialVoyage(){
-      setStatus("特別航海を開始しています。");
+      setStatus("航海を開始しています。");
 
       if(startVoyageBtn){
         startVoyageBtn.disabled = true;
@@ -817,7 +976,7 @@
 
         if(error){
           console.error("start-special-voyage invoke error:", error);
-          setStatus("特別航海の開始に失敗しました：" + error.message, true);
+          setStatus("航海の開始に失敗しました：" + error.message, true);
           return;
         }
 
@@ -833,18 +992,18 @@
 
         activeVoyageMessage.textContent =
           data.message ||
-          "特別航海が始まりました。\nこの海は、少しだけ深く静かです。";
+          "航海が始まりました。\nこの海は、少しだけ深く静かです。";
 
         activeVoyageBox.classList.add("visible");
         specialMessage.disabled = false;
         sendSpecialBtn.disabled = false;
-        setStatus("特別航海が始まりました。");
+        setStatus("航海が始まりました。");
 
         startCountdown(activeSession.ends_at);
 
       }catch(error){
         console.error("startSpecialVoyage catch:", error);
-        setStatus("特別航海の開始処理でエラーが発生しました：" + error.message, true);
+        setStatus("航海の開始処理でエラーが発生しました：" + error.message, true);
       }finally{
         if(startVoyageBtn){
           startVoyageBtn.disabled = false;
@@ -902,16 +1061,16 @@
 
           sendSpecialBtn.disabled = true;
           specialMessage.disabled = true;
-          specialMessage.placeholder = "特別航海の時間は終了しました。";
+          specialMessage.placeholder = "航海の時間は終了しました。";
 
           activeVoyageMessage.textContent =
-            "特別航海の時間が終了しました。\n港は、静かに航海を閉じました。";
+            "航海の時間が終了しました。\n港は、静かに航海を閉じました。";
 
           specialReply.style.display = "block";
           specialReplyText.textContent =
             "この航海はここで閉じられました。\n8秒後に、Voyage Log へ戻ります。";
 
-          setStatus("特別航海の時間が終了しました。Voyage Logへ戻ります。");
+          setStatus("航海の時間が終了しました。Voyage Logへ戻ります。");
 
           expireActiveSession();
           activeSession = null;
@@ -963,7 +1122,7 @@
       }
 
       if(!activeSession){
-        setStatus("現在、開いている特別航海がありません。", true);
+        setStatus("現在、開いている航海がありません。", true);
         return;
       }
 
@@ -979,7 +1138,7 @@
         return;
       }
 
-      setStatus("特別航海が言葉を受け取っています。");
+      setStatus("航海が言葉を受け取っています。");
       sendSpecialBtn.disabled = true;
 
       try{
@@ -991,12 +1150,12 @@
 
         if(error){
           console.error("special-voyage-reply invoke error:", error);
-          setStatus("特別航海の返答に失敗しました：" + error.message, true);
+          setStatus("航海の返答に失敗しました：" + error.message, true);
           return;
         }
 
         if(!data || !data.reply){
-          setStatus("特別航海から返答がありませんでした。", true);
+          setStatus("航海から返答がありませんでした。", true);
           return;
         }
 
@@ -1006,11 +1165,11 @@
         specialMessage.value = "";
         updateSpecialCount();
 
-        setStatus("特別航海から返答が届きました。");
+        setStatus("航海から返答が届きました。");
 
       }catch(error){
         console.error("sendSpecialVoyageMessage catch:", error);
-        setStatus("特別航海の送信処理でエラーが発生しました：" + error.message, true);
+        setStatus("航海の送信処理でエラーが発生しました：" + error.message, true);
       }finally{
         sendSpecialBtn.disabled = false;
       }
