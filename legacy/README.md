@@ -1,5 +1,14 @@
 # Celeste Console
 
+> この文書は旧Celeste Console時代の記録として保存しています。
+> 現在の開発対象は Celeste Harbor です。
+> 現在仕様はルートの `README.md` を参照してください。
+
+Celeste is a quiet, reflective console designed to help organize thoughts.
+...
+
+# Celeste Console
+
 Celeste is a quiet, reflective console designed to help organize thoughts.
 It does not guide decisions, store conversations, or attempt to remember the user.
 
