@@ -1,10 +1,23 @@
 User-agent: *
 
 Allow: /
+Allow: /about/
+Allow: /voyage/
 
 Disallow: /log/
+Disallow: /timeline/
+Disallow: /items/
+Disallow: /vessels/
+Disallow: /map/
+Disallow: /account/
+Disallow: /tickets/
+Disallow: /special-voyage/
+Disallow: /fragments/
+Disallow: /archive/
+Disallow: /harbor/
 Disallow: /auth/
 Disallow: /login/
+Disallow: /legacy/
 Disallow: /celeste-console.html
 
 Sitemap: https://celeste.world/sitemap.xml
