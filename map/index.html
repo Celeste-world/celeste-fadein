@@ -413,23 +413,9 @@
 
     @media(max-width:860px){
       .chart-panel{
-        overflow-x:auto;
+        overflow:visible;
         padding:18px;
-        background:rgba(10,14,28,.82);
-      }
-
-      .chart-panel::before{
-        display:none;
-      }
-
-      .sea-grid{
-        width:980px;
-        min-width:980px;
-        grid-template-columns:repeat(12, minmax(0, 1fr));
-        grid-template-rows:repeat(6, minmax(72px, auto));
-        min-height:560px;
-        border-radius:22px;
-        padding:18px;
+        min-height:auto;
         background:
           linear-gradient(
             180deg,
@@ -437,16 +423,34 @@
             rgba(5,8,17,.38)
           ),
           url("/images/sea-chart-z.png");
-        background-size:cover;
-        background-position:center;
+        background-size:contain;
+        background-position:top center;
         background-repeat:no-repeat;
       }
-
+    
+      .chart-panel::before{
+        display:none;
+      }
+    
+      .sea-grid{
+        width:100%;
+        min-width:0;
+        display:grid;
+        grid-template-columns:1fr;
+        grid-template-rows:auto;
+        gap:14px;
+        min-height:auto;
+        padding-top:56vw;
+        background:none;
+      }
+    
       .sea-card{
+        grid-column:auto !important;
+        grid-row:auto !important;
         min-height:auto;
       }
     }
-
+    
     @media(max-width:640px){
       .wrap{
         padding:36px 16px 32px;
