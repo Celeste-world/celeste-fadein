@@ -21,6 +21,9 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --ticket:#d7c4ff;
+      --gold:#ffe3a3;
     }
 
     *{ box-sizing:border-box; }
@@ -45,7 +48,7 @@
     }
 
     .wrap{
-      max-width:860px;
+      max-width:900px;
       margin:0 auto;
       padding:48px 20px 40px;
       min-height:100vh;
@@ -182,16 +185,21 @@
 
     .timeline-list{
       display:grid;
-      gap:14px;
+      gap:16px;
       position:relative;
     }
 
     .timeline-item{
       position:relative;
-      padding:16px 16px 16px 20px;
-      border-radius:16px;
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:18px;
+      align-items:start;
+      padding:18px;
+      border-radius:18px;
       background:rgba(10,14,28,.62);
       border:1px solid rgba(70,84,132,.38);
+      overflow:hidden;
     }
 
     .timeline-item::before{
@@ -207,6 +215,81 @@
         rgba(169,183,255,.08)
       );
       border-radius:999px;
+    }
+
+    .timeline-item.harbor-find{
+      border-color:rgba(185,246,202,.30);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 42%),
+        rgba(10,14,28,.62);
+    }
+
+    .timeline-item.ticket-drifted{
+      border-color:rgba(215,196,255,.30);
+      background:
+        radial-gradient(circle at top left, rgba(215,196,255,.06), transparent 42%),
+        rgba(10,14,28,.62);
+    }
+
+    .timeline-item.vessel-acquired{
+      border-color:rgba(255,227,163,.30);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.06), transparent 42%),
+        rgba(10,14,28,.62);
+    }
+
+    .timeline-image{
+      width:92px;
+      height:92px;
+      border-radius:18px;
+      border:1px solid rgba(169,183,255,.24);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.14), transparent 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+      flex:0 0 auto;
+    }
+
+    .timeline-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      padding:8px;
+    }
+
+    .timeline-image-symbol{
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      text-align:center;
+      padding:10px;
+    }
+
+    .timeline-symbol{
+      font-size:25px;
+      line-height:1;
+      opacity:.95;
+    }
+
+    .timeline-symbol-label{
+      font-size:10px;
+      line-height:1.5;
+      color:var(--dim);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .timeline-content{
+      min-width:0;
     }
 
     .timeline-date{
@@ -228,6 +311,7 @@
       line-height:1.9;
       color:var(--muted);
       margin:0;
+      white-space:pre-wrap;
     }
 
     .timeline-type{
@@ -239,6 +323,24 @@
       border-radius:999px;
       padding:4px 10px;
       background:rgba(169,183,255,.05);
+    }
+
+    .timeline-type.harbor-find{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.32);
+      background:rgba(185,246,202,.06);
+    }
+
+    .timeline-type.ticket-drifted{
+      color:var(--ticket);
+      border-color:rgba(215,196,255,.32);
+      background:rgba(215,196,255,.06);
+    }
+
+    .timeline-type.vessel-acquired{
+      color:var(--gold);
+      border-color:rgba(255,227,163,.32);
+      background:rgba(255,227,163,.06);
     }
 
     .empty{
@@ -303,6 +405,42 @@
       .panel,
       .timeline-card{
         padding:20px;
+      }
+
+      .timeline-item{
+        grid-template-columns:72px 1fr;
+        gap:14px;
+        padding:16px;
+      }
+
+      .timeline-image{
+        width:72px;
+        height:72px;
+        border-radius:16px;
+      }
+
+      .timeline-symbol{
+        font-size:22px;
+      }
+
+      .timeline-symbol-label{
+        font-size:9px;
+      }
+    }
+
+    @media(max-width:460px){
+      .timeline-item{
+        grid-template-columns:1fr;
+      }
+
+      .timeline-image{
+        width:100%;
+        height:auto;
+        aspect-ratio:16 / 9;
+      }
+
+      .timeline-image img{
+        padding:10px;
       }
     }
   </style>
@@ -440,36 +578,188 @@
       });
     }
 
+    function normalizeEventType(type){
+      return String(type || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll("-", "_");
+    }
+
     function eventTypeLabel(type){
-      if(type === "harbor_find"){
+      const normalized = normalizeEventType(type);
+
+      if(normalized === "harbor_find" || normalized === "item_found"){
         return "Harbor Find";
       }
 
-      if(type === "vessel_acquired"){
+      if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return "Vessel";
       }
 
-      if(type === "ticket_drifted"){
+      if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return "Drift Ticket";
       }
 
-      if(type === "voyage_started"){
+      if(normalized === "voyage_started"){
         return "Special Voyage";
       }
 
-      if(type === "voyage_ended"){
+      if(normalized === "voyage_ended"){
         return "Return";
       }
 
-      if(type === "log_saved"){
+      if(normalized === "log_saved"){
         return "Voyage Log";
       }
 
-      if(type === "cat_reply"){
+      if(normalized === "cat_reply"){
         return "Harbor Cat";
       }
 
       return type || "Cabin Log";
+    }
+
+    function eventClassName(type){
+      const normalized = normalizeEventType(type);
+
+      if(normalized === "harbor_find" || normalized === "item_found"){
+        return "harbor-find";
+      }
+
+      if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
+        return "vessel-acquired";
+      }
+
+      if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
+        return "ticket-drifted";
+      }
+
+      if(normalized === "voyage_started"){
+        return "voyage-started";
+      }
+
+      if(normalized === "voyage_ended"){
+        return "voyage-ended";
+      }
+
+      if(normalized === "cat_reply"){
+        return "cat-reply";
+      }
+
+      if(normalized === "log_saved"){
+        return "log-saved";
+      }
+
+      return "default";
+    }
+
+    function eventSymbol(type){
+      const normalized = normalizeEventType(type);
+
+      if(normalized === "harbor_find" || normalized === "item_found"){
+        return {
+          symbol: "✦",
+          label: "Find"
+        };
+      }
+
+      if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
+        return {
+          symbol: "⛵",
+          label: "Vessel"
+        };
+      }
+
+      if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
+        return {
+          symbol: "⌁",
+          label: "Ticket"
+        };
+      }
+
+      if(normalized === "voyage_started"){
+        return {
+          symbol: "☽",
+          label: "Voyage"
+        };
+      }
+
+      if(normalized === "voyage_ended"){
+        return {
+          symbol: "↩",
+          label: "Return"
+        };
+      }
+
+      if(normalized === "cat_reply"){
+        return {
+          symbol: "🐾",
+          label: "Cat"
+        };
+      }
+
+      if(normalized === "log_saved"){
+        return {
+          symbol: "✎",
+          label: "Log"
+        };
+      }
+
+      return {
+        symbol: "•",
+        label: "Log"
+      };
+    }
+
+    function timelineImagePath(event){
+      return (
+        event.image_path ||
+        event.item_image_path ||
+        event.harbor_item_image_path ||
+        event.vessel_image_path ||
+        event.ticket_image_path ||
+        event.related_image_path ||
+        ""
+      );
+    }
+
+    function timelineImageAlt(event){
+      return (
+        event.image_alt ||
+        event.item_name_ja ||
+        event.vessel_name_ja ||
+        event.ticket_name ||
+        event.title ||
+        eventTypeLabel(event.event_type)
+      );
+    }
+
+    function renderTimelineImage(event){
+      const imagePath = timelineImagePath(event);
+      const alt = timelineImageAlt(event);
+      const fallback = eventSymbol(event.event_type);
+
+      if(imagePath){
+        return `
+          <div class="timeline-image">
+            <img
+              src="${escapeHtml(imagePath)}"
+              alt="${escapeHtml(alt)}"
+              loading="lazy"
+              onerror="this.remove(); this.parentElement.innerHTML='<div class=&quot;timeline-image-symbol&quot;><div class=&quot;timeline-symbol&quot;>${escapeHtml(fallback.symbol)}</div><div class=&quot;timeline-symbol-label&quot;>${escapeHtml(fallback.label)}</div></div>';"
+            >
+          </div>
+        `;
+      }
+
+      return `
+        <div class="timeline-image">
+          <div class="timeline-image-symbol">
+            <div class="timeline-symbol">${escapeHtml(fallback.symbol)}</div>
+            <div class="timeline-symbol-label">${escapeHtml(fallback.label)}</div>
+          </div>
+        </div>
+      `;
     }
 
     async function fetchSupabase(path, options = {}){
@@ -574,24 +864,30 @@
       }
 
       const itemsHtml = events.map(event => {
+        const typeClass = eventClassName(event.event_type);
+
         return `
-          <div class="timeline-item">
-            <div class="timeline-date">
-              ${escapeHtml(formatTimelineDate(event.created_at))}
-            </div>
+          <div class="timeline-item ${typeClass}">
+            ${renderTimelineImage(event)}
 
-            <div class="timeline-title">
-              ${escapeHtml(event.title)}
-            </div>
+            <div class="timeline-content">
+              <div class="timeline-date">
+                ${escapeHtml(formatTimelineDate(event.created_at))}
+              </div>
 
-            ${
-              event.body
-                ? `<p class="timeline-body">${escapeHtml(event.body)}</p>`
-                : ""
-            }
+              <div class="timeline-title">
+                ${escapeHtml(event.title)}
+              </div>
 
-            <div class="timeline-type">
-              ${escapeHtml(eventTypeLabel(event.event_type))}
+              ${
+                event.body
+                  ? `<p class="timeline-body">${escapeHtml(event.body)}</p>`
+                  : ""
+              }
+
+              <div class="timeline-type ${typeClass}">
+                ${escapeHtml(eventTypeLabel(event.event_type))}
+              </div>
             </div>
           </div>
         `;
