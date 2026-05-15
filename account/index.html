@@ -22,6 +22,8 @@
       --accent:#a9b7ff;
       --danger:#ff9b9b;
       --ready:#b9f6ca;
+      --ticket:#d7c4ff;
+      --deep:#8fb7ff;
     }
 
     *{ box-sizing:border-box; }
@@ -46,7 +48,7 @@
     }
 
     .wrap{
-      max-width:760px;
+      max-width:800px;
       margin:0 auto;
       padding:48px 20px 40px;
       min-height:100vh;
@@ -187,12 +189,134 @@
       margin:0 0 18px;
     }
 
+    .ticket-summary{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .summary-card{
+      border:1px solid rgba(70,84,132,.45);
+      background:rgba(10,14,28,.62);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .summary-label{
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:8px;
+    }
+
+    .summary-value{
+      font-size:22px;
+      line-height:1.4;
+      color:var(--text);
+    }
+
+    .summary-card.drift .summary-value{
+      color:var(--ready);
+    }
+
+    .summary-card.special .summary-value{
+      color:var(--ticket);
+    }
+
+    .summary-card.deep .summary-value{
+      color:var(--deep);
+    }
+
     .ticket{
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:18px;
+      align-items:start;
       background:rgba(10,14,28,.68);
       border:1px solid rgba(70,84,132,.45);
       border-radius:18px;
-      padding:20px;
+      padding:18px;
       margin-bottom:16px;
+    }
+
+    .ticket.drift{
+      border-color:rgba(185,246,202,.28);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
+    .ticket.special{
+      border-color:rgba(215,196,255,.28);
+      background:
+        radial-gradient(circle at top left, rgba(215,196,255,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
+    .ticket.deep-sea{
+      border-color:rgba(143,183,255,.28);
+      background:
+        radial-gradient(circle at top left, rgba(143,183,255,.055), transparent 42%),
+        rgba(10,14,28,.68);
+    }
+
+    .ticket-image{
+      width:92px;
+      height:92px;
+      border-radius:18px;
+      border:1px solid rgba(169,183,255,.24);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.14), transparent 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+    }
+
+    .ticket-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      padding:12px;
+    }
+
+    .ticket.drift .ticket-image img{
+      opacity:.78;
+      filter:
+        saturate(.78)
+        brightness(.86)
+        contrast(.88);
+      padding:15px;
+    }
+
+    .ticket-image-fallback{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      text-align:center;
+      padding:10px;
+      width:100%;
+      height:100%;
+    }
+
+    .ticket-symbol{
+      font-size:24px;
+      line-height:1;
+    }
+
+    .ticket-symbol-label{
+      font-size:10px;
+      line-height:1.5;
+      color:var(--dim);
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     .ticket-top{
@@ -219,6 +343,12 @@
       background:rgba(169,183,255,.06);
     }
 
+    .ticket-status.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
     .ticket-line{
       font-size:14px;
       line-height:2;
@@ -242,6 +372,12 @@
       background:rgba(255,255,255,.02);
     }
 
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
+    }
+
     .empty{
       background:rgba(10,14,28,.52);
       border:1px solid rgba(70,84,132,.35);
@@ -251,6 +387,13 @@
       font-size:14px;
       line-height:2;
       margin-bottom:16px;
+    }
+
+    .empty-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
     }
 
     .note{
@@ -302,6 +445,50 @@
       h1{ font-size:31px; }
 
       .panel{ padding:20px; }
+
+      .ticket-summary{
+        grid-template-columns:1fr;
+      }
+
+      .ticket{
+        grid-template-columns:72px 1fr;
+        gap:14px;
+        padding:16px;
+      }
+
+      .ticket-image{
+        width:72px;
+        height:72px;
+        border-radius:16px;
+      }
+
+      .ticket-image img{
+        padding:10px;
+      }
+
+      .ticket.drift .ticket-image img{
+        padding:12px;
+      }
+    }
+
+    @media(max-width:460px){
+      .ticket{
+        grid-template-columns:1fr;
+      }
+
+      .ticket-image{
+        width:100%;
+        height:auto;
+        aspect-ratio:16 / 9;
+      }
+
+      .ticket-image img{
+        padding:18px;
+      }
+
+      .ticket.drift .ticket-image img{
+        padding:24px;
+      }
     }
   </style>
 </head>
@@ -344,6 +531,7 @@
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
           <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
         </div>
 
         <div class="status" id="status"></div>
@@ -351,6 +539,23 @@
 
       <section>
         <h2 class="section-title">Available Tickets</h2>
+
+        <div class="ticket-summary" id="ticketSummary" style="display:none;">
+          <div class="summary-card drift">
+            <div class="summary-label">Drift</div>
+            <div class="summary-value" id="summaryDrift">0</div>
+          </div>
+
+          <div class="summary-card special">
+            <div class="summary-label">Special</div>
+            <div class="summary-value" id="summarySpecial">0</div>
+          </div>
+
+          <div class="summary-card deep">
+            <div class="summary-label">Deep Sea</div>
+            <div class="summary-value" id="summaryDeepSea">0</div>
+          </div>
+        </div>
 
         <div id="tickets">
           <div class="empty">
@@ -394,6 +599,11 @@
     const logoutBtn = document.getElementById("logoutBtn");
     const ticketsEl = document.getElementById("tickets");
 
+    const ticketSummary = document.getElementById("ticketSummary");
+    const summaryDrift = document.getElementById("summaryDrift");
+    const summarySpecial = document.getElementById("summarySpecial");
+    const summaryDeepSea = document.getElementById("summaryDeepSea");
+
     let currentUser = null;
     let currentAccessToken = null;
 
@@ -416,7 +626,13 @@
         return "期限なし";
       }
 
-      return new Date(value).toLocaleString("ja-JP");
+      return new Date(value).toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
     }
 
     function accountDisplayName(user){
@@ -433,20 +649,158 @@
       );
     }
 
+    function normalizeTicketType(type){
+      return String(type || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll("-", "_");
+    }
+
     function ticketLabel(type){
-      if(type === "drift"){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
         return "Drift Ticket（漂着チケット）";
       }
 
-      if(type === "special"){
+      if(normalized === "special"){
         return "Special Voyage Ticket（特別航海チケット）";
       }
 
-      if(type === "deep_sea"){
+      if(normalized === "deep_sea"){
         return "Deep Sea Ticket（深海チケット）";
       }
 
       return type || "Voyage Ticket";
+    }
+
+    function ticketClass(type){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
+        return "drift";
+      }
+
+      if(normalized === "special"){
+        return "special";
+      }
+
+      if(normalized === "deep_sea"){
+        return "deep-sea";
+      }
+
+      return "default";
+    }
+
+    function ticketImagePath(type){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
+        return "/images/tickets/drift-ticket.svg";
+      }
+
+      if(normalized === "special"){
+        return "/images/tickets/special-voyage-ticket.svg";
+      }
+
+      if(normalized === "deep_sea"){
+        return "/images/tickets/deep-sea-ticket.svg";
+      }
+
+      return "";
+    }
+
+    function ticketSymbol(type){
+      const normalized = normalizeTicketType(type);
+
+      if(normalized === "drift"){
+        return {
+          symbol:"⌁",
+          label:"Drift"
+        };
+      }
+
+      if(normalized === "special"){
+        return {
+          symbol:"☽",
+          label:"Special"
+        };
+      }
+
+      if(normalized === "deep_sea"){
+        return {
+          symbol:"◆",
+          label:"Deep"
+        };
+      }
+
+      return {
+        symbol:"•",
+        label:"Ticket"
+      };
+    }
+
+    function sourceLabel(source){
+      if(source === "random_drift"){
+        return "漂着した航海券";
+      }
+
+      if(source === "purchase"){
+        return "購入した航海券";
+      }
+
+      if(source === "admin_grant"){
+        return "港から届いた航海券";
+      }
+
+      return "航海券";
+    }
+
+    function ticketDescription(ticket){
+      const normalized = normalizeTicketType(ticket.ticket_type);
+      const minutes = ticket.duration_minutes || "";
+
+      if(normalized === "drift"){
+        return `${minutes}分だけ、少し深い海へ降りられる漂着チケットです。`;
+      }
+
+      if(normalized === "special"){
+        return `${minutes}分の特別航海に使える航海券です。`;
+      }
+
+      if(normalized === "deep_sea"){
+        return `${minutes}分、さらに深い海へ降りるための限定航海券です。`;
+      }
+
+      return `${minutes}分の特別航海に使える航海券です。`;
+    }
+
+    function renderTicketImage(ticket){
+      const imagePath = ticketImagePath(ticket.ticket_type);
+      const fallback = ticketSymbol(ticket.ticket_type);
+      const alt = ticketLabel(ticket.ticket_type);
+
+      if(imagePath){
+        return `
+          <div class="ticket-image">
+            <img
+              src="${escapeHtml(imagePath)}"
+              alt="${escapeHtml(alt)}"
+              loading="lazy"
+              onerror="this.remove(); this.parentElement.innerHTML='<div class=&quot;ticket-image-fallback&quot;><div class=&quot;ticket-symbol&quot;>${escapeHtml(fallback.symbol)}</div><div class=&quot;ticket-symbol-label&quot;>${escapeHtml(fallback.label)}</div></div>';"
+            >
+          </div>
+        `;
+      }
+
+      return `
+        <div class="ticket-image">
+          <div class="ticket-image-fallback">
+            <div class="ticket-symbol">${escapeHtml(fallback.symbol)}</div>
+            <div class="ticket-symbol-label">${escapeHtml(fallback.label)}</div>
+          </div>
+        </div>
+      `;
     }
 
     async function fetchSupabase(path, options = {}){
@@ -542,13 +896,59 @@
         setStatus("航海券を確認しました。");
       }catch(error){
         console.error("ticket load error:", error);
+
         ticketsEl.innerHTML = `
           <div class="empty">
             航海券を読み込めませんでした。<br>
             ${escapeHtml(error.message)}
           </div>
         `;
+
+        if(ticketSummary){
+          ticketSummary.style.display = "none";
+        }
+
         setStatus("航海券の読み込みに失敗しました：" + error.message, true);
+      }
+    }
+
+    function updateTicketSummary(validTickets){
+      const counts = {
+        drift:0,
+        special:0,
+        deep_sea:0
+      };
+
+      validTickets.forEach(ticket => {
+        const normalized = normalizeTicketType(ticket.ticket_type);
+
+        if(normalized === "drift"){
+          counts.drift += 1;
+        }
+
+        if(normalized === "special"){
+          counts.special += 1;
+        }
+
+        if(normalized === "deep_sea"){
+          counts.deep_sea += 1;
+        }
+      });
+
+      if(summaryDrift){
+        summaryDrift.textContent = counts.drift;
+      }
+
+      if(summarySpecial){
+        summarySpecial.textContent = counts.special;
+      }
+
+      if(summaryDeepSea){
+        summaryDeepSea.textContent = counts.deep_sea;
+      }
+
+      if(ticketSummary){
+        ticketSummary.style.display = "grid";
       }
     }
 
@@ -565,11 +965,19 @@
         return new Date(ticket.expires_at) > now;
       });
 
+      updateTicketSummary(validTickets);
+
       if(validTickets.length === 0){
         ticketsEl.innerHTML = `
           <div class="empty">
             現在、有効な航海券はありません。<br>
-            ときどき、港に小さな航海券が漂着することがあります。
+            小さな航海券が流れ着く夜があります。<br>
+            それは、少しだけ深い海へ降りるための合図です。
+
+            <div class="empty-actions">
+              <a class="btn-ghost" href="/log/">Voyage Logへ戻る</a>
+              <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
+            </div>
           </div>
         `;
         return;
@@ -577,44 +985,46 @@
 
       validTickets.forEach(ticket => {
         const div = document.createElement("div");
-        div.className = "ticket";
+        const className = ticketClass(ticket.ticket_type);
+        div.className = "ticket " + className;
 
-        const sourceLabel =
-          ticket.source === "random_drift"
-            ? "漂着した航海券"
-            : ticket.source === "purchase"
-              ? "購入した航海券"
-              : ticket.source === "admin_grant"
-                ? "港から届いた航海券"
-                : "航海券";
+        const ticketStatusClass =
+          normalizeTicketType(ticket.ticket_type) === "drift"
+            ? "ticket-status ready"
+            : "ticket-status";
 
         div.innerHTML = `
-          <div class="ticket-top">
-            <div>
-              <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
-              <p class="ticket-line">
-                ${escapeHtml(ticket.duration_minutes)}分の特別航海に使える航海券です。
-              </p>
+          ${renderTicketImage(ticket)}
+
+          <div>
+            <div class="ticket-top">
+              <div>
+                <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
+                <p class="ticket-line">
+                  ${escapeHtml(ticketDescription(ticket))}
+                </p>
+              </div>
+
+              <div class="${ticketStatusClass}">
+                航海可能
+              </div>
             </div>
 
-            <div class="ticket-status">
-              航海可能
+            <p class="ticket-line">
+              期限：${escapeHtml(formatDate(ticket.expires_at))}
+            </p>
+
+            <div class="ticket-meta">
+              <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
+              <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
+              <span class="tag">${escapeHtml(ticket.status || "available")}</span>
             </div>
-          </div>
 
-          <p class="ticket-line">
-            期限：${escapeHtml(formatDate(ticket.expires_at))}
-          </p>
-
-          <div class="ticket-meta">
-            <span class="tag">${escapeHtml(sourceLabel)}</span>
-            <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
-          </div>
-
-          <div class="actions">
-            <a class="btn-primary" href="/special-voyage/">
-              特別航海へ進む
-            </a>
+            <div class="actions">
+              <a class="btn-primary" href="/special-voyage/">
+                特別航海へ進む
+              </a>
+            </div>
           </div>
         `;
 
