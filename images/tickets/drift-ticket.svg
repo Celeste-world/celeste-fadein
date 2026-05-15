@@ -1,8 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="80" fill="#0a0e1c"></rect>
-  <rect x="86" y="150" width="340" height="212" rx="28" fill="#111827" stroke="#d7c4ff" stroke-width="10"></rect>
-  <path d="M132 214h248M132 256h180M132 298h248" stroke="#d7c4ff" stroke-width="14" stroke-linecap="round" opacity=".8"></path>
-  <circle cx="384" cy="256" r="32" fill="none" stroke="#b9f6ca" stroke-width="10"></circle>
-  <path d="M176 118c20 18 44 18 64 0 20-18 44-18 64 0" fill="none" stroke="#a9b7ff" stroke-width="12" stroke-linecap="round" opacity=".7"></path>
-  <text x="256" y="410" text-anchor="middle" fill="#a0a8bb" font-size="34" font-family="serif">DRIFT TICKET</text>
+  <defs>
+    <linearGradient id="bgDrift" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1323"></stop>
+      <stop offset="100%" stop-color="#060a14"></stop>
+    </linearGradient>
+
+    <linearGradient id="cardDrift" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#131c31"></stop>
+      <stop offset="100%" stop-color="#0c1322"></stop>
+    </linearGradient>
+
+    <linearGradient id="lineDrift" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b9f6ca"></stop>
+      <stop offset="100%" stop-color="#d7c4ff"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="72" fill="url(#bgDrift)"></rect>
+
+  <circle cx="112" cy="112" r="84" fill="#b9f6ca" opacity="0.06"></circle>
+  <circle cx="408" cy="384" r="92" fill="#d7c4ff" opacity="0.05"></circle>
+
+  <rect x="82" y="132" width="348" height="220" rx="26" fill="url(#cardDrift)" stroke="#7d8cb5" stroke-opacity="0.38" stroke-width="3"></rect>
+
+  <path d="M138 208h236" stroke="url(#lineDrift)" stroke-width="12" stroke-linecap="round" opacity="0.9"></path>
+  <path d="M138 250h180" stroke="#c8d0e8" stroke-width="10" stroke-linecap="round" opacity="0.65"></path>
+  <path d="M138 292h236" stroke="#c8d0e8" stroke-width="10" stroke-linecap="round" opacity="0.65"></path>
+
+  <circle cx="358" cy="250" r="28" fill="none" stroke="#b9f6ca" stroke-width="8" opacity="0.9"></circle>
+  <path d="M160 106c18 16 38 16 56 0s38-16 56 0 38 16 56 0" fill="none" stroke="#a9b7ff" stroke-width="10" stroke-linecap="round" opacity="0.55"></path>
+
+  <text x="256" y="404" text-anchor="middle" fill="#dbe2f4" font-size="26" font-family="Georgia, 'Times New Roman', serif" letter-spacing="3">DRIFT TICKET</text>
+  <text x="256" y="435" text-anchor="middle" fill="#97a4c4" font-size="14" font-family="Georgia, 'Times New Roman', serif" letter-spacing="2">A QUIET SIGN FROM THE HARBOR</text>
 </svg>
