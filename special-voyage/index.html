@@ -35,6 +35,10 @@
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
     a{
       color:inherit;
       text-decoration:none;
@@ -413,18 +417,19 @@
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/account/">Account</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
@@ -452,10 +457,10 @@
         </div>
 
         <div class="actions">
-          <button class="primary" id="loginBtn">Googleでログイン</button>
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/account/">Accountへ</a>
           <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
         </div>
 
         <div class="status" id="status"></div>
@@ -464,7 +469,6 @@
       <section>
         <div id="ticketArea"></div>
 
-        <!-- 有効チケットがある場合に表示される、特別航海の入口 -->
         <div class="voyage-box" id="voyageBox">
           <h2 class="voyage-title">特別航海の入口</h2>
 
@@ -489,7 +493,6 @@
           </div>
         </div>
 
-        <!-- チケット使用後、active session が始まった時に表示される -->
         <div class="voyage-box" id="activeVoyageBox">
           <h2 class="voyage-title">特別航海中</h2>
 
@@ -542,12 +545,12 @@
 
     <footer>
       <div class="footer-links">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/account/">Account</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
-        <a href="/archive/">Archive</a>
+        <a href="/account/">Account</a>
       </div>
 
       <div>CELESTE SPECIAL VOYAGE</div>
@@ -566,7 +569,6 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const ticketArea = document.getElementById("ticketArea");
     const voyageBox = document.getElementById("voyageBox");
@@ -625,13 +627,6 @@
       return type || "Voyage Ticket";
     }
 
-    function updateAuthUI(){
-      const loggedIn = Boolean(currentUser);
-
-      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
-      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
-    }
-
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
 
@@ -639,55 +634,26 @@
 
       if(error){
         console.error("getSession error:", error);
-        currentUser = null;
-        userStatus.textContent = "ログイン状態の確認に失敗しました。";
-        setStatus(error.message, true);
-        updateAuthUI();
+        window.location.replace("/");
         return;
       }
 
       if(data.session && data.session.user){
         currentUser = data.session.user;
+
+        document.body.classList.remove("auth-locked");
+
         userStatus.textContent = "ログイン中：" + currentUser.email;
         setStatus("航海券を確認しています。");
-        updateAuthUI();
-        
+
         const hasActiveSession = await loadActiveSession();
-        
+
         if(!hasActiveSession){
           await loadAvailableTicket();
-        }        
-      }else{
-        currentUser = null;
-        userStatus.textContent = "未ログインです。Googleでログインすると、航海券を確認できます。";
-        ticketArea.innerHTML = `
-          <div class="empty">
-            ログインすると、特別航海に使える航海券を確認できます。
-          </div>
-        `;
-        voyageBox.classList.remove("visible");
-        activeVoyageBox.classList.remove("visible");
-        setStatus("ログインが必要です。");
-        updateAuthUI();
-      }
-    }
-
-    async function login(){
-      setStatus("Googleログインへ進みます。");
-
-      const { error } = await client.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/special-voyage/",
-          queryParams: {
-            prompt: "select_account"
-          }
         }
-      });
-
-      if(error){
-        console.error("login error:", error);
-        setStatus(error.message, true);
+      }else{
+        window.location.replace("/");
+        return;
       }
     }
 
@@ -708,25 +674,16 @@
         countdownTimer = null;
       }
 
-      userStatus.textContent = "未ログインです。";
-      ticketArea.innerHTML = `
-        <div class="empty">
-          ログインすると、特別航海に使える航海券を確認できます。
-        </div>
-      `;
-      voyageBox.classList.remove("visible");
-      activeVoyageBox.classList.remove("visible");
-      setStatus("ログアウトしました。");
-      updateAuthUI();
+      window.location.replace("/");
     }
 
     async function loadActiveSession(){
       if(!currentUser){
         return false;
       }
-    
+
       const now = new Date().toISOString();
-    
+
       const { data, error } = await client
         .from("voyage_sessions")
         .select("*")
@@ -735,33 +692,32 @@
         .gt("ends_at", now)
         .order("created_at", { ascending:false })
         .limit(1);
-    
+
       if(error){
         console.error("active session load error:", error);
         setStatus("特別航海中の記録確認に失敗しました：" + error.message, true);
         return false;
       }
-    
+
       if(!data || data.length === 0){
         return false;
       }
-    
+
       activeSession = data[0];
-    
+
       ticketArea.innerHTML = "";
       voyageBox.classList.remove("visible");
-    
+
       activeVoyageMessage.textContent =
         "特別航海は、まだ静かに続いています。";
-    
+
       activeVoyageBox.classList.add("visible");
       specialMessage.disabled = false;
       sendSpecialBtn.disabled = false;
       startCountdown(activeSession.ends_at);
-      
-    
+
       setStatus("特別航海中です。");
-    
+
       return true;
     }
 
@@ -882,7 +838,7 @@
         specialMessage.disabled = false;
         sendSpecialBtn.disabled = false;
         setStatus("特別航海が始まりました。");
-        
+
         startCountdown(activeSession.ends_at);
 
       }catch(error){
@@ -899,23 +855,23 @@
       if(!activeSession || !activeSession.id){
         return;
       }
-    
+
       try{
         const { data, error } = await client.functions.invoke("expire-voyage-session", {
           body: {
             session_id: activeSession.id
           }
         });
-    
+
         if(error){
           console.error("expire-voyage-session invoke error:", error);
           return;
         }
-    
+
         if(data && data.expired){
           console.log("Special voyage expired:", data.message);
         }
-    
+
       }catch(error){
         console.error("expireActiveSession catch:", error);
       }
@@ -940,25 +896,25 @@
         if(diff <= 0){
           clearInterval(countdownTimer);
           countdownTimer = null;
-        
+
           remainingTime.textContent = "00:00";
-        
+
           sendSpecialBtn.disabled = true;
           specialMessage.disabled = true;
           specialMessage.placeholder = "特別航海の時間は終了しました。";
-        
+
           activeVoyageMessage.textContent =
             "特別航海の時間が終了しました。\n港は、静かに航海を閉じました。";
-        
+
           specialReply.style.display = "block";
           specialReplyText.textContent =
             "この航海はここで閉じられました。\n8秒後に、Voyage Log へ戻ります。";
-          
+
           setStatus("特別航海の時間が終了しました。Voyage Logへ戻ります。");
-          
+
           expireActiveSession();
           activeSession = null;
-          
+
           startReturnCountdown();
         }
       }
@@ -969,17 +925,17 @@
 
     function startReturnCountdown(){
       let seconds = 8;
-    
+
       const returnTimer = setInterval(function(){
         seconds -= 1;
-    
+
         if(seconds > 0){
           specialReplyText.textContent =
             "この航海はここで閉じられました。\n" +
             seconds +
             "秒後に、Voyage Log へ戻ります。";
         }
-    
+
         if(seconds <= 0){
           clearInterval(returnTimer);
           window.location.href = "/log/";
@@ -1059,7 +1015,6 @@
       }
     }
 
-    loginBtn.addEventListener("click", login);
     logoutBtn.addEventListener("click", logout);
 
     if(startVoyageBtn){
@@ -1077,22 +1032,23 @@
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
         currentUser = session.user;
+
+        document.body.classList.remove("auth-locked");
+
         userStatus.textContent = "ログイン中：" + currentUser.email;
-        updateAuthUI();
-        
+
         loadActiveSession().then(function(hasActiveSession){
           if(!hasActiveSession){
             loadAvailableTicket();
           }
         });
-        
+
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
-        updateAuthUI();
+        window.location.replace("/");
       }
     });
 
-    updateAuthUI();
     updateSpecialCount();
     checkSession();
   </script>
