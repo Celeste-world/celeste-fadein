@@ -5,22 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>霧信号 – Fragments</title>
+  <meta name="robots" content="noindex, nofollow">
 
-  <meta name="description" content="霧の向こうから届いた、小さな信号。Celeste Harbor に漂着した短い航海断片。" />
-  <link rel="canonical" href="https://celeste.world/fragments/fog-signal/" />
-  <meta name="robots" content="index, follow">
-  
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="霧信号 – Fragments">
-  <meta property="og:description" content="霧の向こうから返ってきた、小さな信号の記録。">
-  <meta property="og:url" content="https://celeste.world/fragments/fog-signal/">
-  <meta property="og:image" content="https://celeste.world/images/og-image.png">
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="霧信号 – Fragments">
-  <meta name="twitter:description" content="霧の向こうから返ってきた、小さな信号の記録。">
-  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
@@ -30,6 +17,7 @@
       --muted:#a0a8bb;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --danger:#ff9b9b;
     }
 
     *{ box-sizing:border-box; }
@@ -40,6 +28,10 @@
       background:radial-gradient(circle at top,#1a2440 0,#050811 52%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
     }
 
     a{
@@ -80,6 +72,72 @@
 
     .nav a:hover{
       color:var(--text);
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 18px 42px rgba(0,0,0,.36);
+      margin-bottom:42px;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      margin-top:18px;
+    }
+
+    button,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:999px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    button{
+      border:0;
+    }
+
+    .btn-ghost,
+    .ghost{
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+    }
+
+    .btn-ghost:hover,
+    .ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+    }
+
+    .status{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
+    .status.error{
+      color:var(--danger);
     }
 
     .label{
@@ -180,6 +238,10 @@
         font-size:12px;
       }
 
+      .panel{
+        padding:20px;
+      }
+
       h1{
         font-size:31px;
       }
@@ -192,7 +254,7 @@
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
 
   <div class="wrap">
 
@@ -202,14 +264,31 @@
       </a>
 
       <nav class="nav">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
     <main>
+
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
+        </div>
+
+        <div class="actions">
+          <button class="ghost" id="logoutBtn">ログアウト</button>
+          <a class="btn-ghost" href="/fragments/">Fragmentsへ</a>
+          <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
 
       <div class="label">
         Fragment 01
@@ -293,9 +372,12 @@
     <footer>
 
       <div class="footer-links">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </div>
 
       <div>
@@ -305,6 +387,104 @@
     </footer>
 
   </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let currentUser = null;
+    let currentAccessToken = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        window.location.replace("/");
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        currentAccessToken = data.session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        setStatus("Fragment を表示しています。");
+      }else{
+        window.location.replace("/");
+        return;
+      }
+    }
+
+    async function logout(){
+      setStatus("ログアウトしています。");
+
+      const { error } = await client.auth.signOut();
+
+      if(error){
+        console.error("logout error:", error);
+        setStatus(error.message, true);
+        return;
+      }
+
+      currentUser = null;
+      currentAccessToken = null;
+
+      window.location.replace("/");
+    }
+
+    logoutBtn.addEventListener("click", logout);
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+        currentAccessToken = session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        currentAccessToken = null;
+
+        window.location.replace("/");
+      }
+    });
+
+    checkSession();
+  </script>
 
 </body>
 </html>
