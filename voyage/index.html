@@ -92,6 +92,11 @@
       color:var(--muted);
     }
 
+    .nav a:hover{
+      color:var(--text);
+      text-decoration:none;
+    }
+
     main{
       flex:1;
     }
@@ -280,6 +285,12 @@
       }
     }
 
+    @media (max-width:560px){
+      .route-list{
+        grid-template-columns:1fr;
+      }
+    }
+
     .route-item{
       border:1px solid rgba(70,84,132,0.4);
       background:rgba(255,255,255,0.025);
@@ -310,7 +321,7 @@
 
     .harbor-links{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:18px;
     }
 
@@ -362,6 +373,39 @@
       gap:16px;
       flex-wrap:wrap;
     }
+
+    footer a:hover{
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:52px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+        justify-content:flex-start;
+      }
+
+      h1{
+        font-size:31px;
+      }
+
+      .deep-panel,
+      .card,
+      .small-card{
+        padding:20px;
+      }
+    }
   </style>
 </head>
 
@@ -375,10 +419,8 @@
 
       <nav class="nav" aria-label="Main navigation">
         <a href="/">Harbor</a>
-        <a href="/log/">Voyage Log</a>
-        <a href="/fragments/">Fragments</a>
         <a href="/about/">About</a>
-        <a href="/en/">English</a>
+        <a href="/voyage/">Moonlit Voyage</a>
       </nav>
     </header>
 
@@ -571,75 +613,40 @@
         </div>
       </section>
 
-      <section aria-labelledby="fragments-title">
-        <h2 class="section-title" id="fragments-title">Fragments</h2>
-
-        <div class="deep-panel">
-          <p>
-            Fragments は、『Moonlit Voyage』本編の切り抜きではありません。
-          </p>
-
-          <p>
-            それらは、同じ海域に漂着した別の夜です。
-            本編とは少し離れた場所で、Harbor の静けさと深海の余韻をつなぎます。
-          </p>
-
-          <div class="card-actions">
-            <a class="btn-ghost" href="/fragments/">
-              Fragmentsを見る
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="harbor-title">
-        <h2 class="section-title" id="harbor-title">Harbor へ戻る</h2>
+      <section aria-labelledby="public-harbor-title">
+        <h2 class="section-title" id="public-harbor-title">港へ戻る</h2>
 
         <p class="section-lead">
           深海を見たあとも、港は残っています。
-          記録する場所、漂着する場所、静かに戻る場所へ。
+          Celeste Harbor の入口へ戻るか、この場所が何であるかをもう少し読むことができます。
         </p>
 
         <div class="harbor-links">
 
           <article class="small-card">
-            <h3>Voyage Log</h3>
-            <p>
-              自分だけの航海記録を残す場所。
-              誰かに見せるためではなく、帰港のための記録です。
-            </p>
-
-            <div class="card-actions">
-              <a class="btn-ghost" href="/log/">
-                Logへ
-              </a>
-            </div>
-          </article>
-
-          <article class="small-card">
-            <h3>Fragments</h3>
-            <p>
-              Harbor に漂着した短い断片。
-              同じ海域の、別の夜に触れる場所です。
-            </p>
-
-            <div class="card-actions">
-              <a class="btn-ghost" href="/fragments/">
-                Fragmentsへ
-              </a>
-            </div>
-          </article>
-
-          <article class="small-card">
             <h3>Celeste Harbor</h3>
             <p>
               静かな帰港空間。
-              深海から戻ったあと、もう一度港の灯りを見るために。
+              Googleログインで、航海記録や海図のある港の内側へ入れます。
             </p>
 
             <div class="card-actions">
               <a class="btn-ghost" href="/">
                 Harborへ戻る
+              </a>
+            </div>
+          </article>
+
+          <article class="small-card">
+            <h3>About</h3>
+            <p>
+              Celeste Harbor が何を大切にしているのか。
+              Harbor Cat や Presence AI についての灯台です。
+            </p>
+
+            <div class="card-actions">
+              <a class="btn-ghost" href="/about/">
+                Aboutへ
               </a>
             </div>
           </article>
@@ -650,14 +657,11 @@
     </main>
 
     <footer>
-     <div class="footer-links">
+      <div class="footer-links">
         <a href="/">Harbor</a>
-        <a href="/log/">Voyage Log</a>
+        <a href="/about/">About</a>
         <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/map/">Map</a>
-        <a href="/archive/">Archive</a>
-    </div>
+      </div>
 
       <div>CELESTE HARBOR</div>
     </footer>
