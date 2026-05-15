@@ -5,21 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Voyage Tickets – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
 
-  <meta name="description" content="Celeste Harbor の航海チケットについて。漂着チケット、特別航海チケット、深海チケットの位置づけを静かに案内します。" />
-  <link rel="canonical" href="https://celeste.world/tickets/" />
-  <meta name="robots" content="index, follow">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Voyage Tickets – Celeste Harbor">
-  <meta property="og:description" content="漂着チケット、特別航海チケット、深海チケット。Celeste Harbor の深い航海へ降りるための小さな案内。">
-  <meta property="og:url" content="https://celeste.world/tickets/">
-  <meta property="og:image" content="https://celeste.world/images/og-image.png">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Voyage Tickets – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste Harbor の航海チケットについて。">
-  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
@@ -32,6 +20,7 @@
       --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --danger:#ff9b9b;
     }
 
     *{ box-sizing:border-box; }
@@ -44,6 +33,10 @@
         linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
     }
 
     a{
@@ -95,7 +88,7 @@
 
     .hero{
       max-width:760px;
-      margin-bottom:58px;
+      margin-bottom:42px;
     }
 
     .label{
@@ -119,6 +112,22 @@
       color:var(--muted);
       max-width:44rem;
       margin-bottom:24px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:32px;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
     }
 
     .ticket-map{
@@ -209,27 +218,60 @@
     }
 
     .actions{
-      margin-top:28px;
+      margin-top:20px;
       display:flex;
       flex-wrap:wrap;
       gap:12px;
+      align-items:center;
     }
 
-    .btn-ghost{
+    button,
+    .btn-ghost,
+    .btn-primary{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       padding:11px 18px;
       border-radius:999px;
+      font-family:inherit;
       font-size:14px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    button{
+      border:0;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+      border:1px solid transparent;
+    }
+
+    .btn-ghost,
+    .ghost{
       border:1px solid var(--line);
       color:var(--muted);
       background:rgba(255,255,255,.02);
     }
 
-    .btn-ghost:hover{
+    .btn-ghost:hover,
+    .ghost:hover{
       border-color:rgba(169,183,255,.4);
       color:var(--text);
+    }
+
+    .status{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
+    .status.error{
+      color:var(--danger);
     }
 
     footer{
@@ -276,25 +318,27 @@
       }
 
       .ticket,
-      .flow{
+      .flow,
+      .panel{
         padding:20px;
       }
     }
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav" aria-label="Main navigation">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/fragments/">Fragments</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
@@ -317,6 +361,21 @@
           Harbor Cat は無料の短い気配です。<br>
           チケットは、より深い航海へ一時的に入るためのものです。
         </p>
+      </section>
+
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
+        </div>
+
+        <div class="actions">
+          <button class="ghost" id="logoutBtn">ログアウト</button>
+          <a class="btn-ghost" href="/account/">Accountへ</a>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+          <a class="btn-ghost" href="/map/">Mapへ</a>
+        </div>
+
+        <div class="status" id="status"></div>
       </section>
 
       <section class="ticket-map">
@@ -412,13 +471,13 @@
           <a class="btn-ghost" href="/account/">
             Accountで航海券を確認する
           </a>
-        
+
           <a class="btn-ghost" href="/log/">
             Voyage Logへ
           </a>
-        
+
           <a class="btn-ghost" href="/map/">
-            Harbor Mapへ
+            Sea Chartへ
           </a>
         </div>
       </section>
@@ -426,19 +485,115 @@
     </main>
 
     <footer>
-     <div class="footer-links">
-        <a href="/">Harbor</a>
+      <div class="footer-links">
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/fragments/">Fragments</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/archive/">Archive</a>
+        <a href="/account/">Account</a>
       </div>
 
       <div>CELESTE VOYAGE TICKETS</div>
     </footer>
 
   </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let currentUser = null;
+    let currentAccessToken = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        window.location.replace("/");
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        currentAccessToken = data.session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        setStatus("航海券の案内を表示しています。");
+      }else{
+        window.location.replace("/");
+        return;
+      }
+    }
+
+    async function logout(){
+      setStatus("ログアウトしています。");
+
+      const { error } = await client.auth.signOut();
+
+      if(error){
+        console.error("logout error:", error);
+        setStatus(error.message, true);
+        return;
+      }
+
+      currentUser = null;
+      currentAccessToken = null;
+
+      window.location.replace("/");
+    }
+
+    logoutBtn.addEventListener("click", logout);
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+        currentAccessToken = session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        currentAccessToken = null;
+        window.location.replace("/");
+      }
+    });
+
+    checkSession();
+  </script>
 </body>
 </html>
