@@ -184,23 +184,23 @@
 
     .chart-panel{
       position:relative;
+      width:100%;
+      aspect-ratio:16 / 9;
       background:
         linear-gradient(
           180deg,
-          rgba(5,8,17,.18),
-          rgba(5,8,17,.38)
+          rgba(5,8,17,.10),
+          rgba(5,8,17,.26)
         ),
         url("/images/sea-chart-z.png");
       background-size:contain;
-      background-position:top center;
+      background-position:center;
       background-repeat:no-repeat;
       border:1px solid rgba(70,84,132,.55);
       border-radius:26px;
-      padding:28px;
       box-shadow:0 20px 48px rgba(0,0,0,.42);
       overflow:hidden;
       margin-bottom:28px;
-      min-height:620px;
     }
 
     .chart-panel::before{
@@ -210,7 +210,7 @@
       background:
         radial-gradient(circle at 18% 18%, rgba(169,183,255,.08), transparent 24%),
         radial-gradient(circle at 78% 72%, rgba(255,220,160,.07), transparent 26%),
-        linear-gradient(180deg, rgba(5,8,17,.08), rgba(5,8,17,.28));
+        linear-gradient(180deg, rgba(5,8,17,.06), rgba(5,8,17,.22));
       pointer-events:none;
       z-index:0;
     }
@@ -222,31 +222,21 @@
       border:1px solid rgba(169,183,255,.08);
       border-radius:22px;
       pointer-events:none;
+      z-index:0;
     }
 
     .sea-grid{
-      position:relative;
+      position:absolute;
+      inset:0;
       z-index:1;
-      display:grid;
-      grid-template-columns:repeat(12, minmax(0, 1fr));
-      grid-template-rows:repeat(6, minmax(72px, auto));
-      gap:14px;
-      min-height:560px;
     }
 
-    .pos-harbor{ grid-column:1 / span 3; grid-row:1; }
-    .pos-tide{ grid-column:4 / span 3; grid-row:2; }
-    .pos-lighthouse{ grid-column:6 / span 3; grid-row:1; }
-    .pos-fog{ grid-column:9 / span 3; grid-row:2; }
-    .pos-moon{ grid-column:2 / span 3; grid-row:4; }
-    .pos-deep{ grid-column:5 / span 3; grid-row:5; }
-    .pos-outer{ grid-column:9 / span 3; grid-row:5; }
-
     .sea-card{
-      position:relative;
+      position:absolute;
+      width:clamp(150px, 18vw, 230px);
       min-height:auto;
       border-radius:16px;
-      padding:13px 15px;
+      padding:12px 14px;
       background:rgba(5,8,17,.58);
       border:1px solid rgba(169,183,255,.28);
       box-shadow:0 10px 28px rgba(0,0,0,.32);
@@ -255,6 +245,41 @@
       display:flex;
       flex-direction:column;
       transition:.18s ease;
+    }
+
+    .pos-harbor{
+      left:4%;
+      top:9%;
+    }
+
+    .pos-tide{
+      left:31%;
+      top:21%;
+    }
+
+    .pos-lighthouse{
+      left:51%;
+      top:8%;
+    }
+
+    .pos-fog{
+      left:72%;
+      top:23%;
+    }
+
+    .pos-moon{
+      left:10%;
+      top:58%;
+    }
+
+    .pos-deep{
+      left:39%;
+      top:66%;
+    }
+
+    .pos-outer{
+      left:72%;
+      top:68%;
     }
 
     .sea-card.open{
@@ -299,11 +324,11 @@
     .sea-kicker{
       position:relative;
       z-index:1;
-      font-size:11px;
+      font-size:10px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:10px;
+      margin-bottom:6px;
     }
 
     .sea-card.locked .sea-kicker{
@@ -313,10 +338,10 @@
     .sea-name{
       position:relative;
       z-index:1;
-      font-size:18px;
-      line-height:1.7;
+      font-size:16px;
+      line-height:1.6;
       color:var(--text);
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
 
     .sea-card.locked .sea-name{
@@ -326,10 +351,10 @@
     .sea-desc{
       position:relative;
       z-index:1;
-      font-size:13px;
-      line-height:1.9;
+      font-size:12px;
+      line-height:1.75;
       color:var(--muted);
-      margin:0 0 16px;
+      margin:0 0 10px;
     }
 
     .sea-card.locked .sea-desc{
@@ -341,16 +366,16 @@
       z-index:1;
       display:flex;
       flex-wrap:wrap;
-      gap:8px;
+      gap:6px;
       margin-top:auto;
     }
 
     .tag{
-      font-size:11px;
+      font-size:10px;
       color:var(--muted);
       border:1px solid rgba(160,168,187,.28);
       border-radius:999px;
-      padding:5px 10px;
+      padding:4px 9px;
       background:rgba(255,255,255,.02);
     }
 
@@ -413,41 +438,33 @@
 
     @media(max-width:860px){
       .chart-panel{
-        overflow:visible;
-        padding:18px;
+        aspect-ratio:auto;
         min-height:auto;
-        background:
-          linear-gradient(
-            180deg,
-            rgba(5,8,17,.18),
-            rgba(5,8,17,.38)
-          ),
-          url("/images/sea-chart-z.png");
-        background-size:contain;
-        background-position:top center;
-        background-repeat:no-repeat;
+        padding-top:56.25%;
+        margin-bottom:22px;
       }
 
       .chart-panel::before{
-        display:none;
+        background:
+          linear-gradient(180deg, rgba(5,8,17,.04), rgba(5,8,17,.22));
+      }
+
+      .chart-panel::after{
+        inset:12px;
       }
 
       .sea-grid{
-        width:100%;
-        min-width:0;
+        position:static;
         display:grid;
         grid-template-columns:1fr;
-        grid-template-rows:auto;
         gap:14px;
-        min-height:auto;
-        padding-top:56vw;
-        background:none;
       }
 
       .sea-card{
-        grid-column:auto !important;
-        grid-row:auto !important;
-        min-height:auto;
+        position:relative;
+        left:auto !important;
+        top:auto !important;
+        width:100%;
       }
     }
 
@@ -471,13 +488,12 @@
         font-size:31px;
       }
 
-      .panel,
-      .chart-panel{
+      .panel{
         padding:20px;
       }
 
-      .sea-grid{
-        padding-top:58vw;
+      .chart-panel{
+        border-radius:22px;
       }
     }
   </style>
