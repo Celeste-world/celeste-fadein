@@ -21,6 +21,7 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
     }
 
     *{ box-sizing:border-box; }
@@ -146,12 +147,23 @@
       box-shadow:0 18px 42px rgba(0,0,0,.34);
     }
 
+    .ticket.drift{
+      border-color:rgba(185,246,202,.24);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 42%),
+        rgba(10,14,28,.78);
+    }
+
     .ticket-kicker{
       font-size:12px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--accent);
       margin-bottom:12px;
+    }
+
+    .ticket.drift .ticket-kicker{
+      color:var(--ready);
     }
 
     .ticket h2{
@@ -182,6 +194,12 @@
       border-radius:999px;
       padding:6px 12px;
       background:rgba(255,255,255,.02);
+    }
+
+    .tag.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.35);
+      background:rgba(185,246,202,.06);
     }
 
     .flow{
@@ -387,6 +405,10 @@
             航海記録を保存したあとに、港のネコが短く反応します。
             助言や診断ではなく、記録が届いたことを示す小さなPresenceです。
           </p>
+          <p>
+            Harbor Cat は、答えを返すためではなく、
+            記録が港に届いたことを静かに知らせるためにいます。
+          </p>
           <div class="meta">
             <span class="tag">無料</span>
             <span class="tag">1〜2行</span>
@@ -394,18 +416,20 @@
           </div>
         </article>
 
-        <article class="ticket">
+        <article class="ticket drift">
           <div class="ticket-kicker">Drift / Free Ticket</div>
           <h2>Drift Ticket（漂着チケット）</h2>
           <p>
-            ときどき、港に小さな航海券が漂着します。
-            無料で使える短い特別航海で、深い海の入口を少しだけ試すためのものです。
+            小さな航海券が流れ着く夜があります。
+            それは、少しだけ深い海へ降りるための合図です。
           </p>
           <p>
+            Drift Ticket は、Voyage Log のあとに港へ届くことがあります。
             販売のための強い導線ではなく、必要な夜にだけ届く小さな贈り物として扱います。
           </p>
           <div class="meta">
-            <span class="tag">無料配布</span>
+            <span class="tag ready">無料配布</span>
+            <span class="tag">Voyage Log 後</span>
             <span class="tag">5分程度</span>
             <span class="tag">不定期</span>
             <span class="tag">保持1枚まで</span>
@@ -418,6 +442,10 @@
           <p>
             ユーザーが自分で選んで入る、時間制の特別航海です。
             答えを急ぐためではなく、言葉を少し深く整えるための短い時間です。
+          </p>
+          <p>
+            Drift Ticket が港から届く小舟だとすれば、
+            Special Voyage Ticket は、自分で選んで出航するための航海券です。
           </p>
           <div class="meta">
             <span class="tag">有料予定</span>
@@ -462,7 +490,7 @@
 
         <p class="note">
           Harbor Cat は日常の港です。<br>
-          Drift Ticket は、たまに漂着する無料の小舟です。<br>
+          Drift Ticket は、Voyage Log のあとに届くことがある無料の小舟です。<br>
           Special Voyage Ticket は、自分で選んで入る特別航海です。<br>
           Deep Sea Ticket は、限定的に降りる深海です。
         </p>
