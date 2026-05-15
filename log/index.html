@@ -88,6 +88,65 @@
       margin-bottom:28px;
     }
 
+    .weather-panel{
+      background:rgba(10,14,28,.70);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 18px 42px rgba(0,0,0,.30);
+      margin-bottom:24px;
+    }
+
+    .weather-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    .weather-main{
+      font-size:14px;
+      line-height:2;
+      color:var(--text);
+      margin:0 0 10px;
+    }
+
+    .weather-sub{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .weather-meta{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .weather-chip{
+      border:1px solid rgba(70,84,132,.45);
+      background:rgba(255,255,255,.025);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .chip-label{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:6px;
+    }
+
+    .chip-value{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
     .panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
@@ -485,8 +544,13 @@
         font-size:30px;
       }
 
-      .panel{
+      .panel,
+      .weather-panel{
         padding:20px;
+      }
+
+      .weather-meta{
+        grid-template-columns:1fr;
       }
 
       .cat-overlay{
@@ -544,6 +608,30 @@
         今日の航海を、静かに残す場所です。<br>
         記録はあなた自身のために保存されます。
       </p>
+
+      <section class="weather-panel" aria-label="Tonight's Harbor">
+        <div class="weather-label">Tonight's Harbor</div>
+
+        <p class="weather-main" id="weatherMain">
+          今夜の港は静かです。
+        </p>
+
+        <p class="weather-sub" id="weatherSub">
+          しばらく、ここにいても大丈夫です。
+        </p>
+
+        <div class="weather-meta">
+          <div class="weather-chip">
+            <div class="chip-label">Sea</div>
+            <div class="chip-value" id="weatherSea">Quiet</div>
+          </div>
+
+          <div class="weather-chip">
+            <div class="chip-label">Light</div>
+            <div class="chip-value" id="weatherLight">Faint</div>
+          </div>
+        </div>
+      </section>
 
       <section class="panel">
         <div class="user" id="userStatus">
@@ -624,25 +712,81 @@
     </main>
 
     <footer>
-        <div>
-          <a href="/log/">Voyage Log</a>
-          ・
-          <a href="/timeline/">Cabin Log</a>
-          ・
-          <a href="/items/">Items</a>
-          ・
-          <a href="/vessels/">Vessels</a>
-          ・
-          <a href="/map/">Map</a>
-          ・
-          <a href="/account/">Account</a>
-        </div>
+      <div>
+        <a href="/log/">Voyage Log</a>
+        ・
+        <a href="/timeline/">Cabin Log</a>
+        ・
+        <a href="/items/">Items</a>
+        ・
+        <a href="/vessels/">Vessels</a>
+        ・
+        <a href="/map/">Map</a>
+        ・
+        <a href="/account/">Account</a>
+      </div>
       <div>CELESTE HARBOR</div>
     </footer>
 
   </div>
 
   <script>
+    const harborWeather = [
+      {
+        main: "今夜、東の灯台の近くに霧が漂っています。",
+        sub: "海は少し不明瞭ですが、港はまだ開いています。",
+        sea: "Foggy",
+        light: "Distant"
+      },
+      {
+        main: "今夜の海は穏やかですが、完全には静かではありません。",
+        sub: "月明かりの下で、小さな波がまだ続いています。",
+        sea: "Calm",
+        light: "Soft"
+      },
+      {
+        main: "港の端に、小さな灯りが残っています。",
+        sub: "合図である必要はありません。ただ、そこに残っています。",
+        sea: "Still",
+        light: "Faint"
+      },
+      {
+        main: "潮は低く、月はよく見えています。",
+        sub: "次の航海の前に、少し呼吸を整える余白があります。",
+        sea: "Low tide",
+        light: "Clear"
+      },
+      {
+        main: "今夜の港は、何も尋ねずに待っています。",
+        sub: "なぜ戻ってきたのかを、説明する必要はありません。",
+        sea: "Quiet",
+        light: "Waiting"
+      },
+      {
+        main: "薄い雲の向こうに、灯台の光が見えています。",
+        sub: "近すぎず、遠すぎず。方角を失わない程度の光です。",
+        sea: "Slow",
+        light: "Visible"
+      },
+      {
+        main: "水面が、遠い航海の音を運んでいます。",
+        sub: "暗い海の向こうで、まだ進んでいる船があります。",
+        sea: "Moving",
+        light: "Far"
+      }
+    ];
+
+    const today = new Date();
+    const weatherIndex = today.getDate() % harborWeather.length;
+    const weather = harborWeather[weatherIndex];
+
+    function applyHarborWeather(){
+      document.getElementById("weatherMain").textContent = weather.main;
+      document.getElementById("weatherSub").textContent = weather.sub;
+      document.getElementById("weatherSea").textContent = weather.sea;
+      document.getElementById("weatherLight").textContent = weather.light;
+    }
+
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
 
@@ -908,25 +1052,25 @@
 
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
-    
+
       const { data, error } = await client.auth.getSession();
-    
+
       if(error){
         console.error("getSession error:", error);
         window.location.replace("/");
         return;
       }
-    
+
       if(data.session && data.session.user){
         currentUser = data.session.user;
         currentAccessToken = data.session.access_token;
-    
+
         document.body.classList.remove("auth-locked");
-    
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("港へ戻りました。");
         updateAuthUI();
-    
+
         await ensureUserVessel();
         await loadLogs();
       }else{
@@ -956,19 +1100,19 @@
 
     async function logout(){
       const { error } = await client.auth.signOut();
-    
+
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-    
+
       currentUser = null;
       currentAccessToken = null;
       allLogs = [];
       showAllLogs = false;
       closeCatScroll();
-    
+
       window.location.replace("/");
     }
 
@@ -1382,12 +1526,12 @@
       if(session && session.user){
         currentUser = session.user;
         currentAccessToken = session.access_token;
-    
+
         document.body.classList.remove("auth-locked");
-    
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
-    
+
         await ensureUserVessel();
         await loadLogs();
       }else if(event === "SIGNED_OUT"){
@@ -1397,6 +1541,7 @@
       }
     });
 
+    applyHarborWeather();
     setPlaceholder();
     updateCharCount();
     updateAuthUI();
