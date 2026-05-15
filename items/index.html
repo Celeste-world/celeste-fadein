@@ -284,6 +284,13 @@
       line-height:1.7;
       text-align:center;
       padding:14px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .image-box:hover{
+      border-color:rgba(169,183,255,.48);
+      transform:translateY(-1px);
     }
 
     .image-box img{
@@ -357,6 +364,84 @@
       margin-bottom:34px;
     }
 
+    .image-modal{
+      position:fixed;
+      inset:0;
+      z-index:80;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.08), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(4px);
+    }
+
+    .image-modal.visible{
+      display:flex;
+    }
+
+    .image-modal-inner{
+      position:relative;
+      width:min(720px, 100%);
+      max-height:88vh;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.28);
+      background:rgba(10,14,28,.92);
+      box-shadow:0 28px 80px rgba(0,0,0,.58);
+      padding:22px;
+    }
+
+    .image-modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .image-modal-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+
+    .image-modal-img-wrap{
+      width:100%;
+      max-height:70vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border-radius:18px;
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
+        rgba(5,8,17,.62);
+    }
+
+    .image-modal-img{
+      max-width:100%;
+      max-height:70vh;
+      object-fit:contain;
+      display:block;
+    }
+
+    .image-modal-caption{
+      margin-top:14px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
     footer{
       margin-top:64px;
       padding-top:18px;
@@ -407,6 +492,15 @@
         width:100%;
         height:auto;
         aspect-ratio:1 / 1;
+      }
+
+      .image-modal{
+        padding:16px;
+      }
+
+      .image-modal-inner{
+        padding:18px;
+        border-radius:20px;
       }
     }
   </style>
@@ -485,6 +579,20 @@
 
   </div>
 
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <div class="image-modal-inner">
+      <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div class="image-modal-img-wrap">
+        <img class="image-modal-img" id="imageModalImg" src="" alt="">
+      </div>
+
+      <div class="image-modal-caption" id="imageModalCaption"></div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -498,6 +606,11 @@
     const statusEl = document.getElementById("status");
     const logoutBtn = document.getElementById("logoutBtn");
     const harborFindsEl = document.getElementById("harborFinds");
+
+    const imageModal = document.getElementById("imageModal");
+    const imageModalImg = document.getElementById("imageModalImg");
+    const imageModalCaption = document.getElementById("imageModalCaption");
+    const imageModalClose = document.getElementById("imageModalClose");
 
     let currentUser = null;
     let currentAccessToken = null;
@@ -543,7 +656,14 @@
       }
 
       return `
-        <div class="image-box">
+        <div
+          class="image-box"
+          data-image-src="${escapeHtml(imagePath)}"
+          data-image-label="${safeLabel}"
+          role="button"
+          tabindex="0"
+          aria-label="${safeLabel} を拡大表示"
+        >
           <img
             src="${escapeHtml(imagePath)}"
             alt="${safeLabel}"
@@ -823,6 +943,30 @@
       harborFindsEl.innerHTML = sectionsHtml;
     }
 
+    function openImageModal(src, label){
+      if(!src || !imageModal || !imageModalImg){
+        return;
+      }
+
+      imageModalImg.src = src;
+      imageModalImg.alt = label || "";
+      imageModalCaption.textContent = label || "";
+      imageModal.classList.add("visible");
+      imageModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeImageModal(){
+      if(!imageModal || !imageModalImg){
+        return;
+      }
+
+      imageModal.classList.remove("visible");
+      imageModal.setAttribute("aria-hidden", "true");
+      imageModalImg.src = "";
+      imageModalImg.alt = "";
+      imageModalCaption.textContent = "";
+    }
+
     async function logout(){
       setStatus("ログアウトしています。");
 
@@ -841,6 +985,43 @@
     }
 
     logoutBtn.addEventListener("click", logout);
+
+    document.addEventListener("click", function(event){
+      const imageBoxEl = event.target.closest("[data-image-src]");
+
+      if(imageBoxEl){
+        openImageModal(
+          imageBoxEl.dataset.imageSrc,
+          imageBoxEl.dataset.imageLabel
+        );
+        return;
+      }
+
+      if(event.target === imageModal){
+        closeImageModal();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeImageModal();
+      }
+
+      if(event.key === "Enter" || event.key === " "){
+        const imageBoxEl = document.activeElement?.closest?.("[data-image-src]");
+        if(imageBoxEl){
+          event.preventDefault();
+          openImageModal(
+            imageBoxEl.dataset.imageSrc,
+            imageBoxEl.dataset.imageLabel
+          );
+        }
+      }
+    });
+
+    if(imageModalClose){
+      imageModalClose.addEventListener("click", closeImageModal);
+    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
