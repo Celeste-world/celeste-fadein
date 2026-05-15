@@ -231,6 +231,28 @@
       z-index:0;
     }
 
+    .chart-zoom-button{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      z-index:3;
+      border:1px solid rgba(169,183,255,.34);
+      background:rgba(5,8,17,.68);
+      color:var(--muted);
+      border-radius:999px;
+      padding:8px 13px;
+      font-family:inherit;
+      font-size:12px;
+      letter-spacing:.06em;
+      backdrop-filter:blur(6px);
+      cursor:pointer;
+    }
+
+    .chart-zoom-button:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.62);
+    }
+
     .sea-grid{
       position:absolute;
       inset:0;
@@ -254,40 +276,13 @@
       cursor:default;
     }
 
-    .pos-harbor{
-      left:4%;
-      top:9%;
-    }
-
-    .pos-tide{
-      left:31%;
-      top:21%;
-    }
-
-    .pos-lighthouse{
-      left:51%;
-      top:8%;
-    }
-
-    .pos-fog{
-      left:72%;
-      top:23%;
-    }
-
-    .pos-moon{
-      left:10%;
-      top:58%;
-    }
-
-    .pos-deep{
-      left:39%;
-      top:66%;
-    }
-
-    .pos-outer{
-      left:72%;
-      top:68%;
-    }
+    .pos-harbor{ left:4%; top:9%; }
+    .pos-tide{ left:31%; top:21%; }
+    .pos-lighthouse{ left:51%; top:8%; }
+    .pos-fog{ left:72%; top:23%; }
+    .pos-moon{ left:10%; top:58%; }
+    .pos-deep{ left:39%; top:66%; }
+    .pos-outer{ left:72%; top:68%; }
 
     .sea-card.open{
       border-color:rgba(185,246,202,.46);
@@ -549,6 +544,12 @@
 
       .chart-panel::after{
         inset:12px;
+      }
+
+      .chart-zoom-button{
+        top:18px;
+        right:18px;
+        bottom:auto;
       }
 
       .sea-grid{
@@ -1059,17 +1060,24 @@
       mapArea.innerHTML = `
         <section
           class="chart-panel"
+          id="chartPanel"
           aria-label="Celeste Harbor sea chart"
           role="button"
           tabindex="0"
           data-chart-image="${escapeHtml(seaChartImagePath)}"
           data-chart-label="${escapeHtml(seaChartLabel)}"
         >
+          <button class="chart-zoom-button" id="chartZoomButton" type="button">
+            海図を拡大
+          </button>
+
           <div class="sea-grid">
             ${cardsHtml}
           </div>
         </section>
       `;
+
+      bindChartZoom();
     }
 
     function openImageModal(src, label){
@@ -1098,6 +1106,47 @@
       document.body.style.overflow = "";
     }
 
+    function bindChartZoom(){
+      const chartPanel = document.getElementById("chartPanel");
+      const chartZoomButton = document.getElementById("chartZoomButton");
+
+      if(!chartPanel){
+        return;
+      }
+
+      function openChart(){
+        openImageModal(
+          chartPanel.dataset.chartImage || seaChartImagePath,
+          chartPanel.dataset.chartLabel || seaChartLabel
+        );
+      }
+
+      chartPanel.addEventListener("click", function(event){
+        const seaCard = event.target.closest(".sea-card");
+        const zoomButton = event.target.closest("#chartZoomButton");
+
+        if(seaCard && !zoomButton){
+          return;
+        }
+
+        openChart();
+      });
+
+      chartPanel.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          openChart();
+        }
+      });
+
+      if(chartZoomButton){
+        chartZoomButton.addEventListener("click", function(event){
+          event.stopPropagation();
+          openChart();
+        });
+      }
+    }
+
     async function logout(){
       setStatus("ログアウトしています。");
 
@@ -1118,16 +1167,6 @@
     logoutBtn.addEventListener("click", logout);
 
     document.addEventListener("click", function(event){
-      const chartPanel = event.target.closest("[data-chart-image]");
-
-      if(chartPanel){
-        openImageModal(
-          chartPanel.dataset.chartImage,
-          chartPanel.dataset.chartLabel
-        );
-        return;
-      }
-
       if(event.target === imageModal){
         closeImageModal();
       }
@@ -1136,20 +1175,6 @@
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
         closeImageModal();
-        return;
-      }
-
-      if(event.key === "Enter" || event.key === " "){
-        const chartPanel = document.activeElement?.closest?.("[data-chart-image]");
-
-        if(chartPanel){
-          event.preventDefault();
-
-          openImageModal(
-            chartPanel.dataset.chartImage,
-            chartPanel.dataset.chartLabel
-          );
-        }
       }
     });
 
