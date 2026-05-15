@@ -263,7 +263,8 @@
       color:var(--danger);
     }
 
-    .harbor-find-panel{
+    .harbor-find-panel,
+    .drift-ticket-panel{
       margin-top:22px;
       padding:18px;
       border-radius:18px;
@@ -273,7 +274,15 @@
         rgba(5,8,17,.46);
     }
 
-    .harbor-find-head{
+    .drift-ticket-panel{
+      margin-top:14px;
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.06), transparent 42%),
+        rgba(5,8,17,.42);
+    }
+
+    .harbor-find-head,
+    .drift-ticket-head{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
@@ -281,14 +290,20 @@
       margin-bottom:12px;
     }
 
-    .harbor-find-label{
+    .harbor-find-label,
+    .drift-ticket-label{
       font-size:12px;
       letter-spacing:.16em;
       text-transform:uppercase;
       color:var(--accent);
     }
 
-    .harbor-find-state{
+    .drift-ticket-label{
+      color:var(--ready);
+    }
+
+    .harbor-find-state,
+    .drift-ticket-state{
       flex:0 0 auto;
       font-size:11px;
       color:var(--muted);
@@ -298,23 +313,27 @@
       background:rgba(255,255,255,.02);
     }
 
-    .harbor-find-state.found{
+    .harbor-find-state.found,
+    .drift-ticket-state.granted{
       color:var(--ready);
       border-color:rgba(185,246,202,.36);
       background:rgba(185,246,202,.06);
     }
 
-    .harbor-find-state.quiet{
+    .harbor-find-state.quiet,
+    .drift-ticket-state.quiet{
       color:var(--dim);
     }
 
-    .harbor-find-state.checking{
+    .harbor-find-state.checking,
+    .drift-ticket-state.checking{
       color:var(--accent);
       border-color:rgba(169,183,255,.36);
       background:rgba(169,183,255,.06);
     }
 
-    .harbor-find-main{
+    .harbor-find-main,
+    .drift-ticket-main{
       font-size:14px;
       line-height:1.9;
       color:var(--text);
@@ -322,7 +341,8 @@
       white-space:pre-wrap;
     }
 
-    .harbor-find-sub{
+    .harbor-find-sub,
+    .drift-ticket-sub{
       margin:10px 0 0;
       font-size:12px;
       line-height:1.8;
@@ -621,7 +641,8 @@
         grid-template-columns:1fr;
       }
 
-      .harbor-find-head{
+      .harbor-find-head,
+      .drift-ticket-head{
         flex-direction:column;
         gap:8px;
       }
@@ -758,6 +779,21 @@
           </p>
         </div>
 
+        <div class="drift-ticket-panel" id="driftTicketPanel">
+          <div class="drift-ticket-head">
+            <div class="drift-ticket-label">Drift Ticket</div>
+            <div class="drift-ticket-state quiet" id="driftTicketState">Quiet</div>
+          </div>
+
+          <p class="drift-ticket-main" id="driftTicketMain">
+            小さな航海券が流れ着く夜があります。
+          </p>
+
+          <p class="drift-ticket-sub" id="driftTicketSub">
+            それは、少しだけ深い海へ降りるための合図です。
+          </p>
+        </div>
+
         <div class="cat-overlay" id="catOverlay" aria-hidden="true">
           <div class="cat-scroll" role="status" aria-live="polite">
             <div class="cat-scroll-head">
@@ -885,9 +921,14 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
+
     const harborFindState = document.getElementById("harborFindState");
     const harborFindMain = document.getElementById("harborFindMain");
     const harborFindSub = document.getElementById("harborFindSub");
+
+    const driftTicketState = document.getElementById("driftTicketState");
+    const driftTicketMain = document.getElementById("driftTicketMain");
+    const driftTicketSub = document.getElementById("driftTicketSub");
 
     const saveBtn = document.getElementById("saveBtn");
     const loginBtn = document.getElementById("loginBtn");
@@ -1012,6 +1053,36 @@
         "quiet",
         "航海記録を保存すると、今夜の港に漂着の気配があるか確認します。",
         "何かが流れ着く夜もあれば、ただ波だけが残る夜もあります。"
+      );
+    }
+
+    function setDriftTicketDisplay(state, main, sub){
+      if(!driftTicketState || !driftTicketMain || !driftTicketSub){
+        return;
+      }
+
+      driftTicketState.className = "drift-ticket-state";
+
+      if(state === "granted"){
+        driftTicketState.textContent = "Granted";
+        driftTicketState.classList.add("granted");
+      }else if(state === "checking"){
+        driftTicketState.textContent = "Checking";
+        driftTicketState.classList.add("checking");
+      }else{
+        driftTicketState.textContent = "Quiet";
+        driftTicketState.classList.add("quiet");
+      }
+
+      driftTicketMain.textContent = main || "";
+      driftTicketSub.textContent = sub || "";
+    }
+
+    function resetDriftTicketDisplay(){
+      setDriftTicketDisplay(
+        "quiet",
+        "小さな航海券が流れ着く夜があります。",
+        "それは、少しだけ深い海へ降りるための合図です。"
       );
     }
 
@@ -1338,10 +1409,17 @@
 
     async function saveLog(){
       setStatus("保存しています。");
+
       setHarborFindDisplay(
         "checking",
         "航海記録を保存しています。",
         "保存後、今夜の港に漂着の気配があるか確認します。"
+      );
+
+      setDriftTicketDisplay(
+        "checking",
+        "航海券の気配を確認しています。",
+        "港の水面を、静かに見ています。"
       );
 
       closeCatScroll();
@@ -1354,18 +1432,21 @@
         if(!currentUser){
           setStatus("先にログインしてください。", true);
           resetHarborFindDisplay();
+          resetDriftTicketDisplay();
           return;
         }
 
         if(!content){
           setStatus("航海記録が空です。", true);
           resetHarborFindDisplay();
+          resetDriftTicketDisplay();
           return;
         }
 
         if(content.length > maxContentLength){
           setStatus("航海記録が長すぎます。少し短くしてください。", true);
           resetHarborFindDisplay();
+          resetDriftTicketDisplay();
           return;
         }
 
@@ -1387,6 +1468,7 @@
           console.error("insert voyage_logs error:", error);
           setStatus("保存失敗：" + error.message, true);
           resetHarborFindDisplay();
+          resetDriftTicketDisplay();
           return;
         }
 
@@ -1474,18 +1556,39 @@
           );
         }
 
+        setDriftTicketDisplay(
+          "checking",
+          "航海券の気配を確認しています。",
+          "港の端に、小さな流れが残っています。"
+        );
+
         const driftResult = await callGrantDriftTicket();
 
         if(driftResult && driftResult.granted){
-          await appendCatScrollNotice(
+          const driftMessage =
             driftResult.message ||
-              "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。",
+            "今夜、港に小さな航海券が漂着しました。\n5分だけ、少し深い海へ降りられます。";
+
+          setDriftTicketDisplay(
+            "granted",
+            "漂着チケットが届きました。",
+            driftMessage
+          );
+
+          await appendCatScrollNotice(
+            driftMessage,
             "Drift Ticket"
           );
 
           await holdCatText(2400);
 
           setStatus("航海記録を保存しました。漂着チケットが届きました。");
+        }else{
+          setDriftTicketDisplay(
+            "quiet",
+            "今夜、航海券は流れ着きませんでした。",
+            "港は静かなままです。"
+          );
         }
 
         contentEl.value = "";
@@ -1499,6 +1602,7 @@
         console.error("saveLog catch:", error);
         setStatus("保存処理でエラーが発生しました：" + error.message, true);
         resetHarborFindDisplay();
+        resetDriftTicketDisplay();
       }finally{
         updateAuthUI();
       }
@@ -1706,6 +1810,7 @@
     updateCharCount();
     updateAuthUI();
     resetHarborFindDisplay();
+    resetDriftTicketDisplay();
     checkSession();
   </script>
 </body>
