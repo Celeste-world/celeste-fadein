@@ -5,22 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Archive – Celeste Harbor</title>
-  
-  <meta name="description" content="Celeste Archive は、Celeste Harbor へ至るまでの旧航海記録、思想、構造を静かに保存する場所です。" />
-  <link rel="canonical" href="https://celeste.world/archive/" />
-  <meta name="robots" content="index, follow">
-  
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Archive – Celeste Harbor">
-  <meta property="og:description" content="Celeste Harbor へ至るまでの古い灯りを保存する場所。">
-  <meta property="og:url" content="https://celeste.world/archive/">
-  <meta property="og:image" content="https://celeste.world/images/og-image.png">
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Archive – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste Harbor へ至るまでの古い灯りを保存する場所。">
-  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
-  
+  <meta name="robots" content="noindex, nofollow">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
@@ -33,6 +20,7 @@
       --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --danger:#ff9b9b;
     }
 
     *{box-sizing:border-box;}
@@ -49,6 +37,10 @@
         "Yu Mincho",
         "Noto Serif JP",
         serif;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
     }
 
     a{
@@ -69,26 +61,34 @@
       flex-direction:column;
     }
 
-    header{
+    .site-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:24px;
-      margin-bottom:72px;
+      gap:18px;
+      margin-bottom:64px;
+      color:var(--muted);
+      font-size:13px;
     }
 
-    header img{
-      width:72px;
-      height:auto;
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
     }
 
     .nav{
       display:flex;
-      gap:16px;
+      gap:18px;
       flex-wrap:wrap;
-      justify-content:flex-end;
-      font-size:13px;
+    }
+
+    .nav a{
       color:var(--muted);
+    }
+
+    .nav a:hover{
+      color:var(--text);
+      text-decoration:none;
     }
 
     main{
@@ -97,7 +97,7 @@
     }
 
     .hero{
-      margin-bottom:58px;
+      margin-bottom:42px;
     }
 
     .label{
@@ -131,6 +131,73 @@
       font-size:14px;
       line-height:2.1;
       max-width:42rem;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:42px;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      margin-top:20px;
+    }
+
+    button,
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:999px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    button{
+      border:0;
+    }
+
+    .btn-ghost,
+    .ghost{
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+    }
+
+    .btn-ghost:hover,
+    .ghost:hover{
+      border-color:rgba(169,183,255,.4);
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    .status{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
+    .status.error{
+      color:var(--danger);
     }
 
     section{
@@ -203,16 +270,6 @@
       gap:16px;
     }
 
-    @media (max-width:860px){
-      .current-grid{
-        grid-template-columns:1fr;
-      }
-
-      header{
-        align-items:flex-start;
-      }
-    }
-
     .current-card{
       background:rgba(10,14,28,0.62);
       border:1px solid rgba(70,84,132,0.45);
@@ -239,23 +296,6 @@
 
     .card-actions{
       margin-top:auto;
-    }
-
-    .btn-ghost{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 16px;
-      border-radius:999px;
-      font-size:13px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      background:rgba(255,255,255,0.02);
-    }
-
-    .btn-ghost:hover{
-      border-color:rgba(169,183,255,0.4);
-      text-decoration:none;
     }
 
     .note{
@@ -286,23 +326,59 @@
       gap:16px;
       flex-wrap:wrap;
     }
+
+    footer a:hover{
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    @media (max-width:860px){
+      .current-grid{
+        grid-template-columns:1fr;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel,
+      .archive-card,
+      .current-card{
+        padding:20px;
+      }
+    }
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
-    <header>
-      <a href="/" aria-label="Celeste Harbor">
-        <img src="/images/logo.svg" alt="Celeste logo">
-      </a>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav" aria-label="Main navigation">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Voyage</a>
-        <a href="/fragments/">Fragments</a>
-        <a href="/about/">About</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
@@ -329,6 +405,21 @@
         <div class="quote">
           航海には、通ってきた海があります。
         </div>
+      </section>
+
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
+        </div>
+
+        <div class="actions">
+          <button class="ghost" id="logoutBtn">ログアウト</button>
+          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+          <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
+          <a class="btn-ghost" href="/map/">Mapへ</a>
+        </div>
+
+        <div class="status" id="status"></div>
       </section>
 
       <section aria-labelledby="old-records-title">
@@ -430,43 +521,41 @@
         <div class="current-grid">
 
           <article class="current-card">
-            <h3>Harbor</h3>
+            <h3>Voyage Log</h3>
             <p>
-              現在の入口。
-              静かな帰港空間としての Celeste Harbor へ戻ります。
+              現在の港の中心。
+              今日の航海記録を残す場所です。
             </p>
 
             <div class="card-actions">
-              <a class="btn-ghost" href="/">
-                Harborへ
+              <a class="btn-ghost" href="/log/">
+                Voyage Logへ
               </a>
             </div>
           </article>
 
           <article class="current-card">
-            <h3>Moonlit Voyage</h3>
+            <h3>Sea Chart</h3>
             <p>
-              Harbor の深海に置かれた航海記録。
-              月夜の海へ続く静かな入口です。
+              開いている海域と、まだ霧の向こうにある海を見る場所です。
             </p>
 
             <div class="card-actions">
-              <a class="btn-ghost" href="/voyage/">
-                Voyageへ
+              <a class="btn-ghost" href="/map/">
+                Mapへ
               </a>
             </div>
           </article>
 
           <article class="current-card">
-            <h3>Fragments</h3>
+            <h3>Cabin Log</h3>
             <p>
-              同じ海域に漂着した別の夜。
-              Harbor の余白に置かれた短い断片です。
+              漂着物、船、チケット、記録が積もっていく船室のログです。
             </p>
 
             <div class="card-actions">
-              <a class="btn-ghost" href="/fragments/">
-                Fragmentsへ
+              <a class="btn-ghost" href="/timeline/">
+                Cabin Logへ
               </a>
             </div>
           </article>
@@ -478,17 +567,115 @@
 
     <footer>
       <div class="footer-links">
-        <a href="/">Harbor</a>
         <a href="/log/">Voyage Log</a>
-        <a href="/voyage/">Moonlit Voyage</a>
-        <a href="/fragments/">Fragments</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
-        <a href="/archive/">Archive</a>
+        <a href="/account/">Account</a>
       </div>
 
       <div>CELESTE ARCHIVE</div>
     </footer>
 
   </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let currentUser = null;
+    let currentAccessToken = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        window.location.replace("/");
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        currentAccessToken = data.session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        setStatus("Archive を表示しています。");
+      }else{
+        window.location.replace("/");
+        return;
+      }
+    }
+
+    async function logout(){
+      setStatus("ログアウトしています。");
+
+      const { error } = await client.auth.signOut();
+
+      if(error){
+        console.error("logout error:", error);
+        setStatus(error.message, true);
+        return;
+      }
+
+      currentUser = null;
+      currentAccessToken = null;
+
+      window.location.replace("/");
+    }
+
+    logoutBtn.addEventListener("click", logout);
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+        currentAccessToken = session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        currentAccessToken = null;
+
+        window.location.replace("/");
+      }
+    });
+
+    checkSession();
+  </script>
 </body>
 </html>
