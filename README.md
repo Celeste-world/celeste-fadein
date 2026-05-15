@@ -1,179 +1,180 @@
 # Celeste Harbor
 
-Celeste Harbor is a quiet web harbor for recording voyages, receiving small signs, gathering drifted items, building vessels, and opening new sea areas.
+Celeste Harbor は、航海の記録を残し、小さな気配を受け取り、漂着物を集め、船を整え、新しい海域を開いていくための静かなWebの港です。
 
-This project is not designed as a social network, chatbot, or productivity dashboard.  
-It is a private harbor for continuing a quiet voyage.
+このプロジェクトは、SNSでも、チャットボットでも、生産性ダッシュボードでもありません。  
+静かな航海を続けるための、個人的な港です。
 
 ---
 
-## Current Public Pages
+## 公開ページ
 
-The public-facing area is intentionally small.
+公開ページは、意図的に小さく保ちます。
 
 ### `/`
 
-Public entrance page.
+公開入口ページ。
 
-Shows only:
+表示するもの：
 
-- Google login
-- About link
+- Googleログイン
+- Aboutリンク
 
 ### `/about/`
 
-Public explanation page.
+公開説明ページ。
 
-Describes Celeste Harbor, Harbor Cat, Presence AI, and the purpose of the harbor.
+Celeste Harbor、Harbor Cat、Presence AI、港の目的を説明します。
 
 ### `/voyage/`
 
-Public Moonlit Voyage page.
+公開用の Moonlit Voyage ページ。
 
-A public-facing work page for the book and its editions.
+書籍や改訂版の案内を置くための公開ページです。
 
 ---
 
-## Login Required Pages
+## ログイン必須ページ
 
-All harbor-internal pages require Google login.
+港の内部ページは、すべてGoogleログイン必須です。
 
 ### `/log/`
 
-Voyage Log.
+Voyage Log。
 
-The main private writing page.
+Celeste Harbor の中心となる私的な記録ページです。
 
-Includes:
+含まれるもの：
 
-- Voyage Log save
-- Harbor Cat response
+- Voyage Log 保存
+- Harbor Cat 応答
 - Harbor Find
-- Harbor Find display card
-- Drift Ticket display card
+- Harbor Find 表示カード
+- Drift Ticket 表示カード
 - Tonight's Harbor
 - Harbor Weather
 - Recent Logs
 
 ### `/timeline/`
 
-Cabin Log.
+Cabin Log。
 
-Timeline record of logs, harbor finds, vessels, tickets, sea areas, and voyage events.
+ログ保存、Harbor Find、船、チケット、海域開放、航海イベントを時系列で記録するページです。
 
-Includes:
+含まれるもの：
 
-- image-based event cards
-- Harbor Find item images
-- Drift Ticket image display
-- vessel acquisition images
-- sea area / sea chart image display
-- event-type color accents
-- Read more / Show less display
+- 画像付きイベントカード
+- Harbor Find のアイテム画像
+- Drift Ticket 画像
+- 船取得画像
+- 海域 / 海図画像
+- イベント種別ごとの色分け
+- Read more / Show less 表示
 
 ### `/items/`
 
-Harbor Finds.
+Harbor Finds。
 
-Discovered items grouped by sea area.
+発見済みの漂着物を、海域ごとに表示します。
 
-Includes:
+含まれるもの：
 
-- sea-area grouping
-- item image display
-- item image enlargement modal
+- 海域別表示
+- アイテム画像表示
+- アイテム画像拡大モーダル
 
 ### `/vessels/`
 
-Vessel record.
+船の記録。
 
-Shows:
+表示するもの：
 
-- current vessel
-- next vessel requirements
-- owned vessel collection
-- mist-covered locked vessels
-- vessel image enlargement modal
+- 現在の船
+- 次の船に必要な漂着物
+- 所有済みの船コレクション
+- 霧に包まれた未開放の船
+- 船画像拡大モーダル
 
 ### `/map/`
 
-Sea Chart.
+Sea Chart。
 
-Shows opened and unopened sea areas.
+開放済み・未開放の海域を表示します。
 
-Includes:
+含まれるもの：
 
-- sea chart image
-- sea area cards
-- sea chart enlargement modal
+- 海図画像
+- 海域カード
+- 海図拡大モーダル
 
 ### `/account/`
 
-Account and ticket management.
+アカウントと航海券の確認ページ。
 
-Includes:
+含まれるもの：
 
-- available ticket summary
-- Drift / Special / Deep Sea ticket counts
-- ticket image display
-- ticket status display
-- link to Special Voyage
+- 有効なチケットの概要
+- Drift / Special / Deep Sea のチケット数
+- チケット画像表示
+- チケット状態表示
+- Special Voyage への導線
 
 ### `/tickets/`
 
-Ticket explanation and ticket-related navigation.
+チケット説明ページ。
 
-Includes:
+含まれるもの：
 
-- Harbor Cat image
-- Drift Ticket image
-- Special Voyage Ticket image
-- Deep Sea Ticket image
-- unified ticket card layout
-- subdued Drift Ticket visual treatment
+- Harbor Cat 画像
+- Drift Ticket 画像
+- Special Voyage Ticket 画像
+- Deep Sea Ticket 画像
+- 統一されたチケットカードUI
+- Drift Ticket の控えめな表示調整
 
 ### `/special-voyage/`
 
-Time-limited special voyage entry and active voyage interface.
+時間制の特別航海入口および、航海中のインターフェース。
 
 ### `/fragments/`
 
-Fragment archive inside the harbor.
+港内部の Fragment Archive。
 
 ### `/archive/`
 
-Archive for old Celeste records.
+旧Celeste記録への内部アーカイブ入口。
 
 ### `/harbor/`
 
-Legacy harbor route.
+旧 Harbor ルート。
 
-Redirects based on authentication state:
+認証状態に応じてリダイレクトします。
 
 ```txt
-logged in     → /log/
-not logged in → /
+ログイン済み   → /log/
+未ログイン     → /
 ```
 
 ---
 
-## Legacy Pages
+## Legacyページ
 
-Old Celeste Console pages are preserved under:
+旧 Celeste Console 系ページは、以下に保存します。
 
 ```txt
 /legacy/
 ```
 
-Legacy pages are not login-required, but they should not be indexed.
+Legacyページはログイン必須ではありません。  
+ただし、検索エンジンにはインデックスさせません。
 
-Each legacy page should include:
+各Legacyページには以下を入れます。
 
 ```html
 <meta name="robots" content="noindex, nofollow">
 ```
 
-Current legacy files:
+現在のLegacyファイル：
 
 ```txt
 /legacy/about.html
@@ -187,7 +188,7 @@ Current legacy files:
 /legacy/README.md
 ```
 
-Root-level old HTML pages redirect to their legacy equivalents:
+ルート直下の旧HTMLページは、対応するLegacyページへリダイレクトします。
 
 ```txt
 /about.html              → /legacy/about.html
@@ -200,13 +201,13 @@ Root-level old HTML pages redirect to their legacy equivalents:
 /timeline.html           → /legacy/timeline.html
 ```
 
-`/auth/` redirects to `/`.
+`/auth/` は `/` へリダイレクトします。
 
 ---
 
-## Core Loop
+## 基本ループ
 
-The main harbor loop is:
+Celeste Harbor の基本ループは以下です。
 
 ```txt
 Voyage Log
@@ -226,53 +227,53 @@ Map
 Cabin Log
 ```
 
-The user writes a Voyage Log.  
-Harbor Cat responds briefly without advice or diagnosis.  
-Sometimes an item drifts into the harbor.  
-Items are used to prepare vessels.  
-Vessels open new sea areas.  
-Sea areas expand item pools.  
-All important events are recorded in Cabin Log.
+ユーザーは Voyage Log を書きます。  
+Harbor Cat は、助言や診断ではなく、短い静かな応答を返します。  
+ときどき、何かが港へ漂着します。  
+漂着物は、船を整えるために使われます。  
+船が増えると、新しい海域が開きます。  
+海域が広がると、漂着物の可能性も広がります。  
+重要な出来事は Cabin Log に記録されます。
 
 ---
 
-## Fixed Design Policy
+## 固定仕様
 
-### Vessels
+### 船
 
-There are 9 vessels.
+船は9隻です。
 
-Vessel creation is item-consumption based.  
-Vessels are part of the user’s growth record.
+船の作成は、漂着物の消費によって行います。  
+船は、ユーザーの成長記録の一部です。
 
-`/vessels/` shows:
+`/vessels/` に表示するもの：
 
-- current vessel
-- next vessel requirements
-- owned vessel collection
-- mist-covered locked vessels
-- vessel images
-- vessel image enlargement modal
+- 現在の船
+- 次の船に必要な漂着物
+- 所有済みの船コレクション
+- 霧に包まれた未開放の船
+- 船画像
+- 船画像拡大モーダル
 
-### Items
+### 漂着物
 
-There are 25 harbor item types.
+漂着物は25種類です。
 
-`/items/` shows discovered items only.
+`/items/` は、発見済みの漂着物だけを表示します。
 
-Items are grouped by sea area.  
-Undiscovered items are not shown.  
-Unopened areas are shown as `霧の向こう`.
+漂着物は海域ごとにグループ化します。  
+未発見の漂着物は表示しません。  
+未開放の海域は `霧の向こう` として表示します。
 
-`/items/` includes:
+`/items/` に含まれるもの：
 
-- image display
-- image enlargement modal
-- sea-area grouping
+- 画像表示
+- 画像拡大モーダル
+- 海域別表示
 
-### Sea Areas
+### 海域
 
-Initial sea areas:
+初期海域は以下です。
 
 ```txt
 harbor
@@ -284,51 +285,53 @@ deep_current
 unnamed_waters
 ```
 
-Sea areas are shown in `/map/`.
+海域は `/map/` に表示します。
 
-Unopened areas appear as:
+未開放の海域は以下のように表示します。
 
 ```txt
 霧の向こう
 ```
 
-`/map/` includes:
+`/map/` に含まれるもの：
 
-- sea chart image
-- opened / unopened sea area cards
-- sea chart enlargement modal
+- 海図画像
+- 開放済み / 未開放の海域カード
+- 海図拡大モーダル
 
 ---
 
-## Harbor Find Rate
+## Harbor Find
 
-Normal Voyage Log:
+Harbor Find は、Voyage Log 保存後に、港へ何かが漂着する仕組みです。
+
+通常の Voyage Log：
 
 ```txt
 12%
 ```
 
-Special Voyage:
+Special Voyage：
 
 ```txt
 40%
 ```
 
-Deep Sea Voyage:
+Deep Sea Voyage：
 
 ```txt
 60%
 ```
 
-First Harbor Find is guaranteed once per user.
+初回 Harbor Find は、ユーザーごとに1回だけ必ず発生します。
 
-Tags are treated as “signs” or “weather” of the log.  
-They lightly influence item weighting, but they do not unlock unopened areas.
+タグは、そのログの「気配」や「天候」として扱います。  
+アイテム抽選の重み付けに軽く影響しますが、未開放の海域を開くことはありません。
 
-The UI should not expose internal probability details too directly.  
-Harbor Find should feel like a quiet sign from the harbor, not a reward dashboard.
+UIでは、内部の確率や保証を直接見せすぎないようにします。  
+Harbor Find は報酬ダッシュボードではなく、港からの静かな気配として扱います。
 
-Current `/log/` display wording:
+`/log/` の現在の表示文言：
 
 ```txt
 何かが流れ着く夜もあれば、ただ波だけが残る夜もあります。
@@ -336,13 +339,13 @@ Current `/log/` display wording:
 
 ---
 
-## Drift Ticket Display
+## Drift Ticket 表示
 
-`/log/` includes a Drift Ticket display card.
+`/log/` には Drift Ticket 表示カードがあります。
 
-The card appears below the Harbor Find card.
+Harbor Find カードの下に表示します。
 
-Current display states:
+現在の表示状態：
 
 ```txt
 Quiet
@@ -350,73 +353,74 @@ Checking
 Granted
 ```
 
-The card should not expose internal ticket rules too directly.
+内部ルールを直接見せすぎないようにします。
 
-Current default wording:
+現在の初期文言：
 
 ```txt
 小さな航海券が流れ着く夜があります。
 それは、少しだけ深い海へ降りるための合図です。
 ```
 
-After saving a Voyage Log:
+Voyage Log 保存後：
 
-- `Checking` while the harbor checks for a ticket
-- `Granted` if a Drift Ticket is granted
-- `Quiet` if no ticket arrives
+- チケット確認中は `Checking`
+- Drift Ticket が付与された場合は `Granted`
+- 何も届かなかった場合は `Quiet`
 
-Drift Ticket notices may also appear inside the Harbor Cat scroll.
+Drift Ticket の通知は Harbor Cat の巻物内にも表示されることがあります。
 
 ---
 
-## Ticket Types
+## チケット種別
 
-Celeste Harbor currently uses three ticket types.
+Celeste Harbor では、現在3種類のチケットを扱います。
 
 ### Drift Ticket
 
-A free ticket that may drift into the harbor after saving a Voyage Log.
+Voyage Log 保存後に、港へ漂着することがある無料チケットです。
 
-It is a small sign from the harbor, not a purchase flow.
+販売導線ではなく、港からの小さな気配として扱います。
 
-Current display wording:
+現在の表示文言：
 
 ```txt
 小さな航海券が流れ着く夜があります。
 それは、少しだけ深い海へ降りるための合図です。
 ```
 
-Current image path:
+画像パス：
 
 ```txt
 /images/tickets/drift-ticket.svg
 ```
 
-Visual note:
+表示方針：
 
-- Drift Ticket should remain visually subdued.
-- It should feel like something that drifted in, not a strong purchase banner.
+- Drift Ticket は控えめに表示する。
+- 強い購入バナーのように見せない。
+- 「流れ着いたもの」として扱う。
 
 ### Special Voyage Ticket
 
-A paid ticket planned for user-chosen Special Voyages.
+ユーザーが自分で選んで入る Special Voyage 用の有料予定チケットです。
 
-Special Voyage Ticket has only two duration types:
+Special Voyage Ticket は以下の2種類です。
 
 ```txt
-10 minutes
-20 minutes
+10分
+20分
 ```
 
-No 15-minute or 30-minute Special Voyage Ticket is planned.
+15分・30分の Special Voyage Ticket は作りません。
 
-Current display wording:
+現在の表示文言：
 
 ```txt
 チケットは 10分 と 20分 の2種類です。
 ```
 
-Current image path:
+画像パス：
 
 ```txt
 /images/tickets/special-voyage-ticket.svg
@@ -424,11 +428,11 @@ Current image path:
 
 ### Deep Sea Ticket
 
-A limited ticket for entering a deeper and quieter sea.
+さらに深く静かな海へ降りるための限定チケットです。
 
-It should be written for users as an experience, not as an internal product plan.
+ユーザー向けには、内部設計や販売方針ではなく、体験として説明します。
 
-Current user-facing wording:
+現在のユーザー向け文言：
 
 ```txt
 いつもの港よりも、さらに深い海へ降りるための航海券です。
@@ -438,7 +442,7 @@ Current user-facing wording:
 必要だと感じる時だけ、深い海への入口として開きます。
 ```
 
-Current image path:
+画像パス：
 
 ```txt
 /images/tickets/deep-sea-ticket.svg
@@ -446,36 +450,66 @@ Current image path:
 
 ---
 
-## Cabin Log / Timeline Display
+## Special Voyage
 
-`/timeline/` is the visual record of harbor events.
+`/special-voyage/` は、有効な航海券を使って時間制の航海へ入るページです。
 
-Current display behavior:
+現在の挙動：
 
-- events are shown as image-based cards
-- initial display shows 5 events
-- `Read more` expands all events
-- `Show less` returns to the first 5 events
-- events are loaded from `user_timeline_events_view`
+- 有効なチケットを確認する
+- チケットがあれば航海入口を表示する
+- 航海開始時にチケットを使用済みにする
+- 制限時間内だけ特別航海UIを表示する
+- 終了後は Voyage Log へ戻す
 
-Current image behavior:
+チケット種別ごとの入口表示：
 
 ```txt
-Harbor Find      → harbor item image
-Drift Ticket     → ticket image
-Vessel acquired  → vessel image
-Sea Area opened  → sea chart image
-Fallback         → quiet symbolic icon
+Drift Ticket
+  → 漂着チケットの入口
+
+Special Voyage Ticket
+  → 特別航海の入口
+
+Deep Sea Ticket
+  → 深海航海の入口
 ```
 
-Current supported image fields from `user_timeline_events_view`:
+Drift Ticket を Special Voyage Ticket のように見せないこと。  
+それぞれのチケットが持つ意味に合わせて表示文言を変えること。
+
+---
+
+## Cabin Log / Timeline 表示
+
+`/timeline/` は、港で起きた出来事の視覚的な記録です。
+
+現在の表示：
+
+- イベントを画像付きカードとして表示
+- 初期表示は5件
+- `Read more` で全件表示
+- `Show less` で5件表示へ戻す
+- イベントは `user_timeline_events_view` から取得する
+
+現在の画像表示：
+
+```txt
+Harbor Find      → 漂着物画像
+Drift Ticket     → チケット画像
+Vessel acquired  → 船画像
+Sea Area opened  → 海図画像
+Fallback         → 静かなアイコン
+```
+
+`user_timeline_events_view` で対応する画像列：
 
 ```txt
 image_path
 image_alt
 ```
 
-The frontend also checks fallback image fields:
+フロント側では以下のフォールバック画像列も見ます。
 
 ```txt
 item_image_path
@@ -485,40 +519,40 @@ ticket_image_path
 related_image_path
 ```
 
-Event cards use quiet visual differences by event type:
+イベント種別ごとの見た目：
 
 ```txt
-harbor_find      → green / find tone
-ticket_drifted   → subdued purple / ticket tone
-vessel_acquired  → gold / vessel tone
-sea_area_opened  → sea chart image
+harbor_find      → 緑系 / 漂着物
+ticket_drifted   → 控えめな紫系 / チケット
+vessel_acquired  → 金色系 / 船
+sea_area_opened  → 海図画像
 ```
 
-Drift Ticket images should remain subdued so they do not visually overpower item or vessel events.
+Drift Ticket 画像は、アイテムや船イベントより目立ちすぎないように控えめに表示します。
 
 ---
 
 ## Harbor Cat
 
-Harbor Cat does not diagnose, advise, evaluate, or solve.
+Harbor Cat は、診断・助言・評価・解決をしません。
 
-It returns a short quiet presence after a log is saved.
+Voyage Log 保存後に、短い静かなPresenceを返します。
 
-Current behavior:
+現在の動作：
 
-- appears after saving a Voyage Log
-- reads the log as a scroll
-- returns a short quiet response
-- can show Harbor Find notices inside the scroll
-- can show Drift Ticket notices inside the scroll
+- Voyage Log 保存後に表示される
+- 巻物を読むような演出で表示される
+- 短い静かな応答を返す
+- Harbor Find の通知を巻物内に表示することがある
+- Drift Ticket の通知を巻物内に表示することがある
 
-Harbor Cat should remain a presence, not an assistant.
+Harbor Cat は「助手」ではなく「気配」として扱います。
 
 ---
 
-## Important Supabase Tables
+## 重要なSupabaseテーブル
 
-Core tables include:
+主要テーブル：
 
 ```txt
 vessels
@@ -537,9 +571,9 @@ user_timeline_events
 
 ---
 
-## Important Views
+## 重要なView
 
-Current display views include:
+現在使っている主な表示用View：
 
 ```txt
 user_current_vessel_view
@@ -551,17 +585,17 @@ user_vessels_collection_view
 vessel_requirements_display_view
 ```
 
-Some collection display is handled through RPC rather than relying only on views.
+一部のコレクション表示は、ViewだけではなくRPCで処理しています。
 
 ---
 
 ## `user_timeline_events_view`
 
-`user_timeline_events_view` is used by `/timeline/`.
+`user_timeline_events_view` は `/timeline/` で使います。
 
-It should return event fields plus image fields.
+イベント情報に加えて、画像表示用の列も返す必要があります。
 
-Expected columns include:
+期待する列：
 
 ```txt
 id
@@ -576,15 +610,15 @@ image_path
 image_alt
 ```
 
-Image resolution policy:
+画像解決方針：
 
-- metadata image path should be used first if present
-- Harbor Find should join to `harbor_items` by `metadata.item_key`
-- vessel events should join to `vessels` by `metadata.vessel_key` or vessel id fields
-- ticket events may use fixed ticket image paths
-- sea area events may use the sea chart image
+- metadata に画像パスがあれば優先する
+- Harbor Find は `metadata.item_key` で `harbor_items` と結合する
+- 船イベントは `metadata.vessel_key` または vessel id 系で `vessels` と結合する
+- チケットイベントは固定画像パスを使ってよい
+- 海域開放イベントは海図画像を使ってよい
 
-Important metadata examples:
+metadata 例：
 
 ```json
 {
@@ -595,7 +629,7 @@ Important metadata examples:
 }
 ```
 
-Current fixed image paths may include:
+固定画像パス例：
 
 ```txt
 /images/tickets/drift-ticket.svg
@@ -607,13 +641,13 @@ Current fixed image paths may include:
 
 ---
 
-## Important RPC Functions
+## 重要なRPC関数
 
 ### `ensure_user_vessel()`
 
-Ensures the initial vessel and user harbor state exist.
+初期船とユーザーの港状態を用意します。
 
-Used by:
+使用ページ：
 
 ```txt
 /log/
@@ -624,15 +658,15 @@ Used by:
 
 ### `check_and_unlock_next_vessel()`
 
-Checks whether the user has enough required items to unlock the next vessel.
+次の船に必要な漂着物が揃っているか確認します。
 
-If requirements are met:
+条件を満たした場合：
 
-- consumes required items
-- unlocks next vessel
-- records timeline event
+- 必要な漂着物を消費
+- 次の船を解放
+- Timeline に記録
 
-Used by:
+使用ページ：
 
 ```txt
 /vessels/
@@ -642,9 +676,9 @@ Used by:
 
 ### `check_and_unlock_sea_areas()`
 
-Unlocks sea areas according to owned vessel count.
+所有している船の数に応じて、海域を開放します。
 
-Current rule:
+現在のルール：
 
 ```txt
 1 vessel  → harbor
@@ -656,7 +690,7 @@ Current rule:
 7 vessels → unnamed_waters
 ```
 
-Used by:
+使用ページ：
 
 ```txt
 /map/
@@ -667,46 +701,49 @@ Used by:
 
 ### `grant_random_harbor_find(p_tag, p_context, p_force)`
 
-Handles Harbor Find logic.
+Harbor Find の抽選処理を行います。
 
-Features:
+機能：
 
-- normal drift rate: 12%
-- special voyage rate: 40%
-- deep sea voyage rate: 60%
-- first harbor find guarantee
-- open-area-only item pool
-- rarity weighting
-- light tag-based area boost
-- user inventory update
-- timeline event creation
+- 通常漂着率：12%
+- Special Voyage 後：40%
+- Deep Sea Voyage 後：60%
+- 初回 Harbor Find 保証
+- 開放済み海域の item pool のみ使用
+- rarity による重み付け
+- tag による軽い海域ブースト
+- user inventory 更新
+- timeline event 作成
 
-Used by:
+使用ページ：
 
 ```txt
 /log/
 ```
 
-Current UI behavior:
+現在のUI挙動：
 
-- result appears inside Harbor Cat scroll
-- result also appears in the Harbor Find display card
-- result appears in `/timeline/` with the harbor item image
-- internal guarantee/rate language is not shown directly to the user
+- 結果は Harbor Cat の巻物内に表示
+- 結果は `/log/` の Harbor Find カードにも表示
+- 結果は `/timeline/` に漂着物画像付きで表示
+- 内部の保証や確率はユーザーに直接見せない
 
 ---
 
 ### `get_user_vessels_collection()`
 
-Returns all 9 vessels for the current user with:
+ユーザーの9隻すべての船情報を返します。
 
-- owned/current status
-- locked mist status
-- vessel details
-- image paths
+返す内容：
+
+- 所有状態
+- 現在の船
+- 霧に包まれた未開放状態
+- 船の詳細
+- 画像パス
 - stage order
 
-Used by:
+使用ページ：
 
 ```txt
 /vessels/
@@ -714,9 +751,9 @@ Used by:
 
 ---
 
-## Authentication Policy
+## 認証方針
 
-Only these pages are public:
+公開ページは以下のみです。
 
 ```txt
 /
@@ -724,15 +761,13 @@ Only these pages are public:
 /voyage/
 ```
 
-All other active harbor pages require Google login.
+それ以外の有効な港ページは、Googleログイン必須です。
 
-Protected pages use:
+保護ページでは以下を使います。
 
 ```html
 <body class="auth-locked">
 ```
-
-and:
 
 ```css
 body.auth-locked .wrap{
@@ -740,13 +775,13 @@ body.auth-locked .wrap{
 }
 ```
 
-Unauthenticated users are redirected to:
+未ログインユーザーは以下へ戻します。
 
 ```txt
 /
 ```
 
-Logout also redirects to:
+ログアウト後も以下へ戻します。
 
 ```txt
 /
@@ -754,19 +789,9 @@ Logout also redirects to:
 
 ---
 
-## SEO Policy
+## SEO方針
 
-`sitemap.xml` should include only public pages:
-
-```txt
-/
-/about/
-/voyage/
-```
-
-`robots.txt` should allow public pages and disallow internal or legacy areas.
-
-Public:
+`sitemap.xml` には公開ページのみを含めます。
 
 ```txt
 /
@@ -774,7 +799,17 @@ Public:
 /voyage/
 ```
 
-Disallowed:
+`robots.txt` では公開ページを許可し、内部ページとLegacyページを拒否します。
+
+公開：
+
+```txt
+/
+/about/
+/voyage/
+```
+
+Disallow：
 
 ```txt
 /log/
@@ -792,7 +827,7 @@ Disallowed:
 /legacy/
 ```
 
-Legacy pages should also include:
+Legacyページにも以下を入れます。
 
 ```html
 <meta name="robots" content="noindex, nofollow">
@@ -800,193 +835,198 @@ Legacy pages should also include:
 
 ---
 
-## Current Completion Status
+## 完了済み
 
-Completed:
+完了済み：
 
-- formal DB reset
-- 9 vessels registered
-- 25 harbor item types registered
-- vessel requirements registered
-- 7 sea areas registered
-- area item pools registered
-- initial `user_sea_areas` behavior
-- key display views
+- DB正式リセット
+- 9隻の船を登録
+- 25種類の漂着物を登録
+- 船の必要漂着物を登録
+- 7海域を登録
+- area item pools を登録
+- 初期 `user_sea_areas` 挙動
+- 主要表示View
 - `ensure_user_vessel()`
 - `check_and_unlock_next_vessel()`
 - `check_and_unlock_sea_areas()`
 - `grant_random_harbor_find()`
 - `get_user_vessels_collection()`
-- `/log/` formal RPC connection
-- Voyage Log save
-- Harbor Cat response
+- `/log/` の正式RPC接続
+- Voyage Log 保存
+- Harbor Cat 応答
 - Harbor Find
-- Harbor Find display card
-- Drift Ticket display card
+- Harbor Find 表示カード
+- Drift Ticket 表示カード
 - Recent Logs
-- `/timeline/` Cabin Log separation
-- `/timeline/` image-based event cards
-- `/timeline/` Harbor Find image display
-- `/timeline/` Drift Ticket image display
-- `/timeline/` vessel acquisition image display
-- `/timeline/` sea area image display
+- `/timeline/` Cabin Log 分離
+- `/timeline/` 画像付きイベントカード
+- `/timeline/` Harbor Find 画像表示
+- `/timeline/` Drift Ticket 画像表示
+- `/timeline/` 船取得画像表示
+- `/timeline/` 海域画像表示
 - `/timeline/` Read more / Show less
-- `/account/` lightweight page
-- `/account/` ticket summary display
-- `/account/` ticket image cards
-- `/items/` sea-area grouping
-- `/items/` image display
-- `/items/` image enlargement modal
-- `/vessels/` vessel collection display
-- `/vessels/` vessel image enlargement modal
-- `/map/` sea chart
-- `/map/` sea area cards
-- `/map/` sea chart enlargement modal
-- `/tickets/` ticket explanation page
-- `/tickets/` unified ticket image layout
-- `/tickets/` Drift / Special / Deep Sea ticket images
-- Special Voyage Ticket duration fixed to 10 / 20 minutes only
-- Deep Sea Ticket user-facing wording refined
-- public/private route cleanup
-- legacy migration
-- sitemap / robots cleanup
-- README creation and update
+- `/account/` 軽量ページ
+- `/account/` チケット概要表示
+- `/account/` チケット画像カード
+- `/items/` 海域別表示
+- `/items/` 画像表示
+- `/items/` 画像拡大モーダル
+- `/vessels/` 船コレクション表示
+- `/vessels/` 船画像拡大モーダル
+- `/map/` 海図
+- `/map/` 海域カード
+- `/map/` 海図拡大モーダル
+- `/tickets/` チケット説明ページ
+- `/tickets/` 統一チケット画像レイアウト
+- `/tickets/` Drift / Special / Deep Sea チケット画像
+- Special Voyage Ticket は 10分 / 20分 の2種類に固定
+- Deep Sea Ticket のユーザー向け文言調整
+- `/special-voyage/` チケット種別ごとの入口表示
+- 公開 / 非公開ルート整理
+- Legacy移行
+- sitemap / robots 整理
+- README 作成・更新
+- README 日本語化
 
 ---
 
-## Current Page Structure
+## 現在のページ構成
 
 ```txt
 /
-  Public entrance
+  公開入口
 
 /about/
-  Public explanation
+  公開説明ページ
 
 /voyage/
-  Public Moonlit Voyage page
+  公開 Moonlit Voyage ページ
 
 /log/
   Voyage Log
   Harbor Cat
-  Harbor Find display card
-  Drift Ticket display card
+  Harbor Find 表示カード
+  Drift Ticket 表示カード
   Tonight's Harbor
   Harbor Weather
 
 /timeline/
   Cabin Log
-  Image-based event cards
+  画像付きイベントカード
   Read more / Show less
 
 /items/
-  Harbor Finds by sea area
-  Item image modal
+  海域別 Harbor Finds
+  アイテム画像モーダル
 
 /vessels/
-  Current vessel, next vessel, owned vessels
-  Vessel image modal
+  現在の船
+  次の船
+  所有済みの船
+  船画像モーダル
 
 /map/
   Sea Chart
-  Sea chart modal
+  海図モーダル
 
 /account/
   Account and tickets
-  Ticket summary
-  Ticket image cards
+  チケット概要
+  チケット画像カード
 
 /tickets/
-  Ticket explanation
-  Ticket image cards
+  チケット説明
+  チケット画像カード
 
 /special-voyage/
   Special Voyage
+  チケット種別ごとの入口
 
 /fragments/
-  Internal fragment archive
+  内部 Fragment Archive
 
 /archive/
-  Internal archive entrance
+  内部 Archive 入口
 
 /legacy/
-  Old Celeste records
+  旧Celeste記録
 ```
 
 ---
 
-## Visual / Interaction Features
+## 表示・操作機能
 
-Current implemented visual features:
+現在実装済みの表示機能：
 
 ```txt
 /items/
-  item images
-  item enlargement modal
+  アイテム画像
+  アイテム画像拡大モーダル
 
 /vessels/
-  current vessel image
-  next vessel image
-  vessel collection images
-  vessel enlargement modal
+  現在の船画像
+  次の船画像
+  船コレクション画像
+  船画像拡大モーダル
 
 /map/
-  sea chart image
-  sea area cards
-  sea chart enlargement modal
+  海図画像
+  海域カード
+  海図拡大モーダル
 
 /log/
   Tonight's Harbor
   Harbor Weather
-  Harbor Cat scroll
-  Harbor Find display card
-  Drift Ticket display card
+  Harbor Cat 巻物
+  Harbor Find 表示カード
+  Drift Ticket 表示カード
 
 /timeline/
-  image-based event cards
-  Harbor Find item images
-  Drift Ticket image
-  vessel acquisition images
-  sea area image
+  画像付きイベントカード
+  Harbor Find アイテム画像
+  Drift Ticket 画像
+  船取得画像
+  海域画像
   Read more / Show less
 
 /account/
-  Drift / Special / Deep Sea ticket summary
-  ticket image cards
-  available ticket status
-  Special Voyage link
+  Drift / Special / Deep Sea チケット概要
+  チケット画像カード
+  有効チケット状態
+  Special Voyage 導線
 
 /tickets/
-  Harbor Cat image
-  Drift Ticket image
-  Special Voyage Ticket image
-  Deep Sea Ticket image
-  unified ticket card layout
-  subdued Drift Ticket visual treatment
+  Harbor Cat 画像
+  Drift Ticket 画像
+  Special Voyage Ticket 画像
+  Deep Sea Ticket 画像
+  統一チケットカードレイアウト
+  Drift Ticket の控えめな表示
 ```
 
-Modal behavior should generally include:
+画像モーダルの基本挙動：
 
-- click to open
-- close button
-- background click to close
-- Escape key to close
-- `object-fit: contain` for images
-- mobile-safe layout
+- クリックで開く
+- 閉じるボタン
+- 背景クリックで閉じる
+- Escapeキーで閉じる
+- `object-fit: contain`
+- スマホでも崩れにくい表示
 
-Timeline card behavior should generally include:
+Timelineカードの基本挙動：
 
-- first 5 events shown by default
-- `Read more` to show all loaded events
-- `Show less` to collapse
-- image fallback if `image_path` is missing or broken
-- subdued visual treatment for Drift Ticket images
+- 初期表示は5件
+- `Read more` で全件表示
+- `Show less` で折りたたみ
+- `image_path` がない・壊れている場合はアイコンへフォールバック
+- Drift Ticket 画像は控えめに表示
 
 ---
 
-## Storage / Image Path Notes
+## Storage / 画像パス メモ
 
-Current image path patterns include:
+現在使う画像パス例：
 
 ```txt
 /images/sea-chart-z.png
@@ -996,77 +1036,77 @@ Current image path patterns include:
 /images/tickets/deep-sea-ticket.svg
 ```
 
-Harbor item images are stored in `harbor_items.image_path`.
+漂着物画像は `harbor_items.image_path` に保存します。
 
-Vessel images are stored in `vessels.image_path`.
+船画像は `vessels.image_path` に保存します。
 
-Timeline images should come from `user_timeline_events_view.image_path`.
+Timeline画像は `user_timeline_events_view.image_path` から取得します。
 
-If an image is missing, pages should fall back gracefully to:
+画像が見つからない場合は、以下にフォールバックします。
 
-- symbolic icon
-- image pending text
-- or quiet placeholder
-
----
-
-## Future Work Candidates
-
-Possible next work:
-
-- confirm `/special-voyage/` current behavior
-- polish `/log/` Harbor Weather wording
-- adjust `/map/` card placement and mobile layout
-- refine `/vessels/` collection visuals
-- add richer vessel acquisition timeline
-- improve ticket UX
-- implement paid Special Voyage tickets
-- implement Deep Sea Ticket behavior
-- add optional sound later
-- add admin maintenance notes
-- create a database schema backup file
-- create a development changelog
+- シンボルアイコン
+- image pending テキスト
+- 静かなプレースホルダー
 
 ---
 
-## Deferred Ideas
+## 今後の候補
 
-These ideas are intentionally deferred.
+今後できること：
 
-### Sound
-
-Sound may be added later, but it is not currently active.
-
-Potential direction:
-
-- quiet harbor ambience
-- gentle waves
-- distant wind
-- subtle wooden vessel creak
-- user-controlled sound toggle only
-
-Sound should never autoplay without user action.
-
-### Richer Animation
-
-Possible later additions:
-
-- subtle Harbor Find shimmer
-- vessel unlock glow
-- map mist transition
-- item discovery reveal
-- timeline event reveal
-
-Animation should remain quiet and minimal.
+- `/special-voyage/` の現在挙動を実機確認
+- `/log/` Harbor Weather 文言調整
+- `/map/` カード位置・スマホ表示調整
+- `/vessels/` コレクション表示の微調整
+- 船取得Timelineの表現をさらに豊かにする
+- Ticket UX 改善
+- 有料 Special Voyage Ticket 実装
+- Deep Sea Ticket 挙動実装
+- optional sound の導入
+- 管理・メンテナンス用メモ追加
+- DB schema backup 作成
+- development changelog 作成
 
 ---
 
-## Notes
+## 保留アイデア
 
-Celeste Harbor should remain quiet.
+以下は意図的に保留中です。
 
-The system should not become a productivity dashboard, social feed, or optimization tool.
+### 音
 
-The core experience is a small harbor where the user can return, write, notice what has drifted in, and continue.
+音は将来追加してもよいですが、現在は未実装です。
 
-The ship is still moving.
+方向性：
+
+- 静かな港の環境音
+- 小さな波音
+- 遠い風
+- かすかな木造船の軋み
+- ユーザー操作による Sound On / Off のみ
+
+音は、ユーザー操作なしで自動再生しません。
+
+### より豊かなアニメーション
+
+将来的な候補：
+
+- Harbor Find の控えめな光
+- 船解放時の淡い演出
+- Map の霧が晴れる表現
+- アイテム発見時の静かなReveal
+- Timelineイベントの表示演出
+
+アニメーションは静かで最小限にします。
+
+---
+
+## メモ
+
+Celeste Harbor は静かであること。
+
+このシステムを、生産性ダッシュボード、SNS、最適化ツールにしないこと。
+
+中心体験は、ユーザーが港へ戻り、記録を書き、流れ着いたものに気づき、航海を続けることです。
+
+船は、まだ進んでいる。
