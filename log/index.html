@@ -19,6 +19,7 @@
       --line:#252b3a;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --ready:#b9f6ca;
     }
 
     *{ box-sizing:border-box; }
@@ -260,6 +261,73 @@
 
     .status.error{
       color:var(--danger);
+    }
+
+    .harbor-find-panel{
+      margin-top:22px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.45);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 42%),
+        rgba(5,8,17,.46);
+    }
+
+    .harbor-find-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:12px;
+    }
+
+    .harbor-find-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .harbor-find-state{
+      flex:0 0 auto;
+      font-size:11px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .harbor-find-state.found{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.36);
+      background:rgba(185,246,202,.06);
+    }
+
+    .harbor-find-state.quiet{
+      color:var(--dim);
+    }
+
+    .harbor-find-state.checking{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.36);
+      background:rgba(169,183,255,.06);
+    }
+
+    .harbor-find-main{
+      font-size:14px;
+      line-height:1.9;
+      color:var(--text);
+      margin:0;
+      white-space:pre-wrap;
+    }
+
+    .harbor-find-sub{
+      margin:10px 0 0;
+      font-size:12px;
+      line-height:1.8;
+      color:var(--muted);
+      white-space:pre-wrap;
     }
 
     .cat-overlay{
@@ -553,6 +621,11 @@
         grid-template-columns:1fr;
       }
 
+      .harbor-find-head{
+        flex-direction:column;
+        gap:8px;
+      }
+
       .cat-overlay{
         align-items:flex-start;
         padding-top:120px;
@@ -669,6 +742,21 @@
         </div>
 
         <div class="status" id="status"></div>
+
+        <div class="harbor-find-panel" id="harborFindPanel">
+          <div class="harbor-find-head">
+            <div class="harbor-find-label">Harbor Find</div>
+            <div class="harbor-find-state quiet" id="harborFindState">Quiet</div>
+          </div>
+
+          <p class="harbor-find-main" id="harborFindMain">
+            航海記録を保存すると、今夜の港に漂着の気配があるか確認します。
+          </p>
+
+          <p class="harbor-find-sub" id="harborFindSub">
+            初回は必ず、何かが港へ流れ着きます。
+          </p>
+        </div>
 
         <div class="cat-overlay" id="catOverlay" aria-hidden="true">
           <div class="cat-scroll" role="status" aria-live="polite">
@@ -797,6 +885,10 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
+    const harborFindState = document.getElementById("harborFindState");
+    const harborFindMain = document.getElementById("harborFindMain");
+    const harborFindSub = document.getElementById("harborFindSub");
+
     const saveBtn = document.getElementById("saveBtn");
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -891,6 +983,36 @@
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
+    }
+
+    function setHarborFindDisplay(state, main, sub){
+      if(!harborFindState || !harborFindMain || !harborFindSub){
+        return;
+      }
+
+      harborFindState.className = "harbor-find-state";
+
+      if(state === "found"){
+        harborFindState.textContent = "Found";
+        harborFindState.classList.add("found");
+      }else if(state === "checking"){
+        harborFindState.textContent = "Checking";
+        harborFindState.classList.add("checking");
+      }else{
+        harborFindState.textContent = "Quiet";
+        harborFindState.classList.add("quiet");
+      }
+
+      harborFindMain.textContent = main || "";
+      harborFindSub.textContent = sub || "";
+    }
+
+    function resetHarborFindDisplay(){
+      setHarborFindDisplay(
+        "quiet",
+        "航海記録を保存すると、今夜の港に漂着の気配があるか確認します。",
+        "初回は必ず、何かが港へ流れ着きます。"
+      );
     }
 
     function accountDisplayName(user){
@@ -1216,6 +1338,12 @@
 
     async function saveLog(){
       setStatus("保存しています。");
+      setHarborFindDisplay(
+        "checking",
+        "航海記録を保存しています。",
+        "保存後、今夜の港に漂着の気配があるか確認します。"
+      );
+
       closeCatScroll();
       saveBtn.disabled = true;
 
@@ -1225,16 +1353,19 @@
 
         if(!currentUser){
           setStatus("先にログインしてください。", true);
+          resetHarborFindDisplay();
           return;
         }
 
         if(!content){
           setStatus("航海記録が空です。", true);
+          resetHarborFindDisplay();
           return;
         }
 
         if(content.length > maxContentLength){
           setStatus("航海記録が長すぎます。少し短くしてください。", true);
+          resetHarborFindDisplay();
           return;
         }
 
@@ -1255,6 +1386,7 @@
         }catch(error){
           console.error("insert voyage_logs error:", error);
           setStatus("保存失敗：" + error.message, true);
+          resetHarborFindDisplay();
           return;
         }
 
@@ -1292,9 +1424,21 @@
           setStatus("航海記録を保存しました。");
         }
 
+        setHarborFindDisplay(
+          "checking",
+          "今夜の港を確認しています。",
+          "波の間に、小さな気配があるかもしれません。"
+        );
+
         const harborFindResult = await callGrantHarborFind(tag, "voyage_log", false);
 
         if(harborFindResult && harborFindResult.hint_message){
+          setHarborFindDisplay(
+            "checking",
+            "漂着の気配があります。",
+            harborFindResult.hint_message
+          );
+
           await appendCatScrollNotice(
             harborFindResult.hint_message,
             "漂着の気配"
@@ -1304,15 +1448,30 @@
         }
 
         if(harborFindResult && harborFindResult.found){
-          await appendCatScrollNotice(
+          const foundMessage =
             harborFindResult.message ||
-              "今夜、港に小さな漂着物が流れ着きました。",
+            "今夜、港に小さな漂着物が流れ着きました。";
+
+          setHarborFindDisplay(
+            "found",
+            "港に漂着物が届きました。",
+            foundMessage
+          );
+
+          await appendCatScrollNotice(
+            foundMessage,
             "Harbor Find"
           );
 
           await holdCatText(2400);
 
           setStatus("航海記録を保存しました。港に漂着物が届きました。");
+        }else{
+          setHarborFindDisplay(
+            "quiet",
+            "今夜は、港に新しい漂着物はありませんでした。",
+            "それでも記録は残りました。海は静かに続いています。"
+          );
         }
 
         const driftResult = await callGrantDriftTicket();
@@ -1339,6 +1498,7 @@
       }catch(error){
         console.error("saveLog catch:", error);
         setStatus("保存処理でエラーが発生しました：" + error.message, true);
+        resetHarborFindDisplay();
       }finally{
         updateAuthUI();
       }
@@ -1545,6 +1705,7 @@
     setPlaceholder();
     updateCharCount();
     updateAuthUI();
+    resetHarborFindDisplay();
     checkSession();
   </script>
 </body>
