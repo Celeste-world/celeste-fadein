@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0a0e1c"></rect>
+  <rect x="86" y="150" width="340" height="212" rx="28" fill="#111827" stroke="#d7c4ff" stroke-width="10"></rect>
+  <path d="M132 214h248M132 256h180M132 298h248" stroke="#d7c4ff" stroke-width="14" stroke-linecap="round" opacity=".8"></path>
+  <circle cx="384" cy="256" r="32" fill="none" stroke="#b9f6ca" stroke-width="10"></circle>
+  <path d="M176 118c20 18 44 18 64 0 20-18 44-18 64 0" fill="none" stroke="#a9b7ff" stroke-width="12" stroke-linecap="round" opacity=".7"></path>
+  <text x="256" y="410" text-anchor="middle" fill="#a0a8bb" font-size="34" font-family="serif">DRIFT TICKET</text>
+</svg>
