@@ -201,12 +201,6 @@
       box-shadow:0 20px 48px rgba(0,0,0,.42);
       overflow:hidden;
       margin-bottom:28px;
-      cursor:zoom-in;
-    }
-
-    .chart-panel:focus-visible{
-      outline:2px solid rgba(169,183,255,.7);
-      outline-offset:4px;
     }
 
     .chart-panel::before{
@@ -231,34 +225,12 @@
       z-index:0;
     }
 
-    .chart-zoom-button{
-      position:absolute;
-      right:18px;
-      bottom:18px;
-      z-index:3;
-      border:1px solid rgba(169,183,255,.34);
-      background:rgba(5,8,17,.68);
-      color:var(--muted);
-      border-radius:999px;
-      padding:8px 13px;
-      font-family:inherit;
-      font-size:12px;
-      letter-spacing:.06em;
-      backdrop-filter:blur(6px);
-      cursor:pointer;
-    }
-
-    .chart-zoom-button:hover{
-      color:var(--text);
-      border-color:rgba(169,183,255,.62);
-    }
-
     .chart-actions{
       display:flex;
       justify-content:flex-end;
       margin:-10px 0 28px;
     }
-    
+
     .chart-zoom-button{
       border:1px solid rgba(169,183,255,.34);
       background:rgba(5,8,17,.68);
@@ -271,7 +243,7 @@
       backdrop-filter:blur(6px);
       cursor:pointer;
     }
-    
+
     .chart-zoom-button:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.62);
@@ -297,16 +269,42 @@
       display:flex;
       flex-direction:column;
       transition:.18s ease;
-      cursor:default;
     }
 
-    .pos-harbor{ left:4%; top:9%; }
-    .pos-tide{ left:31%; top:21%; }
-    .pos-lighthouse{ left:51%; top:8%; }
-    .pos-fog{ left:72%; top:23%; }
-    .pos-moon{ left:10%; top:58%; }
-    .pos-deep{ left:39%; top:66%; }
-    .pos-outer{ left:72%; top:68%; }
+    .pos-harbor{
+      left:4%;
+      top:9%;
+    }
+
+    .pos-tide{
+      left:31%;
+      top:21%;
+    }
+
+    .pos-lighthouse{
+      left:51%;
+      top:8%;
+    }
+
+    .pos-fog{
+      left:72%;
+      top:23%;
+    }
+
+    .pos-moon{
+      left:10%;
+      top:58%;
+    }
+
+    .pos-deep{
+      left:39%;
+      top:66%;
+    }
+
+    .pos-outer{
+      left:72%;
+      top:68%;
+    }
 
     .sea-card.open{
       border-color:rgba(185,246,202,.46);
@@ -550,7 +548,7 @@
         background:rgba(10,14,28,.82);
         overflow:hidden;
       }
-
+    
       .chart-panel::before{
         display:block;
         background:
@@ -565,17 +563,11 @@
         background-repeat:no-repeat;
         pointer-events:none;
       }
-
+    
       .chart-panel::after{
         inset:12px;
       }
-
-      .chart-zoom-button{
-        top:18px;
-        right:18px;
-        bottom:auto;
-      }
-
+    
       .sea-grid{
         position:relative;
         inset:auto;
@@ -585,7 +577,7 @@
         gap:14px;
         padding-top:56vw;
       }
-
+    
       .sea-card{
         position:relative;
         left:auto !important;
@@ -624,6 +616,11 @@
 
       .sea-grid{
         padding-top:58vw;
+      }
+
+      .chart-actions{
+        justify-content:center;
+        margin:-6px 0 28px;
       }
 
       .image-modal{
@@ -689,6 +686,12 @@
         </div>
       </section>
 
+      <div class="chart-actions">
+        <button class="chart-zoom-button" id="chartZoomButton" type="button">
+          海図を拡大
+        </button>
+      </div>
+
       <p class="note">
         未開放の海域は、名前や詳細をすべて明かしません。<br>
         霧の向こうにある、ということだけが今の港に見えています。
@@ -737,6 +740,7 @@
     const statusEl = document.getElementById("status");
     const logoutBtn = document.getElementById("logoutBtn");
     const mapArea = document.getElementById("mapArea");
+    const chartZoomButton = document.getElementById("chartZoomButton");
 
     const imageModal = document.getElementById("imageModal");
     const imageModalImg = document.getElementById("imageModalImg");
@@ -1058,7 +1062,7 @@
           : "未開放";
 
         return `
-          <article class="sea-card ${stateClass} ${positionClass}" aria-label="${escapeHtml(displayName)}">
+          <article class="sea-card ${stateClass} ${positionClass}">
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
 
             <div class="sea-name">
@@ -1082,29 +1086,14 @@
       }).join("");
 
       mapArea.innerHTML = `
-        <section
-          class="chart-panel"
-          id="chartPanel"
-          aria-label="Celeste Harbor sea chart"
-          role="button"
-          tabindex="0"
-          data-chart-image="${escapeHtml(seaChartImagePath)}"
-          data-chart-label="${escapeHtml(seaChartLabel)}"
-        >
+        <section class="chart-panel" aria-label="Celeste Harbor sea chart">
           <div class="sea-grid">
             ${cardsHtml}
           </div>
         </section>
-      
-        <div class="chart-actions">
-          <button class="chart-zoom-button" id="chartZoomButton" type="button">
-            海図を拡大
-          </button>
-        </div>
       `;
-      
-      bindChartZoom();
-      
+    }
+
     function openImageModal(src, label){
       if(!src || !imageModal || !imageModalImg){
         return;
@@ -1131,43 +1120,6 @@
       document.body.style.overflow = "";
     }
 
-    function bindChartZoom(){
-      const chartPanel = document.getElementById("chartPanel");
-      const chartZoomButton = document.getElementById("chartZoomButton");
-    
-      function openChart(){
-        openImageModal(
-          seaChartImagePath,
-          seaChartLabel
-        );
-      }
-    
-      if(chartPanel){
-        chartPanel.addEventListener("click", function(event){
-          const seaCard = event.target.closest(".sea-card");
-    
-          if(seaCard){
-            return;
-          }
-    
-          openChart();
-        });
-    
-        chartPanel.addEventListener("keydown", function(event){
-          if(event.key === "Enter" || event.key === " "){
-            event.preventDefault();
-            openChart();
-          }
-        });
-      }
-    
-      if(chartZoomButton){
-        chartZoomButton.addEventListener("click", function(event){
-          event.preventDefault();
-          openChart();
-        });
-      }
-    }
     async function logout(){
       setStatus("ログアウトしています。");
 
@@ -1187,6 +1139,16 @@
 
     logoutBtn.addEventListener("click", logout);
 
+    if(chartZoomButton){
+      chartZoomButton.addEventListener("click", function(){
+        openImageModal(seaChartImagePath, seaChartLabel);
+      });
+    }
+
+    if(imageModalClose){
+      imageModalClose.addEventListener("click", closeImageModal);
+    }
+
     document.addEventListener("click", function(event){
       if(event.target === imageModal){
         closeImageModal();
@@ -1198,10 +1160,6 @@
         closeImageModal();
       }
     });
-
-    if(imageModalClose){
-      imageModalClose.addEventListener("click", closeImageModal);
-    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
