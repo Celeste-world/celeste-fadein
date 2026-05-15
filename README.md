@@ -120,6 +120,9 @@ Archive for old Celeste records.
 
 Legacy harbor route.
 
+- /log/ に Drift Ticket 表示カードを追加。
+- Voyage Log 保存後、Drift Ticket の Checking / Granted / Quiet 状態を表示。
+
 Redirects based on authentication state:
 
 ```txt
