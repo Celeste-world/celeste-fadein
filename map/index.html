@@ -201,6 +201,12 @@
       box-shadow:0 20px 48px rgba(0,0,0,.42);
       overflow:hidden;
       margin-bottom:28px;
+      cursor:zoom-in;
+    }
+
+    .chart-panel:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:4px;
     }
 
     .chart-panel::before{
@@ -245,6 +251,7 @@
       display:flex;
       flex-direction:column;
       transition:.18s ease;
+      cursor:default;
     }
 
     .pos-harbor{
@@ -391,6 +398,85 @@
       background:rgba(255,255,255,.015);
     }
 
+    .image-modal{
+      position:fixed;
+      inset:0;
+      z-index:80;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.08), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(4px);
+    }
+
+    .image-modal.visible{
+      display:flex;
+    }
+
+    .image-modal-inner{
+      position:relative;
+      width:min(980px, 100%);
+      max-height:88vh;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.28);
+      background:rgba(10,14,28,.92);
+      box-shadow:0 28px 80px rgba(0,0,0,.58);
+      padding:22px;
+    }
+
+    .image-modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+      z-index:2;
+    }
+
+    .image-modal-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+
+    .image-modal-img-wrap{
+      width:100%;
+      max-height:72vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border-radius:18px;
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
+        rgba(5,8,17,.62);
+    }
+
+    .image-modal-img{
+      max-width:100%;
+      max-height:72vh;
+      object-fit:contain;
+      display:block;
+    }
+
+    .image-modal-caption{
+      margin-top:14px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+    }
+
     .empty{
       background:rgba(10,14,28,.52);
       border:1px solid rgba(70,84,132,.35);
@@ -445,7 +531,7 @@
         background:rgba(10,14,28,.82);
         overflow:hidden;
       }
-    
+
       .chart-panel::before{
         display:block;
         background:
@@ -460,11 +546,11 @@
         background-repeat:no-repeat;
         pointer-events:none;
       }
-    
+
       .chart-panel::after{
         inset:12px;
       }
-    
+
       .sea-grid{
         position:relative;
         inset:auto;
@@ -474,7 +560,7 @@
         gap:14px;
         padding-top:56vw;
       }
-    
+
       .sea-card{
         position:relative;
         left:auto !important;
@@ -514,7 +600,15 @@
       .sea-grid{
         padding-top:58vw;
       }
-      
+
+      .image-modal{
+        padding:16px;
+      }
+
+      .image-modal-inner{
+        padding:18px;
+        border-radius:20px;
+      }
     }
   </style>
 </head>
@@ -591,6 +685,20 @@
 
   </div>
 
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <div class="image-modal-inner">
+      <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div class="image-modal-img-wrap">
+        <img class="image-modal-img" id="imageModalImg" src="" alt="">
+      </div>
+
+      <div class="image-modal-caption" id="imageModalCaption"></div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -604,6 +712,14 @@
     const statusEl = document.getElementById("status");
     const logoutBtn = document.getElementById("logoutBtn");
     const mapArea = document.getElementById("mapArea");
+
+    const imageModal = document.getElementById("imageModal");
+    const imageModalImg = document.getElementById("imageModalImg");
+    const imageModalCaption = document.getElementById("imageModalCaption");
+    const imageModalClose = document.getElementById("imageModalClose");
+
+    const seaChartImagePath = "/images/sea-chart-z.png";
+    const seaChartLabel = "Celeste Harbor Sea Chart";
 
     let currentUser = null;
     let currentAccessToken = null;
@@ -917,7 +1033,7 @@
           : "未開放";
 
         return `
-          <article class="sea-card ${stateClass} ${positionClass}">
+          <article class="sea-card ${stateClass} ${positionClass}" aria-label="${escapeHtml(displayName)}">
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
 
             <div class="sea-name">
@@ -941,12 +1057,45 @@
       }).join("");
 
       mapArea.innerHTML = `
-        <section class="chart-panel" aria-label="Celeste Harbor sea chart">
+        <section
+          class="chart-panel"
+          aria-label="Celeste Harbor sea chart"
+          role="button"
+          tabindex="0"
+          data-chart-image="${escapeHtml(seaChartImagePath)}"
+          data-chart-label="${escapeHtml(seaChartLabel)}"
+        >
           <div class="sea-grid">
             ${cardsHtml}
           </div>
         </section>
       `;
+    }
+
+    function openImageModal(src, label){
+      if(!src || !imageModal || !imageModalImg){
+        return;
+      }
+
+      imageModalImg.src = src;
+      imageModalImg.alt = label || "";
+      imageModalCaption.textContent = label || "";
+      imageModal.classList.add("visible");
+      imageModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeImageModal(){
+      if(!imageModal || !imageModalImg){
+        return;
+      }
+
+      imageModal.classList.remove("visible");
+      imageModal.setAttribute("aria-hidden", "true");
+      imageModalImg.src = "";
+      imageModalImg.alt = "";
+      imageModalCaption.textContent = "";
+      document.body.style.overflow = "";
     }
 
     async function logout(){
@@ -967,6 +1116,46 @@
     }
 
     logoutBtn.addEventListener("click", logout);
+
+    document.addEventListener("click", function(event){
+      const chartPanel = event.target.closest("[data-chart-image]");
+
+      if(chartPanel){
+        openImageModal(
+          chartPanel.dataset.chartImage,
+          chartPanel.dataset.chartLabel
+        );
+        return;
+      }
+
+      if(event.target === imageModal){
+        closeImageModal();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeImageModal();
+        return;
+      }
+
+      if(event.key === "Enter" || event.key === " "){
+        const chartPanel = document.activeElement?.closest?.("[data-chart-image]");
+
+        if(chartPanel){
+          event.preventDefault();
+
+          openImageModal(
+            chartPanel.dataset.chartImage,
+            chartPanel.dataset.chartLabel
+          );
+        }
+      }
+    });
+
+    if(imageModalClose){
+      imageModalClose.addEventListener("click", closeImageModal);
+    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
