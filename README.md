@@ -11,79 +11,119 @@ It is a private harbor for continuing a quiet voyage.
 
 The public-facing area is intentionally small.
 
-```txt
-/
+### `/`
 
 Public entrance page.
+
 Shows only:
 
-Google login
-About link
-/about/
+- Google login
+- About link
+
+### `/about/`
 
 Public explanation page.
+
 Describes Celeste Harbor, Harbor Cat, Presence AI, and the purpose of the harbor.
 
-/voyage/
+### `/voyage/`
 
 Public Moonlit Voyage page.
+
 A public-facing work page for the book and its editions.
 
-Login Required Pages
+---
+
+## Login Required Pages
 
 All harbor-internal pages require Google login.
 
-/log/
+### `/log/`
 
 Voyage Log.
+
 The main private writing page.
 
-/timeline/
+Includes:
+
+- Voyage Log save
+- Harbor Cat response
+- Harbor Find
+- Harbor Find display card
+- Tonight's Harbor
+- Harbor Weather
+- Recent Logs
+
+### `/timeline/`
 
 Cabin Log.
+
 Timeline record of logs, harbor finds, vessels, tickets, and voyage events.
 
-/items/
+### `/items/`
 
 Harbor Finds.
+
 Discovered items grouped by sea area.
 
-/vessels/
+Includes:
+
+- sea-area grouping
+- item image display
+- item image enlargement modal
+
+### `/vessels/`
 
 Vessel record.
-Shows current vessel, next vessel requirements, and owned vessel collection.
 
-/map/
+Shows:
+
+- current vessel
+- next vessel requirements
+- owned vessel collection
+- mist-covered locked vessels
+- vessel image enlargement modal
+
+### `/map/`
 
 Sea Chart.
+
 Shows opened and unopened sea areas.
 
-/account/
+Includes:
+
+- sea chart image
+- sea area cards
+- sea chart enlargement modal
+
+### `/account/`
 
 Account and ticket management.
 
-/tickets/
+### `/tickets/`
 
 Ticket explanation and ticket-related navigation.
 
-/special-voyage/
+### `/special-voyage/`
 
 Time-limited special voyage entry and active voyage interface.
 
-/fragments/
+### `/fragments/`
 
 Fragment archive inside the harbor.
 
-/archive/
+### `/archive/`
 
 Archive for old Celeste records.
 
-/harbor/
+### `/harbor/`
 
 Legacy harbor route.
+
 Redirects based on authentication state:
 
-logged in → /log/
+```txt
+logged in     → /log/
 not logged in → /
 Legacy Pages
 
@@ -152,20 +192,35 @@ All important events are recorded in Cabin Log.
 
 Fixed Design Policy
 Vessels
+
 There are 9 vessels.
+
 Vessel creation is item-consumption based.
 Vessels are part of the user’s growth record.
+
 /vessels/ shows:
+
 current vessel
 next vessel requirements
 owned vessel collection
 mist-covered locked vessels
+vessel images
+vessel image enlargement modal
 Items
+
 There are 25 harbor item types.
+
 /items/ shows discovered items only.
+
 Items are grouped by sea area.
 Undiscovered items are not shown.
-Unopened areas are shown as “霧の向こう”.
+Unopened areas are shown as 霧の向こう.
+
+/items/ includes:
+
+image display
+image enlargement modal
+sea-area grouping
 Sea Areas
 
 Initial sea areas:
@@ -183,6 +238,12 @@ Sea areas are shown in /map/.
 Unopened areas appear as:
 
 霧の向こう
+
+/map/ includes:
+
+sea chart image
+opened / unopened sea area cards
+sea chart enlargement modal
 Harbor Find Rate
 
 Normal Voyage Log:
@@ -202,10 +263,26 @@ First Harbor Find is guaranteed once per user.
 Tags are treated as “signs” or “weather” of the log.
 They lightly influence item weighting, but they do not unlock unopened areas.
 
+The UI should not expose internal probability details too directly.
+Harbor Find should feel like a quiet sign from the harbor, not a reward dashboard.
+
+Current /log/ display wording:
+
+何かが流れ着く夜もあれば、ただ波だけが残る夜もあります。
 Harbor Cat
 
 Harbor Cat does not diagnose, advise, evaluate, or solve.
+
 It returns a short quiet presence after a log is saved.
+
+Current behavior:
+
+appears after saving a Voyage Log
+reads the log as a scroll
+returns a short quiet response
+can also show Harbor Find and Drift Ticket notices inside the scroll
+
+Harbor Cat should remain a presence, not an assistant.
 
 Important Supabase Tables
 
@@ -296,6 +373,12 @@ timeline event creation
 Used by:
 
 /log/
+
+Current UI behavior:
+
+result appears inside Harbor Cat scroll
+result also appears in the Harbor Find display card
+internal guarantee/rate language is not shown directly to the user
 get_user_vessels_collection()
 
 Returns all 9 vessels for the current user with:
@@ -341,8 +424,8 @@ SEO Policy
 sitemap.xml should include only public pages:
 
 /
- /about/
- /voyage/
+/about/
+/voyage/
 
 robots.txt should allow public pages and disallow internal or legacy areas.
 
@@ -387,20 +470,28 @@ ensure_user_vessel()
 check_and_unlock_next_vessel()
 check_and_unlock_sea_areas()
 grant_random_harbor_find()
+get_user_vessels_collection()
 /log/ formal RPC connection
 Voyage Log save
 Harbor Cat response
 Harbor Find
+Harbor Find display card
 Timeline record
 Recent Logs
 /account/ lightweight page
 /timeline/ Cabin Log separation
 /items/ sea-area grouping
+/items/ image display
+/items/ image enlargement modal
 /vessels/ vessel collection display
+/vessels/ vessel image enlargement modal
 /map/ sea chart
+/map/ sea area cards
+/map/ sea chart enlargement modal
 public/private route cleanup
 legacy migration
 sitemap / robots cleanup
+README creation and update
 Current Page Structure
 /
   Public entrance
@@ -413,18 +504,25 @@ Current Page Structure
 
 /log/
   Voyage Log
+  Harbor Cat
+  Harbor Find display card
+  Tonight's Harbor
+  Harbor Weather
 
 /timeline/
   Cabin Log
 
 /items/
   Harbor Finds by sea area
+  Item image modal
 
 /vessels/
   Current vessel, next vessel, owned vessels
+  Vessel image modal
 
 /map/
   Sea Chart
+  Sea chart modal
 
 /account/
   Account and tickets
@@ -443,10 +541,44 @@ Current Page Structure
 
 /legacy/
   Old Celeste records
+Visual / Interaction Features
+
+Current implemented visual features:
+
+/items/
+  item images
+  item enlargement modal
+
+/vessels/
+  current vessel image
+  next vessel image
+  vessel collection images
+  vessel enlargement modal
+
+/map/
+  sea chart image
+  sea area cards
+  sea chart enlargement modal
+
+/log/
+  Tonight's Harbor
+  Harbor Weather
+  Harbor Cat scroll
+  Harbor Find display card
+
+Modal behavior should generally include:
+
+click to open
+close button
+background click to close
+Escape key to close
+object-fit: contain for images
+mobile-safe layout
 Future Work Candidates
 
 Possible next work:
 
+Drift Ticket display card on /log/
 polish /log/ Harbor Weather wording
 adjust /map/ card placement and mobile layout
 refine /vessels/ collection visuals
@@ -454,14 +586,45 @@ add richer vessel acquisition timeline
 improve ticket UX
 implement paid Special Voyage tickets
 implement Deep Sea Ticket behavior
+add optional sound later
 add admin maintenance notes
 create a database schema backup file
 create a development changelog
+Deferred Ideas
+
+These ideas are intentionally deferred:
+
+Sound
+
+Sound may be added later, but it is not currently active.
+
+Potential direction:
+
+quiet harbor ambience
+gentle waves
+distant wind
+subtle wooden vessel creak
+user-controlled sound toggle only
+
+Sound should never autoplay without user action.
+
+Richer Animation
+
+Possible later additions:
+
+subtle Harbor Find shimmer
+vessel unlock glow
+map mist transition
+item discovery reveal
+
+Animation should remain quiet and minimal.
+
 Notes
 
 Celeste Harbor should remain quiet.
 
 The system should not become a productivity dashboard, social feed, or optimization tool.
+
 The core experience is a small harbor where the user can return, write, notice what has drifted in, and continue.
 
 The ship is still moving.
