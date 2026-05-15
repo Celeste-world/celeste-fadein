@@ -22,6 +22,8 @@
       --accent:#a9b7ff;
       --danger:#ff9b9b;
       --ready:#b9f6ca;
+      --ticket:#d7c4ff;
+      --deep:#8fb7ff;
     }
 
     *{ box-sizing:border-box; }
@@ -136,22 +138,71 @@
       grid-template-columns:1fr;
       gap:18px;
       margin-bottom:58px;
-      max-width:860px;
+      max-width:880px;
     }
 
     .ticket{
+      display:grid;
+      grid-template-columns:116px 1fr;
+      gap:22px;
+      align-items:start;
       background:rgba(10,14,28,.78);
       border:1px solid rgba(70,84,132,.52);
       border-radius:20px;
-      padding:24px;
+      padding:22px;
       box-shadow:0 18px 42px rgba(0,0,0,.34);
     }
 
     .ticket.drift{
-      border-color:rgba(185,246,202,.24);
+      border-color:rgba(185,246,202,.22);
       background:
-        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 42%),
+        radial-gradient(circle at top left, rgba(185,246,202,.035), transparent 42%),
         rgba(10,14,28,.78);
+    }
+
+    .ticket.special{
+      border-color:rgba(215,196,255,.24);
+      background:
+        radial-gradient(circle at top left, rgba(215,196,255,.045), transparent 42%),
+        rgba(10,14,28,.78);
+    }
+
+    .ticket.deep{
+      border-color:rgba(143,183,255,.24);
+      background:
+        radial-gradient(circle at top left, rgba(143,183,255,.045), transparent 42%),
+        rgba(10,14,28,.78);
+    }
+
+    .ticket-image{
+      width:116px;
+      height:116px;
+      border-radius:20px;
+      border:1px solid rgba(169,183,255,.24);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.12), transparent 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .ticket-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      padding:12px;
+    }
+
+    .ticket.drift .ticket-image img{
+      opacity:.74;
+      filter:
+        saturate(.72)
+        brightness(.84)
+        contrast(.86);
+      padding:17px;
     }
 
     .ticket-kicker{
@@ -163,7 +214,15 @@
     }
 
     .ticket.drift .ticket-kicker{
-      color:var(--ready);
+      color:rgba(185,246,202,.82);
+    }
+
+    .ticket.special .ticket-kicker{
+      color:var(--ticket);
+    }
+
+    .ticket.deep .ticket-kicker{
+      color:var(--deep);
     }
 
     .ticket h2{
@@ -203,7 +262,7 @@
     }
 
     .flow{
-      max-width:860px;
+      max-width:880px;
       background:rgba(10,14,28,.62);
       border:1px solid rgba(70,84,132,.45);
       border-radius:20px;
@@ -315,7 +374,7 @@
       color:var(--text);
     }
 
-    @media(max-width:640px){
+    @media(max-width:700px){
       .wrap{
         padding:36px 16px 32px;
       }
@@ -339,6 +398,45 @@
       .flow,
       .panel{
         padding:20px;
+      }
+
+      .ticket{
+        grid-template-columns:86px 1fr;
+        gap:16px;
+      }
+
+      .ticket-image{
+        width:86px;
+        height:86px;
+        border-radius:18px;
+      }
+
+      .ticket-image img{
+        padding:10px;
+      }
+
+      .ticket.drift .ticket-image img{
+        padding:14px;
+      }
+    }
+
+    @media(max-width:480px){
+      .ticket{
+        grid-template-columns:1fr;
+      }
+
+      .ticket-image{
+        width:100%;
+        height:auto;
+        aspect-ratio:16 / 9;
+      }
+
+      .ticket-image img{
+        padding:18px;
+      }
+
+      .ticket.drift .ticket-image img{
+        padding:24px;
       }
     }
   </style>
@@ -399,77 +497,101 @@
       <section class="ticket-map">
 
         <article class="ticket">
-          <div class="ticket-kicker">Free / Presence</div>
-          <h2>Harbor Cat</h2>
-          <p>
-            航海記録を保存したあとに、港のネコが短く反応します。
-            助言や診断ではなく、記録が届いたことを示す小さなPresenceです。
-          </p>
-          <p>
-            Harbor Cat は、答えを返すためではなく、
-            記録が港に届いたことを静かに知らせるためにいます。
-          </p>
-          <div class="meta">
-            <span class="tag">無料</span>
-            <span class="tag">1〜2行</span>
-            <span class="tag">常設</span>
+          <div class="ticket-image">
+            <img src="/images/harbor-cat/cat-harbor-main.png" alt="Harbor Cat" loading="lazy">
+          </div>
+
+          <div>
+            <div class="ticket-kicker">Free / Presence</div>
+            <h2>Harbor Cat</h2>
+            <p>
+              航海記録を保存したあとに、港のネコが短く反応します。
+              助言や診断ではなく、記録が届いたことを示す小さなPresenceです。
+            </p>
+            <p>
+              Harbor Cat は、答えを返すためではなく、
+              記録が港に届いたことを静かに知らせるためにいます。
+            </p>
+            <div class="meta">
+              <span class="tag">無料</span>
+              <span class="tag">1〜2行</span>
+              <span class="tag">常設</span>
+            </div>
           </div>
         </article>
 
         <article class="ticket drift">
-          <div class="ticket-kicker">Drift / Free Ticket</div>
-          <h2>Drift Ticket（漂着チケット）</h2>
-          <p>
-            小さな航海券が流れ着く夜があります。
-            それは、少しだけ深い海へ降りるための合図です。
-          </p>
-          <p>
-            Drift Ticket は、Voyage Log のあとに港へ届くことがあります。
-            販売のための強い導線ではなく、必要な夜にだけ届く小さな贈り物として扱います。
-          </p>
-          <div class="meta">
-            <span class="tag ready">無料配布</span>
-            <span class="tag">Voyage Log 後</span>
-            <span class="tag">5分程度</span>
-            <span class="tag">不定期</span>
-            <span class="tag">保持1枚まで</span>
+          <div class="ticket-image">
+            <img src="/images/tickets/drift-ticket.svg" alt="Drift Ticket" loading="lazy">
+          </div>
+
+          <div>
+            <div class="ticket-kicker">Drift / Free Ticket</div>
+            <h2>Drift Ticket（漂着チケット）</h2>
+            <p>
+              小さな航海券が流れ着く夜があります。
+              それは、少しだけ深い海へ降りるための合図です。
+            </p>
+            <p>
+              Drift Ticket は、Voyage Log のあとに港へ届くことがあります。
+              販売のための強い導線ではなく、必要な夜にだけ届く小さな贈り物として扱います。
+            </p>
+            <div class="meta">
+              <span class="tag ready">無料配布</span>
+              <span class="tag">Voyage Log 後</span>
+              <span class="tag">5分程度</span>
+              <span class="tag">不定期</span>
+              <span class="tag">保持1枚まで</span>
+            </div>
           </div>
         </article>
 
-        <article class="ticket">
-          <div class="ticket-kicker">Paid / Special Voyage</div>
-          <h2>Special Voyage Ticket（特別航海チケット）</h2>
-          <p>
-            ユーザーが自分で選んで入る、時間制の特別航海です。
-            答えを急ぐためではなく、言葉を少し深く整えるための短い時間です。
-          </p>
-          <p>
-            Drift Ticket が港から届く小舟だとすれば、
-            Special Voyage Ticket は、自分で選んで出航するための航海券です。
-          </p>
-          <div class="meta">
-            <span class="tag">有料予定</span>
-            <span class="tag">10分</span>
-            <span class="tag">15分</span>
-            <span class="tag">30分</span>
-            <span class="tag">複数保持不可</span>
+        <article class="ticket special">
+          <div class="ticket-image">
+            <img src="/images/tickets/special-voyage-ticket.svg" alt="Special Voyage Ticket" loading="lazy">
+          </div>
+
+          <div>
+            <div class="ticket-kicker">Paid / Special Voyage</div>
+            <h2>Special Voyage Ticket（特別航海チケット）</h2>
+            <p>
+              ユーザーが自分で選んで入る、時間制の特別航海です。
+              答えを急ぐためではなく、言葉を少し深く整えるための短い時間です。
+            </p>
+            <p>
+              Drift Ticket が港から届く小舟だとすれば、
+              Special Voyage Ticket は、自分で選んで出航するための航海券です。
+            </p>
+            <div class="meta">
+              <span class="tag">有料予定</span>
+              <span class="tag">10分</span>
+              <span class="tag">15分</span>
+              <span class="tag">30分</span>
+              <span class="tag">複数保持不可</span>
+            </div>
           </div>
         </article>
 
-        <article class="ticket">
-          <div class="ticket-kicker">Limited / Deep Sea</div>
-          <h2>Deep Sea Ticket（深海チケット）</h2>
-          <p>
-            特に深い夜のための、限定的な航海券です。
-            通常の特別航海よりも静かに、深く降りるためのものとして扱います。
-          </p>
-          <p>
-            常設販売ではなく、必要な時期にだけ開く深い海として設計します。
-          </p>
-          <div class="meta">
-            <span class="tag">限定</span>
-            <span class="tag">上位航海</span>
-            <span class="tag">常設しない</span>
+        <article class="ticket deep">
+          <div class="ticket-image">
+            <img src="/images/tickets/deep-sea-ticket.svg" alt="Deep Sea Ticket" loading="lazy">
+          </div>
+
+          <div>
+            <div class="ticket-kicker">Limited / Deep Sea</div>
+            <h2>Deep Sea Ticket（深海チケット）</h2>
+            <p>
+              特に深い夜のための、限定的な航海券です。
+              通常の特別航海よりも静かに、深く降りるためのものとして扱います。
+            </p>
+            <p>
+              常設販売ではなく、必要な時期にだけ開く深い海として設計します。
+            </p>
+            <div class="meta">
+              <span class="tag">限定</span>
+              <span class="tag">上位航海</span>
+              <span class="tag">常設しない</span>
+            </div>
           </div>
         </article>
 
