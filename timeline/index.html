@@ -35,6 +35,10 @@
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
     a{
       color:inherit;
       text-decoration:none;
@@ -304,7 +308,7 @@
   </style>
 </head>
 
-<body>
+<body class="auth-locked">
   <div class="wrap">
 
     <header class="site-header">
@@ -340,7 +344,6 @@
         </div>
 
         <div class="actions">
-          <button class="primary" id="loginBtn">Googleでログイン</button>
           <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/account/">Accountへ</a>
@@ -389,7 +392,6 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const timelineEl = document.getElementById("timeline");
 
@@ -470,23 +472,6 @@
       return type || "Cabin Log";
     }
 
-    function updateAuthUI(){
-      const loggedIn = Boolean(currentUser);
-
-      loginBtn.style.display = loggedIn ? "none" : "inline-flex";
-      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
-    }
-
-    function renderLoggedOutState(){
-      currentAccessToken = null;
-
-      timelineEl.innerHTML = `
-        <div class="empty">
-          ログインすると、Cabin Log を確認できます。
-        </div>
-      `;
-    }
-
     async function fetchSupabase(path, options = {}){
       if(!currentAccessToken){
         throw new Error("Missing access token");
@@ -529,12 +514,7 @@
 
       if(error){
         console.error("getSession error:", error);
-        currentUser = null;
-        currentAccessToken = null;
-        userStatus.textContent = "ログイン状態の確認に失敗しました。";
-        setStatus(error.message, true);
-        updateAuthUI();
-        renderLoggedOutState();
+        window.location.replace("/");
         return;
       }
 
@@ -542,18 +522,15 @@
         currentUser = data.session.user;
         currentAccessToken = data.session.access_token;
 
+        document.body.classList.remove("auth-locked");
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("Cabin Log を確認しています。");
-        updateAuthUI();
 
         await loadTimeline();
       }else{
-        currentUser = null;
-        currentAccessToken = null;
-        userStatus.textContent = "未ログインです。Googleでログインすると、Cabin Log を確認できます。";
-        renderLoggedOutState();
-        setStatus("ログインが必要です。");
-        updateAuthUI();
+        window.location.replace("/");
+        return;
       }
     }
 
@@ -629,25 +606,6 @@
       `;
     }
 
-    async function login(){
-      setStatus("Googleログインへ進みます。");
-
-      const { error } = await client.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin + "/timeline/",
-          queryParams: {
-            prompt: "select_account"
-          }
-        }
-      });
-
-      if(error){
-        console.error("login error:", error);
-        setStatus(error.message, true);
-      }
-    }
-
     async function logout(){
       setStatus("ログアウトしています。");
 
@@ -661,13 +619,10 @@
 
       currentUser = null;
       currentAccessToken = null;
-      userStatus.textContent = "未ログインです。";
-      renderLoggedOutState();
-      setStatus("ログアウトしました。");
-      updateAuthUI();
+
+      window.location.replace("/");
     }
 
-    loginBtn.addEventListener("click", login);
     logoutBtn.addEventListener("click", logout);
 
     client.auth.onAuthStateChange(function(event, session){
@@ -675,8 +630,9 @@
         currentUser = session.user;
         currentAccessToken = session.access_token;
 
+        document.body.classList.remove("auth-locked");
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        updateAuthUI();
 
         setTimeout(function(){
           loadTimeline().catch(function(error){
@@ -687,12 +643,10 @@
         currentUser = null;
         currentAccessToken = null;
 
-        updateAuthUI();
-        renderLoggedOutState();
+        window.location.replace("/");
       }
     });
 
-    updateAuthUI();
     checkSession();
   </script>
 
