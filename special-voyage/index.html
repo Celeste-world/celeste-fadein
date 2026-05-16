@@ -319,6 +319,34 @@
       margin:0 0 18px;
     }
 
+    .benefit-box{
+      margin-top:18px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.18);
+      background:rgba(255,255,255,.025);
+    }
+
+    .benefit-title{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .benefit-list{
+      margin:0;
+      padding-left:1.2em;
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
+    }
+
+    .benefit-list li{
+      margin:0 0 4px;
+    }
+
     #remainingTime{
       color:var(--accent);
       letter-spacing:.06em;
@@ -478,8 +506,8 @@
       </h1>
 
       <p class="lead">
-        Special Voyage は、通常の Harbor Cat よりも少し深く、
-        言葉を整えるための短い航海です。
+        Special Voyage は、ただAIと話すための場所ではありません。<br>
+        いつもの記録より深い航海に入り、言葉を整え、港に何かが届く気配を強めるための短い時間です。
       </p>
 
       <p class="lead">
@@ -517,6 +545,15 @@
             開始すると、航海券は使用済みになります。<br>
             時間内だけ、少し深い海へ降りることができます。
           </p>
+
+          <div class="benefit-box" id="voyageBenefitBox">
+            <div class="benefit-title">この航海で変わること</div>
+            <ul class="benefit-list" id="voyageBenefitList">
+              <li>いつもの記録より深い航海に入れます</li>
+              <li>漂着物が届く気配が強まります</li>
+              <li>言葉を静かに整えやすくなります</li>
+            </ul>
+          </div>
 
           <div class="actions">
             <button class="primary" id="startVoyageBtn" type="button">
@@ -573,8 +610,9 @@
         </div>
 
         <p class="note">
-          Special Voyage Ticket は、10分 または 20分の特別航海に使えます。<br>
+          深い航海ほど、港に何かが流れ着く気配も強くなります。<br>
           Drift Ticket は、港にたまたま漂着する無料の短い航海券です。<br>
+          Special Voyage Ticket は、10分 または 20分の特別航海に使えます。<br>
           Deep Sea Ticket は、さらに深い海へ降りたいときのための航海券です。
         </p>
       </section>
@@ -613,6 +651,7 @@
     const voyageEntryTitle = document.getElementById("voyageEntryTitle");
     const voyageEntryLead = document.getElementById("voyageEntryLead");
     const voyageEntryNote = document.getElementById("voyageEntryNote");
+    const voyageBenefitList = document.getElementById("voyageBenefitList");
 
     const activeVoyageBox = document.getElementById("activeVoyageBox");
     const startVoyageBtn = document.getElementById("startVoyageBtn");
@@ -654,6 +693,20 @@
       return new Date(value).toLocaleString("ja-JP");
     }
 
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
     function normalizeTicketType(type){
       return String(type || "")
         .trim()
@@ -677,20 +730,6 @@
       }
 
       return type || "Voyage Ticket";
-    }
-
-    function accountDisplayName(user){
-      if(!user){
-        return "Guest";
-      }
-    
-      return (
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.user_metadata?.display_name ||
-        user.email ||
-        "Account"
-      );
     }
 
     function ticketCardClass(type){
@@ -758,7 +797,12 @@
           note:
             "開始すると、この漂着チケットは使用済みになります。<br>" +
             "短い航海なので、今置きたい言葉だけを静かに持って入ってください。",
-          button: "漂着チケットで航海を開始する"
+          button: "漂着チケットで航海を開始する",
+          benefits: [
+            "5分だけ、少し深い海へ降りられます",
+            "通常の記録よりも、漂着物が届きやすくなります",
+            "無料で、深い航海の入口を試せます"
+          ]
         };
       }
 
@@ -771,7 +815,12 @@
           note:
             "開始すると、この深海チケットは使用済みになります。<br>" +
             "必要な言葉だけを持って、静かに進んでください。",
-          button: "深海航海を開始する"
+          button: "深海航海を開始する",
+          benefits: [
+            "さらに深い海へ降りられます",
+            "漂着物が届く可能性がもっとも高まります",
+            "まだ言葉にならないものを、急がず扱いやすくなります"
+          ]
         };
       }
 
@@ -783,7 +832,12 @@
         note:
           "開始すると、この航海券は使用済みになります。<br>" +
           "時間内だけ、少し深い海へ降りることができます。",
-        button: "特別航海を開始する"
+        button: "特別航海を開始する",
+        benefits: [
+          "10分 または 20分の特別航海に入れます",
+          "通常の記録よりも、漂着の気配がはっきり強まります",
+          "考えや言葉を、短い時間で静かに整えられます"
+        ]
       };
     }
 
@@ -794,6 +848,10 @@
       voyageEntryLead.innerHTML = content.lead;
       voyageEntryNote.innerHTML = content.note;
       startVoyageBtn.textContent = content.button;
+
+      voyageBenefitList.innerHTML = content.benefits
+        .map(item => `<li>${escapeHtml(item)}</li>`)
+        .join("");
     }
 
     async function checkSession(){
