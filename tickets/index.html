@@ -75,6 +75,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -82,6 +83,15 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -495,6 +505,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -526,7 +537,6 @@
         </div>
 
         <div class="actions">
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/account/">Accountへ</a>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/map/">Mapへ</a>
@@ -729,7 +739,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
 
     let currentUser = null;
     let currentAccessToken = null;
@@ -795,7 +805,10 @@
       window.location.replace("/");
     }
 
-    logoutBtn.addEventListener("click", logout);
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
