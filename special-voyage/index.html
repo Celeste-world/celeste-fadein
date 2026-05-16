@@ -301,34 +301,6 @@
       line-height:2;
     }
 
-    .voyage-box{
-      display:none;
-      background:rgba(10,14,28,.82);
-      border:1px solid rgba(169,183,255,.28);
-      border-radius:20px;
-      padding:24px;
-      margin-top:24px;
-      box-shadow:0 18px 42px rgba(0,0,0,.34);
-    }
-
-    .voyage-box.visible{
-      display:block;
-    }
-
-    .voyage-title{
-      font-size:20px;
-      font-weight:500;
-      line-height:1.7;
-      margin:0 0 14px;
-    }
-
-    .voyage-text{
-      font-size:14px;
-      line-height:2.05;
-      color:var(--muted);
-      margin:0 0 18px;
-    }
-
     .benefit-box{
       margin-top:18px;
       padding:16px;
@@ -355,6 +327,34 @@
 
     .benefit-list li{
       margin:0 0 4px;
+    }
+
+    .voyage-box{
+      display:none;
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(169,183,255,.28);
+      border-radius:20px;
+      padding:24px;
+      margin-top:24px;
+      box-shadow:0 18px 42px rgba(0,0,0,.34);
+    }
+
+    .voyage-box.visible{
+      display:block;
+    }
+
+    .voyage-title{
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 14px;
+    }
+
+    .voyage-text{
+      font-size:14px;
+      line-height:2.05;
+      color:var(--muted);
+      margin:0 0 18px;
     }
 
     #remainingTime{
@@ -582,38 +582,9 @@
       </section>
 
       <section>
-        <div id="ticketArea"></div>
-
-        <div class="voyage-box" id="voyageBox">
-          <h2 class="voyage-title" id="voyageEntryTitle">航海の入口</h2>
-
-          <p class="voyage-text" id="voyageEntryLead">
-            有効な航海券が確認されました。<br>
-            この先では、時間制の航海を開始できます。
-          </p>
-
-          <p class="voyage-text" id="voyageEntryNote">
-            開始すると、航海券は使用済みになります。<br>
-            時間内だけ、少し深い海へ降りることができます。
-          </p>
-
-          <div class="benefit-box" id="voyageBenefitBox">
-            <div class="benefit-title">この航海で変わること</div>
-            <ul class="benefit-list" id="voyageBenefitList">
-              <li>いつもの記録より深い航海に入れます</li>
-              <li>漂着物が届く気配が強まります</li>
-              <li>言葉を静かに整えやすくなります</li>
-            </ul>
-          </div>
-
-          <div class="actions">
-            <button class="primary" id="startVoyageBtn" type="button">
-              航海を開始する
-            </button>
-
-            <a class="btn-ghost" href="/account/">
-              チケットを確認する
-            </a>
+        <div id="ticketArea">
+          <div class="empty">
+            航海券を確認しています...
           </div>
         </div>
 
@@ -704,14 +675,7 @@
     const logoutLink = document.getElementById("logoutLink");
     const ticketArea = document.getElementById("ticketArea");
 
-    const voyageBox = document.getElementById("voyageBox");
-    const voyageEntryTitle = document.getElementById("voyageEntryTitle");
-    const voyageEntryLead = document.getElementById("voyageEntryLead");
-    const voyageEntryNote = document.getElementById("voyageEntryNote");
-    const voyageBenefitList = document.getElementById("voyageBenefitList");
-
     const activeVoyageBox = document.getElementById("activeVoyageBox");
-    const startVoyageBtn = document.getElementById("startVoyageBtn");
     const activeVoyageMessage = document.getElementById("activeVoyageMessage");
     const remainingTime = document.getElementById("remainingTime");
 
@@ -728,7 +692,6 @@
     let currentUser = null;
     let activeSession = null;
     let countdownTimer = null;
-    let selectedTicket = null;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -846,20 +809,19 @@
 
     function voyageEntryContent(ticket){
       const normalized = normalizeTicketType(ticket?.ticket_type);
+      const duration = Number(ticket?.duration_minutes || 0);
 
       if(normalized === "drift"){
         return {
           title: "漂着チケットの入口",
           lead:
-            "有効な Drift Ticket が確認されました。<br>" +
-            "この先では、5分だけ少し深い海へ降りることができます。",
+            "5分だけ、少し深い海へ降りることができます。",
           note:
-            "開始すると、この漂着チケットは使用済みになります。<br>" +
             "短い航海なので、今置きたい言葉だけを静かに持って入ってください。",
           button: "漂着チケットで航海を開始する",
           benefits: [
-            "5分だけ、少し深い海へ降りられます",
-            "通常の記録よりも、漂着物が届きやすくなります",
+            "最大1個まで漂着物が届く可能性があります",
+            "取得は確定ではありません",
             "無料で、深い航海の入口を試せます"
           ]
         };
@@ -869,89 +831,161 @@
         return {
           title: "深海航海の入口",
           lead:
-            "有効な Deep Sea Ticket が確認されました。<br>" +
-            "この先では、さらに深い海へ降りる航海を開始できます。",
+            "さらに深い海へ降りる航海を開始できます。",
           note:
-            "開始すると、この深海チケットは使用済みになります。<br>" +
-            "必要な言葉だけを持って、静かに進んでください。",
+            "深海系の漂着物が届きやすくなります。ただし、取得は確定ではありません。",
           button: "深海航海を開始する",
           benefits: [
-            "さらに深い海へ降りられます",
-            "漂着物が届く可能性がもっとも高まります",
-            "まだ言葉にならないものを、急がず扱いやすくなります"
+            "最大2個まで漂着物が届く可能性があります",
+            "深海系アイテムの抽選率が高まります",
+            "取得は確定ではありません"
+          ]
+        };
+      }
+
+      if(duration >= 20){
+        return {
+          title: "20分の特別航海の入口",
+          lead:
+            "20分の特別航海を開始できます。",
+          note:
+            "2個目の漂着物が届く可能性があります。ただし、2個目は低確率です。",
+          button: "20分チケットで航海を開始する",
+          benefits: [
+            "最大2個まで漂着物が届く可能性があります",
+            "2個目は低確率です",
+            "取得は確定ではありません"
           ]
         };
       }
 
       return {
-        title: "特別航海の入口",
+        title: "10分の特別航海の入口",
         lead:
-          "有効な Special Voyage Ticket が確認されました。<br>" +
-          "この先では、時間制の特別航海を開始できます。",
+          "10分の特別航海を開始できます。",
         note:
-          "開始すると、この航海券は使用済みになります。<br>" +
-          "時間内だけ、少し深い海へ降りることができます。",
-        button: "特別航海を開始する",
+          "通常の Voyage Log より、漂着物が届く気配が強まります。",
+        button: "10分チケットで航海を開始する",
         benefits: [
-          "10分 または 20分の特別航海に入れます",
-          "通常の記録よりも、漂着の気配がはっきり強まります",
-          "考えや言葉を、短い時間で静かに整えられます"
+          "最大1個まで漂着物が届く可能性があります",
+          "取得は確定ではありません",
+          "言葉を短い時間で静かに整えられます"
         ]
       };
     }
 
-    function applyVoyageEntryContent(ticket){
-      const content = voyageEntryContent(ticket);
+    function ticketSortValue(ticket){
+      const normalized = normalizeTicketType(ticket.ticket_type);
+      const duration = Number(ticket.duration_minutes || 0);
 
-      voyageEntryTitle.textContent = content.title;
-      voyageEntryLead.innerHTML = content.lead;
-      voyageEntryNote.innerHTML = content.note;
-      startVoyageBtn.textContent = content.button;
+      if(normalized === "drift"){
+        return 1;
+      }
 
-      voyageBenefitList.innerHTML = content.benefits
-        .map(item => `<li>${escapeHtml(item)}</li>`)
-        .join("");
+      if(normalized === "special" && duration < 20){
+        return 2;
+      }
+
+      if(normalized === "special" && duration >= 20){
+        return 3;
+      }
+
+      if(normalized === "deep_sea"){
+        return 4;
+      }
+
+      return 9;
     }
 
-    function extractHarborFindNotices(harborFind){
-      if(!harborFind){
-        return [];
-      }
+    function renderTicket(tickets){
+      ticketArea.innerHTML = "";
+      activeVoyageBox.classList.remove("visible");
 
-      if(Array.isArray(harborFind.notices)){
-        return harborFind.notices
-          .map(item => String(item || "").trim())
-          .filter(Boolean);
-      }
+      const now = new Date();
 
-      const rolls = Array.isArray(harborFind.rolls)
-        ? harborFind.rolls
-        : [];
+      const validTickets = (tickets || [])
+        .filter(ticket => {
+          if(!ticket.expires_at){
+            return true;
+          }
 
-      return rolls
-        .filter(row => row && row.found === true)
-        .map(row => {
-          const result = row.result || {};
-          return String(result.message || "").trim();
+          return new Date(ticket.expires_at) > now;
         })
-        .filter(Boolean);
-    }
+        .sort((a, b) => {
+          const sortDiff = ticketSortValue(a) - ticketSortValue(b);
 
-    function renderHarborFindNotice(harborFind){
-      if(!specialFind || !specialFindText){
+          if(sortDiff !== 0){
+            return sortDiff;
+          }
+
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        });
+
+      if(validTickets.length === 0){
+        ticketArea.innerHTML = `
+          <div class="empty">
+            現在、航海に使える有効な航海券はありません。<br>
+            ときどき、Voyage Log のあとに小さな航海券が漂着することがあります。
+          </div>
+        `;
         return;
       }
 
-      const notices = extractHarborFindNotices(harborFind);
+      const cardsHtml = validTickets.map(ticket => {
+        const content = voyageEntryContent(ticket);
 
-      if(!notices.length){
-        specialFind.classList.remove("visible");
-        specialFindText.textContent = "";
-        return;
-      }
+        const benefitsHtml = content.benefits
+          .map(item => `<li>${escapeHtml(item)}</li>`)
+          .join("");
 
-      specialFindText.textContent = notices.join("\n\n");
-      specialFind.classList.add("visible");
+        return `
+          <article class="${ticketCardClass(ticket.ticket_type)}">
+            <div class="ticket-top">
+              <div>
+                <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
+                <p class="ticket-line">
+                  ${escapeHtml(ticketDescription(ticket))}
+                </p>
+              </div>
+
+              <div class="ticket-status ready">
+                ${escapeHtml(ticket.status || "available")}
+              </div>
+            </div>
+
+            <p class="ticket-line">
+              期限：${escapeHtml(formatDate(ticket.expires_at))}
+            </p>
+
+            <div class="ticket-meta">
+              <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
+              <span class="tag">届いた日：${escapeHtml(formatDate(ticket.created_at))}</span>
+              <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
+            </div>
+
+            <div class="benefit-box">
+              <div class="benefit-title">${escapeHtml(content.title)}</div>
+              <p class="ticket-line">${escapeHtml(content.lead)}</p>
+              <p class="ticket-line">${escapeHtml(content.note)}</p>
+              <ul class="benefit-list">
+                ${benefitsHtml}
+              </ul>
+            </div>
+
+            <div class="actions">
+              <button
+                class="primary"
+                type="button"
+                data-start-ticket-id="${escapeHtml(ticket.id)}"
+              >
+                ${escapeHtml(content.button)}
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      ticketArea.innerHTML = cardsHtml;
     }
 
     async function checkSession(){
@@ -976,7 +1010,7 @@
         const hasActiveSession = await loadActiveSession();
 
         if(!hasActiveSession){
-          await loadAvailableTicket();
+          await loadAvailableTickets();
         }
       }else{
         window.location.replace("/");
@@ -995,7 +1029,6 @@
 
       currentUser = null;
       activeSession = null;
-      selectedTicket = null;
 
       if(countdownTimer){
         clearInterval(countdownTimer);
@@ -1034,8 +1067,6 @@
       activeSession = data[0];
 
       ticketArea.innerHTML = "";
-      voyageBox.classList.remove("visible");
-
       activeVoyageMessage.textContent =
         "航海は、まだ静かに続いています。";
 
@@ -1049,7 +1080,7 @@
       return true;
     }
 
-    async function loadAvailableTicket(){
+    async function loadAvailableTickets(){
       if(!currentUser){
         return;
       }
@@ -1059,8 +1090,7 @@
         .select("*")
         .eq("user_id", currentUser.id)
         .eq("status", "available")
-        .order("created_at", { ascending:false })
-        .limit(1);
+        .order("created_at", { ascending:true });
 
       if(error){
         console.error("ticket load error:", error);
@@ -1072,78 +1102,24 @@
       setStatus("航海券を確認しました。");
     }
 
-    function renderTicket(tickets){
-      ticketArea.innerHTML = "";
-      voyageBox.classList.remove("visible");
-      activeVoyageBox.classList.remove("visible");
-      selectedTicket = null;
-
-      const now = new Date();
-
-      const validTickets = (tickets || []).filter(ticket => {
-        if(!ticket.expires_at){
-          return true;
-        }
-
-        return new Date(ticket.expires_at) > now;
-      });
-
-      if(validTickets.length === 0){
-        ticketArea.innerHTML = `
-          <div class="empty">
-            現在、航海に使える有効な航海券はありません。<br>
-            ときどき、Voyage Log のあとに小さな航海券が漂着することがあります。
-          </div>
-        `;
+    async function startSpecialVoyage(ticketId){
+      if(!ticketId){
+        setStatus("使用する航海券が選ばれていません。", true);
         return;
       }
 
-      const ticket = validTickets[0];
-      selectedTicket = ticket;
-
-      const div = document.createElement("div");
-      div.className = ticketCardClass(ticket.ticket_type);
-
-      div.innerHTML = `
-        <div class="ticket-top">
-          <div>
-            <div class="ticket-type">${escapeHtml(ticketLabel(ticket.ticket_type))}</div>
-            <p class="ticket-line">
-              ${escapeHtml(ticketDescription(ticket))}
-            </p>
-          </div>
-
-          <div class="ticket-status ready">
-            ${escapeHtml(ticket.status || "available")}
-          </div>
-        </div>
-
-        <p class="ticket-line">
-          期限：${escapeHtml(formatDate(ticket.expires_at))}
-        </p>
-
-        <div class="ticket-meta">
-          <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
-          <span class="tag">届いた日：${escapeHtml(formatDate(ticket.created_at))}</span>
-          <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
-        </div>
-      `;
-
-      ticketArea.appendChild(div);
-      applyVoyageEntryContent(ticket);
-      voyageBox.classList.add("visible");
-    }
-
-    async function startSpecialVoyage(){
       setStatus("航海を開始しています。");
 
-      if(startVoyageBtn){
-        startVoyageBtn.disabled = true;
-      }
+      const buttons = document.querySelectorAll("[data-start-ticket-id]");
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
 
       try{
         const { data, error } = await client.functions.invoke("start-special-voyage", {
-          body: {}
+          body: {
+            ticket_id: ticketId
+          }
         });
 
         if(error){
@@ -1160,7 +1136,6 @@
         activeSession = data.session;
 
         ticketArea.innerHTML = "";
-        voyageBox.classList.remove("visible");
 
         activeVoyageMessage.textContent =
           data.message ||
@@ -1177,9 +1152,9 @@
         console.error("startSpecialVoyage catch:", error);
         setStatus("航海の開始処理でエラーが発生しました：" + error.message, true);
       }finally{
-        if(startVoyageBtn){
-          startVoyageBtn.disabled = false;
-        }
+        buttons.forEach(button => {
+          button.disabled = false;
+        });
       }
     }
 
@@ -1292,6 +1267,47 @@
         : "special-count";
     }
 
+    function extractHarborFindNotices(harborFind){
+      if(!harborFind){
+        return [];
+      }
+
+      if(Array.isArray(harborFind.notices)){
+        return harborFind.notices
+          .map(item => String(item || "").trim())
+          .filter(Boolean);
+      }
+
+      const rolls = Array.isArray(harborFind.rolls)
+        ? harborFind.rolls
+        : [];
+
+      return rolls
+        .filter(row => row && row.found === true)
+        .map(row => {
+          const result = row.result || {};
+          return String(result.message || "").trim();
+        })
+        .filter(Boolean);
+    }
+
+    function renderHarborFindNotice(harborFind){
+      if(!specialFind || !specialFindText){
+        return;
+      }
+
+      const notices = extractHarborFindNotices(harborFind);
+
+      if(!notices.length){
+        specialFind.classList.remove("visible");
+        specialFindText.textContent = "";
+        return;
+      }
+
+      specialFindText.textContent = notices.join("\n\n");
+      specialFind.classList.add("visible");
+    }
+
     async function sendSpecialVoyageMessage(){
       if(!currentUser){
         setStatus("先にログインしてください。", true);
@@ -1365,9 +1381,15 @@
       logout();
     });
 
-    if(startVoyageBtn){
-      startVoyageBtn.addEventListener("click", startSpecialVoyage);
-    }
+    ticketArea.addEventListener("click", function(event){
+      const button = event.target.closest("[data-start-ticket-id]");
+
+      if(!button){
+        return;
+      }
+
+      startSpecialVoyage(button.dataset.startTicketId);
+    });
 
     if(sendSpecialBtn){
       sendSpecialBtn.addEventListener("click", sendSpecialVoyageMessage);
@@ -1387,7 +1409,7 @@
 
         loadActiveSession().then(function(hasActiveSession){
           if(!hasActiveSession){
-            loadAvailableTicket();
+            loadAvailableTickets();
           }
         });
 
