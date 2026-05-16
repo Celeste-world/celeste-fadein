@@ -1267,47 +1267,509 @@
         : "special-count";
     }
 
-    function extractHarborFindNotices(harborFind){
-      if(!harborFind){
+    
+    
+    function extractHarborFindRewards(payload){
+      if(!payload){
         return [];
       }
-
-      if(Array.isArray(harborFind.notices)){
-        return harborFind.notices
-          .map(item => String(item || "").trim())
-          .filter(Boolean);
-      }
-
-      const rolls = Array.isArray(harborFind.rolls)
-        ? harborFind.rolls
+    
+      const rewards = [];
+    
+      const foundItems = Array.isArray(payload.found_items)
+        ? payload.found_items
         : [];
-
-      return rolls
-        .filter(row => row && row.found === true)
-        .map(row => {
-          const result = row.result || {};
-          return String(result.message || "").trim();
-        })
-        .filter(Boolean);
+    
+      foundItems.forEach((item) => {
+        if(!item){
+          return;
+        }
+    
+        rewards.push({
+          type: "harbor_find",
+          label: "HARBOR FIND",
+          title: item.item_name || item.name_ja || item.item_key || "漂着物",
+          item_key: item.item_key || "",
+          rarity: item.rarity || "",
+          family: item.family || "",
+          description: item.description || "",
+          origin_text: item.origin_text || "",
+          area_hint: item.area_hint || "",
+          image_path: item.image_path || ""
+        });
+      });
+    
+      const findRolls = Array.isArray(payload.find_rolls)
+        ? payload.find_rolls
+        : [];
+    
+      findRolls.forEach((roll) => {
+        const item = roll && roll.item ? roll.item : null;
+    
+        if(!roll || roll.found !== true || !item){
+          return;
+        }
+    
+        const alreadyExists = rewards.some((reward) =>
+          reward.type === "harbor_find" &&
+          reward.item_key &&
+          reward.item_key === item.item_key
+        );
+    
+        if(alreadyExists){
+          return;
+        }
+    
+        rewards.push({
+          type: "harbor_find",
+          label: "HARBOR FIND",
+          title: item.item_name || item.name_ja || item.item_key || "漂着物",
+          item_key: item.item_key || "",
+          rarity: item.rarity || "",
+          family: item.family || "",
+          description: item.description || "",
+          origin_text: item.origin_text || "",
+          area_hint: item.area_hint || "",
+          image_path: item.image_path || ""
+        });
+      });
+    
+      const grantedTickets = []
+        .concat(Array.isArray(payload.granted_tickets) ? payload.granted_tickets : [])
+        .concat(Array.isArray(payload.drift_tickets) ? payload.drift_tickets : [])
+        .concat(Array.isArray(payload.tickets) ? payload.tickets : []);
+    
+      grantedTickets.forEach((ticket) => {
+        if(!ticket){
+          return;
+        }
+    
+        const ticketType = ticket.ticket_type || ticket.type || "drift";
+        const durationMinutes = ticket.duration_minutes || ticket.duration || 5;
+    
+        rewards.push({
+          type: "drift_ticket",
+          label: "DRIFT TICKET",
+          title: ticketType === "drift"
+            ? "Drift Ticket（漂着チケット）"
+            : "Voyage Ticket",
+          ticket_type: ticketType,
+          duration_minutes: durationMinutes,
+          status: ticket.status || "available",
+          source: ticket.source || "",
+          expires_at: ticket.expires_at || ""
+        });
+      });
+    
+      const harborFind = payload.harbor_find || payload;
+    
+      if(Array.isArray(harborFind.notices)){
+        harborFind.notices.forEach((notice) => {
+          const text = String(notice || "").trim();
+    
+          if(!text){
+            return;
+          }
+    
+          rewards.push({
+            type: "notice",
+            label: "NOTICE",
+            title: text,
+            description: text
+          });
+        });
+      }
+    
+      if(rewards.length > 0){
+        return rewards;
+      }
+    
+      if(Array.isArray(harborFind.rolls)){
+        return harborFind.rolls
+          .filter((row) => row && row.found === true)
+          .map((row) => {
+            const result = row.result || {};
+            const item = result.item || row.item || {};
+    
+            return {
+              type: "harbor_find",
+              label: "HARBOR FIND",
+              title:
+                item.item_name ||
+                item.name_ja ||
+                result.message ||
+                "漂着物",
+              item_key: item.item_key || "",
+              rarity: item.rarity || "",
+              family: item.family || "",
+              description: item.description || "",
+              origin_text: item.origin_text || "",
+              area_hint: item.area_hint || "",
+              image_path: item.image_path || ""
+            };
+          });
+      }
+    
+      return [];
     }
-
-    function renderHarborFindNotice(harborFind){
+    
+    function renderHarborFindNotice(payload){
       if(!specialFind || !specialFindText){
         return;
       }
-
-      const notices = extractHarborFindNotices(harborFind);
-
-      if(!notices.length){
+    
+      const rewards = extractHarborFindRewards(payload);
+    
+      if(!rewards.length){
         specialFind.classList.remove("visible");
-        specialFindText.textContent = "";
+        specialFindText.innerHTML = "";
         return;
       }
-
-      specialFindText.textContent = notices.join("\n\n");
+    
+      specialFindText.innerHTML = "";
+    
+      rewards.forEach((reward) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "special-find-reward-button";
+    
+        button.style.display = "block";
+        button.style.width = "100%";
+        button.style.textAlign = "left";
+        button.style.margin = "8px 0";
+        button.style.padding = "12px 14px";
+        button.style.border = "1px solid rgba(180, 200, 255, 0.25)";
+        button.style.borderRadius = "14px";
+        button.style.background = "rgba(255, 255, 255, 0.04)";
+        button.style.color = "inherit";
+        button.style.cursor = "pointer";
+    
+        const label = document.createElement("div");
+        label.textContent = reward.label || "REWARD";
+        label.style.fontSize = "0.72rem";
+        label.style.letterSpacing = "0.12em";
+        label.style.opacity = "0.75";
+        label.style.marginBottom = "4px";
+    
+        const title = document.createElement("div");
+        title.textContent = reward.title || "漂着物";
+        title.style.fontSize = "0.95rem";
+        title.style.fontWeight = "600";
+    
+        button.appendChild(label);
+        button.appendChild(title);
+    
+        button.addEventListener("click", () => {
+          openRewardDetailModal(reward);
+        });
+    
+        specialFindText.appendChild(button);
+      });
+    
       specialFind.classList.add("visible");
     }
-
+    
+    async function openRewardDetailModal(reward){
+      const detailReward = await enrichRewardDetail(reward);
+    
+      let modal = document.getElementById("specialRewardDetailModal");
+    
+      if(!modal){
+        modal = document.createElement("div");
+        modal.id = "specialRewardDetailModal";
+    
+        modal.style.position = "fixed";
+        modal.style.inset = "0";
+        modal.style.zIndex = "9999";
+        modal.style.display = "none";
+        modal.style.alignItems = "center";
+        modal.style.justifyContent = "center";
+        modal.style.background = "rgba(2, 6, 23, 0.72)";
+        modal.style.backdropFilter = "blur(6px)";
+    
+        modal.addEventListener("click", (event) => {
+          if(event.target === modal){
+            closeRewardDetailModal();
+          }
+        });
+    
+        document.body.appendChild(modal);
+      }
+    
+      modal.innerHTML = "";
+    
+      const panel = document.createElement("div");
+      panel.style.width = "min(520px, calc(100vw - 32px))";
+      panel.style.maxHeight = "calc(100vh - 64px)";
+      panel.style.overflow = "auto";
+      panel.style.background = "#07101f";
+      panel.style.border = "1px solid rgba(190,210,255,.2)";
+      panel.style.borderRadius = "22px";
+      panel.style.padding = "22px";
+      panel.style.color = "#e6edf7";
+      panel.style.boxShadow = "0 24px 80px rgba(0,0,0,.45)";
+    
+      const content = document.createElement("div");
+    
+      if(detailReward.type === "harbor_find"){
+        content.appendChild(buildHarborFindDetail(detailReward));
+      }else if(detailReward.type === "drift_ticket"){
+        content.appendChild(buildDriftTicketDetail(detailReward));
+      }else{
+        content.appendChild(buildNoticeDetail(detailReward));
+      }
+    
+      const footer = document.createElement("div");
+      footer.style.marginTop = "22px";
+      footer.style.textAlign = "right";
+    
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.textContent = "閉じる";
+      closeButton.style.border = "1px solid rgba(255,255,255,.18)";
+      closeButton.style.background = "rgba(255,255,255,.06)";
+      closeButton.style.color = "#e6edf7";
+      closeButton.style.borderRadius = "999px";
+      closeButton.style.padding = "8px 16px";
+      closeButton.style.cursor = "pointer";
+    
+      closeButton.addEventListener("click", closeRewardDetailModal);
+    
+      footer.appendChild(closeButton);
+      panel.appendChild(content);
+      panel.appendChild(footer);
+      modal.appendChild(panel);
+    
+      modal.style.display = "flex";
+    }
+    
+    function closeRewardDetailModal(){
+      const modal = document.getElementById("specialRewardDetailModal");
+    
+      if(modal){
+        modal.style.display = "none";
+      }
+    }
+    
+    async function enrichRewardDetail(reward){
+      if(!reward || reward.type !== "harbor_find" || !reward.item_key){
+        return reward;
+      }
+    
+      const hasDetails =
+        reward.description ||
+        reward.origin_text ||
+        reward.area_hint ||
+        reward.image_path;
+    
+      if(hasDetails){
+        return reward;
+      }
+    
+      try{
+        const { data, error } = await client
+          .from("harbor_items")
+          .select("item_key, name_ja, name_en, description, origin_text, rarity, area_hint, image_path")
+          .eq("item_key", reward.item_key)
+          .maybeSingle();
+    
+        if(error || !data){
+          console.warn("harbor item detail fetch failed", error);
+          return reward;
+        }
+    
+        return {
+          ...reward,
+          title: data.name_ja || reward.title,
+          name_en: data.name_en || "",
+          description: data.description || reward.description || "",
+          origin_text: data.origin_text || reward.origin_text || "",
+          rarity: data.rarity || reward.rarity || "",
+          area_hint: data.area_hint || reward.area_hint || "",
+          image_path: data.image_path || reward.image_path || ""
+        };
+      }catch(error){
+        console.warn("harbor item detail fetch catch", error);
+        return reward;
+      }
+    }
+    
+    function buildHarborFindDetail(reward){
+      const wrapper = document.createElement("div");
+    
+      const top = document.createElement("div");
+      top.style.display = "flex";
+      top.style.gap = "16px";
+      top.style.alignItems = "flex-start";
+    
+      const imageBox = document.createElement("div");
+    
+      if(reward.image_path){
+        const img = document.createElement("img");
+        img.src = reward.image_path;
+        img.alt = reward.title || "漂着物";
+        img.style.width = "96px";
+        img.style.height = "96px";
+        img.style.objectFit = "cover";
+        img.style.borderRadius = "18px";
+        img.style.border = "1px solid rgba(255,255,255,.14)";
+        img.style.background = "rgba(255,255,255,.04)";
+    
+        imageBox.appendChild(img);
+      }else{
+        imageBox.style.width = "96px";
+        imageBox.style.height = "96px";
+        imageBox.style.borderRadius = "18px";
+        imageBox.style.border = "1px solid rgba(255,255,255,.14)";
+        imageBox.style.display = "flex";
+        imageBox.style.alignItems = "center";
+        imageBox.style.justifyContent = "center";
+        imageBox.style.fontSize = ".75rem";
+        imageBox.style.opacity = ".65";
+        imageBox.innerHTML = "image<br>pending";
+      }
+    
+      const main = document.createElement("div");
+      main.style.flex = "1";
+    
+      const label = document.createElement("div");
+      label.textContent = "HARBOR FIND";
+      label.style.fontSize = ".72rem";
+      label.style.letterSpacing = ".14em";
+      label.style.opacity = ".7";
+      label.style.marginBottom = "6px";
+    
+      const title = document.createElement("h3");
+      title.textContent = reward.title || "漂着物";
+      title.style.margin = "0 0 10px";
+      title.style.fontSize = "1.25rem";
+    
+      const tags = document.createElement("div");
+      tags.style.display = "flex";
+      tags.style.gap = "8px";
+      tags.style.flexWrap = "wrap";
+      tags.style.marginBottom = "12px";
+    
+      [
+        reward.rarity,
+        reward.family,
+        reward.area_hint
+      ].filter(Boolean).forEach((text) => {
+        const tag = document.createElement("span");
+        tag.textContent = text;
+        tag.style.border = "1px solid rgba(255,255,255,.18)";
+        tag.style.borderRadius = "999px";
+        tag.style.padding = "4px 10px";
+        tag.style.fontSize = ".75rem";
+        tags.appendChild(tag);
+      });
+    
+      main.appendChild(label);
+      main.appendChild(title);
+      main.appendChild(tags);
+    
+      top.appendChild(imageBox);
+      top.appendChild(main);
+      wrapper.appendChild(top);
+    
+      if(reward.description){
+        const description = document.createElement("p");
+        description.textContent = reward.description;
+        description.style.lineHeight = "1.8";
+        description.style.margin = "18px 0 0";
+        wrapper.appendChild(description);
+      }
+    
+      if(reward.origin_text){
+        const origin = document.createElement("p");
+        origin.textContent = reward.origin_text;
+        origin.style.lineHeight = "1.8";
+        origin.style.margin = "14px 0 0";
+        origin.style.opacity = ".8";
+        wrapper.appendChild(origin);
+      }
+    
+      if(reward.item_key){
+        const key = document.createElement("p");
+        key.textContent = reward.item_key;
+        key.style.margin = "18px 0 0";
+        key.style.fontSize = ".75rem";
+        key.style.opacity = ".55";
+        wrapper.appendChild(key);
+      }
+    
+      return wrapper;
+    }
+    
+    function buildDriftTicketDetail(reward){
+      const wrapper = document.createElement("div");
+    
+      const label = document.createElement("div");
+      label.textContent = "DRIFT TICKET";
+      label.style.fontSize = ".72rem";
+      label.style.letterSpacing = ".14em";
+      label.style.opacity = ".7";
+      label.style.marginBottom = "6px";
+    
+      const title = document.createElement("h3");
+      title.textContent = reward.title || "Drift Ticket（漂着チケット）";
+      title.style.margin = "0 0 12px";
+      title.style.fontSize = "1.25rem";
+    
+      const description = document.createElement("p");
+      description.innerHTML =
+        "短い航海へ出るためのチケットです。<br>" +
+        "漂着物が届くこともありますが、確定ではありません。";
+      description.style.lineHeight = "1.8";
+      description.style.margin = "0";
+    
+      const tags = document.createElement("div");
+      tags.style.display = "flex";
+      tags.style.gap = "8px";
+      tags.style.flexWrap = "wrap";
+      tags.style.marginTop = "16px";
+    
+      [
+        `${reward.duration_minutes || 5}分`,
+        reward.status || "available"
+      ].filter(Boolean).forEach((text) => {
+        const tag = document.createElement("span");
+        tag.textContent = text;
+        tag.style.border = "1px solid rgba(255,255,255,.18)";
+        tag.style.borderRadius = "999px";
+        tag.style.padding = "4px 10px";
+        tag.style.fontSize = ".75rem";
+        tags.appendChild(tag);
+      });
+    
+      wrapper.appendChild(label);
+      wrapper.appendChild(title);
+      wrapper.appendChild(description);
+      wrapper.appendChild(tags);
+    
+      return wrapper;
+    }
+    
+    function buildNoticeDetail(reward){
+      const wrapper = document.createElement("div");
+    
+      const label = document.createElement("div");
+      label.textContent = reward.label || "NOTICE";
+      label.style.fontSize = ".72rem";
+      label.style.letterSpacing = ".14em";
+      label.style.opacity = ".7";
+      label.style.marginBottom = "6px";
+    
+      const title = document.createElement("h3");
+      title.textContent = reward.title || "通知";
+      title.style.margin = "0 0 12px";
+      title.style.fontSize = "1.15rem";
+    
+      wrapper.appendChild(label);
+      wrapper.appendChild(title);
+    
+      return wrapper;
+    }
     async function sendSpecialVoyageMessage(){
       if(!currentUser){
         setStatus("先にログインしてください。", true);
@@ -1356,7 +1818,7 @@
         specialReplyText.textContent = data.reply;
         specialReply.style.display = "block";
 
-        renderHarborFindNotice(data.harbor_find);renderHarborFindNotice({
+        renderHarborFindNotice({
           harbor_find: data.harbor_find,
           found_items: data.found_items || [],
           find_rolls: data.find_rolls || [],
