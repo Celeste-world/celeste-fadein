@@ -64,6 +64,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -72,6 +73,16 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -692,6 +703,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -756,9 +768,8 @@
         </select>
 
         <div class="actions">
-          <button class="primary" id="saveBtn">Save Log</button>
+          <button class="primary" id="saveBtn">航海記録を残す</button>
           <button class="ghost" id="loginBtn">Googleでログイン</button>
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <button class="danger" id="deleteAllBtn">全ログ削除</button>
         </div>
 
@@ -985,7 +996,7 @@
 
     const saveBtn = document.getElementById("saveBtn");
     const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
     const deleteAllBtn = document.getElementById("deleteAllBtn");
     const logsEl = document.getElementById("logs");
     const logsCount = document.getElementById("logsCount");
@@ -1169,7 +1180,7 @@
       const loggedIn = Boolean(currentUser);
 
       loginBtn.style.display = loggedIn ? "none" : "inline-flex";
-      logoutBtn.style.display = loggedIn ? "inline-flex" : "none";
+      logoutLink.style.display = loggedIn ? "inline" : "none";
       deleteAllBtn.style.display = loggedIn ? "inline-flex" : "none";
 
       saveBtn.disabled = !loggedIn;
@@ -1870,7 +1881,12 @@
     }
 
     loginBtn.addEventListener("click", login);
-    logoutBtn.addEventListener("click", logout);
+
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
+
     saveBtn.addEventListener("click", saveLog);
     deleteAllBtn.addEventListener("click", deleteAllLogs);
 
