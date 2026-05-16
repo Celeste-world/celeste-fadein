@@ -707,22 +707,22 @@
         <div class="weather-label">Tonight's Harbor</div>
 
         <p class="weather-main" id="weatherMain">
-          今夜の港は静かです。
+          今夜の港を確認しています。
         </p>
 
         <p class="weather-sub" id="weatherSub">
-          しばらく、ここにいても大丈夫です。
+          海の気配を読み込んでいます。
         </p>
 
         <div class="weather-meta">
           <div class="weather-chip">
             <div class="chip-label">Sea</div>
-            <div class="chip-value" id="weatherSea">Quiet</div>
+            <div class="chip-value" id="weatherSea">Checking</div>
           </div>
 
           <div class="weather-chip">
             <div class="chip-label">Light</div>
-            <div class="chip-value" id="weatherLight">Faint</div>
+            <div class="chip-value" id="weatherLight">Checking</div>
           </div>
         </div>
       </section>
@@ -855,61 +855,114 @@
   </div>
 
   <script>
-    const harborWeather = [
-      {
-        main: "今夜、東の灯台の近くに霧が漂っています。",
-        sub: "海は少し不明瞭ですが、港はまだ開いています。",
-        sea: "Foggy",
-        light: "Distant"
-      },
-      {
-        main: "今夜の海は穏やかですが、完全には静かではありません。",
-        sub: "月明かりの下で、小さな波がまだ続いています。",
-        sea: "Calm",
-        light: "Soft"
-      },
-      {
-        main: "港の端に、小さな灯りが残っています。",
-        sub: "合図である必要はありません。ただ、そこに残っています。",
-        sea: "Still",
-        light: "Faint"
-      },
-      {
-        main: "潮は低く、月はよく見えています。",
-        sub: "次の航海の前に、少し呼吸を整える余白があります。",
-        sea: "Low tide",
-        light: "Clear"
-      },
-      {
-        main: "今夜の港は、何も尋ねずに待っています。",
-        sub: "なぜ戻ってきたのかを、説明する必要はありません。",
-        sea: "Quiet",
-        light: "Waiting"
-      },
-      {
-        main: "薄い雲の向こうに、灯台の光が見えています。",
-        sub: "近すぎず、遠すぎず。方角を失わない程度の光です。",
-        sea: "Slow",
-        light: "Visible"
-      },
-      {
-        main: "水面が、遠い航海の音を運んでいます。",
-        sub: "暗い海の向こうで、まだ進んでいる船があります。",
-        sea: "Moving",
-        light: "Far"
-      }
-    ];
-
     const today = new Date();
-    const weatherIndex = today.getDate() % harborWeather.length;
-    const weather = harborWeather[weatherIndex];
 
-    function applyHarborWeather(){
-      document.getElementById("weatherMain").textContent = weather.main;
-      document.getElementById("weatherSub").textContent = weather.sub;
-      document.getElementById("weatherSea").textContent = weather.sea;
-      document.getElementById("weatherLight").textContent = weather.light;
-    }
+    const areaHarborWeather = {
+      harbor: [
+        {
+          main: "今夜の港は静かです。",
+          sub: "まだ、すべては岸の近くにあります。",
+          sea: "Harbor",
+          light: "Faint"
+        },
+        {
+          main: "港の端に、小さな灯りが残っています。",
+          sub: "合図である必要はありません。ただ、そこにあります。",
+          sea: "Still",
+          light: "Small"
+        }
+      ],
+
+      silent_water: [
+        {
+          main: "静かな水域に、低い波が広がっています。",
+          sub: "港の外へ出ても、まだ海は穏やかです。",
+          sea: "Silent Water",
+          light: "Soft"
+        },
+        {
+          main: "水面は静かで、船の影だけがゆっくり揺れています。",
+          sub: "急がなくても、進むことはできます。",
+          sea: "Calm",
+          light: "Pale"
+        }
+      ],
+
+      lighthouse_coast: [
+        {
+          main: "遠くの灯台が、今夜の海に細い光を落としています。",
+          sub: "近づくためではなく、方角を失わないための光です。",
+          sea: "Lighthouse Coast",
+          light: "Distant"
+        },
+        {
+          main: "灯台海岸の向こうで、淡い光が揺れています。",
+          sub: "見えるものが少ない夜ほど、小さな光は残ります。",
+          sea: "Coast",
+          light: "Visible"
+        }
+      ],
+
+      fog_sea: [
+        {
+          main: "霧が出ています。",
+          sub: "見えない海にも、道は続いています。",
+          sea: "Fog Sea",
+          light: "Scattered"
+        },
+        {
+          main: "白い霧が、海と空の境目を隠しています。",
+          sub: "確信よりも、今日は継続の方が頼りになります。",
+          sea: "Foggy",
+          light: "Blurred"
+        }
+      ],
+
+      moonlit_sea: [
+        {
+          main: "月光が、水面に細い道を描いています。",
+          sub: "どこへ続くか分からなくても、その道は確かにあります。",
+          sea: "Moonlit Sea",
+          light: "Moonlit"
+        },
+        {
+          main: "月の光が、静かな海に落ちています。",
+          sub: "今夜は、言葉を少し遠くまで運べそうです。",
+          sea: "Moonlit",
+          light: "Clear"
+        }
+      ],
+
+      deep_current: [
+        {
+          main: "水面は静かですが、深いところで潮が動いています。",
+          sub: "見えているものより、見えない流れが船を運ぶ夜です。",
+          sea: "Deep Current",
+          light: "Low"
+        },
+        {
+          main: "深い潮が、海の下でゆっくり向きを変えています。",
+          sub: "大きく舵を切らず、ただ保つことが必要な夜です。",
+          sea: "Deep",
+          light: "Dim"
+        }
+      ],
+
+      unnamed_waters: [
+        {
+          main: "名前のない海域の方から、遠い光が揺れています。",
+          sub: "終点ではなく、まだ外へ続く入口のようです。",
+          sea: "Unnamed Waters",
+          light: "Far"
+        },
+        {
+          main: "海図の外側に、まだ知らない夜が広がっています。",
+          sub: "進む理由は、いつも少し遅れて分かります。",
+          sea: "Outer",
+          light: "Unknown"
+        }
+      ]
+    };
 
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -1243,6 +1296,63 @@
       }
     }
 
+    async function loadUnlockedSeaAreas(){
+      if(!currentUser || !currentAccessToken){
+        return ["harbor"];
+      }
+
+      try{
+        const userId = encodeURIComponent(currentUser.id);
+
+        const rows = await fetchSupabase(
+          "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+        );
+
+        const opened = Array.isArray(rows)
+          ? rows
+              .filter(row => {
+                const status = row.status || row.unlock_status || row.state || "open";
+                return status === "open" || status === "unlocked" || status === "active";
+              })
+              .map(row => row.area_key || row.sea_area_key)
+              .filter(Boolean)
+          : [];
+
+        if(!opened.includes("harbor")){
+          opened.unshift("harbor");
+        }
+
+        return opened.length ? opened : ["harbor"];
+      }catch(error){
+        console.error("loadUnlockedSeaAreas error:", error);
+        return ["harbor"];
+      }
+    }
+
+    function pickWeatherFromAreas(openedAreas){
+      const areas = openedAreas && openedAreas.length
+        ? openedAreas
+        : ["harbor"];
+
+      const areaIndex = today.getDate() % areas.length;
+      const areaKey = areas[areaIndex];
+
+      const weatherList = areaHarborWeather[areaKey] || areaHarborWeather.harbor;
+      const weatherIndex = today.getDate() % weatherList.length;
+
+      return weatherList[weatherIndex];
+    }
+
+    async function applyHarborWeather(){
+      const openedAreas = await loadUnlockedSeaAreas();
+      const weather = pickWeatherFromAreas(openedAreas);
+
+      document.getElementById("weatherMain").textContent = weather.main;
+      document.getElementById("weatherSub").textContent = weather.sub;
+      document.getElementById("weatherSea").textContent = weather.sea;
+      document.getElementById("weatherLight").textContent = weather.light;
+    }
+
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
 
@@ -1265,6 +1375,7 @@
         updateAuthUI();
 
         await ensureUserVessel();
+        await applyHarborWeather();
         await loadLogs();
       }else{
         window.location.replace("/");
@@ -1596,6 +1707,7 @@
         updateCharCount();
         showAllLogs = false;
 
+        await applyHarborWeather();
         await loadLogs();
 
       }catch(error){
@@ -1797,6 +1909,7 @@
         updateAuthUI();
 
         await ensureUserVessel();
+        await applyHarborWeather();
         await loadLogs();
       }else if(event === "SIGNED_OUT"){
         currentUser = null;
@@ -1805,7 +1918,6 @@
       }
     });
 
-    applyHarborWeather();
     setPlaceholder();
     updateCharCount();
     updateAuthUI();
