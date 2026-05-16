@@ -73,6 +73,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -80,6 +81,15 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -345,6 +355,11 @@
       transform:translateY(-1px);
     }
 
+    .image-box:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:3px;
+    }
+
     .image-box img{
       width:100%;
       height:100%;
@@ -436,13 +451,16 @@
 
     .image-modal-inner{
       position:relative;
-      width:min(720px, 100%);
+      width:min(760px, 100%);
       max-height:88vh;
       border-radius:24px;
       border:1px solid rgba(169,183,255,.28);
-      background:rgba(10,14,28,.92);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 38%),
+        rgba(10,14,28,.94);
       box-shadow:0 28px 80px rgba(0,0,0,.58);
-      padding:22px;
+      padding:26px;
+      overflow:auto;
     }
 
     .image-modal-close{
@@ -459,6 +477,7 @@
       line-height:1;
       cursor:pointer;
       padding:0;
+      z-index:2;
     }
 
     .image-modal-close:hover{
@@ -536,6 +555,16 @@
         padding:20px;
       }
 
+      .actions{
+        gap:10px;
+      }
+
+      .btn-ghost,
+      .btn-primary,
+      button{
+        width:100%;
+      }
+
       .area-status-group{
         align-items:flex-start;
       }
@@ -551,12 +580,24 @@
       }
 
       .image-modal{
-        padding:16px;
+        align-items:flex-start;
+        padding:14px;
+        overflow:auto;
       }
 
       .image-modal-inner{
-        padding:18px;
+        padding:16px;
         border-radius:20px;
+        max-height:none;
+        margin:24px 0;
+      }
+
+      .image-modal-img-wrap{
+        max-height:58vh;
+      }
+
+      .image-modal-img{
+        max-height:58vh;
       }
     }
   </style>
@@ -575,6 +616,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -597,7 +639,6 @@
         </div>
 
         <div class="actions">
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/vessels/">Vesselsへ</a>
           <a class="btn-ghost" href="/map/">Mapへ</a>
@@ -660,7 +701,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
     const harborFindsEl = document.getElementById("harborFinds");
 
     const imageModal = document.getElementById("imageModal");
@@ -1076,6 +1117,7 @@
       imageModalCaption.textContent = label || "";
       imageModal.classList.add("visible");
       imageModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
     }
 
     function closeImageModal(){
@@ -1088,6 +1130,7 @@
       imageModalImg.src = "";
       imageModalImg.alt = "";
       imageModalCaption.textContent = "";
+      document.body.style.overflow = "";
     }
 
     async function logout(){
@@ -1107,7 +1150,10 @@
       window.location.replace("/");
     }
 
-    logoutBtn.addEventListener("click", logout);
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
 
     document.addEventListener("click", function(event){
       const imageBoxEl = event.target.closest("[data-image-src]");
