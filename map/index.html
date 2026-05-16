@@ -73,6 +73,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -80,6 +81,15 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -496,6 +506,7 @@
       background:rgba(10,14,28,.92);
       box-shadow:0 28px 80px rgba(0,0,0,.58);
       padding:22px;
+      overflow:auto;
     }
 
     .image-modal-close{
@@ -696,8 +707,8 @@
         z-index:1;
         display:grid;
         grid-template-columns:1fr;
-        gap:14px;
-        padding-top:56vw;
+        gap:16px;
+        padding-top:54vw;
       }
 
       .sea-card{
@@ -705,6 +716,19 @@
         left:auto !important;
         top:auto !important;
         width:100%;
+        padding:15px;
+      }
+
+      .sea-name{
+        font-size:17px;
+      }
+
+      .sea-desc{
+        font-size:13px;
+      }
+
+      .sea-atmosphere-text{
+        font-size:12px;
       }
     }
 
@@ -732,12 +756,24 @@
         padding:20px;
       }
 
+      .actions{
+        gap:10px;
+      }
+
+      .btn-ghost,
+      .btn-primary,
+      button{
+        width:100%;
+      }
+
       .chart-panel{
         border-radius:22px;
+        padding:16px;
       }
 
       .sea-grid{
-        padding-top:58vw;
+        padding-top:60vw;
+        gap:14px;
       }
 
       .chart-actions{
@@ -745,22 +781,57 @@
         margin:-6px 0 28px;
       }
 
+      .chart-zoom-button{
+        width:100%;
+        max-width:280px;
+      }
+
       .image-modal{
-        padding:16px;
+        align-items:flex-start;
+        padding:14px;
+        overflow:auto;
       }
 
       .image-modal-inner{
-        padding:18px;
+        padding:16px;
         border-radius:20px;
+        max-height:none;
+        margin:24px 0;
+      }
+
+      .image-modal-img-wrap{
+        max-height:58vh;
+      }
+
+      .image-modal-img{
+        max-height:58vh;
       }
 
       .fog-card{
-        min-height:280px;
-        padding:24px;
+        min-height:260px;
+        padding:24px 18px;
       }
 
       .fog-card-title{
         font-size:21px;
+      }
+    }
+
+    @media(max-width:420px){
+      .sea-grid{
+        padding-top:66vw;
+      }
+
+      .sea-card{
+        padding:14px;
+      }
+
+      .sea-name{
+        font-size:16px;
+      }
+
+      .sea-atmosphere{
+        padding:9px 10px;
       }
     }
   </style>
@@ -779,6 +850,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -802,7 +874,6 @@
         </div>
 
         <div class="actions">
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/vessels/">Vesselsへ</a>
           <a class="btn-ghost" href="/items/">Itemsへ</a>
@@ -869,7 +940,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
     const mapArea = document.getElementById("mapArea");
     const chartZoomButton = document.getElementById("chartZoomButton");
 
@@ -1395,7 +1466,10 @@
       window.location.replace("/");
     }
 
-    logoutBtn.addEventListener("click", logout);
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
 
     if(chartZoomButton){
       chartZoomButton.addEventListener("click", function(){
