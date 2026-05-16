@@ -1105,9 +1105,9 @@
       if(!harborFindState || !harborFindMain || !harborFindSub){
         return;
       }
-
+    
       harborFindState.className = "harbor-find-state";
-
+    
       if(state === "found"){
         harborFindState.textContent = "Found";
         harborFindState.classList.add("found");
@@ -1118,9 +1118,45 @@
         harborFindState.textContent = "Quiet";
         harborFindState.classList.add("quiet");
       }
-
+    
       harborFindMain.textContent = main || "";
       harborFindSub.textContent = sub || "";
+    
+      const card =
+        harborFindState.closest(".harbor-find-card") ||
+        harborFindState.closest(".cat-scroll-card") ||
+        harborFindState.closest(".notice-card") ||
+        harborFindState.closest(".card") ||
+        harborFindState.parentElement?.parentElement ||
+        harborFindState.parentElement;
+    
+      if(!card){
+        return;
+      }
+    
+      card.style.cursor = "pointer";
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+    
+      card.onclick = () => {
+        openLogRewardDetailModal({
+          type: "harbor_find",
+          label: "HARBOR FIND",
+          title: state === "found"
+            ? "港に届いた漂着物"
+            : "HARBOR FIND",
+          status: state || "quiet",
+          main: main || "",
+          sub: sub || ""
+        });
+      };
+    
+      card.onkeydown = (event) => {
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          card.click();
+        }
+      };
     }
 
     function resetHarborFindDisplay(){
