@@ -389,6 +389,48 @@ Legacy ページの扱いを整理した。
 
 ただし、検索流入させるページではないため noindex, nofollow とする。
 
+チケット利用時の漂着物取得ルール
+完了
+
+Drift Ticket / Special Voyage Ticket / Deep Sea Ticket 利用時の漂着物取得ルールを定義した。
+
+仕様
+Drift Ticket
+  最大取得数：1個
+  取得は確定ではない
+  無料で少し深い海を試すための短い航海
+
+Special Voyage Ticket 10分
+  最大取得数：1個
+  取得は確定ではない
+  通常の Voyage Log より、漂着物が届きやすい
+
+Special Voyage Ticket 20分
+  最大取得数：2個
+  1個目も確定ではない
+  2個目は低確率
+  10分チケットより、少しだけ深く届きやすい
+
+Deep Sea Ticket
+  最大取得数：2個
+  取得は確定ではない
+  深海系アイテムの抽選率を高める
+  2個目も確定ではない
+共通方針
+
+チケットは、漂着物の取得を保証するものではない。
+ただし、通常の Voyage Log よりも、漂着物が届く気配を強める。
+
+報酬を確定させるための仕組みではなく、
+少し深い海へ降りることで、届く可能性が変わる仕組みとして扱う。
+
+意図
+
+チケットに価値を持たせつつ、報酬ゲームのように見せすぎないため。
+
+Deep Sea Ticket は、単に取得数を増やすためのものではなく、
+深い海域に属する漂着物が選ばれやすくなるチケットとして扱う。
+
 2026-05-17 時点の主要完成状態
 /log/
   航海記録、Harbor Cat、Harbor Find、Drift Ticket、海域連動Weather
@@ -439,13 +481,14 @@ Legacy ページの扱いを整理した。
 今後の候補
 /special-voyage/ の実機動作確認
 全内部ページのヘッダー実機確認
+チケット利用時の Harbor Find 実装
+Deep Sea Ticket 挙動実装
 DB schema backup 作成
 README / CHECKLIST の更新反映
 robots.txt / sitemap.xml の最終確認
 /map/ のスマホ表示微調整
 /vessels/ の船詳細モーダルの見た目調整
 船取得Timelineの演出強化
-Deep Sea Ticket の実際の挙動実装
 有料 Special Voyage Ticket 実装
 development changelog の継続更新
 optional sound の再検討
