@@ -1356,7 +1356,14 @@
         specialReplyText.textContent = data.reply;
         specialReply.style.display = "block";
 
-        renderHarborFindNotice(data.harbor_find);
+        renderHarborFindNotice(data.harbor_find);renderHarborFindNotice({
+          harbor_find: data.harbor_find,
+          found_items: data.found_items || [],
+          find_rolls: data.find_rolls || [],
+          grant_results: data.grant_results || [],
+          ticket_rule: data.ticket_rule,
+          reused_existing_rolls: data.reused_existing_rolls
+        });
 
         specialMessage.value = "";
         updateSpecialCount();
