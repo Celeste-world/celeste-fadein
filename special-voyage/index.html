@@ -679,6 +679,20 @@
       return type || "Voyage Ticket";
     }
 
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+    
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
     function ticketCardClass(type){
       const normalized = normalizeTicketType(type);
 
@@ -798,7 +812,7 @@
 
         document.body.classList.remove("auth-locked");
 
-        userStatus.textContent = "ログイン中：" + currentUser.email;
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("航海券を確認しています。");
 
         const hasActiveSession = await loadActiveSession();
@@ -1195,7 +1209,7 @@
 
         document.body.classList.remove("auth-locked");
 
-        userStatus.textContent = "ログイン中：" + currentUser.email;
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
 
         loadActiveSession().then(function(hasActiveSession){
           if(!hasActiveSession){
