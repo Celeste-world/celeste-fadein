@@ -257,7 +257,7 @@
 
     .sea-card{
       position:absolute;
-      width:clamp(150px, 18vw, 230px);
+      width:clamp(160px, 19vw, 245px);
       min-height:auto;
       border-radius:16px;
       padding:12px 14px;
@@ -382,6 +382,49 @@
     }
 
     .sea-card.locked .sea-desc{
+      color:#7f8799;
+    }
+
+    .sea-atmosphere{
+      position:relative;
+      z-index:1;
+      margin:4px 0 12px;
+      padding:10px 11px;
+      border-radius:12px;
+      border:1px solid rgba(169,183,255,.16);
+      background:rgba(255,255,255,.022);
+    }
+
+    .sea-atmosphere-label{
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:4px;
+    }
+
+    .sea-atmosphere-text{
+      font-size:11px;
+      line-height:1.75;
+      color:var(--muted);
+    }
+
+    .sea-card.open .sea-atmosphere{
+      border-color:rgba(185,246,202,.20);
+      background:rgba(185,246,202,.035);
+    }
+
+    .sea-card.open .sea-atmosphere-label{
+      color:rgba(185,246,202,.82);
+    }
+
+    .sea-card.locked .sea-atmosphere{
+      border-color:rgba(111,118,137,.18);
+      background:rgba(255,255,255,.014);
+    }
+
+    .sea-card.locked .sea-atmosphere-label,
+    .sea-card.locked .sea-atmosphere-text{
       color:#7f8799;
     }
 
@@ -805,6 +848,16 @@
       }
     ];
 
+    const areaAtmospheres = {
+      harbor: "木片、古い道具、浅瀬に残る小さな漂着物の気配。",
+      silent_water: "低い波、静かな水面、港の外へ出るための軽い素材の気配。",
+      lighthouse_coast: "遠い光、古い金具、方角を思い出させるものの気配。",
+      fog_sea: "白い霧、湿った布、見えない流れと羅針盤の影。",
+      moonlit_sea: "月光、銀色の水面、静かに進むための印。",
+      deep_current: "重い素材、深い潮、沈まないためのものの気配。",
+      unnamed_waters: "海図の外側、まだ名のない漂着物、遠い光の気配。"
+    };
+
     const positionClasses = [
       "pos-harbor",
       "pos-tide",
@@ -1028,6 +1081,14 @@
       return key === "harbor";
     }
 
+    function areaAtmosphereText(areaKey, open){
+      if(!open){
+        return "まだ霧の向こうにあります。";
+      }
+
+      return areaAtmospheres[areaKey] || "まだ名前のない気配が、海の上に残っています。";
+    }
+
     function renderSeaChart(rawAreas, unlockedMap){
       const normalized = rawAreas
         .map((area, index) => normalizeArea(area, index))
@@ -1061,6 +1122,8 @@
           ? "開放中"
           : "未開放";
 
+        const atmosphereText = areaAtmosphereText(area.area_key, open);
+
         return `
           <article class="sea-card ${stateClass} ${positionClass}">
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
@@ -1072,6 +1135,13 @@
             <p class="sea-desc">
               ${escapeHtml(displayDesc)}
             </p>
+
+            <div class="sea-atmosphere">
+              <div class="sea-atmosphere-label">気配</div>
+              <div class="sea-atmosphere-text">
+                ${escapeHtml(atmosphereText)}
+              </div>
+            </div>
 
             <div class="sea-meta">
               <span class="tag ${stateClass}">
