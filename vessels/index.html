@@ -303,7 +303,8 @@
       margin:0 0 10px;
     }
 
-    .cabin-box{
+    .cabin-box,
+    .opened-sea-box{
       margin-top:18px;
       padding:16px;
       border-radius:16px;
@@ -311,11 +312,53 @@
       border:1px solid rgba(160,168,187,.18);
     }
 
-    .cabin-title{
+    .opened-sea-box{
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 44%),
+        rgba(255,255,255,.025);
+      border-color:rgba(185,246,202,.22);
+    }
+
+    .cabin-title,
+    .opened-sea-label{
       font-size:13px;
       color:var(--accent);
       letter-spacing:.12em;
       margin-bottom:8px;
+    }
+
+    .opened-sea-label{
+      color:var(--ready);
+    }
+
+    .opened-sea-name{
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+
+    .opened-sea-desc{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .opened-sea-link{
+      display:inline-flex;
+      margin-top:12px;
+      font-size:12px;
+      color:var(--ready);
+      border:1px solid rgba(185,246,202,.28);
+      border-radius:999px;
+      padding:6px 12px;
+      background:rgba(185,246,202,.05);
+    }
+
+    .opened-sea-link:hover{
+      color:var(--text);
+      border-color:rgba(185,246,202,.45);
     }
 
     .next-box{
@@ -522,6 +565,38 @@
       line-height:1.9;
       color:var(--muted);
       margin:0;
+    }
+
+    .collection-sea{
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid rgba(185,246,202,.18);
+      background:rgba(185,246,202,.035);
+    }
+
+    .collection-sea-label{
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--ready);
+      margin-bottom:5px;
+    }
+
+    .collection-sea-name{
+      font-size:13px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    .collection-card.locked .collection-sea{
+      border-color:rgba(111,118,137,.18);
+      background:rgba(255,255,255,.012);
+    }
+
+    .collection-card.locked .collection-sea-label,
+    .collection-card.locked .collection-sea-name{
+      color:var(--fog);
     }
 
     .collection-meta{
@@ -755,7 +830,7 @@
 
         <p class="note">
           船は、航海記録と漂着物によって少しずつ整っていきます。<br>
-          ここは進行状況の画面であり、同時に船の成長記録でもあります。
+          船が整うたびに、港の外にある海も少しずつ開いていきます。
         </p>
       </section>
     </main>
@@ -810,6 +885,7 @@
 
     let currentUser = null;
     let currentAccessToken = null;
+    let seaAreasCache = [];
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -998,13 +1074,19 @@
           }
         );
 
+        const seaAreas = await fetchSupabase(
+          "/rest/v1/sea_areas?select=*&order=sort_order.asc"
+        );
+
+        seaAreasCache = Array.isArray(seaAreas) ? seaAreas : [];
+
         const vessel = Array.isArray(vesselRows) ? vesselRows[0] : null;
         const requirements = Array.isArray(requirementRows) ? requirementRows : [];
         const collection = collectionResult && Array.isArray(collectionResult.vessels)
           ? collectionResult.vessels
           : [];
 
-        renderVessel(vessel, requirements, collection);
+        renderVessel(vessel, requirements, collection, seaAreasCache);
         setStatus("船室を確認しました。");
       }catch(error){
         console.error("load vessel display error:", error);
@@ -1020,7 +1102,123 @@
       }
     }
 
-    function renderVessel(vessel, requirements, collection){
+    function stageNumber(row){
+      const value =
+        row?.stage_order ||
+        row?.unlock_order ||
+        row?.stage ||
+        row?.vessel_stage ||
+        row?.order_index ||
+        row?.sort_order ||
+        null;
+
+      const number = Number(value);
+
+      return Number.isFinite(number) && number > 0
+        ? number
+        : null;
+    }
+
+    function seaAreaForStage(stage, seaAreas){
+      if(!stage || !Array.isArray(seaAreas) || seaAreas.length === 0){
+        return null;
+      }
+
+      const sorted = seaAreas
+        .slice()
+        .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+
+      return sorted[stage - 1] || null;
+    }
+
+    function seaAreaName(area){
+      if(!area){
+        return "まだ海域は開きません";
+      }
+
+      return area.name_ja || area.title_ja || area.name || area.area_key || "名前のない海域";
+    }
+
+    function seaAreaDescription(area){
+      if(!area){
+        return "この船では、新しい海域は開きません。けれど航海の記録として、港に残ります。";
+      }
+
+      return area.description || area.description_ja || area.body || "";
+    }
+
+    function seaAreaBox(stage, seaAreas, options = {}){
+      const area = seaAreaForStage(stage, seaAreas);
+      const label = options.label || "Opened Sea";
+      const linkText = options.linkText || "海図で確認する";
+
+      return `
+        <div class="opened-sea-box">
+          <div class="opened-sea-label">${escapeHtml(label)}</div>
+          <div class="opened-sea-name">${escapeHtml(seaAreaName(area))}</div>
+          <p class="opened-sea-desc">
+            ${escapeHtml(seaAreaDescription(area))}
+          </p>
+          ${
+            area
+              ? `
+                <a class="opened-sea-link" href="/map/">
+                  ${escapeHtml(linkText)}
+                </a>
+              `
+              : ""
+          }
+        </div>
+      `;
+    }
+
+    function collectionSeaBox(row, owned, seaAreas){
+      const stage = stageNumber(row);
+      const area = seaAreaForStage(stage, seaAreas);
+
+      if(!owned){
+        return `
+          <div class="collection-sea">
+            <div class="collection-sea-label">Sea</div>
+            <div class="collection-sea-name">
+              この船が開く海域は、まだ霧の向こうにあります。
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="collection-sea">
+          <div class="collection-sea-label">Opened Sea</div>
+          <div class="collection-sea-name">
+            ${escapeHtml(seaAreaName(area))}
+          </div>
+        </div>
+      `;
+    }
+
+    function nextVesselStage(requirements, currentVessel){
+      const first = Array.isArray(requirements) && requirements.length > 0
+        ? requirements[0]
+        : null;
+
+      const fromRequirement =
+        first?.next_vessel_stage_order ||
+        first?.next_vessel_unlock_order ||
+        first?.next_stage_order ||
+        first?.next_unlock_order ||
+        null;
+
+      if(fromRequirement){
+        return Number(fromRequirement);
+      }
+
+      const currentStage = stageNumber(currentVessel);
+
+      return currentStage ? currentStage + 1 : null;
+    }
+
+    function renderVessel(vessel, requirements, collection, seaAreas){
       if(!vessel){
         vesselEl.innerHTML = `
           <div class="empty">
@@ -1031,6 +1229,7 @@
       }
 
       const vesselStatus = vessel.status === "owned" ? "航海可能" : vessel.status;
+      const currentStage = stageNumber(vessel);
 
       let nextHtml = "";
 
@@ -1038,6 +1237,7 @@
         const nextName = requirements[0].next_vessel_name_ja || "次の船";
         const nextDescription = requirements[0].next_vessel_description || "";
         const nextImagePath = requirements[0].next_vessel_image_path || "";
+        const nextStage = nextVesselStage(requirements, vessel);
 
         const itemsHtml = requirements.map(item => {
           const readyClass = item.is_ready ? " ready" : "";
@@ -1074,6 +1274,11 @@
                 </p>
               </div>
             </div>
+
+            ${seaAreaBox(nextStage, seaAreas, {
+              label: "この船で開く海域",
+              linkText: "海図を見る"
+            })}
 
             <div class="requirements">
               ${itemsHtml}
@@ -1130,6 +1335,11 @@
                 </p>
               </div>
 
+              ${seaAreaBox(currentStage, seaAreas, {
+                label: "この船で開いた海域",
+                linkText: "海図で確認する"
+              })}
+
               <div class="ticket-meta">
                 <span class="tag">My Vessel</span>
                 <span class="tag current">${vessel.is_current ? "Current" : "Owned"}</span>
@@ -1140,7 +1350,7 @@
           ${nextHtml}
         </div>
 
-        ${renderVesselCollection(collection)}
+        ${renderVesselCollection(collection, seaAreas)}
       `;
     }
 
@@ -1148,7 +1358,7 @@
       return value === true || value === "true" || value === 1 || value === "1";
     }
 
-    function renderVesselCollection(collection){
+    function renderVesselCollection(collection, seaAreas){
       if(!collection || collection.length === 0){
         return `
           <div class="collection-panel">
@@ -1229,6 +1439,8 @@
                   `
                   : ""
               }
+
+              ${collectionSeaBox(row, owned, seaAreas)}
 
               <div class="collection-meta">
                 <span class="${statusClass}">
