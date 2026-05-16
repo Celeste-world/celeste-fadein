@@ -425,6 +425,36 @@
       line-height:2.05;
     }
 
+    .special-find{
+      display:none;
+      margin-top:18px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(185,246,202,.26);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.065), transparent 42%),
+        rgba(255,255,255,.022);
+    }
+
+    .special-find.visible{
+      display:block;
+    }
+
+    .special-find-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--ready);
+      margin-bottom:10px;
+    }
+
+    .special-find-text{
+      white-space:pre-wrap;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.95;
+    }
+
     .note{
       max-width:760px;
       font-size:13px;
@@ -487,6 +517,16 @@
         flex-direction:column;
         align-items:flex-start;
       }
+
+      .actions{
+        gap:10px;
+      }
+
+      .btn-ghost,
+      .btn-primary,
+      button{
+        width:100%;
+      }
     }
   </style>
 </head>
@@ -503,6 +543,7 @@
         <a href="/items/">Items</a>
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -616,6 +657,11 @@
           <div class="special-reply" id="specialReply" style="display:none;">
             <div class="special-reply-label">Special Voyage</div>
             <div class="special-reply-text" id="specialReplyText"></div>
+
+            <div class="special-find" id="specialFind">
+              <div class="special-find-label">漂着の気配</div>
+              <div class="special-find-text" id="specialFindText"></div>
+            </div>
           </div>
         </div>
 
@@ -635,6 +681,7 @@
         <a href="/items/">Items</a>
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
         <a href="/account/">Account</a>
       </div>
 
@@ -673,6 +720,8 @@
     const sendSpecialBtn = document.getElementById("sendSpecialBtn");
     const specialReply = document.getElementById("specialReply");
     const specialReplyText = document.getElementById("specialReplyText");
+    const specialFind = document.getElementById("specialFind");
+    const specialFindText = document.getElementById("specialFindText");
 
     const maxSpecialLength = 2000;
 
@@ -862,6 +911,47 @@
       voyageBenefitList.innerHTML = content.benefits
         .map(item => `<li>${escapeHtml(item)}</li>`)
         .join("");
+    }
+
+    function extractHarborFindNotices(harborFind){
+      if(!harborFind){
+        return [];
+      }
+
+      if(Array.isArray(harborFind.notices)){
+        return harborFind.notices
+          .map(item => String(item || "").trim())
+          .filter(Boolean);
+      }
+
+      const rolls = Array.isArray(harborFind.rolls)
+        ? harborFind.rolls
+        : [];
+
+      return rolls
+        .filter(row => row && row.found === true)
+        .map(row => {
+          const result = row.result || {};
+          return String(result.message || "").trim();
+        })
+        .filter(Boolean);
+    }
+
+    function renderHarborFindNotice(harborFind){
+      if(!specialFind || !specialFindText){
+        return;
+      }
+
+      const notices = extractHarborFindNotices(harborFind);
+
+      if(!notices.length){
+        specialFind.classList.remove("visible");
+        specialFindText.textContent = "";
+        return;
+      }
+
+      specialFindText.textContent = notices.join("\n\n");
+      specialFind.classList.add("visible");
     }
 
     async function checkSession(){
@@ -1152,6 +1242,11 @@
           specialReplyText.textContent =
             "この航海はここで閉じられました。\n8秒後に、Voyage Log へ戻ります。";
 
+          if(specialFind && specialFindText){
+            specialFind.classList.remove("visible");
+            specialFindText.textContent = "";
+          }
+
           setStatus("航海の時間が終了しました。Voyage Logへ戻ります。");
 
           expireActiveSession();
@@ -1244,10 +1339,18 @@
         specialReplyText.textContent = data.reply;
         specialReply.style.display = "block";
 
+        renderHarborFindNotice(data.harbor_find);
+
         specialMessage.value = "";
         updateSpecialCount();
 
-        setStatus("航海記録を残しました。");
+        const notices = extractHarborFindNotices(data.harbor_find);
+
+        if(notices.length){
+          setStatus("航海記録を残しました。港に漂着の気配があります。");
+        }else{
+          setStatus("航海記録を残しました。");
+        }
 
       }catch(error){
         console.error("sendSpecialVoyageMessage catch:", error);
