@@ -225,6 +225,13 @@
       margin:0;
     }
 
+    .area-status-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+    }
+
     .area-status{
       font-size:12px;
       color:var(--accent);
@@ -234,10 +241,55 @@
       background:rgba(169,183,255,.06);
     }
 
+    .area-progress{
+      font-size:12px;
+      color:var(--ready);
+      border:1px solid rgba(185,246,202,.32);
+      border-radius:999px;
+      padding:5px 11px;
+      background:rgba(185,246,202,.055);
+      white-space:nowrap;
+    }
+
+    .area-progress.empty-progress{
+      color:var(--muted);
+      border-color:rgba(160,168,187,.25);
+      background:rgba(255,255,255,.02);
+    }
+
     .area-section.locked .area-title,
     .area-section.locked .area-kicker,
     .area-section.locked .area-desc{
       color:#7f8799;
+    }
+
+    .area-section.locked .area-status,
+    .area-section.locked .area-progress{
+      color:#8b92a3;
+      border-color:rgba(139,146,163,.22);
+      background:rgba(255,255,255,.015);
+    }
+
+    .progress-bar{
+      width:100%;
+      height:7px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(160,168,187,.14);
+      margin:4px 0 16px;
+    }
+
+    .progress-bar-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(185,246,202,.82), rgba(169,183,255,.72));
+      transition:width .25s ease;
+    }
+
+    .area-section.locked .progress-bar-fill{
+      background:rgba(111,118,137,.34);
     }
 
     .area-empty{
@@ -484,6 +536,10 @@
         padding:20px;
       }
 
+      .area-status-group{
+        align-items:flex-start;
+      }
+
       .find-item{
         grid-template-columns:1fr;
       }
@@ -558,8 +614,8 @@
         </div>
 
         <p class="note">
-          未発見のものは表示されません。<br>
-          未開放の海域は、まだ霧の向こうにあります。
+          未発見のものは名前を表示しません。<br>
+          発見数だけが、海域ごとに静かに積もっていきます。
         </p>
       </section>
     </main>
@@ -822,6 +878,24 @@
       return map;
     }
 
+    function buildPoolCountMap(pools){
+      const map = new Map();
+
+      (pools || []).forEach(row => {
+        if(!row.area_key || !row.item_key){
+          return;
+        }
+
+        if(!map.has(row.area_key)){
+          map.set(row.area_key, new Set());
+        }
+
+        map.get(row.area_key).add(row.item_key);
+      });
+
+      return map;
+    }
+
     function areaIsOpen(areaKey, openMap){
       if(openMap.has(areaKey)){
         const status = String(openMap.get(areaKey));
@@ -831,9 +905,26 @@
       return areaKey === "harbor";
     }
 
+    function areaProgressText(foundCount, totalCount){
+      if(!totalCount){
+        return `発見済み ${foundCount}`;
+      }
+
+      return `発見済み ${foundCount} / ${totalCount}`;
+    }
+
+    function areaProgressPercent(foundCount, totalCount){
+      if(!totalCount){
+        return foundCount > 0 ? 100 : 0;
+      }
+
+      return Math.max(0, Math.min(100, Math.round((foundCount / totalCount) * 100)));
+    }
+
     function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
       const openMap = buildOpenAreaMap(userAreas);
       const itemAreaMap = buildItemAreaMap(pools);
+      const poolCountMap = buildPoolCountMap(pools);
 
       const areas = (seaAreas || [])
         .slice()
@@ -868,6 +959,20 @@
         const areaKey = area.area_key || area.key || area.id;
         const open = areaIsOpen(areaKey, openMap);
         const areaItems = grouped.get(areaKey) || [];
+        const totalCount = poolCountMap.has(areaKey)
+          ? poolCountMap.get(areaKey).size
+          : 0;
+
+        const foundItemKeys = new Set(
+          areaItems
+            .map(item => item.item_key || item.harbor_item_key || item.id)
+            .filter(Boolean)
+        );
+
+        const foundCount = foundItemKeys.size || areaItems.length;
+        const progressText = areaProgressText(foundCount, totalCount);
+        const progressPercent = areaProgressPercent(foundCount, totalCount);
+        const progressClass = foundCount > 0 ? "area-progress" : "area-progress empty-progress";
 
         if(!open){
           return `
@@ -881,9 +986,18 @@
                   </p>
                 </div>
 
-                <div class="area-status">
-                  未開放
+                <div class="area-status-group">
+                  <div class="area-status">
+                    未開放
+                  </div>
+                  <div class="${progressClass}">
+                    ${escapeHtml(progressText)}
+                  </div>
                 </div>
+              </div>
+
+              <div class="progress-bar" aria-hidden="true">
+                <div class="progress-bar-fill" style="width:${escapeHtml(progressPercent)}%;"></div>
               </div>
             </section>
           `;
@@ -928,9 +1042,18 @@
                 </p>
               </div>
 
-              <div class="area-status">
-                開放中
+              <div class="area-status-group">
+                <div class="area-status">
+                  開放中
+                </div>
+                <div class="${progressClass}">
+                  ${escapeHtml(progressText)}
+                </div>
               </div>
+            </div>
+
+            <div class="progress-bar" aria-hidden="true">
+              <div class="progress-bar-fill" style="width:${escapeHtml(progressPercent)}%;"></div>
             </div>
 
             <div class="finds-grid">
