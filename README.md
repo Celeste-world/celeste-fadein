@@ -1,3 +1,4 @@
+README.md
 # Celeste Harbor
 
 Celeste Harbor は、航海の記録を残し、小さな気配を受け取り、漂着物を集め、船を整え、新しい海域を開いていくための静かなWebの港です。
