@@ -1152,8 +1152,13 @@
       driftTicketMain.textContent = main || "";
       driftTicketSub.textContent = sub || "";
     
-      const card = driftTicketState.closest(".cat-scroll-card") ||
+      const card =
+        driftTicketState.closest(".drift-ticket-card") ||
+        driftTicketState.closest(".cat-scroll-card") ||
+        driftTicketState.closest(".harbor-find-card") ||
+        driftTicketState.closest(".notice-card") ||
         driftTicketState.closest(".card") ||
+        driftTicketState.parentElement?.parentElement ||
         driftTicketState.parentElement;
     
       if(!card){
