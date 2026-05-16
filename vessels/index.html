@@ -75,13 +75,8 @@
       flex-wrap:wrap;
     }
 
-    .nav a{
-      color:var(--muted);
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
+    .nav a{ color:var(--muted); }
+    .nav a:hover{ color:var(--text); }
 
     main{ flex:1; }
 
@@ -192,9 +187,7 @@
       min-height:1.8em;
     }
 
-    .status.error{
-      color:var(--danger);
-    }
+    .status.error{ color:var(--danger); }
 
     .section-title{
       font-size:20px;
@@ -266,13 +259,8 @@
       text-align:center;
     }
 
-    .image-box.image-missing .image-fallback{
-      display:block;
-    }
-
-    .image-box.image-missing{
-      cursor:default;
-    }
+    .image-box.image-missing .image-fallback{ display:block; }
+    .image-box.image-missing{ cursor:default; }
 
     .vessel-top{
       display:flex;
@@ -336,9 +324,7 @@
       margin-bottom:8px;
     }
 
-    .opened-sea-label{
-      color:var(--ready);
-    }
+    .opened-sea-label{ color:var(--ready); }
 
     .opened-sea-name{
       font-size:15px;
@@ -506,9 +492,7 @@
       background:rgba(255,255,255,.015);
     }
 
-    .collection-panel{
-      margin-top:42px;
-    }
+    .collection-panel{ margin-top:42px; }
 
     .collection-panel .section-title{
       border-top:1px solid rgba(169,183,255,.18);
@@ -760,7 +744,8 @@
       font-size:14px;
       line-height:2;
       margin:0 0 16px;
-      white-space:pre-wrap;
+      white-space:normal;
+      text-align:left;
     }
 
     .detail-section{
@@ -802,7 +787,8 @@
       line-height:1.9;
       color:var(--muted);
       margin:0;
-      white-space:pre-wrap;
+      white-space:normal;
+      text-align:left;
     }
 
     .detail-meta{
@@ -1399,21 +1385,42 @@
       return currentStage ? currentStage + 1 : null;
     }
 
+    function optionValue(options, key, fallback){
+      return Object.prototype.hasOwnProperty.call(options, key)
+        ? options[key]
+        : fallback;
+    }
+
     function makeDetailFromVessel(row, options = {}){
-      const stage = options.stage || stageNumber(row);
-      const sea = seaAreaDetail(stage, options.seaAreas || seaAreasCache);
+      const stage = optionValue(options, "stage", stageNumber(row));
+      const sea = seaAreaDetail(stage, optionValue(options, "seaAreas", seaAreasCache));
+      const owned = optionValue(options, "owned", true);
+
+      const defaultTitle = owned
+        ? (row?.name_ja || row?.name_en || row?.vessel_key || "船")
+        : "霧の向こう";
+
+      const defaultDescription = owned
+        ? (row?.description || "")
+        : "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。";
 
       return {
-        title: options.title || row?.name_ja || row?.name_en || row?.vessel_key || "霧の向こう",
-        key: options.key || row?.vessel_key || "",
-        imagePath: options.imagePath || row?.image_path || "",
-        description: options.description || row?.description || "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。",
-        cabin: options.cabin || row?.cabin_description || "",
-        status: options.status || "",
+        title: optionValue(options, "title", defaultTitle),
+        key: optionValue(options, "key", owned ? (row?.vessel_key || "") : ""),
+        imagePath: optionValue(options, "imagePath", owned ? (row?.image_path || "") : ""),
+        description: optionValue(options, "description", defaultDescription),
+        cabin: optionValue(options, "cabin", owned ? (row?.cabin_description || "") : ""),
+        status: optionValue(options, "status", ""),
         stage: stage || "",
-        seaName: options.seaName || sea.name,
-        seaDescription: options.seaDescription || sea.description,
-        owned: options.owned !== undefined ? options.owned : true
+        seaName: optionValue(options, "seaName", owned ? sea.name : "霧の向こう"),
+        seaDescription: optionValue(
+          options,
+          "seaDescription",
+          owned
+            ? sea.description
+            : "この船が開く海域は、まだ霧の向こうにあります。"
+        ),
+        owned
       };
     }
 
@@ -1579,6 +1586,26 @@
       `;
     }
 
+    function detailButton(detail, label = "船の記録を開く"){
+      const id = registerVesselDetail(detail);
+
+      return `
+        <button
+          class="detail-button"
+          type="button"
+          data-vessel-detail-id="${escapeHtml(id)}"
+        >
+          ${escapeHtml(label)}
+        </button>
+      `;
+    }
+
+    function registerVesselDetail(detail){
+      const id = "vessel-detail-" + (++vesselDetailCounter);
+      vesselDetailStore.set(id, detail);
+      return id;
+    }
+
     function normalizeBoolean(value){
       return value === true || value === "true" || value === 1 || value === "1";
     }
@@ -1637,13 +1664,20 @@
 
         const detail = makeDetailFromVessel(row, {
           title: displayName,
+          key: owned ? (row.vessel_key || "") : "",
           description: displayDesc,
-          cabin: displayCabin,
-          imagePath: owned ? row.image_path : "",
+          cabin: owned ? displayCabin : "",
+          imagePath: owned ? (row.image_path || "") : "",
           seaAreas,
           stage: stageNumber(row),
           status: statusText,
-          owned
+          owned,
+          seaName: owned
+            ? seaAreaName(seaAreaForStage(stageNumber(row), seaAreas))
+            : "霧の向こう",
+          seaDescription: owned
+            ? seaAreaDescription(seaAreaForStage(stageNumber(row), seaAreas))
+            : "この船が開く海域は、まだ霧の向こうにあります。"
         });
 
         return `
@@ -1656,7 +1690,7 @@
               </div>
 
               <div class="collection-key">
-                ${escapeHtml(row.vessel_key || "")}
+                ${owned ? escapeHtml(row.vessel_key || "") : ""}
               </div>
 
               <p class="collection-desc">
@@ -1685,7 +1719,7 @@
                   ${escapeHtml(statusText)}
                 </span>
                 <span class="tag">
-                  Stage ${escapeHtml(row.stage_order || "")}
+                  ${owned ? "Stage " + escapeHtml(row.stage_order || "") : "Locked"}
                 </span>
               </div>
             </div>
@@ -1737,7 +1771,14 @@
 
       const imageHtml = detail.imagePath
         ? `<img src="${escapeHtml(detail.imagePath)}" alt="${escapeHtml(detail.title)}" loading="lazy">`
-        : `${escapeHtml(detail.title)}<br>image pending`;
+        : detail.owned === false
+          ? `
+            <div>
+              霧の向こう<br>
+              <span style="color:var(--dim);font-size:12px;">まだ輪郭は見えません</span>
+            </div>
+          `
+          : `${escapeHtml(detail.title)}<br>image pending`;
 
       detailModalContent.innerHTML = `
         <div class="detail-grid">
@@ -1786,7 +1827,7 @@
                   : ""
               }
               ${
-                detail.stage
+                detail.stage && detail.owned !== false
                   ? `<span class="tag">Stage ${escapeHtml(detail.stage)}</span>`
                   : ""
               }
