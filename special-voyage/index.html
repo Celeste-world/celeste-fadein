@@ -75,6 +75,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -82,6 +83,15 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -494,6 +504,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -521,7 +532,6 @@
         </div>
 
         <div class="actions">
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/account/">Accountへ</a>
           <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
@@ -582,7 +592,7 @@
             <textarea
               id="specialMessage"
               maxlength="2000"
-              placeholder="今、海に置きたい言葉を書く..."
+              placeholder="今、海に置きたい言葉を残す..."
             ></textarea>
 
             <div class="special-row">
@@ -594,7 +604,7 @@
 
             <div class="actions">
               <button class="primary" id="sendSpecialBtn" type="button">
-                送る
+                航海記録を残す
               </button>
 
               <a class="btn-ghost" href="/account/">
@@ -644,7 +654,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
     const ticketArea = document.getElementById("ticketArea");
 
     const voyageBox = document.getElementById("voyageBox");
@@ -1201,7 +1211,7 @@
       const message = specialMessage.value.trim();
 
       if(!message){
-        setStatus("海に置く言葉が空です。", true);
+        setStatus("海に残す言葉が空です。", true);
         return;
       }
 
@@ -1237,7 +1247,7 @@
         specialMessage.value = "";
         updateSpecialCount();
 
-        setStatus("航海から返答が届きました。");
+        setStatus("航海記録を残しました。");
 
       }catch(error){
         console.error("sendSpecialVoyageMessage catch:", error);
@@ -1247,7 +1257,10 @@
       }
     }
 
-    logoutBtn.addEventListener("click", logout);
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
 
     if(startVoyageBtn){
       startVoyageBtn.addEventListener("click", startSpecialVoyage);
