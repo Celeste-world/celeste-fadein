@@ -239,6 +239,46 @@
       margin:0 0 16px;
     }
 
+    .benefit-box{
+      margin-top:18px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.18);
+      background:rgba(255,255,255,.025);
+    }
+
+    .benefit-title{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .ticket.drift .benefit-title{
+      color:var(--ready);
+    }
+
+    .ticket.special .benefit-title{
+      color:var(--ticket);
+    }
+
+    .ticket.deep .benefit-title{
+      color:var(--deep);
+    }
+
+    .benefit-list{
+      margin:0;
+      padding-left:1.2em;
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
+    }
+
+    .benefit-list li{
+      margin:0 0 4px;
+    }
+
     .meta{
       display:flex;
       flex-wrap:wrap;
@@ -474,8 +514,9 @@
         </p>
 
         <p class="lead">
-          Harbor Cat は無料の短い気配です。<br>
-          チケットは、より深い航海へ一時的に入るためのものです。
+          チケットは、ただAIと話すためのものではありません。<br>
+          いつもの記録より深い航海に入り、漂着物が届く気配を強め、
+          船や海域の進行につながる可能性を広げるためのものです。
         </p>
       </section>
 
@@ -529,18 +570,27 @@
             <div class="ticket-kicker">Drift / Free Ticket</div>
             <h2>Drift Ticket（漂着チケット）</h2>
             <p>
-              小さな航海券が流れ着く夜があります。
-              それは、少しだけ深い海へ降りるための合図です。
+              港にたまたま流れ着く、無料の短い航海券です。
+              5分だけ、いつもの記録より少し深い海へ降りることができます。
             </p>
             <p>
-              Drift Ticket は、Voyage Log のあとに港へ届くことがあります。
-              販売のための強い導線ではなく、必要な夜にだけ届く小さな贈り物として扱います。
+              購入するものではなく、Voyage Log のあとに港へ届くことがあります。
+              「少しだけ試してみたい夜」のためのチケットです。
             </p>
+
+            <div class="benefit-box">
+              <div class="benefit-title">このチケットで変わること</div>
+              <ul class="benefit-list">
+                <li>5分だけ、少し深い海へ降りられる</li>
+                <li>通常の記録よりも、漂着物が届きやすくなる</li>
+                <li>無料で、深い航海の入口を試せる</li>
+              </ul>
+            </div>
+
             <div class="meta">
               <span class="tag ready">無料配布</span>
               <span class="tag">Voyage Log 後</span>
-              <span class="tag">5分程度</span>
-              <span class="tag">不定期</span>
+              <span class="tag">5分</span>
               <span class="tag">保持1枚まで</span>
             </div>
           </div>
@@ -550,21 +600,28 @@
           <div class="ticket-image">
             <img src="/images/tickets/special-voyage-ticket.svg" alt="Special Voyage Ticket" loading="lazy">
           </div>
-        
+
           <div>
             <div class="ticket-kicker">Paid / Special Voyage</div>
             <h2>Special Voyage Ticket（特別航海チケット）</h2>
             <p>
-              ユーザーが自分で選んで入る、時間制の特別航海です。
-              答えを急ぐためではなく、言葉を少し深く整えるための短い時間です。
-            </p>
-            <p>
-              Drift Ticket が港から届く小舟だとすれば、
-              Special Voyage Ticket は、自分で選んで出航するための航海券です。
+              自分で選んで入る、時間制の特別航海です。
+              考えや言葉を、通常の記録より少し深く整えるために使います。
             </p>
             <p>
               チケットは 10分 と 20分 の2種類です。
+              短い時間の中で、今の言葉を静かに整えるための航海です。
             </p>
+
+            <div class="benefit-box">
+              <div class="benefit-title">このチケットで変わること</div>
+              <ul class="benefit-list">
+                <li>10分 または 20分の特別航海に入れる</li>
+                <li>通常の記録よりも、漂着の気配がはっきり強まる</li>
+                <li>考えや言葉を、短い時間で静かに整えられる</li>
+              </ul>
+            </div>
+
             <div class="meta">
               <span class="tag">有料予定</span>
               <span class="tag">10分</span>
@@ -573,12 +630,12 @@
             </div>
           </div>
         </article>
-        
+
         <article class="ticket deep">
           <div class="ticket-image">
             <img src="/images/tickets/deep-sea-ticket.svg" alt="Deep Sea Ticket" loading="lazy">
           </div>
-        
+
           <div>
             <div class="ticket-kicker">Limited / Deep Sea</div>
             <h2>Deep Sea Ticket（深海チケット）</h2>
@@ -588,8 +645,18 @@
             </p>
             <p>
               すべての夜に必要なものではありません。
-              必要だと感じる時だけ、深い海への入口として開きます。
+              必要だと感じる時だけ開く、深い海への入口です。
             </p>
+
+            <div class="benefit-box">
+              <div class="benefit-title">このチケットで変わること</div>
+              <ul class="benefit-list">
+                <li>さらに深い海へ降りられる</li>
+                <li>漂着物が届く可能性がもっとも高まる</li>
+                <li>まだ言葉にならないものを、急がず扱いやすくなる</li>
+              </ul>
+            </div>
+
             <div class="meta">
               <span class="tag">限定</span>
               <span class="tag">深い航海</span>
@@ -601,23 +668,22 @@
       </section>
 
       <section class="flow">
-        <h2>位置関係</h2>
+        <h2>航海の深さ</h2>
 
         <p class="flow-line">
-          Harbor Cat<br>
+          Voyage Log<br>
           ↓<br>
-          Drift Ticket（漂着チケット）<br>
+          Drift Ticket（少しだけ深い海を試す）<br>
           ↓<br>
-          Special Voyage Ticket（特別航海チケット）<br>
+          Special Voyage Ticket（自分で選んで、言葉を整える）<br>
           ↓<br>
-          Deep Sea Ticket（深海チケット）
+          Deep Sea Ticket（さらに深い海へ降りる）
         </p>
 
         <p class="note">
-          Harbor Cat は日常の港です。<br>
-          Drift Ticket は、Voyage Log のあとに届くことがある無料の小舟です。<br>
-          Special Voyage Ticket は、自分で選んで入る特別航海です。<br>
-          Deep Sea Ticket は、限定的に降りる深海です。
+          深い航海ほど、港に何かが流れ着く気配も強くなります。<br>
+          ただし、チケットは報酬を得るためだけのものではありません。<br>
+          自分の言葉と向き合う深さを選ぶための、小さな航海券です。
         </p>
 
         <div class="actions">
