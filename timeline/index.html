@@ -75,6 +75,7 @@
       display:flex;
       gap:18px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     .nav a{
@@ -82,6 +83,15 @@
     }
 
     .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
       color:var(--text);
     }
 
@@ -435,6 +445,16 @@
         padding:20px;
       }
 
+      .actions{
+        gap:10px;
+      }
+
+      .btn-ghost,
+      .btn-primary,
+      button{
+        width:100%;
+      }
+
       .timeline-item{
         grid-template-columns:72px 1fr;
         gap:14px;
@@ -491,6 +511,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
 
@@ -514,7 +535,6 @@
         </div>
 
         <div class="actions">
-          <button class="ghost" id="logoutBtn">ログアウト</button>
           <a class="btn-ghost" href="/log/">Voyage Logへ</a>
           <a class="btn-ghost" href="/account/">Accountへ</a>
         </div>
@@ -568,7 +588,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutLink = document.getElementById("logoutLink");
     const timelineEl = document.getElementById("timeline");
     const readMoreWrap = document.getElementById("readMoreWrap");
     const readMoreBtn = document.getElementById("readMoreBtn");
@@ -1004,7 +1024,10 @@
       window.location.replace("/");
     }
 
-    logoutBtn.addEventListener("click", logout);
+    logoutLink.addEventListener("click", function(event){
+      event.preventDefault();
+      logout();
+    });
 
     if(readMoreBtn){
       readMoreBtn.addEventListener("click", function(){
