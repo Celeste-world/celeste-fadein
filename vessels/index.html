@@ -136,7 +136,8 @@
 
     button,
     .btn-primary,
-    .btn-ghost{
+    .btn-ghost,
+    .detail-button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -163,16 +164,24 @@
     }
 
     .ghost,
-    .btn-ghost{
+    .btn-ghost,
+    .detail-button{
       background:rgba(255,255,255,.02);
       color:var(--muted);
       border:1px solid var(--line);
     }
 
     .ghost:hover,
-    .btn-ghost:hover{
+    .btn-ghost:hover,
+    .detail-button:hover{
       border-color:rgba(169,183,255,.4);
       color:var(--text);
+    }
+
+    .detail-button{
+      padding:8px 14px;
+      font-size:12px;
+      margin-top:14px;
     }
 
     .status{
@@ -606,7 +615,8 @@
       margin-top:14px;
     }
 
-    .image-modal{
+    .image-modal,
+    .detail-modal{
       position:fixed;
       inset:0;
       z-index:80;
@@ -620,11 +630,13 @@
       backdrop-filter:blur(4px);
     }
 
-    .image-modal.visible{
+    .image-modal.visible,
+    .detail-modal.visible{
       display:flex;
     }
 
-    .image-modal-inner{
+    .image-modal-inner,
+    .detail-modal-inner{
       position:relative;
       width:min(760px, 100%);
       max-height:88vh;
@@ -633,9 +645,11 @@
       background:rgba(10,14,28,.92);
       box-shadow:0 28px 80px rgba(0,0,0,.58);
       padding:22px;
+      overflow:auto;
     }
 
-    .image-modal-close{
+    .image-modal-close,
+    .detail-modal-close{
       position:absolute;
       top:12px;
       right:12px;
@@ -649,9 +663,11 @@
       line-height:1;
       cursor:pointer;
       padding:0;
+      z-index:2;
     }
 
-    .image-modal-close:hover{
+    .image-modal-close:hover,
+    .detail-modal-close:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.48);
     }
@@ -682,6 +698,118 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.8;
+    }
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .detail-image{
+      width:100%;
+      aspect-ratio:1 / 1;
+      border-radius:22px;
+      border:1px solid rgba(169,183,255,.24);
+      background:
+        radial-gradient(circle at top,rgba(169,183,255,.14),rgba(255,255,255,.02) 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+      text-align:center;
+      font-size:13px;
+      line-height:1.7;
+      padding:16px;
+    }
+
+    .detail-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .detail-kicker{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    .detail-title{
+      font-size:24px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .detail-key{
+      font-size:12px;
+      color:var(--dim);
+      letter-spacing:.08em;
+      margin-bottom:14px;
+    }
+
+    .detail-desc{
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+      margin:0 0 16px;
+      white-space:pre-wrap;
+    }
+
+    .detail-section{
+      margin-top:16px;
+      padding:15px 16px;
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.18);
+      background:rgba(255,255,255,.025);
+    }
+
+    .detail-section.sea{
+      border-color:rgba(185,246,202,.24);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.055), transparent 44%),
+        rgba(255,255,255,.025);
+    }
+
+    .detail-section-label{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    .detail-section.sea .detail-section-label{
+      color:var(--ready);
+    }
+
+    .detail-section-title{
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:5px;
+    }
+
+    .detail-section-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+      white-space:pre-wrap;
+    }
+
+    .detail-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:16px;
     }
 
     .empty{
@@ -751,7 +879,8 @@
 
       .vessel-layout,
       .next-head,
-      .collection-card{
+      .collection-card,
+      .detail-grid{
         grid-template-columns:1fr;
       }
 
@@ -765,13 +894,19 @@
         flex-direction:column;
       }
 
-      .image-modal{
+      .image-modal,
+      .detail-modal{
         padding:16px;
       }
 
-      .image-modal-inner{
+      .image-modal-inner,
+      .detail-modal-inner{
         padding:18px;
         border-radius:20px;
+      }
+
+      .detail-image{
+        max-width:280px;
       }
     }
   </style>
@@ -864,6 +999,16 @@
     </div>
   </div>
 
+  <div class="detail-modal" id="detailModal" aria-hidden="true">
+    <div class="detail-modal-inner">
+      <button class="detail-modal-close" id="detailModalClose" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div id="detailModalContent"></div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -883,9 +1028,15 @@
     const imageModalCaption = document.getElementById("imageModalCaption");
     const imageModalClose = document.getElementById("imageModalClose");
 
+    const detailModal = document.getElementById("detailModal");
+    const detailModalClose = document.getElementById("detailModalClose");
+    const detailModalContent = document.getElementById("detailModalContent");
+
     let currentUser = null;
     let currentAccessToken = null;
     let seaAreasCache = [];
+    let vesselDetailStore = new Map();
+    let vesselDetailCounter = 0;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -951,6 +1102,26 @@
             image pending
           </span>
         </div>
+      `;
+    }
+
+    function registerVesselDetail(detail){
+      const id = "vessel-detail-" + (++vesselDetailCounter);
+      vesselDetailStore.set(id, detail);
+      return id;
+    }
+
+    function detailButton(detail, label = "船の記録を開く"){
+      const id = registerVesselDetail(detail);
+
+      return `
+        <button
+          class="detail-button"
+          type="button"
+          data-vessel-detail-id="${escapeHtml(id)}"
+        >
+          ${escapeHtml(label)}
+        </button>
       `;
     }
 
@@ -1147,6 +1318,16 @@
       return area.description || area.description_ja || area.body || "";
     }
 
+    function seaAreaDetail(stage, seaAreas){
+      const area = seaAreaForStage(stage, seaAreas);
+
+      return {
+        name: seaAreaName(area),
+        description: seaAreaDescription(area),
+        hasArea: Boolean(area)
+      };
+    }
+
     function seaAreaBox(stage, seaAreas, options = {}){
       const area = seaAreaForStage(stage, seaAreas);
       const label = options.label || "Opened Sea";
@@ -1218,7 +1399,28 @@
       return currentStage ? currentStage + 1 : null;
     }
 
+    function makeDetailFromVessel(row, options = {}){
+      const stage = options.stage || stageNumber(row);
+      const sea = seaAreaDetail(stage, options.seaAreas || seaAreasCache);
+
+      return {
+        title: options.title || row?.name_ja || row?.name_en || row?.vessel_key || "霧の向こう",
+        key: options.key || row?.vessel_key || "",
+        imagePath: options.imagePath || row?.image_path || "",
+        description: options.description || row?.description || "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。",
+        cabin: options.cabin || row?.cabin_description || "",
+        status: options.status || "",
+        stage: stage || "",
+        seaName: options.seaName || sea.name,
+        seaDescription: options.seaDescription || sea.description,
+        owned: options.owned !== undefined ? options.owned : true
+      };
+    }
+
     function renderVessel(vessel, requirements, collection, seaAreas){
+      vesselDetailStore = new Map();
+      vesselDetailCounter = 0;
+
       if(!vessel){
         vesselEl.innerHTML = `
           <div class="empty">
@@ -1231,6 +1433,13 @@
       const vesselStatus = vessel.status === "owned" ? "航海可能" : vessel.status;
       const currentStage = stageNumber(vessel);
 
+      const currentDetail = makeDetailFromVessel(vessel, {
+        seaAreas,
+        stage: currentStage,
+        status: vessel.is_current ? "Current" : "Owned",
+        owned: true
+      });
+
       let nextHtml = "";
 
       if(requirements && requirements.length > 0){
@@ -1238,6 +1447,18 @@
         const nextDescription = requirements[0].next_vessel_description || "";
         const nextImagePath = requirements[0].next_vessel_image_path || "";
         const nextStage = nextVesselStage(requirements, vessel);
+
+        const nextDetail = makeDetailFromVessel({}, {
+          title: nextName,
+          imagePath: nextImagePath,
+          description: nextDescription,
+          cabin: "",
+          key: "",
+          seaAreas,
+          stage: nextStage,
+          status: "Next",
+          owned: false
+        });
 
         const itemsHtml = requirements.map(item => {
           const readyClass = item.is_ready ? " ready" : "";
@@ -1272,6 +1493,8 @@
                 <p class="vessel-line">
                   ${escapeHtml(nextDescription)}
                 </p>
+
+                ${detailButton(nextDetail, "次の船の記録を見る")}
               </div>
             </div>
 
@@ -1339,6 +1562,8 @@
                 label: "この船で開いた海域",
                 linkText: "海図で確認する"
               })}
+
+              ${detailButton(currentDetail, "現在の船の記録を開く")}
 
               <div class="ticket-meta">
                 <span class="tag">My Vessel</span>
@@ -1410,6 +1635,17 @@
             ? "tag ready"
             : "tag fog";
 
+        const detail = makeDetailFromVessel(row, {
+          title: displayName,
+          description: displayDesc,
+          cabin: displayCabin,
+          imagePath: owned ? row.image_path : "",
+          seaAreas,
+          stage: stageNumber(row),
+          status: statusText,
+          owned
+        });
+
         return `
           <div class="${cardClass}">
             ${imageBox(owned ? row.image_path : "", displayName, true)}
@@ -1441,6 +1677,8 @@
               }
 
               ${collectionSeaBox(row, owned, seaAreas)}
+
+              ${detailButton(detail, owned ? "船の記録を開く" : "霧の記録を見る")}
 
               <div class="collection-meta">
                 <span class="${statusClass}">
@@ -1489,6 +1727,88 @@
       imageModalImg.src = "";
       imageModalImg.alt = "";
       imageModalCaption.textContent = "";
+      document.body.style.overflow = "";
+    }
+
+    function openDetailModal(detail){
+      if(!detailModal || !detailModalContent || !detail){
+        return;
+      }
+
+      const imageHtml = detail.imagePath
+        ? `<img src="${escapeHtml(detail.imagePath)}" alt="${escapeHtml(detail.title)}" loading="lazy">`
+        : `${escapeHtml(detail.title)}<br>image pending`;
+
+      detailModalContent.innerHTML = `
+        <div class="detail-grid">
+          <div class="detail-image">
+            ${imageHtml}
+          </div>
+
+          <div>
+            <div class="detail-kicker">Vessel Record</div>
+            <div class="detail-title">${escapeHtml(detail.title)}</div>
+            ${
+              detail.key
+                ? `<div class="detail-key">${escapeHtml(detail.key)}</div>`
+                : ""
+            }
+
+            <p class="detail-desc">
+              ${escapeHtml(detail.description)}
+            </p>
+
+            ${
+              detail.cabin
+                ? `
+                  <div class="detail-section">
+                    <div class="detail-section-label">Cabin</div>
+                    <p class="detail-section-text">
+                      ${escapeHtml(detail.cabin)}
+                    </p>
+                  </div>
+                `
+                : ""
+            }
+
+            <div class="detail-section sea">
+              <div class="detail-section-label">Opened Sea</div>
+              <div class="detail-section-title">${escapeHtml(detail.seaName)}</div>
+              <p class="detail-section-text">
+                ${escapeHtml(detail.seaDescription)}
+              </p>
+            </div>
+
+            <div class="detail-meta">
+              ${
+                detail.status
+                  ? `<span class="tag current">${escapeHtml(detail.status)}</span>`
+                  : ""
+              }
+              ${
+                detail.stage
+                  ? `<span class="tag">Stage ${escapeHtml(detail.stage)}</span>`
+                  : ""
+              }
+              <a class="tag ready" href="/map/">Sea Chart</a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      detailModal.classList.add("visible");
+      detailModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDetailModal(){
+      if(!detailModal || !detailModalContent){
+        return;
+      }
+
+      detailModal.classList.remove("visible");
+      detailModal.setAttribute("aria-hidden", "true");
+      detailModalContent.innerHTML = "";
       document.body.style.overflow = "";
     }
 
@@ -1646,11 +1966,18 @@
     vesselEl.addEventListener("click", function(event){
       const button = event.target.closest("#unlockVesselBtn");
 
-      if(!button){
+      if(button){
+        checkAndUnlockNextVessel();
         return;
       }
 
-      checkAndUnlockNextVessel();
+      const detailButtonEl = event.target.closest("[data-vessel-detail-id]");
+
+      if(detailButtonEl){
+        const id = detailButtonEl.dataset.vesselDetailId;
+        const detail = vesselDetailStore.get(id);
+        openDetailModal(detail);
+      }
     });
 
     document.addEventListener("click", function(event){
@@ -1667,11 +1994,16 @@
       if(event.target === imageModal){
         closeImageModal();
       }
+
+      if(event.target === detailModal){
+        closeDetailModal();
+      }
     });
 
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
         closeImageModal();
+        closeDetailModal();
         return;
       }
 
@@ -1691,6 +2023,10 @@
 
     if(imageModalClose){
       imageModalClose.addEventListener("click", closeImageModal);
+    }
+
+    if(detailModalClose){
+      detailModalClose.addEventListener("click", closeDetailModal);
     }
 
     client.auth.onAuthStateChange(function(event, session){
