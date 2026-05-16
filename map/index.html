@@ -269,6 +269,12 @@
       display:flex;
       flex-direction:column;
       transition:.18s ease;
+      cursor:pointer;
+    }
+
+    .sea-card:focus-visible{
+      outline:2px solid rgba(169,183,255,.65);
+      outline-offset:3px;
     }
 
     .pos-harbor{
@@ -323,6 +329,11 @@
     .sea-card.open:hover{
       transform:translateY(-2px);
       border-color:rgba(169,183,255,.72);
+    }
+
+    .sea-card.locked:hover{
+      transform:translateY(-1px);
+      border-color:rgba(160,168,187,.28);
     }
 
     .sea-card::before{
@@ -537,6 +548,74 @@
       line-height:1.8;
     }
 
+    .area-caption-title{
+      color:var(--text);
+      font-size:17px;
+      line-height:1.8;
+      margin-bottom:6px;
+    }
+
+    .area-caption-desc{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      margin-bottom:8px;
+    }
+
+    .area-caption-atmosphere{
+      display:inline-block;
+      color:var(--ready);
+      border:1px solid rgba(185,246,202,.24);
+      background:rgba(185,246,202,.045);
+      border-radius:14px;
+      padding:8px 12px;
+      font-size:12px;
+      line-height:1.8;
+      margin-top:4px;
+    }
+
+    .fog-card{
+      width:100%;
+      min-height:360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:18px;
+      padding:34px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(180,190,220,.12), transparent 36%),
+        linear-gradient(135deg, rgba(90,98,122,.18), rgba(8,12,24,.72)),
+        rgba(5,8,17,.72);
+      border:1px solid rgba(160,168,187,.22);
+      overflow:hidden;
+    }
+
+    .fog-card-inner{
+      max-width:560px;
+    }
+
+    .fog-card-label{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--fog);
+      margin-bottom:14px;
+    }
+
+    .fog-card-title{
+      font-size:24px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:12px;
+    }
+
+    .fog-card-text{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+    }
+
     .empty{
       background:rgba(10,14,28,.52);
       border:1px solid rgba(70,84,132,.35);
@@ -591,7 +670,7 @@
         background:rgba(10,14,28,.82);
         overflow:hidden;
       }
-    
+
       .chart-panel::before{
         display:block;
         background:
@@ -606,11 +685,11 @@
         background-repeat:no-repeat;
         pointer-events:none;
       }
-    
+
       .chart-panel::after{
         inset:12px;
       }
-    
+
       .sea-grid{
         position:relative;
         inset:auto;
@@ -620,7 +699,7 @@
         gap:14px;
         padding-top:56vw;
       }
-    
+
       .sea-card{
         position:relative;
         left:auto !important;
@@ -673,6 +752,15 @@
       .image-modal-inner{
         padding:18px;
         border-radius:20px;
+      }
+
+      .fog-card{
+        min-height:280px;
+        padding:24px;
+      }
+
+      .fog-card-title{
+        font-size:21px;
       }
     }
   </style>
@@ -762,7 +850,7 @@
         ×
       </button>
 
-      <div class="image-modal-img-wrap">
+      <div class="image-modal-img-wrap" id="imageModalContent">
         <img class="image-modal-img" id="imageModalImg" src="" alt="">
       </div>
 
@@ -786,6 +874,7 @@
     const chartZoomButton = document.getElementById("chartZoomButton");
 
     const imageModal = document.getElementById("imageModal");
+    const imageModalContent = document.getElementById("imageModalContent");
     const imageModalImg = document.getElementById("imageModalImg");
     const imageModalCaption = document.getElementById("imageModalCaption");
     const imageModalClose = document.getElementById("imageModalClose");
@@ -856,6 +945,16 @@
       moonlit_sea: "月光、銀色の水面、静かに進むための印。",
       deep_current: "重い素材、深い潮、沈まないためのものの気配。",
       unnamed_waters: "海図の外側、まだ名のない漂着物、遠い光の気配。"
+    };
+
+    const areaImagePaths = {
+      harbor: "/images/areas/harbor.png",
+      silent_water: "/images/areas/silent-water.png",
+      lighthouse_coast: "/images/areas/lighthouse-coast.png",
+      fog_sea: "/images/areas/fog-sea.png",
+      moonlit_sea: "/images/areas/moonlit-sea.png",
+      deep_current: "/images/areas/deep-current.png",
+      unnamed_waters: "/images/areas/unnamed-waters.png"
     };
 
     const positionClasses = [
@@ -1089,6 +1188,10 @@
       return areaAtmospheres[areaKey] || "まだ名前のない気配が、海の上に残っています。";
     }
 
+    function areaImagePath(areaKey){
+      return areaImagePaths[areaKey] || seaChartImagePath;
+    }
+
     function renderSeaChart(rawAreas, unlockedMap){
       const normalized = rawAreas
         .map((area, index) => normalizeArea(area, index))
@@ -1125,7 +1228,17 @@
         const atmosphereText = areaAtmosphereText(area.area_key, open);
 
         return `
-          <article class="sea-card ${stateClass} ${positionClass}">
+          <article
+            class="sea-card ${stateClass} ${positionClass}"
+            role="button"
+            tabindex="0"
+            data-area-open="${open ? "true" : "false"}"
+            data-area-key="${escapeHtml(area.area_key)}"
+            data-area-title="${escapeHtml(displayName)}"
+            data-area-desc="${escapeHtml(displayDesc)}"
+            data-area-atmosphere="${escapeHtml(atmosphereText)}"
+            data-area-image="${escapeHtml(areaImagePath(area.area_key))}"
+          >
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
 
             <div class="sea-name">
@@ -1164,28 +1277,103 @@
       `;
     }
 
+    function resetModalContent(){
+      imageModalContent.className = "image-modal-img-wrap";
+      imageModalContent.innerHTML = `
+        <img class="image-modal-img" id="imageModalImg" src="" alt="">
+      `;
+    }
+
     function openImageModal(src, label){
-      if(!src || !imageModal || !imageModalImg){
+      if(!src || !imageModal || !imageModalContent){
         return;
       }
 
-      imageModalImg.src = src;
-      imageModalImg.alt = label || "";
+      resetModalContent();
+
+      const img = imageModalContent.querySelector("img");
+
+      if(img){
+        img.src = src;
+        img.alt = label || "";
+      }
+
       imageModalCaption.textContent = label || "";
       imageModal.classList.add("visible");
       imageModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
 
+    function openAreaModal(areaData){
+      if(!imageModal || !imageModalContent){
+        return;
+      }
+
+      const isOpen = areaData.open === "true";
+
+      if(!isOpen){
+        imageModalContent.className = "image-modal-img-wrap";
+        imageModalContent.innerHTML = `
+          <div class="fog-card">
+            <div class="fog-card-inner">
+              <div class="fog-card-label">Beyond the Fog</div>
+              <div class="fog-card-title">霧の向こう</div>
+              <div class="fog-card-text">
+                まだ、この海は姿を見せていません。<br>
+                船が整い、次の航路が開くまで、<br>
+                その景色は静かに霧の中にあります。
+              </div>
+            </div>
+          </div>
+        `;
+
+        imageModalCaption.innerHTML = `
+          <div class="area-caption-title">霧の向こう</div>
+          <div class="area-caption-desc">
+            この海域は、まだ開かれていません。
+          </div>
+        `;
+
+        imageModal.classList.add("visible");
+        imageModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        return;
+      }
+
+      resetModalContent();
+
+      const img = imageModalContent.querySelector("img");
+
+      if(img){
+        img.src = areaData.image || seaChartImagePath;
+        img.alt = areaData.title || "";
+        img.onerror = function(){
+          this.onerror = null;
+          this.src = seaChartImagePath;
+        };
+      }
+
+      imageModalCaption.innerHTML = `
+        <div class="area-caption-title">${escapeHtml(areaData.title || "")}</div>
+        <div class="area-caption-desc">${escapeHtml(areaData.desc || "")}</div>
+        <div class="area-caption-atmosphere">
+          気配：${escapeHtml(areaData.atmosphere || "")}
+        </div>
+      `;
+
+      imageModal.classList.add("visible");
+      imageModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
     function closeImageModal(){
-      if(!imageModal || !imageModalImg){
+      if(!imageModal || !imageModalContent){
         return;
       }
 
       imageModal.classList.remove("visible");
       imageModal.setAttribute("aria-hidden", "true");
-      imageModalImg.src = "";
-      imageModalImg.alt = "";
+      resetModalContent();
       imageModalCaption.textContent = "";
       document.body.style.overflow = "";
     }
@@ -1214,6 +1402,46 @@
         openImageModal(seaChartImagePath, seaChartLabel);
       });
     }
+
+    mapArea.addEventListener("click", function(event){
+      const card = event.target.closest(".sea-card");
+
+      if(!card){
+        return;
+      }
+
+      openAreaModal({
+        open: card.dataset.areaOpen,
+        key: card.dataset.areaKey,
+        title: card.dataset.areaTitle,
+        desc: card.dataset.areaDesc,
+        atmosphere: card.dataset.areaAtmosphere,
+        image: card.dataset.areaImage
+      });
+    });
+
+    mapArea.addEventListener("keydown", function(event){
+      if(event.key !== "Enter" && event.key !== " "){
+        return;
+      }
+
+      const card = event.target.closest(".sea-card");
+
+      if(!card){
+        return;
+      }
+
+      event.preventDefault();
+
+      openAreaModal({
+        open: card.dataset.areaOpen,
+        key: card.dataset.areaKey,
+        title: card.dataset.areaTitle,
+        desc: card.dataset.areaDesc,
+        atmosphere: card.dataset.areaAtmosphere,
+        image: card.dataset.areaImage
+      });
+    });
 
     if(imageModalClose){
       imageModalClose.addEventListener("click", closeImageModal);
