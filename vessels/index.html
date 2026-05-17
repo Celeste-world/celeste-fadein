@@ -1048,6 +1048,8 @@
     let seaAreasCache = [];
     let vesselDetailStore = new Map();
     let vesselDetailCounter = 0;
+    
+    const fogVesselImagePath = "/images/vessels/vessel-fog.png";
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1479,7 +1481,7 @@
 
         const nextDetail = makeDetailFromVessel({}, {
           title: "霧の向こう",
-          imagePath: "",
+          imagePath: fogVesselImagePath,
           description: "次の船は、まだ霧の中にあります。必要な漂着物が集まるまで、輪郭は見えません。",
           cabin: "",
           key: "",
@@ -1514,7 +1516,7 @@
         nextHtml = `
           <div class="next-box">
             <div class="next-head">
-              ${imageBox("", "霧の向こう", true)}
+              ${imageBox(fogVesselImagePath, "霧の向こう", true)}
 
               <div>
                 <div class="next-title">
@@ -1570,7 +1572,7 @@
             ${imageBox(
               vessel.display_state === "owned" || vessel.is_owned === true || vessel.is_current === true
                 ? vessel.image_path
-                : "/images/vessels/vessel-fog.png",
+                : fogVesselImagePath,
               vessel.display_state === "owned" || vessel.is_owned === true || vessel.is_current === true
                 ? vessel.name_ja
                 : "霧の向こう"
@@ -1681,7 +1683,7 @@
           key: owned ? (row.vessel_key || "") : "",
           description: displayDesc,
           cabin: owned ? displayCabin : "",
-          imagePath: owned ? (row.image_path || "") : "",
+          imagePath: owned ? (row.image_path || "") : fogVesselImagePath,
           seaAreas,
           stage: stageNumber(row),
           status: statusText,
@@ -1696,7 +1698,11 @@
 
         return `
           <div class="${cardClass}">
-            ${imageBox(owned ? row.image_path : "", displayName, true)}
+            ${imageBox(
+              owned ? row.image_path : fogVesselImagePath,
+              displayName,
+              true
+            )}
 
             <div>
               <div class="collection-name">
