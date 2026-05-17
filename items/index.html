@@ -1802,23 +1802,37 @@
       closeSpecialItemDetailModal();
     }
 
+    async function endSpecialVoyageOnLogout(){
+      try{
+        await client.functions.invoke("end-voyage-session", {
+          body: {
+            reason: "logout"
+          }
+        });
+      }catch(error){
+        console.warn("end special voyage on logout failed:", error);
+      }
+    }
+    
     async function logout(){
       setStatus("ログアウトしています。");
-
+    
+      await endSpecialVoyageOnLogout();
+    
       const { error } = await client.auth.signOut();
-
+    
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-
+    
       clearActiveVoyageTimer();
-
+    
       currentUser = null;
       currentAccessToken = null;
       activeVoyageSession = null;
-
+    
       window.location.replace("/");
     }
 
