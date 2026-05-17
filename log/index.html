@@ -1861,29 +1861,69 @@
           const foundMessage =
             harborFindResult.message ||
             "今夜、港に小さな漂着物が流れ着きました。";
-
+        
+          const harborFindDetail = {
+            title:
+              harborFindResult.title ||
+              harborFindResult.name_ja ||
+              harborFindResult.item_name ||
+              harborFindResult.name ||
+              "港に届いた漂着物",
+        
+            item_key:
+              harborFindResult.item_key ||
+              "",
+        
+            image_path:
+              harborFindResult.image_path ||
+              "",
+        
+            rarity:
+              harborFindResult.rarity ||
+              "",
+        
+            area_hint:
+              harborFindResult.area_hint ||
+              "",
+        
+            description:
+              harborFindResult.description ||
+              foundMessage ||
+              "",
+        
+            origin_text:
+              harborFindResult.origin_text ||
+              ""
+          };
+        
           setHarborFindDisplay(
             "found",
             "港に漂着物が届きました。",
-            foundMessage
+            foundMessage,
+            harborFindDetail
           );
-
+        
           await appendCatScrollNotice(
             foundMessage,
             "Harbor Find"
           );
-
+        
           await holdCatText(2400);
-
+        
           setStatus("航海記録を保存しました。港に漂着物が届きました。");
         }else{
           setHarborFindDisplay(
             "quiet",
             "今夜は、港に新しい漂着物はありませんでした。",
-            "それでも記録は残りました。海は静かに続いています。"
+            "それでも記録は残りました。海は静かに続いています。",
+            {
+              title: "HARBOR FIND",
+              description: "この航海では、港に新しい漂着物は届きませんでした。",
+              status: "quiet"
+            }
           );
         }
-
+        
         setDriftTicketDisplay(
           "checking",
           "航海券の気配を確認しています。",
