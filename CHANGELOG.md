@@ -1,5 +1,3 @@
-。
-
 # Celeste Harbor 開発変更履歴
 
 Celeste Harbor の開発変更履歴です。
