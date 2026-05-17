@@ -1347,12 +1347,16 @@
 
             <div class="find-meta">
               <span class="tag">数量：${escapeHtml(item.quantity)}</span>
-              <span class="tag">${escapeHtml(item.rarity)}</span>
               ${
-                  item.area_hint && !extraMetaHtml
-                    ? `<span class="tag">${escapeHtml(item.area_hint)}</span>`
-                    : ""
-                }
+                item.rarity && !extraMetaHtml
+                  ? `<span class="tag">${escapeHtml(item.rarity)}</span>`
+                  : ""
+              }
+              ${
+                item.area_hint && !extraMetaHtml
+                  ? `<span class="tag">${escapeHtml(item.area_hint)}</span>`
+                  : ""
+              }
               ${extraMetaHtml}
             </div>
           </div>
