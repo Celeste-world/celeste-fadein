@@ -248,6 +248,31 @@
       color:var(--danger);
     }
 
+    .special-find-notice{
+      display:none;
+      margin:-6px 0 20px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(185,246,202,.28);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.075), transparent 44%),
+        rgba(10,14,28,.72);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .special-find-notice.visible{
+      display:block;
+    }
+
+    .special-find-notice-title{
+      color:var(--ready);
+      font-size:13px;
+      letter-spacing:.08em;
+      margin-bottom:5px;
+    }
+
     .area-section{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
@@ -255,6 +280,13 @@
       padding:22px;
       box-shadow:0 20px 48px rgba(0,0,0,.32);
       margin-bottom:18px;
+    }
+
+    .area-section.special-voyage-finds{
+      border-color:rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 42%),
+        rgba(10,14,28,.82);
     }
 
     .area-section.locked{
@@ -465,6 +497,12 @@
       color:var(--fog);
       border-color:rgba(111,118,137,.26);
       background:rgba(255,255,255,.015);
+    }
+
+    .tag.special{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.34);
+      background:rgba(169,183,255,.06);
     }
 
     .empty{
@@ -724,6 +762,8 @@
         <div class="status" id="status"></div>
       </section>
 
+      <div class="special-find-notice" id="specialFindNotice"></div>
+
       <section>
         <div id="harborFinds">
           <div class="empty">
@@ -781,6 +821,7 @@
     const logoutLink = document.getElementById("logoutLink");
     const harborFindsEl = document.getElementById("harborFinds");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
+    const specialFindNotice = document.getElementById("specialFindNotice");
 
     const imageModal = document.getElementById("imageModal");
     const imageModalImg = document.getElementById("imageModalImg");
@@ -817,6 +858,26 @@
         user.user_metadata?.display_name ||
         user.email ||
         "Account"
+      );
+    }
+
+    function itemKeyOf(item){
+      return String(
+        item?.item_key ||
+        item?.harbor_item_key ||
+        item?.id ||
+        ""
+      );
+    }
+
+    function itemNameOf(item){
+      return (
+        item?.name_ja ||
+        item?.item_name_ja ||
+        item?.item_name ||
+        item?.name ||
+        itemKeyOf(item) ||
+        "名前のない漂着物"
       );
     }
 
@@ -1137,6 +1198,20 @@
       return map;
     }
 
+    function buildAreaNameMap(seaAreas){
+      const map = new Map();
+
+      (seaAreas || []).forEach(area => {
+        const key = area.area_key || area.key || area.id;
+
+        if(key){
+          map.set(String(key), area.name_ja || area.name || key);
+        }
+      });
+
+      return map;
+    }
+
     function areaIsOpen(areaKey, openMap){
       if(openMap.has(areaKey)){
         const status = String(openMap.get(areaKey));
@@ -1162,10 +1237,189 @@
       return Math.max(0, Math.min(100, Math.round((foundCount / totalCount) * 100)));
     }
 
+    function specialFindStorageKey(){
+      return currentUser
+        ? "celeste_special_voyage_find_keys:" + currentUser.id
+        : "celeste_special_voyage_find_keys";
+    }
+
+    function showSpecialFindNotice(movedNames){
+      if(!specialFindNotice){
+        return;
+      }
+
+      if(!movedNames || movedNames.length === 0){
+        specialFindNotice.classList.remove("visible");
+        specialFindNotice.innerHTML = "";
+        return;
+      }
+
+      const namesText = movedNames
+        .slice(0, 3)
+        .map(name => `「${name}」`)
+        .join("、");
+
+      const moreText = movedNames.length > 3
+        ? ` ほか ${movedNames.length - 3} 件`
+        : "";
+
+      specialFindNotice.innerHTML = `
+        <div class="special-find-notice-title">
+          霧が少し晴れました
+        </div>
+        <div>
+          ${escapeHtml(namesText + moreText)} が、本来の海域の記録へ移りました。
+        </div>
+      `;
+
+      specialFindNotice.classList.add("visible");
+    }
+
+    function updateSpecialFindMovementNotice(currentSpecialItems, displayedItemKeys, finds){
+      if(!currentUser){
+        return;
+      }
+
+      const storageKey = specialFindStorageKey();
+      const currentSpecialKeys = currentSpecialItems
+        .map(item => itemKeyOf(item))
+        .filter(Boolean);
+
+      const currentSpecialKeySet = new Set(currentSpecialKeys);
+
+      let previousKeys = [];
+
+      try{
+        const raw = localStorage.getItem(storageKey);
+        previousKeys = raw ? JSON.parse(raw) : [];
+      }catch(error){
+        previousKeys = [];
+      }
+
+      if(Array.isArray(previousKeys) && previousKeys.length > 0){
+        const movedKeys = previousKeys.filter(key => {
+          return !currentSpecialKeySet.has(key) && displayedItemKeys.has(key);
+        });
+
+        if(movedKeys.length > 0){
+          const findMap = new Map();
+
+          (finds || []).forEach(item => {
+            const key = itemKeyOf(item);
+
+            if(key){
+              findMap.set(key, item);
+            }
+          });
+
+          const movedNames = movedKeys.map(key => {
+            return itemNameOf(findMap.get(key));
+          });
+
+          showSpecialFindNotice(movedNames);
+        }else{
+          showSpecialFindNotice([]);
+        }
+      }else{
+        showSpecialFindNotice([]);
+      }
+
+      try{
+        localStorage.setItem(storageKey, JSON.stringify(currentSpecialKeys));
+      }catch(error){
+        console.warn("special find localStorage update failed:", error);
+      }
+    }
+
+    function renderItemCard(item, extraMetaHtml = ""){
+      const name = itemNameOf(item);
+
+      return `
+        <div class="find-item">
+          ${imageBox(item.image_path, name)}
+
+          <div>
+            <div class="find-name">${escapeHtml(name)}</div>
+
+            <p class="find-line">
+              ${escapeHtml(item.origin_text || item.description || "静かに港へ届いた漂着物です。")}
+            </p>
+
+            <div class="find-meta">
+              <span class="tag">数量：${escapeHtml(item.quantity)}</span>
+              <span class="tag">${escapeHtml(item.rarity)}</span>
+              ${
+                item.area_hint
+                  ? `<span class="tag">${escapeHtml(item.area_hint)}</span>`
+                  : ""
+              }
+              ${extraMetaHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSpecialVoyageFindsSection(items, itemAreaMap, areaNameMap){
+      if(!items || items.length === 0){
+        return "";
+      }
+
+      const itemsHtml = items.map(item => {
+        const itemKey = itemKeyOf(item);
+        const originalAreaKey =
+          item.area_key ||
+          item.sea_area_key ||
+          itemAreaMap.get(itemKey) ||
+          "";
+
+        const areaName = originalAreaKey
+          ? (areaNameMap.get(originalAreaKey) || "霧の向こう")
+          : "霧の向こう";
+
+        const extraMetaHtml = `
+          <span class="tag special">Special Voyage</span>
+          <span class="tag fog">本来の海域：${escapeHtml(areaName === "霧の向こう" ? "未開放" : areaName)}</span>
+        `;
+
+        return renderItemCard(item, extraMetaHtml);
+      }).join("");
+
+      return `
+        <section class="area-section special-voyage-finds">
+          <div class="area-head">
+            <div>
+              <div class="area-kicker">Special Voyage Finds</div>
+              <div class="area-title">特別航海で見つかった漂着物</div>
+              <p class="area-desc">
+                本来の海域がまだ霧の向こうにあるため、ここに仮置きされています。<br>
+                海域が開かれると、その漂着物は本来の海域の記録へ移ります。
+              </p>
+            </div>
+
+            <div class="area-status-group">
+              <div class="area-status">
+                仮置き
+              </div>
+              <div class="area-progress">
+                記録済み ${escapeHtml(items.length)}
+              </div>
+            </div>
+          </div>
+
+          <div class="finds-grid">
+            ${itemsHtml}
+          </div>
+        </section>
+      `;
+    }
+
     function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
       const openMap = buildOpenAreaMap(userAreas);
       const itemAreaMap = buildItemAreaMap(pools);
       const poolCountMap = buildPoolCountMap(pools);
+      const areaNameMap = buildAreaNameMap(seaAreas);
+      const displayedItemKeys = new Set();
 
       const areas = (seaAreas || [])
         .slice()
@@ -1183,10 +1437,11 @@
       const grouped = new Map();
 
       (finds || []).forEach(item => {
+        const key = itemKeyOf(item);
         const areaKey =
           item.area_key ||
           item.sea_area_key ||
-          itemAreaMap.get(item.item_key) ||
+          itemAreaMap.get(key) ||
           "harbor";
 
         if(!grouped.has(areaKey)){
@@ -1204,24 +1459,18 @@
           : [];
 
         const poolItemKeySet = new Set(poolItemKeys);
-
         const rawAreaItems = grouped.get(areaKey) || [];
 
         const areaItems = poolItemKeys.length
           ? rawAreaItems.filter((item) => {
-              const itemKey =
-                item.item_key ||
-                item.harbor_item_key ||
-                item.id ||
-                "";
-
-              return poolItemKeySet.has(itemKey);
+              const key = itemKeyOf(item);
+              return poolItemKeySet.has(key);
             })
           : rawAreaItems;
 
         const foundItemKeys = new Set(
           areaItems
-            .map((item) => item.item_key || item.harbor_item_key || item.id)
+            .map(item => itemKeyOf(item))
             .filter(Boolean)
         );
 
@@ -1266,28 +1515,16 @@
           `;
         }
 
+        areaItems.forEach(item => {
+          const key = itemKeyOf(item);
+
+          if(key){
+            displayedItemKeys.add(key);
+          }
+        });
+
         const itemsHtml = areaItems.length
-          ? areaItems.map(item => {
-              return `
-                <div class="find-item">
-                  ${imageBox(item.image_path, item.name_ja)}
-
-                  <div>
-                    <div class="find-name">${escapeHtml(item.name_ja)}</div>
-
-                    <p class="find-line">
-                      ${escapeHtml(item.origin_text || item.description)}
-                    </p>
-
-                    <div class="find-meta">
-                      <span class="tag">数量：${escapeHtml(item.quantity)}</span>
-                      <span class="tag">${escapeHtml(item.rarity)}</span>
-                      <span class="tag">${escapeHtml(item.area_hint)}</span>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join("")
+          ? areaItems.map(item => renderItemCard(item)).join("")
           : `
             <div class="area-empty">
               この海域から届いた漂着物は、まだありません。
@@ -1326,7 +1563,24 @@
         `;
       }).join("");
 
-      harborFindsEl.innerHTML = sectionsHtml;
+      const specialVoyageItems = (finds || []).filter(item => {
+        const key = itemKeyOf(item);
+        return key && !displayedItemKeys.has(key);
+      });
+
+      const specialVoyageHtml = renderSpecialVoyageFindsSection(
+        specialVoyageItems,
+        itemAreaMap,
+        areaNameMap
+      );
+
+      updateSpecialFindMovementNotice(
+        specialVoyageItems,
+        displayedItemKeys,
+        finds
+      );
+
+      harborFindsEl.innerHTML = sectionsHtml + specialVoyageHtml;
     }
 
     function openImageModal(src, label){
