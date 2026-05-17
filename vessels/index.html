@@ -1567,7 +1567,14 @@
       vesselEl.innerHTML = `
         <div class="vessel-card">
           <div class="vessel-layout">
-            ${imageBox(vessel.image_path, vessel.name_ja)}
+            ${imageBox(
+              vessel.is_owned || vessel.is_current
+                ? vessel.image_path
+                : "/images/vessels/vessel-fog.png",
+              vessel.is_owned || vessel.is_current
+                ? vessel.name_ja
+                : "霧の向こう"
+            )}
 
             <div>
               <div class="vessel-top">
