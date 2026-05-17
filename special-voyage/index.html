@@ -1830,7 +1830,14 @@
         specialMessage.value = "";
         updateSpecialCount();
 
-        const notices = extractHarborFindNotices(data.harbor_find);
+        const notices = extractHarborFindRewards({
+          harbor_find: data.harbor_find,
+          found_items: data.found_items || [],
+          find_rolls: data.find_rolls || [],
+          grant_results: data.grant_results || [],
+          ticket_rule: data.ticket_rule,
+          reused_existing_rolls: data.reused_existing_rolls
+        });
 
         if(notices.length){
           setStatus("航海記録を残しました。港に漂着の気配があります。");
