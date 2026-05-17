@@ -1568,10 +1568,10 @@
         <div class="vessel-card">
           <div class="vessel-layout">
             ${imageBox(
-              vessel.is_owned || vessel.is_current
+              vessel.display_state === "owned" || vessel.is_owned === true || vessel.is_current === true
                 ? vessel.image_path
                 : "/images/vessels/vessel-fog.png",
-              vessel.is_owned || vessel.is_current
+              vessel.display_state === "owned" || vessel.is_owned === true || vessel.is_current === true
                 ? vessel.name_ja
                 : "霧の向こう"
             )}
