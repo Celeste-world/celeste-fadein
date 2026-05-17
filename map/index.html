@@ -530,13 +530,13 @@
 
     .image-modal-inner{
       position:relative;
-      width:min(980px, 100%);
-      max-height:88vh;
+      width:min(900px, 100%);
+      max-height:82vh;
       border-radius:24px;
       border:1px solid rgba(169,183,255,.28);
       background:rgba(10,14,28,.92);
       box-shadow:0 28px 80px rgba(0,0,0,.58);
-      padding:22px;
+      padding:18px;
       overflow:auto;
     }
 
@@ -564,7 +564,7 @@
 
     .image-modal-img-wrap{
       width:100%;
-      max-height:72vh;
+      max-height:60vh;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -574,13 +574,13 @@
         radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
         rgba(5,8,17,.62);
     }
-
-    .image-modal-img{
-      max-width:100%;
-      max-height:72vh;
-      object-fit:contain;
-      display:block;
-    }
+    
+        .image-modal-img{
+          max-width:100%;
+          max-height:60vh;
+          object-fit:contain;
+          display:block;
+        }
 
     .image-modal-caption{
       margin-top:14px;
@@ -604,6 +604,30 @@
       margin-bottom:8px;
     }
 
+    @media(min-width:641px){
+      .image-modal-caption{
+        margin-top:10px;
+      }
+    
+      .area-caption-title{
+        font-size:16px;
+        line-height:1.6;
+        margin-bottom:4px;
+      }
+    
+      .area-caption-desc{
+        font-size:12px;
+        line-height:1.7;
+        margin-bottom:6px;
+      }
+    
+      .area-caption-atmosphere{
+        padding:6px 10px;
+        font-size:11px;
+        line-height:1.6;
+      }
+    }
+
     .area-caption-atmosphere{
       display:inline-block;
       color:var(--ready);
@@ -618,13 +642,13 @@
 
     .fog-card{
       width:100%;
-      min-height:360px;
+      min-height:300px;
       display:flex;
       align-items:center;
       justify-content:center;
       text-align:center;
       border-radius:18px;
-      padding:34px;
+      padding:26px;
       background:
         radial-gradient(circle at 50% 38%, rgba(180,190,220,.12), transparent 36%),
         linear-gradient(135deg, rgba(90,98,122,.18), rgba(8,12,24,.72)),
