@@ -1344,10 +1344,12 @@
       tags.style.gap = "8px";
       tags.style.flexWrap = "wrap";
       tags.style.marginTop = "16px";
-    
+      
       [
-        reward.duration_minutes ? `${reward.duration_minutes}分` : "",
-        reward.status || ""
+        reward.status || "",
+        reward.rarity || "",
+        reward.area_hint || "",
+        reward.duration_minutes ? `${reward.duration_minutes}分` : ""
       ].filter(Boolean).forEach((text) => {
         const tag = document.createElement("span");
         tag.textContent = text;
