@@ -1231,7 +1231,34 @@
       };
     }
 
-    function openLogRewardDetailModal(reward){
+    async function openLogRewardDetailModal(reward){
+
+      if(reward && reward.type === "harbor_find" && reward.item_key){
+        try{
+          const { data, error } = await client
+            .from("harbor_items")
+            .select("item_key, name_ja, name_en, description, origin_text, rarity, area_hint, image_path")
+            .eq("item_key", reward.item_key)
+            .maybeSingle();
+      
+          if(!error && data){
+            reward = {
+              ...reward,
+              title: data.name_ja || reward.title,
+              name_en: data.name_en || reward.name_en || "",
+              description: data.description || reward.description || "",
+              origin_text: data.origin_text || reward.origin_text || "",
+              rarity: data.rarity || reward.rarity || "",
+              area_hint: data.area_hint || reward.area_hint || "",
+              image_path: data.image_path || reward.image_path || ""
+            };
+          }else{
+            console.warn("harbor_items detail fetch failed", error);
+          }
+        }catch(error){
+          console.warn("harbor_items detail fetch catch", error);
+        }
+      }
       let modal = document.getElementById("logRewardDetailModal");
     
       if(!modal){
