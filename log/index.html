@@ -86,6 +86,64 @@
       color:var(--text);
     }
 
+    #activeVoyageBanner{
+      position:sticky;
+      top:12px;
+      z-index:50;
+      margin:-22px 0 30px;
+      display:none;
+    }
+    
+    .active-voyage-banner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(169,183,255,.36);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.16), transparent 44%),
+        rgba(10,14,28,.94);
+      box-shadow:0 14px 34px rgba(0,0,0,.34);
+      color:var(--text);
+      text-decoration:none;
+      backdrop-filter:blur(8px);
+    }
+    
+    .active-voyage-banner:hover{
+      border-color:rgba(169,183,255,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.22), transparent 44%),
+        rgba(13,18,36,.96);
+    }
+    
+    .active-voyage-main{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--text);
+    }
+    
+    .active-voyage-time{
+      font-size:12px;
+      line-height:1.7;
+      color:var(--accent);
+      white-space:nowrap;
+    }
+    
+    .active-voyage-link{
+      font-size:12px;
+      line-height:1.7;
+      color:var(--muted);
+      border-left:1px solid rgba(169,183,255,.22);
+      padding-left:12px;
+      white-space:nowrap;
+    }
+    
+    .active-voyage-banner:hover .active-voyage-link{
+      color:var(--text);
+    }
+
     h1{
       font-size:34px;
       font-weight:500;
@@ -628,6 +686,23 @@
         padding:28px 16px;
       }
 
+      #activeVoyageBanner{
+        top:10px;
+        margin:-12px 0 24px;
+      }
+      
+      .active-voyage-banner{
+        align-items:flex-start;
+        flex-direction:column;
+        border-radius:18px;
+        gap:6px;
+      }
+      
+      .active-voyage-link{
+        border-left:0;
+        padding-left:0;
+      }
+
       .site-header{
         align-items:flex-start;
         flex-direction:column;
@@ -715,6 +790,8 @@
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
+
+    <div id="activeVoyageBanner"></div>
 
     <main>
       <h1>Voyage Log</h1>
@@ -996,6 +1073,7 @@
 
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
+    const activeVoyageBanner = document.getElementById("activeVoyageBanner");
 
     const harborFindState = document.getElementById("harborFindState");
     const harborFindMain = document.getElementById("harborFindMain");
@@ -1031,6 +1109,8 @@
     let allLogs = [];
     let showAllLogs = false;
     let catScrollAutoCloseTimer = null;
+    let activeVoyageSession = null;
+    let activeVoyageTimer = null;
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -1576,6 +1656,125 @@
       return result;
     }
 
+    function clearActiveVoyageTimer(){
+      if(activeVoyageTimer){
+        clearInterval(activeVoyageTimer);
+        activeVoyageTimer = null;
+      }
+    }
+    
+    function formatRemainingTime(endsAtValue){
+      const endsAt = new Date(endsAtValue);
+      const now = new Date();
+      const remainingMs = Math.max(0, endsAt.getTime() - now.getTime());
+    
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+    
+      return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0")
+      );
+    }
+    
+    function activeVoyageLabel(session){
+      const sessionType = String(session?.session_type || "");
+      const durationMinutes = Number(session?.duration_minutes || 0);
+    
+      if(sessionType === "drift"){
+        return "漂着チケットの航海が続いています";
+      }
+    
+      if(sessionType === "deep_sea"){
+        return "深海航海が続いています";
+      }
+    
+      if(sessionType === "special" && durationMinutes >= 20){
+        return "少し長い特別航海が続いています";
+      }
+    
+      return "特別航海が続いています";
+    }
+    
+    function renderActiveVoyageBanner(){
+      if(!activeVoyageBanner){
+        return;
+      }
+    
+      if(!activeVoyageSession){
+        activeVoyageBanner.innerHTML = "";
+        activeVoyageBanner.style.display = "none";
+        clearActiveVoyageTimer();
+        return;
+      }
+    
+      const endsAt = new Date(activeVoyageSession.ends_at);
+      const now = new Date();
+    
+      if(!activeVoyageSession.ends_at || endsAt <= now){
+        activeVoyageSession = null;
+        activeVoyageBanner.innerHTML = "";
+        activeVoyageBanner.style.display = "none";
+        clearActiveVoyageTimer();
+        return;
+      }
+    
+      activeVoyageBanner.style.display = "block";
+      activeVoyageBanner.innerHTML = `
+        <a class="active-voyage-banner" href="/special-voyage/">
+          <span class="active-voyage-main">
+            ${escapeHtml(activeVoyageLabel(activeVoyageSession))}
+          </span>
+          <span class="active-voyage-time">
+            残り ${escapeHtml(formatRemainingTime(activeVoyageSession.ends_at))}
+          </span>
+          <span class="active-voyage-link">
+            航海へ戻る
+          </span>
+        </a>
+      `;
+    }
+    
+    async function loadActiveSpecialVoyageBanner(){
+      if(!currentUser || !currentAccessToken){
+        return;
+      }
+    
+      try{
+        const userId = encodeURIComponent(currentUser.id);
+        const now = encodeURIComponent(new Date().toISOString());
+    
+        const sessions = await fetchSupabase(
+          "/rest/v1/voyage_sessions" +
+          "?user_id=eq." + userId +
+          "&status=eq.active" +
+          "&ends_at=gt." + now +
+          "&select=id,user_id,ticket_id,session_type,duration_minutes,started_at,ends_at,status" +
+          "&order=started_at.desc" +
+          "&limit=1"
+        );
+    
+        activeVoyageSession =
+          Array.isArray(sessions) && sessions.length > 0
+            ? sessions[0]
+            : null;
+    
+        renderActiveVoyageBanner();
+    
+        clearActiveVoyageTimer();
+    
+        if(activeVoyageSession){
+          activeVoyageTimer = setInterval(renderActiveVoyageBanner, 1000);
+        }
+      }catch(error){
+        console.warn("active special voyage banner error:", error);
+        activeVoyageSession = null;
+        renderActiveVoyageBanner();
+      }
+    }
+
     async function ensureUserVessel(){
       try{
         await fetchSupabase(
@@ -1668,6 +1867,7 @@
         setStatus("港へ戻りました。");
         updateAuthUI();
 
+        await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
@@ -1698,19 +1898,22 @@
 
     async function logout(){
       const { error } = await client.auth.signOut();
-
+    
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-
+    
       currentUser = null;
       currentAccessToken = null;
       allLogs = [];
       showAllLogs = false;
+      activeVoyageSession = null;
+    
+      clearActiveVoyageTimer();
       closeCatScroll();
-
+    
       window.location.replace("/");
     }
 
@@ -2251,6 +2454,7 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
 
+        await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
