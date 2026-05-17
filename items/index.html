@@ -1364,27 +1364,16 @@
       if(!items || items.length === 0){
         return "";
       }
-
+    
       const itemsHtml = items.map(item => {
-        const itemKey = itemKeyOf(item);
-        const originalAreaKey =
-          item.area_key ||
-          item.sea_area_key ||
-          itemAreaMap.get(itemKey) ||
-          "";
-
-        const areaName = originalAreaKey
-          ? (areaNameMap.get(originalAreaKey) || "霧の向こう")
-          : "霧の向こう";
-
         const extraMetaHtml = `
           <span class="tag special">Special Voyage</span>
-          <span class="tag fog">本来の海域：${escapeHtml(areaName === "霧の向こう" ? "未開放" : areaName)}</span>
+          <span class="tag fog">本来の海域：霧の向こう</span>
         `;
-
+    
         return renderItemCard(item, extraMetaHtml);
       }).join("");
-
+    
       return `
         <section class="area-section special-voyage-finds">
           <div class="area-head">
@@ -1396,7 +1385,7 @@
                 海域が開かれると、その漂着物は本来の海域の記録へ移ります。
               </p>
             </div>
-
+    
             <div class="area-status-group">
               <div class="area-status">
                 仮置き
@@ -1406,14 +1395,14 @@
               </div>
             </div>
           </div>
-
+    
           <div class="finds-grid">
             ${itemsHtml}
           </div>
         </section>
       `;
     }
-
+    
     function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
       const openMap = buildOpenAreaMap(userAreas);
       const itemAreaMap = buildItemAreaMap(pools);
