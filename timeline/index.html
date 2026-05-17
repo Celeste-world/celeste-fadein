@@ -248,6 +248,13 @@
         rgba(10,14,28,.62);
     }
 
+    .timeline-item.special-voyage{
+      border-color:rgba(169,183,255,.32);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.07), transparent 42%),
+        rgba(10,14,28,.62);
+    }
+
     .timeline-image{
       width:92px;
       height:92px;
@@ -360,6 +367,12 @@
       color:var(--gold);
       border-color:rgba(255,227,163,.32);
       background:rgba(255,227,163,.06);
+    }
+
+    .timeline-type.special-voyage{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.34);
+      background:rgba(169,183,255,.07);
     }
 
     .read-more-wrap{
@@ -648,6 +661,17 @@
         .replaceAll("-", "_");
     }
 
+    function isSpecialVoyageEvent(type){
+      const normalized = normalizeEventType(type);
+
+      return normalized === "special_voyage_find" ||
+        normalized === "special_voyage_started" ||
+        normalized === "special_voyage_completed" ||
+        normalized === "special_voyage_expired" ||
+        normalized === "voyage_started" ||
+        normalized === "voyage_ended";
+    }
+
     function eventTypeLabel(type){
       const normalized = normalizeEventType(type);
 
@@ -667,12 +691,8 @@
         return "Sea Area";
       }
 
-      if(normalized === "voyage_started"){
+      if(isSpecialVoyageEvent(normalized)){
         return "Special Voyage";
-      }
-
-      if(normalized === "voyage_ended"){
-        return "Return";
       }
 
       if(normalized === "log_saved"){
@@ -705,12 +725,8 @@
         return "sea-area-opened";
       }
 
-      if(normalized === "voyage_started"){
-        return "voyage-started";
-      }
-
-      if(normalized === "voyage_ended"){
-        return "voyage-ended";
+      if(isSpecialVoyageEvent(normalized)){
+        return "special-voyage";
       }
 
       if(normalized === "cat_reply"){
@@ -755,17 +771,10 @@
         };
       }
 
-      if(normalized === "voyage_started"){
+      if(isSpecialVoyageEvent(normalized)){
         return {
           symbol: "☽",
           label: "Voyage"
-        };
-      }
-
-      if(normalized === "voyage_ended"){
-        return {
-          symbol: "↩",
-          label: "Return"
         };
       }
 
