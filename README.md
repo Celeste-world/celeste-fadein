@@ -1,4 +1,5 @@
-README.md
+。
+
 # Celeste Harbor
 
 Celeste Harbor は、航海の記録を残し、小さな気配を受け取り、漂着物を集め、船を整え、新しい海域を開いていくための静かなWebの港です。
@@ -51,7 +52,9 @@ Celeste Harbor の中心となる私的な記録ページです。
 - Harbor Cat 応答
 - Harbor Find
 - Harbor Find 表示カード
+- Harbor Find 詳細モーダル
 - Drift Ticket 表示カード
+- Drift Ticket 詳細モーダル
 - Tonight's Harbor
 - Harbor Weather
 - 開放済み海域に連動した Harbor Weather
@@ -89,6 +92,9 @@ Harbor Finds。
 
 未発見アイテム名は表示しません。  
 探索感は出しつつ、ネタバレは避けます。
+
+数量が `0` のアイテムも、一度発見済みであれば表示します。  
+`quantity` は現在の所持数であり、発見済み状態そのものは `user_harbor_items` に行が存在することで判断します。
 
 ### `/vessels/`
 
@@ -157,6 +163,18 @@ Sea Chart。
 時間制の特別航海入口および、航海中のインターフェース。
 
 チケット種別に応じて入口文言を変えます。
+
+含まれるもの：
+
+- Drift Ticket / Special Ticket / Deep Sea Ticket の複数表示
+- チケット選択
+- 航海開始
+- 航海中画面
+- 航海記録入力
+- Special Voyage 用の Harbor Find 抽選
+- 報酬カード表示
+- Harbor Find 詳細モーダル
+- Drift Ticket 詳細モーダル
 
 ### `/fragments/`
 
@@ -312,7 +330,8 @@ Harbor Find の抽選対象 item pool が広がる
 
 漂着物
 
-漂着物は25種類です。
+漂着物は25種類を基本とします。
+Special Voyage 用の追加・連動漂着物は、harbor_items と area_item_pools に整合させます。
 
 /items/ は、発見済みの漂着物だけを表示します。
 
@@ -327,6 +346,28 @@ Harbor Find の抽選対象 item pool が広がる
 海域別表示
 海域ごとの発見数
 進捗バー
+
+数量が 0 のアイテムも、一度発見済みであれば表示します。
+これは「現在所持していないが、過去に見つけたことがある」状態を表します。
+
+アイテム欄の発見数
+
+/items/ のエリア別発見数は、area_item_pools を基準に計算します。
+
+各エリアごとの計算：
+
+分母：
+area_item_pools に登録されている、そのエリアの item_key 数
+
+分子：
+その item_key のうち、user_harbor_items に存在する数
+
+これにより、以下のような不正な表示を防ぎます。
+
+発見済み 6 / 4
+
+他エリアのアイテムは、そのエリアの発見数に含めません。
+
 海域
 
 初期海域は以下です。
@@ -563,6 +604,31 @@ Drift Ticket が付与された場合は Granted
 
 Drift Ticket の通知は Harbor Cat の巻物内にも表示されることがあります。
 
+報酬詳細表示
+
+/log/ および /special-voyage/ の報酬カードはクリックできます。
+
+対応カード：
+
+HARBOR FIND
+DRIFT TICKET
+
+HARBOR FIND の詳細モーダルには以下を表示します。
+
+アイテム画像
+アイテム名
+説明文
+由来文
+レアリティ
+エリアヒント
+状態
+
+DRIFT TICKET の詳細モーダルには以下を表示します。
+
+チケット名
+航海時間
+状態
+簡単な説明
 チケット種別
 
 Celeste Harbor では、現在3種類のチケットを扱います。
@@ -584,9 +650,9 @@ Voyage Log 保存後に、港へ漂着することがある無料チケットで
 
 表示方針：
 
-Drift Ticket は控えめに表示する。
-強い購入バナーのように見せない。
-「流れ着いたもの」として扱う。
+Drift Ticket は控えめに表示する
+強い購入バナーのように見せない
+「流れ着いたもの」として扱う
 Special Voyage Ticket
 
 ユーザーが自分で選んで入る Special Voyage 用の有料予定チケットです。
@@ -649,7 +715,9 @@ Deep Sea Ticket
 取得は確定ではない
 深海系アイテムの抽選率を高める
 2個目も確定ではない
-実装方針
+
+実装方針：
+
 Drift Ticket
   → 最大1個
 
@@ -675,6 +743,8 @@ Special Voyage
 
 有効なチケットを確認する
 チケットがあれば航海入口を表示する
+複数チケットを表示できる
+選択された ticket_id で航海を開始する
 航海開始時にチケットを使用済みにする
 制限時間内だけ特別航海UIを表示する
 終了後は Voyage Log へ戻す
@@ -693,6 +763,191 @@ Deep Sea Ticket
 Drift Ticket を Special Voyage Ticket のように見せないこと。
 それぞれのチケットが持つ意味に合わせて表示文言を変えること。
 
+Special Voyage / Harbor Find 実装仕様
+チケット種別と抽選ルール
+チケット	session_type	duration_minutes	漂着物ルール
+Drift Ticket	drift	5	最大1個。確定ではない
+Special Ticket 10分	special	10	最大1個。確定ではない
+Special Ticket 20分	special	20	最大2個。2個目は低確率
+Deep Sea Ticket	deep_sea	20	最大2個。深海系アイテムの抽選率が高い
+チケット判定
+
+special-voyage-reply では、DB上の session_type と duration_minutes から ticket_rule を解決します。
+
+session_type = drift
+  → drift
+
+session_type = special
+duration_minutes = 10
+  → special_10
+
+session_type = special
+duration_minutes = 20
+  → special_20
+
+session_type = deep_sea
+  → deep_sea
+セッション単位の抽選ルール
+
+漂着物抽選は、1つの voyage_session につき1回だけ実行します。
+
+同じ航海中に複数回「航海記録を残す」を行った場合：
+
+既存の voyage_session_find_rolls を再利用する
+新しい漂着物抽選は行わない
+すでに見つかった漂着物を「船に収められているもの」として再表示する
+アイテムの二重付与は行わない
+
+これにより、Deep Sea Ticket などで「記録を書くたびに報酬が増える」状態を防ぎます。
+
+Special Voyage 抽選ログ
+
+Special Voyage の漂着物抽選結果は、以下のテーブルに保存します。
+
+voyage_session_find_rolls
+
+主なカラム：
+
+カラム	用途
+user_id	航海セッションの所有者
+session_id	voyage_sessions.id との紐づけ
+grant_index	抽選枠番号
+ticket_rule	drift, special_10, special_20, deep_sea など
+roll_passed	確率判定に成功したか
+found	漂着物が見つかったか
+result	アイテム情報・乱数値・メタ情報を含むJSON
+
+例：
+
+{
+  "found": true,
+  "roll_passed": true,
+  "roll_value": 0.1954615022296824,
+  "grant_index": 1,
+  "ticket_rule": "special_20",
+  "item": {
+    "item_key": "moon_shell",
+    "item_name": "月明かりの貝殻",
+    "rarity": "common",
+    "family": "surface"
+  }
+}
+Special Voyage アイテム付与
+
+新しく漂着物が見つかった場合、以下のテーブルに付与します。
+
+user_harbor_items
+
+付与ルール：
+
+未所持アイテムの場合、新規行を追加する
+既に所持している場合、quantity を +1 する
+quantity = 0 のアイテムも「過去に発見済み」としてアイテム欄に表示する
+既存rollを再利用する場合、再付与は行わない
+
+一意制約：
+
+unique(user_id, item_key)
+special-voyage-reply の返却形式
+
+special-voyage-reply Edge Function は、以下のような形式で返却します。
+
+{
+  "ok": true,
+  "reply": "...",
+  "message": "...",
+  "session_id": "...",
+  "ticket_id": "...",
+  "session_type": "...",
+  "duration_minutes": 20,
+  "ticket_rule": "deep_sea",
+  "find_rolls": [],
+  "found_items": [],
+  "roll_insert_results": [],
+  "grant_results": [],
+  "reused_existing_rolls": false
+}
+
+フロント側では、必ず session_id を渡します。
+
+const { data, error } = await client.functions.invoke("special-voyage-reply", {
+  body: {
+    session_id: activeSession.id,
+    message
+  }
+});
+
+session_id がない場合、以下を返します。
+
+{
+  "ok": false,
+  "error": "session_id_required"
+}
+現在の Special Voyage 漂着物プール
+
+現在、Special Voyage の漂着物抽選で使用するアイテムは以下です。
+
+item_key	日本語名	エリア
+moon_shell	月明かりの貝殻	Moonlit Sea
+driftwood	漂流木	Harbor
+sea_glass	波に削られた硝子片	Moonlit Sea
+lighthouse_shard	灯台のかけら	Lighthouse Coast
+fog_compass	霧の羅針盤	Fog Sea
+quiet_chart	静かな海図	Fog Sea
+deep_blue_pearl	深海の青い真珠	Deep Current
+sunken_star	沈んだ星	Deep Current
+abyss_note	深海からの記録片	Deep Current
+
+これらのアイテムは、以下の両方に登録されている必要があります。
+
+harbor_items
+area_item_pools
+
+また、各アイテムには有効な image_path を設定します。
+
+Special Voyage 漂着物画像パス
+item_key	image_path
+moon_shell	/images/items/moon-shell.png
+driftwood	/images/items/driftwood.png
+sea_glass	/images/items/sea-glass.png
+lighthouse_shard	/images/items/lighthouse-shard.png
+fog_compass	/images/items/fog-compass.png
+quiet_chart	/images/items/quiet-chart.png
+deep_blue_pearl	/images/items/deep-blue-pearl.png
+sunken_star	/images/items/sunken-star.png
+abyss_note	/images/items/abyss-note.png
+Special Voyage 整合性確認SQL
+
+抽選対象アイテムの登録状態を確認するSQLです。
+
+select
+  hi.item_key,
+  hi.name_ja,
+  hi.rarity,
+  hi.area_hint,
+  hi.image_path,
+  aip.area_key
+from harbor_items hi
+left join area_item_pools aip
+  on aip.item_key = hi.item_key
+where hi.item_key in (
+  'moon_shell',
+  'driftwood',
+  'sea_glass',
+  'lighthouse_shard',
+  'fog_compass',
+  'quiet_chart',
+  'deep_blue_pearl',
+  'sunken_star',
+  'abyss_note'
+)
+order by hi.item_key, aip.area_key;
+
+期待状態：
+
+すべての item_key が harbor_items に存在する
+すべての item_key に image_path がある
+すべての item_key が area_item_pools に登録済み
 Cabin Log / Timeline 表示
 
 /timeline/ は、港で起きた出来事の視覚的な記録です。
@@ -766,6 +1021,7 @@ user_sea_areas
 voyage_logs
 voyage_tickets
 voyage_sessions
+voyage_session_find_rolls
 user_timeline_events
 重要なView
 
@@ -774,6 +1030,7 @@ user_timeline_events
 user_current_vessel_view
 next_vessel_requirements_view
 user_harbor_items_view
+user_open_area_item_pools_view
 user_timeline_events_view
 user_max_vessel_stage_view
 user_vessels_collection_view
@@ -866,7 +1123,7 @@ check_and_unlock_sea_areas()
 /vessels/
 grant_random_harbor_find(p_tag, p_context, p_force)
 
-Harbor Find の抽選処理を行います。
+通常の Voyage Log における Harbor Find の抽選処理を行います。
 
 機能：
 
@@ -890,6 +1147,24 @@ timeline event 作成
 結果は /log/ の Harbor Find カードにも表示
 結果は /timeline/ に漂着物画像付きで表示
 内部の保証や確率はユーザーに直接見せない
+special-voyage-reply
+
+Special Voyage 中の航海記録に対して、返信生成・漂着物抽選・所持品付与を行います。
+
+機能：
+
+session_id を必須とする
+voyage_sessions からチケット種別を解決する
+voyage_session_find_rolls を確認する
+既存rollがあれば再利用する
+新規rollがあれば voyage_session_find_rolls に保存する
+見つかったアイテムを user_harbor_items に付与する
+既存roll再利用時は再付与しない
+返答文と報酬情報をフロントに返す
+
+使用ページ：
+
+/special-voyage/
 get_user_vessels_collection()
 
 ユーザーの9隻すべての船情報を返します。
@@ -987,7 +1262,9 @@ Voyage Log 保存
 Harbor Cat 応答
 Harbor Find
 Harbor Find 表示カード
+Harbor Find 詳細モーダル
 Drift Ticket 表示カード
+Drift Ticket 詳細モーダル
 /log/ Harbor Weather の海域連動
 Recent Logs
 /timeline/ Cabin Log 分離
@@ -1005,6 +1282,7 @@ Recent Logs
 /items/ 進捗バー
 /items/ 画像表示
 /items/ 画像拡大モーダル
+/items/ 発見数カウント修正
 /vessels/ 船コレクション表示
 /vessels/ 船画像拡大モーダル
 /vessels/ 船詳細モーダル
@@ -1024,6 +1302,17 @@ Special Voyage Ticket は 10分 / 20分 の2種類に固定
 チケット利用時の漂着物取得ルールを定義
 Deep Sea Ticket のユーザー向け文言調整
 /special-voyage/ チケット種別ごとの入口表示
+/special-voyage/ 複数チケット表示
+/special-voyage/ ticket_id 指定による航海開始
+/special-voyage/ session_id 渡し
+/special-voyage/ special-voyage-reply non-2xx 解消
+Special Voyage 漂着物roll保存
+Special Voyage 1セッション1回抽選
+Special Voyage 既存roll再利用
+Special Voyage アイテム付与
+Special Voyage 報酬詳細モーダル
+Special Voyage 漂着物画像整備
+small_driftwood を driftwood に統一
 公開 / 非公開ルート整理
 Legacy移行
 sitemap / robots 整理
@@ -1043,7 +1332,9 @@ README 日本語化
   Voyage Log
   Harbor Cat
   Harbor Find 表示カード
+  Harbor Find 詳細モーダル
   Drift Ticket 表示カード
+  Drift Ticket 詳細モーダル
   Tonight's Harbor
   Harbor Weather
   海域連動 Weather
@@ -1084,6 +1375,9 @@ README 日本語化
 /special-voyage/
   Special Voyage
   チケット種別ごとの入口
+  航海中画面
+  航海記録
+  Special Voyage Harbor Find
 
 /fragments/
   内部 Fragment Archive
@@ -1126,7 +1420,9 @@ README 日本語化
   開放済み海域に連動した Harbor Weather
   Harbor Cat 巻物
   Harbor Find 表示カード
+  Harbor Find 詳細モーダル
   Drift Ticket 表示カード
+  Drift Ticket 詳細モーダル
 
 /timeline/
   画像付きイベントカード
@@ -1149,6 +1445,14 @@ README 日本語化
   Deep Sea Ticket 画像
   統一チケットカードレイアウト
   Drift Ticket の控えめな表示
+
+/special-voyage/
+  複数チケット表示
+  チケット別入口
+  航海中画面
+  航海記録入力
+  報酬カード
+  報酬詳細モーダル
 
 画像モーダルの基本挙動：
 
@@ -1197,23 +1501,34 @@ Timeline画像は user_timeline_events_view.image_path から取得します。
 image pending テキスト
 静かなプレースホルダー
 海域風景画像の場合は海図画像
+
+Special Voyage 漂着物画像：
+
+/images/items/moon-shell.png
+/images/items/driftwood.png
+/images/items/sea-glass.png
+/images/items/lighthouse-shard.png
+/images/items/fog-compass.png
+/images/items/quiet-chart.png
+/images/items/deep-blue-pearl.png
+/images/items/sunken-star.png
+/images/items/abyss-note.png
 今後の候補
 
 今後できること：
 
-/special-voyage/ の現在挙動を実機確認
 /log/ Harbor Weather 文言調整
 /map/ カード位置・スマホ表示調整
 /vessels/ コレクション表示の微調整
 船取得Timelineの表現をさらに豊かにする
 Ticket UX 改善
 有料 Special Voyage Ticket 実装
-チケット利用時の Harbor Find 実装
-Deep Sea Ticket 挙動実装
 optional sound の導入
 管理・メンテナンス用メモ追加
 DB schema backup 作成
 development changelog 作成
+Special Voyage の追加チケット種別検討
+報酬詳細モーダルの表現統一
 保留アイデア
 
 以下は意図的に保留中です。
@@ -1242,6 +1557,8 @@ Map の霧が晴れる表現
 アイテム発見時の静かなReveal
 Timelineイベントの表示演出
 船詳細モーダルの静かなReveal
+Special Voyage 出航時の控えめな演出
+報酬カード表示時の小さな光
 
 アニメーションは静かで最小限にします。
 
