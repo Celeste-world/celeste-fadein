@@ -915,33 +915,43 @@
       if(!currentUser || !currentAccessToken){
         return;
       }
-
+    
       try{
         const userId = encodeURIComponent(currentUser.id);
-
+    
         const events = await fetchSupabase(
           "/rest/v1/user_timeline_events_view?user_id=eq." + userId + "&select=*&order=created_at.desc&limit=50"
         );
-
-        allTimelineEvents = Array.isArray(events) ? events : [];
+    
+        allTimelineEvents = (Array.isArray(events) ? events : []).filter((event) => {
+          const normalizedType = normalizeEventType(event.event_type);
+          const sessionType = event.metadata?.session_type;
+    
+          const isOldSpecialVoyageEvent =
+            ["voyage_started", "voyage_ended"].includes(normalizedType) &&
+            ["drift", "special", "deep_sea"].includes(sessionType);
+    
+          return !isOldSpecialVoyageEvent;
+        });
+    
         showAllTimeline = false;
-
+    
         renderTimeline();
         setStatus("Cabin Log を確認しました。");
       }catch(error){
         console.error("load timeline error:", error);
-
+    
         timelineEl.innerHTML = `
           <div class="empty">
             Cabin Log を読み込めませんでした。<br>
             ${escapeHtml(error.message)}
           </div>
         `;
-
+    
         if(readMoreWrap){
           readMoreWrap.style.display = "none";
         }
-
+    
         setStatus("Cabin Log を読み込めませんでした：" + error.message, true);
       }
     }
