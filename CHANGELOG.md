@@ -1,3 +1,5 @@
+。
+
 # Celeste Harbor 開発変更履歴
 
 Celeste Harbor の開発変更履歴です。
@@ -431,9 +433,215 @@ Deep Sea Ticket
 Deep Sea Ticket は、単に取得数を増やすためのものではなく、
 深い海域に属する漂着物が選ばれやすくなるチケットとして扱う。
 
+Special Voyage 実装
+追加
+voyage_sessions による時間制航海を使用。
+voyage_tickets.ticket_id を指定して Special Voyage を開始する流れを実装。
+/special-voyage/ で複数チケット表示に対応。
+Drift / Special 10分 / Special 20分 / Deep Sea Ticket の航海開始を確認。
+航海中画面を表示。
+航海記録送信時に special-voyage-reply を呼び出す流れを整理。
+変更
+start-special-voyage を ticket_id を受け取る版に変更。
+special-voyage-reply を安全版に差し替え。
+フロント側で special-voyage-reply 呼び出し時に session_id を渡すよう修正。
+const { data, error } = await client.functions.invoke("special-voyage-reply", {
+  body: {
+    session_id: activeSession.id,
+    message
+  }
+});
+修正
+session_id が渡されず session_id_required となり、Edge Function non-2xx になる問題を修正。
+voyage_sessions に ticket_type カラムが存在せず、実際には session_type を使う必要がある問題を修正。
+special の 10分 / 20分 判定を duration_minutes で行うよう修正。
+voyage_session_find_rolls への insert 時に user_id が null になり、not-null 制約で失敗する問題を修正。
+存在しない voyage_replies テーブルへ書き込もうとして失敗する問題を回避。
+意図
+
+Special Voyage を通常の Voyage Log とは別の、時間制の静かな航海として成立させるため。
+また、チケット種別ごとの意味を保ちながら、実装上は安全に session_id と ticket_id で紐づけるため。
+
+Special Voyage Harbor Find 抽選
+追加
+voyage_session_find_rolls テーブルを使用した抽選記録を追加。
+Drift / Special 10分 / Special 20分 / Deep Sea Ticket ごとの抽選ルールを実装。
+Special 20分で2枠抽選が記録されることを確認。
+Deep Sea Ticket で2枠抽選が記録されることを確認。
+Deep Sea Ticket で深海系アイテムが出ることを確認。
+abyss_note / 深海からの記録片 が取得可能であることを確認。
+仕様
+Drift Ticket
+  最大1個
+  確定ではない
+
+Special 10分
+  最大1個
+  確定ではない
+
+Special 20分
+  最大2個
+  2個目は低確率
+
+Deep Sea Ticket
+  最大2個
+  深海系アイテム抽選率を高める
+セッション単位の抽選
+
+漂着物抽選は、1つの voyage_session につき1回だけ実行する仕様に変更した。
+
+同じ航海中に複数回「航海記録を残す」を押した場合：
+
+既存の voyage_session_find_rolls を再利用する
+新しいrollは作成しない
+既存の漂着物を「すでに船に収められているもの」として再表示する
+アイテムの二重付与は行わない
+修正
+航海記録を書くたびに、Deep Sea Ticket の漂着物が2個ずつ増える問題を修正。
+既存roll再利用時に「新しく見つかった」と表示される表現を修正。
+既存roll再利用時は「この航海で見つかった漂着物は、すでに船に収められています」と表示する方針に変更。
+意図
+
+Deep Sea Ticket が「記録を書くたびに報酬が増えるチケット」にならないようにするため。
+漂着物は、1つの航海の中で一度だけ海から届くものとして扱うため。
+
+Special Voyage アイテム付与
+追加
+Special Voyage で見つかった漂着物を user_harbor_items に付与する処理を追加。
+未所持アイテムは新規追加。
+既存アイテムは quantity を +1。
+unique(user_id, item_key) を利用して安全に所持品を更新。
+既存roll再利用時には再付与しない。
+修正
+返答文には漂着物が出るが、/items/ に表示されない問題を修正。
+voyage_session_find_rolls には記録されるが、user_harbor_items に付与されていなかった問題を修正。
+harbor_items に存在しない item_key があると表示できない問題を確認し、抽選対象アイテムのマスタ登録を整理。
+確認
+sea_glass / 波に削られた硝子片 が user_harbor_items に付与されることを確認。
+/items/ に付与済みアイテムが表示されることを確認。
+quantity = 0 のアイテムも一度発見済みであれば表示する仕様であることを再確認。
+意図
+
+Special Voyage の報酬を、その場の文章だけで終わらせず、実際の港の所持品として残すため。
+
+報酬詳細モーダル
+追加
+/special-voyage/ の HARBOR FIND 報酬カードをクリック可能にした。
+/special-voyage/ の DRIFT TICKET 報酬カードをクリック可能にした。
+/log/ の HARBOR FIND カードをクリック可能にした。
+/log/ の DRIFT TICKET カードをクリック可能にした。
+HARBOR FIND の詳細モーダルで画像を表示。
+HARBOR FIND の詳細モーダルで rarity / area_hint を表示。
+DRIFT TICKET の詳細モーダルでチケット説明を表示。
+表示内容
+
+HARBOR FIND：
+
+アイテム画像
+アイテム名
+説明文
+由来文
+rarity
+area_hint
+status
+
+DRIFT TICKET：
+
+チケット名
+duration
+status
+説明文
+修正
+/log/ 側でカードではなく文字だけがクリック対象になっていた問題を修正。
+/log/ の HARBOR FIND モーダルで画像が出ない問題を修正。
+/log/ の HARBOR FIND モーダルで common や Silent Water などのタグが出ない問題を修正。
+/special-voyage/ 側で extractHarborFindNotices is not defined となる問題を修正。
+意図
+
+漂着物やチケットを「ただの通知」ではなく、手に取って確認できるものとして扱うため。
+港に届いたものの存在感を少しだけ強めるため。
+
+/items/ 発見数カウント修正
+修正
+/items/ で港エリアの発見数が 6 / 4 になる問題を修正。
+分母と分子の基準がズレていたため、area_item_pools を基準に統一。
+他エリアのアイテムが現在エリアの発見数に混ざらないよう修正。
+正しい計算
+分母：
+area_item_pools に登録された、そのエリアの item_key 数
+
+分子：
+その item_key のうち、user_harbor_items に存在する数
+確認
+
+港エリアでは以下のみをカウント対象とする。
+
+chart_fragment
+driftwood
+lantern_fragment
+old_rope
+
+moon_shell や sea_glass は moonlit_sea に属するため、港の発見数には含めない。
+
+意図
+
+発見数は「そのエリアで見つかるべきもの」に対する進捗であり、
+単なる所持品数ではないため。
+
+Special Voyage 漂着物マスタ整備
+追加・整理
+
+Special Voyage の抽選対象アイテムを harbor_items と area_item_pools に登録し、画像パスを設定した。
+
+現在の Special Voyage 漂着物プール：
+
+item_key	日本語名	エリア	image_path
+moon_shell	月明かりの貝殻	Moonlit Sea	/images/items/moon-shell.png
+driftwood	漂流木	Harbor	/images/items/driftwood.png
+sea_glass	波に削られた硝子片	Moonlit Sea	/images/items/sea-glass.png
+lighthouse_shard	灯台のかけら	Lighthouse Coast	/images/items/lighthouse-shard.png
+fog_compass	霧の羅針盤	Fog Sea	/images/items/fog-compass.png
+quiet_chart	静かな海図	Fog Sea	/images/items/quiet-chart.png
+deep_blue_pearl	深海の青い真珠	Deep Current	/images/items/deep-blue-pearl.png
+sunken_star	沈んだ星	Deep Current	/images/items/sunken-star.png
+abyss_note	深海からの記録片	Deep Current	/images/items/abyss-note.png
+追加した画像
+/images/items/moon-shell.png
+/images/items/sea-glass.png
+/images/items/lighthouse-shard.png
+/images/items/quiet-chart.png
+/images/items/abyss-note.png
+/images/items/deep-blue-pearl.png
+/images/items/sunken-star.png
+修正
+moon_shell が area_item_pools に未登録だったため、moonlit_sea に登録。
+sea_glass が area_item_pools に未登録だったため、moonlit_sea に登録。
+abyss_note / deep_blue_pearl / sunken_star を deep_current に登録。
+lighthouse_shard を lighthouse_coast に登録。
+quiet_chart を fog_sea に登録。
+image_path = null だったアイテムに画像パスを設定。
+実画像ファイルを /images/items/ に配置。
+意図
+
+抽選で出たアイテムが、返答・所持品・アイテム欄・画像表示まで一貫してつながるようにするため。
+
+small_driftwood 統一
+変更
+small_driftwood を廃止。
+Special Voyage の抽選コードでは、既存の driftwood を使用するよう変更。
+driftwood は既に画像・マスタ・所持品が整っているため、そちらに統一。
+状態
+small_driftwood：廃止
+driftwood：継続使用
+意図
+
+似たアイテムを増やしすぎず、既存の画像付き漂着物に統一するため。
+「小さな流木」と「漂流木」を別アイテムとして扱う必要性が低いため。
+
 2026-05-17 時点の主要完成状態
 /log/
   航海記録、Harbor Cat、Harbor Find、Drift Ticket、海域連動Weather
+  HARBOR FIND / DRIFT TICKET 詳細モーダル
   ヘッダーにログアウト統一
   保存表記は「航海記録を残す」
 
@@ -443,6 +651,8 @@ Deep Sea Ticket は、単に取得数を増やすためのものではなく、
 
 /items/
   海域別Harbor Finds、発見数、進捗バー、画像モーダル
+  発見数カウント修正済み
+  quantity = 0 も発見済みとして表示
   ヘッダーにログアウト統一
 
 /vessels/
@@ -464,7 +674,12 @@ Deep Sea Ticket は、単に取得数を増やすためのものではなく、
 
 /special-voyage/
   チケット種別ごとの入口
+  複数チケット表示
+  ticket_id 指定で航海開始
   航海中の記録導線を「航海記録を残す」に統一
+  special-voyage-reply 連携
+  1セッション1回の漂着物抽選
+  報酬詳細モーダル
 
 /fragments/
   Fragment一覧
@@ -478,12 +693,39 @@ Deep Sea Ticket は、単に取得数を増やすためのものではなく、
   ログイン不要
   noindex, nofollow
   旧Celeste Console系ページを保存
+確認済み
+Drift Ticket
+航海開始できることを確認。
+航海記録への返答が返ることを確認。
+voyage_session_find_rolls にrollが記録されることを確認。
+最大1個、確定ではない仕様を確認。
+Special Ticket 10分
+航海開始できることを確認。
+航海記録への返答が返ることを確認。
+voyage_session_find_rolls にrollが記録されることを確認。
+最大1個、確定ではない仕様を確認。
+Special Ticket 20分
+航海開始できることを確認。
+航海記録への返答が返ることを確認。
+2枠分のrollが記録されることを確認。
+1個目が成功し得ることを確認。
+2個目が低確率であることを確認。
+20分経過後、セッションが expired になることを確認。
+Deep Sea Ticket
+航海開始できることを確認。
+航海記録への返答が返ることを確認。
+2枠分のrollが記録されることを確認。
+Deep Sea 系アイテムが抽選対象に入ることを確認。
+abyss_note / 深海からの記録片 が取得可能であることを確認。
+1回の Deep Sea 航海で複数漂着物が見つかることを確認。
+同じ航海中に再度記録を書いても、追加rollが作成されないことを確認。
+アイテム表示
+見つかった漂着物が user_harbor_items に付与されることを確認。
+付与されたアイテムが /items/ に表示されることを確認。
+quantity = 0 のアイテムも発見済みとして表示されることを確認。
+image_path が存在し、画像ファイルが配置されていれば画像表示されることを確認。
 今後の候補
-/special-voyage/ の実機動作確認
 全内部ページのヘッダー実機確認
-チケット利用時の Harbor Find 実装
-Deep Sea Ticket 挙動実装
-DB schema backup 作成
 README / CHECKLIST の更新反映
 robots.txt / sitemap.xml の最終確認
 /map/ のスマホ表示微調整
@@ -492,6 +734,9 @@ robots.txt / sitemap.xml の最終確認
 有料 Special Voyage Ticket 実装
 development changelog の継続更新
 optional sound の再検討
+Special Voyage の追加チケット種別検討
+報酬詳細モーダルの表現統一
+DB schema backup 作成
 保留
 音
 
