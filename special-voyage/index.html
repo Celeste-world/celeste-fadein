@@ -1080,104 +1080,6 @@
       return null;
     }
 
-    function endEventTitle(session){
-      const sessionType = String(session?.session_type || "");
-      const durationMinutes = Number(session?.duration_minutes || 0);
-
-      if(sessionType === "drift"){
-        return "漂着チケットの航海が終了しました";
-      }
-
-      if(sessionType === "deep_sea"){
-        return "深海航海が終了しました";
-      }
-
-      if(sessionType === "special" && durationMinutes >= 20){
-        return "特別航海が終了しました";
-      }
-
-      return "特別航海が終了しました";
-    }
-
-    function endEventBody(session, reason){
-      const userCancelled = reason === "user_cancelled" || reason === "logout";
-
-      if(userCancelled){
-        return "航海は途中で閉じられ、船は静かに港へ戻りました。";
-      }
-
-      const sessionType = String(session?.session_type || "");
-
-      if(sessionType === "drift"){
-        return "短い航海は、静かに港へ戻りました。";
-      }
-
-      if(sessionType === "deep_sea"){
-        return "深い海へ向かった航海は、静かに終わりました。";
-      }
-
-      return "月明かりの海を進んだ特別航海は、静かに閉じられました。";
-    }
-
-    async function recordVoyageEndedEvent(session, reason){
-      if(!currentUser || !session || !session.id){
-        return;
-      }
-
-      const eventType = "special_voyage_expired";
-      const eventKey = `ended:${session.id}`;
-      const endedAt = new Date().toISOString();
-
-      try{
-        const { data: existingEvent, error: existingError } = await client
-          .from("user_timeline_events")
-          .select("id")
-          .eq("user_id", currentUser.id)
-          .eq("event_type", eventType)
-          .eq("event_key", eventKey)
-          .maybeSingle();
-
-        if(existingError){
-          console.warn("timeline ended lookup failed:", existingError);
-          return;
-        }
-
-        if(existingEvent){
-          return;
-        }
-
-        const { error: insertError } = await client
-          .from("user_timeline_events")
-          .insert([
-            {
-              user_id: currentUser.id,
-              event_type: eventType,
-              event_key: eventKey,
-              title: endEventTitle(session),
-              body: endEventBody(session, reason),
-              metadata: {
-                source: "special_voyage",
-                session_id: session.id,
-                ticket_id: session.ticket_id || null,
-                session_type: session.session_type || null,
-                duration_minutes: session.duration_minutes || null,
-                started_at: session.started_at || null,
-                ends_at: session.ends_at || null,
-                ended_at: endedAt,
-                status: "expired",
-                reason: reason || "ended"
-              }
-            }
-          ]);
-
-        if(insertError){
-          console.warn("timeline ended insert failed:", insertError);
-        }
-      }catch(error){
-        console.warn("timeline ended unexpected error:", error);
-      }
-    }
-
     async function endActiveVoyage(options = {}){
       const {
         reason = "user_cancelled",
@@ -1217,26 +1119,30 @@
       }
 
       try{
-        const { error: updateError } = await client
-          .from("voyage_sessions")
-          .update({
-            status: "expired"
-          })
-          .eq("id", session.id)
-          .eq("user_id", currentUser.id)
-          .eq("status", "active");
+        const { data, error } = await client.functions.invoke("end-voyage-session", {
+          body: {
+            session_id: session.id,
+            reason
+          }
+        });
 
-        if(updateError){
-          console.error("end active voyage update error:", updateError);
+        if(error){
+          console.error("end-voyage-session invoke error:", error);
 
           if(!silent){
-            setStatus("航海を閉じられませんでした：" + updateError.message, true);
+            setStatus("航海を閉じられませんでした：" + error.message, true);
           }
 
           return false;
         }
 
-        await recordVoyageEndedEvent(session, reason);
+        if(!data || data.ended !== true){
+          if(!silent){
+            setStatus(data?.message || "航海を閉じられませんでした。", true);
+          }
+
+          return false;
+        }
 
         if(countdownTimer){
           clearInterval(countdownTimer);
@@ -1893,7 +1799,7 @@
         img.alt = reward.title || "漂着物";
         img.style.width = "96px";
         img.style.height = "96px";
-        img.style.objectFit = "cover";
+        img.style.objectFit = "contain";
         img.style.borderRadius = "18px";
         img.style.border = "1px solid rgba(255,255,255,.14)";
         img.style.background = "rgba(255,255,255,.04)";
@@ -2093,26 +1999,21 @@
         specialReplyText.textContent = data.reply;
         specialReply.style.display = "block";
 
-        renderHarborFindNotice({
+        const payload = {
           harbor_find: data.harbor_find,
           found_items: data.found_items || [],
           find_rolls: data.find_rolls || [],
           grant_results: data.grant_results || [],
           ticket_rule: data.ticket_rule,
           reused_existing_rolls: data.reused_existing_rolls
-        });
+        };
+
+        renderHarborFindNotice(payload);
 
         specialMessage.value = "";
         updateSpecialCount();
 
-        const notices = extractHarborFindRewards({
-          harbor_find: data.harbor_find,
-          found_items: data.found_items || [],
-          find_rolls: data.find_rolls || [],
-          grant_results: data.grant_results || [],
-          ticket_rule: data.ticket_rule,
-          reused_existing_rolls: data.reused_existing_rolls
-        });
+        const notices = extractHarborFindRewards(payload);
 
         if(notices.length){
           setStatus("航海記録を残しました。港に漂着の気配があります。");
