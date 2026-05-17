@@ -1101,7 +1101,7 @@
       statusEl.className = isError ? "status error" : "status";
     }
 
-    function setHarborFindDisplay(state, main, sub){
+    function setHarborFindDisplay(state, main, sub, detail = {}){
       if(!harborFindState || !harborFindMain || !harborFindSub){
         return;
       }
@@ -1142,12 +1142,18 @@
         openLogRewardDetailModal({
           type: "harbor_find",
           label: "HARBOR FIND",
-          title: state === "found"
-            ? "港に届いた漂着物"
-            : "HARBOR FIND",
+          title: detail.title || detail.name_ja || detail.item_name || (
+            state === "found" ? "港に届いた漂着物" : "HARBOR FIND"
+          ),
           status: state || "quiet",
           main: main || "",
-          sub: sub || ""
+          sub: sub || "",
+          item_key: detail.item_key || "",
+          image_path: detail.image_path || "",
+          rarity: detail.rarity || "",
+          area_hint: detail.area_hint || "",
+          description: detail.description || "",
+          origin_text: detail.origin_text || ""
         });
       };
     
