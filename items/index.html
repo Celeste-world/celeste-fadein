@@ -418,6 +418,17 @@
       border:1px solid rgba(70,84,132,.38);
     }
 
+    .find-item.special-detail-card{
+      cursor:pointer;
+    }
+
+    .find-item.special-detail-card:hover{
+      border-color:rgba(169,183,255,.52);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 42%),
+        rgba(10,14,28,.66);
+    }
+
     .image-box{
       width:92px;
       min-width:92px;
@@ -527,7 +538,8 @@
       margin-bottom:34px;
     }
 
-    .image-modal{
+    .image-modal,
+    .item-detail-modal{
       position:fixed;
       inset:0;
       z-index:80;
@@ -541,11 +553,21 @@
       backdrop-filter:blur(4px);
     }
 
-    .image-modal.visible{
+    .item-detail-modal{
+      z-index:90;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.08), transparent 34%),
+        rgba(3,5,11,.74);
+      backdrop-filter:blur(5px);
+    }
+
+    .image-modal.visible,
+    .item-detail-modal.visible{
       display:flex;
     }
 
-    .image-modal-inner{
+    .image-modal-inner,
+    .item-detail-modal-inner{
       position:relative;
       width:min(760px, 100%);
       max-height:88vh;
@@ -559,7 +581,15 @@
       overflow:auto;
     }
 
-    .image-modal-close{
+    .item-detail-modal-inner{
+      width:min(620px, 100%);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 38%),
+        rgba(10,14,28,.96);
+    }
+
+    .image-modal-close,
+    .item-detail-modal-close{
       position:absolute;
       top:12px;
       right:12px;
@@ -576,7 +606,8 @@
       z-index:2;
     }
 
-    .image-modal-close:hover{
+    .image-modal-close:hover,
+    .item-detail-modal-close:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.48);
     }
@@ -607,6 +638,68 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.8;
+    }
+
+    .item-detail-layout{
+      display:grid;
+      grid-template-columns:132px 1fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .item-detail-image{
+      width:132px;
+      height:132px;
+      border-radius:20px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.12), transparent 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.7;
+      text-align:center;
+      padding:14px;
+    }
+
+    .item-detail-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .item-detail-kicker{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    .item-detail-title{
+      font-size:22px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+
+    .item-detail-desc{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .item-detail-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:16px;
     }
 
     footer{
@@ -692,13 +785,15 @@
         aspect-ratio:1 / 1;
       }
 
-      .image-modal{
+      .image-modal,
+      .item-detail-modal{
         align-items:flex-start;
         padding:14px;
         overflow:auto;
       }
 
-      .image-modal-inner{
+      .image-modal-inner,
+      .item-detail-modal-inner{
         padding:16px;
         border-radius:20px;
         max-height:none;
@@ -711,6 +806,16 @@
 
       .image-modal-img{
         max-height:58vh;
+      }
+
+      .item-detail-layout{
+        grid-template-columns:1fr;
+      }
+
+      .item-detail-image{
+        width:100%;
+        height:auto;
+        aspect-ratio:1 / 1;
       }
     }
   </style>
@@ -807,6 +912,16 @@
     </div>
   </div>
 
+  <div class="item-detail-modal" id="itemDetailModal" aria-hidden="true">
+    <div class="item-detail-modal-inner">
+      <button class="item-detail-modal-close" id="itemDetailModalClose" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div id="itemDetailModalContent"></div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -828,10 +943,16 @@
     const imageModalCaption = document.getElementById("imageModalCaption");
     const imageModalClose = document.getElementById("imageModalClose");
 
+    const itemDetailModal = document.getElementById("itemDetailModal");
+    const itemDetailModalClose = document.getElementById("itemDetailModalClose");
+    const itemDetailModalContent = document.getElementById("itemDetailModalContent");
+
     let currentUser = null;
     let currentAccessToken = null;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
+    let specialItemDetailStore = new Map();
+    let specialItemDetailCounter = 0;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -910,6 +1031,70 @@
           >
         </div>
       `;
+    }
+
+    function registerSpecialItemDetail(detail){
+      const id = "special-item-detail-" + (++specialItemDetailCounter);
+      specialItemDetailStore.set(id, detail);
+      return id;
+    }
+
+    function openSpecialItemDetailModal(detail){
+      if(!itemDetailModal || !itemDetailModalContent || !detail){
+        return;
+      }
+
+      const imageHtml = detail.image_path
+        ? `
+          <img
+            src="${escapeHtml(detail.image_path)}"
+            alt="${escapeHtml(detail.title)}"
+            loading="lazy"
+            onerror="this.remove(); this.parentElement.innerHTML='image pending';"
+          >
+        `
+        : "image pending";
+
+      itemDetailModalContent.innerHTML = `
+        <div class="item-detail-layout">
+          <div class="item-detail-image">
+            ${imageHtml}
+          </div>
+
+          <div>
+            <div class="item-detail-kicker">Special Voyage Find</div>
+
+            <div class="item-detail-title">
+              ${escapeHtml(detail.title)}
+            </div>
+
+            <p class="item-detail-desc">
+              ${escapeHtml(detail.description)}
+            </p>
+
+            <div class="item-detail-meta">
+              <span class="tag">数量：${escapeHtml(detail.quantity)}</span>
+              <span class="tag special">Special Voyage</span>
+              <span class="tag fog">本来の海域：霧の向こう</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      itemDetailModal.classList.add("visible");
+      itemDetailModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSpecialItemDetailModal(){
+      if(!itemDetailModal || !itemDetailModalContent){
+        return;
+      }
+
+      itemDetailModal.classList.remove("visible");
+      itemDetailModal.setAttribute("aria-hidden", "true");
+      itemDetailModalContent.innerHTML = "";
+      document.body.style.overflow = "";
     }
 
     async function fetchSupabase(path, options = {}){
@@ -1198,20 +1383,6 @@
       return map;
     }
 
-    function buildAreaNameMap(seaAreas){
-      const map = new Map();
-
-      (seaAreas || []).forEach(area => {
-        const key = area.area_key || area.key || area.id;
-
-        if(key){
-          map.set(String(key), area.name_ja || area.name || key);
-        }
-      });
-
-      return map;
-    }
-
     function areaIsOpen(areaKey, openMap){
       if(openMap.has(areaKey)){
         const status = String(openMap.get(areaKey));
@@ -1331,11 +1502,32 @@
       }
     }
 
-    function renderItemCard(item, extraMetaHtml = ""){
+    function renderItemCard(item, extraMetaHtml = "", options = {}){
       const name = itemNameOf(item);
 
+      const detailId = options.specialDetail
+        ? registerSpecialItemDetail({
+            title: name,
+            image_path: item.image_path || "",
+            quantity: item.quantity || 1,
+            description:
+              item.origin_text ||
+              item.description ||
+              "特別航海で見つかった漂着物です。本来の海域は、まだ霧の向こうにあります。海域が開かれると、この漂着物は本来の海域の記録へ移ります。"
+          })
+        : "";
+
+      const cardAttrs = detailId
+        ? `
+          data-special-item-detail-id="${escapeHtml(detailId)}"
+          role="button"
+          tabindex="0"
+          aria-label="${escapeHtml(name)} の詳細を開く"
+        `
+        : "";
+
       return `
-        <div class="find-item">
+        <div class="find-item${detailId ? " special-detail-card" : ""}" ${cardAttrs}>
           ${imageBox(item.image_path, name)}
 
           <div>
@@ -1364,20 +1556,22 @@
       `;
     }
 
-    function renderSpecialVoyageFindsSection(items, itemAreaMap, areaNameMap){
+    function renderSpecialVoyageFindsSection(items, itemAreaMap){
       if(!items || items.length === 0){
         return "";
       }
-    
+
       const itemsHtml = items.map(item => {
         const extraMetaHtml = `
           <span class="tag special">Special Voyage</span>
           <span class="tag fog">本来の海域：霧の向こう</span>
         `;
-    
-        return renderItemCard(item, extraMetaHtml);
+
+        return renderItemCard(item, extraMetaHtml, {
+          specialDetail: true
+        });
       }).join("");
-    
+
       return `
         <section class="area-section special-voyage-finds">
           <div class="area-head">
@@ -1389,7 +1583,7 @@
                 海域が開かれると、その漂着物は本来の海域の記録へ移ります。
               </p>
             </div>
-    
+
             <div class="area-status-group">
               <div class="area-status">
                 仮置き
@@ -1399,19 +1593,21 @@
               </div>
             </div>
           </div>
-    
+
           <div class="finds-grid">
             ${itemsHtml}
           </div>
         </section>
       `;
     }
-    
+
     function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
+      specialItemDetailStore = new Map();
+      specialItemDetailCounter = 0;
+
       const openMap = buildOpenAreaMap(userAreas);
       const itemAreaMap = buildItemAreaMap(pools);
       const poolCountMap = buildPoolCountMap(pools);
-      const areaNameMap = buildAreaNameMap(seaAreas);
       const displayedItemKeys = new Set();
 
       const areas = (seaAreas || [])
@@ -1563,8 +1759,7 @@
 
       const specialVoyageHtml = renderSpecialVoyageFindsSection(
         specialVoyageItems,
-        itemAreaMap,
-        areaNameMap
+        itemAreaMap
       );
 
       updateSpecialFindMovementNotice(
@@ -1602,6 +1797,11 @@
       document.body.style.overflow = "";
     }
 
+    function closeAllModals(){
+      closeImageModal();
+      closeSpecialItemDetailModal();
+    }
+
     async function logout(){
       setStatus("ログアウトしています。");
 
@@ -1628,6 +1828,17 @@
     });
 
     document.addEventListener("click", function(event){
+      const specialDetailCard = event.target.closest("[data-special-item-detail-id]");
+
+      if(specialDetailCard){
+        const detail = specialItemDetailStore.get(
+          specialDetailCard.dataset.specialItemDetailId
+        );
+
+        openSpecialItemDetailModal(detail);
+        return;
+      }
+
       const imageBoxEl = event.target.closest("[data-image-src]");
 
       if(imageBoxEl){
@@ -1641,15 +1852,34 @@
       if(event.target === imageModal){
         closeImageModal();
       }
+
+      if(event.target === itemDetailModal){
+        closeSpecialItemDetailModal();
+      }
     });
 
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
-        closeImageModal();
+        closeAllModals();
+        return;
       }
 
       if(event.key === "Enter" || event.key === " "){
+        const specialDetailCard = document.activeElement?.closest?.("[data-special-item-detail-id]");
+
+        if(specialDetailCard){
+          event.preventDefault();
+
+          const detail = specialItemDetailStore.get(
+            specialDetailCard.dataset.specialItemDetailId
+          );
+
+          openSpecialItemDetailModal(detail);
+          return;
+        }
+
         const imageBoxEl = document.activeElement?.closest?.("[data-image-src]");
+
         if(imageBoxEl){
           event.preventDefault();
           openImageModal(
@@ -1662,6 +1892,10 @@
 
     if(imageModalClose){
       imageModalClose.addEventListener("click", closeImageModal);
+    }
+
+    if(itemDetailModalClose){
+      itemDetailModalClose.addEventListener("click", closeSpecialItemDetailModal);
     }
 
     client.auth.onAuthStateChange(function(event, session){
