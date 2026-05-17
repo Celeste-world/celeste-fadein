@@ -1307,6 +1307,25 @@
       title.textContent = reward.title || "報酬";
       title.style.margin = "0 0 12px";
       title.style.fontSize = "1.25rem";
+
+      const imageWrap = document.createElement("div");
+        
+        if(reward.type === "harbor_find" && reward.image_path){
+          imageWrap.style.margin = "14px 0 16px";
+        
+          const img = document.createElement("img");
+          img.src = reward.image_path;
+          img.alt = reward.title || "漂着物";
+          img.style.width = "112px";
+          img.style.height = "112px";
+          img.style.objectFit = "cover";
+          img.style.borderRadius = "18px";
+          img.style.border = "1px solid rgba(255,255,255,.16)";
+          img.style.background = "rgba(255,255,255,.04)";
+          img.style.display = "block";
+        
+          imageWrap.appendChild(img);
+        }
     
       const description = document.createElement("p");
       description.style.lineHeight = "1.8";
@@ -1359,6 +1378,11 @@
     
       panel.appendChild(label);
       panel.appendChild(title);
+      
+      if(imageWrap.childNodes.length > 0){
+        panel.appendChild(imageWrap);
+      }
+      
       panel.appendChild(description);
       panel.appendChild(tags);
       panel.appendChild(footer);
