@@ -1030,6 +1030,7 @@
     let currentAccessToken = null;
     let allLogs = [];
     let showAllLogs = false;
+    let catScrollAutoCloseTimer = null;
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -1078,6 +1079,21 @@
       await sleep(420);
     }
 
+    function clearCatScrollAutoCloseTimer(){
+      if(catScrollAutoCloseTimer){
+        clearTimeout(catScrollAutoCloseTimer);
+        catScrollAutoCloseTimer = null;
+      }
+    }
+
+    function scheduleCatScrollAutoClose(delay = 7000){
+      clearCatScrollAutoCloseTimer();
+
+      catScrollAutoCloseTimer = setTimeout(() => {
+        closeCatScroll();
+      }, delay);
+    }
+
     async function fetchWithTimeout(url, options = {}, timeoutMs = 8000){
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -1105,9 +1121,9 @@
       if(!harborFindState || !harborFindMain || !harborFindSub){
         return;
       }
-    
+
       harborFindState.className = "harbor-find-state";
-    
+
       if(state === "found"){
         harborFindState.textContent = "Found";
         harborFindState.classList.add("found");
@@ -1118,10 +1134,10 @@
         harborFindState.textContent = "Quiet";
         harborFindState.classList.add("quiet");
       }
-    
+
       harborFindMain.textContent = main || "";
       harborFindSub.textContent = sub || "";
-    
+
       const card =
         harborFindState.closest(".harbor-find-card") ||
         harborFindState.closest(".cat-scroll-card") ||
@@ -1129,15 +1145,15 @@
         harborFindState.closest(".card") ||
         harborFindState.parentElement?.parentElement ||
         harborFindState.parentElement;
-    
+
       if(!card){
         return;
       }
-    
+
       card.style.cursor = "pointer";
       card.setAttribute("role", "button");
       card.setAttribute("tabindex", "0");
-    
+
       card.onclick = () => {
         openLogRewardDetailModal({
           type: "harbor_find",
@@ -1156,7 +1172,7 @@
           origin_text: detail.origin_text || ""
         });
       };
-    
+
       card.onkeydown = (event) => {
         if(event.key === "Enter" || event.key === " "){
           event.preventDefault();
@@ -1177,9 +1193,9 @@
       if(!driftTicketState || !driftTicketMain || !driftTicketSub){
         return;
       }
-    
+
       driftTicketState.className = "drift-ticket-state";
-    
+
       if(state === "granted"){
         driftTicketState.textContent = "Granted";
         driftTicketState.classList.add("granted");
@@ -1190,10 +1206,10 @@
         driftTicketState.textContent = "Quiet";
         driftTicketState.classList.add("quiet");
       }
-    
+
       driftTicketMain.textContent = main || "";
       driftTicketSub.textContent = sub || "";
-    
+
       const card =
         driftTicketState.closest(".drift-ticket-card") ||
         driftTicketState.closest(".cat-scroll-card") ||
@@ -1202,15 +1218,15 @@
         driftTicketState.closest(".card") ||
         driftTicketState.parentElement?.parentElement ||
         driftTicketState.parentElement;
-    
+
       if(!card){
         return;
       }
-    
+
       card.style.cursor = "pointer";
       card.setAttribute("role", "button");
       card.setAttribute("tabindex", "0");
-    
+
       card.onclick = () => {
         openLogRewardDetailModal({
           type: "drift_ticket",
@@ -1222,7 +1238,7 @@
           duration_minutes: 5
         });
       };
-    
+
       card.onkeydown = (event) => {
         if(event.key === "Enter" || event.key === " "){
           event.preventDefault();
@@ -1232,7 +1248,6 @@
     }
 
     async function openLogRewardDetailModal(reward){
-
       if(reward && reward.type === "harbor_find" && reward.item_key){
         try{
           const { data, error } = await client
@@ -1240,7 +1255,7 @@
             .select("item_key, name_ja, name_en, description, origin_text, rarity, area_hint, image_path")
             .eq("item_key", reward.item_key)
             .maybeSingle();
-      
+
           if(!error && data){
             reward = {
               ...reward,
@@ -1259,12 +1274,13 @@
           console.warn("harbor_items detail fetch catch", error);
         }
       }
+
       let modal = document.getElementById("logRewardDetailModal");
-    
+
       if(!modal){
         modal = document.createElement("div");
         modal.id = "logRewardDetailModal";
-    
+
         modal.style.position = "fixed";
         modal.style.inset = "0";
         modal.style.zIndex = "9999";
@@ -1273,18 +1289,18 @@
         modal.style.justifyContent = "center";
         modal.style.background = "rgba(2, 6, 23, 0.72)";
         modal.style.backdropFilter = "blur(6px)";
-    
+
         modal.addEventListener("click", (event) => {
           if(event.target === modal){
             closeLogRewardDetailModal();
           }
         });
-    
+
         document.body.appendChild(modal);
       }
-    
+
       modal.innerHTML = "";
-    
+
       const panel = document.createElement("div");
       panel.style.width = "min(520px, calc(100vw - 32px))";
       panel.style.maxHeight = "calc(100vh - 64px)";
@@ -1295,42 +1311,42 @@
       panel.style.padding = "22px";
       panel.style.color = "#e6edf7";
       panel.style.boxShadow = "0 24px 80px rgba(0,0,0,.45)";
-    
+
       const label = document.createElement("div");
       label.textContent = reward.label || "REWARD";
       label.style.fontSize = ".72rem";
       label.style.letterSpacing = ".14em";
       label.style.opacity = ".7";
       label.style.marginBottom = "6px";
-    
+
       const title = document.createElement("h3");
       title.textContent = reward.title || "報酬";
       title.style.margin = "0 0 12px";
       title.style.fontSize = "1.25rem";
 
       const imageWrap = document.createElement("div");
-        
-        if(reward.type === "harbor_find" && reward.image_path){
-          imageWrap.style.margin = "14px 0 16px";
-        
-          const img = document.createElement("img");
-          img.src = reward.image_path;
-          img.alt = reward.title || "漂着物";
-          img.style.width = "112px";
-          img.style.height = "112px";
-          img.style.objectFit = "cover";
-          img.style.borderRadius = "18px";
-          img.style.border = "1px solid rgba(255,255,255,.16)";
-          img.style.background = "rgba(255,255,255,.04)";
-          img.style.display = "block";
-        
-          imageWrap.appendChild(img);
-        }
-    
+
+      if(reward.type === "harbor_find" && reward.image_path){
+        imageWrap.style.margin = "14px 0 16px";
+
+        const img = document.createElement("img");
+        img.src = reward.image_path;
+        img.alt = reward.title || "漂着物";
+        img.style.width = "112px";
+        img.style.height = "112px";
+        img.style.objectFit = "cover";
+        img.style.borderRadius = "18px";
+        img.style.border = "1px solid rgba(255,255,255,.16)";
+        img.style.background = "rgba(255,255,255,.04)";
+        img.style.display = "block";
+
+        imageWrap.appendChild(img);
+      }
+
       const description = document.createElement("p");
       description.style.lineHeight = "1.8";
       description.style.margin = "0";
-    
+
       if(reward.type === "drift_ticket"){
         description.innerHTML =
           "短い航海へ出るためのチケットです。<br>" +
@@ -1338,13 +1354,13 @@
       }else{
         description.textContent = reward.sub || reward.main || "";
       }
-    
+
       const tags = document.createElement("div");
       tags.style.display = "flex";
       tags.style.gap = "8px";
       tags.style.flexWrap = "wrap";
       tags.style.marginTop = "16px";
-      
+
       [
         reward.status || "",
         reward.rarity || "",
@@ -1359,11 +1375,11 @@
         tag.style.fontSize = ".75rem";
         tags.appendChild(tag);
       });
-    
+
       const footer = document.createElement("div");
       footer.style.marginTop = "22px";
       footer.style.textAlign = "right";
-    
+
       const closeButton = document.createElement("button");
       closeButton.type = "button";
       closeButton.textContent = "閉じる";
@@ -1373,29 +1389,29 @@
       closeButton.style.borderRadius = "999px";
       closeButton.style.padding = "8px 16px";
       closeButton.style.cursor = "pointer";
-    
+
       closeButton.addEventListener("click", closeLogRewardDetailModal);
-    
+
       footer.appendChild(closeButton);
-    
+
       panel.appendChild(label);
       panel.appendChild(title);
-      
+
       if(imageWrap.childNodes.length > 0){
         panel.appendChild(imageWrap);
       }
-      
+
       panel.appendChild(description);
       panel.appendChild(tags);
       panel.appendChild(footer);
-    
+
       modal.appendChild(panel);
       modal.style.display = "flex";
     }
-    
+
     function closeLogRewardDetailModal(){
       const modal = document.getElementById("logRewardDetailModal");
-    
+
       if(modal){
         modal.style.display = "none";
       }
@@ -1462,6 +1478,8 @@
     }
 
     function openCatScroll(message, mode = "reading"){
+      clearCatScrollAutoCloseTimer();
+
       catReplyText.textContent = message || "";
       catReplyText.classList.remove("fading");
 
@@ -1480,6 +1498,8 @@
     }
 
     async function appendCatScrollNotice(message, label = "Harbor Find"){
+      clearCatScrollAutoCloseTimer();
+
       const current = catReplyText.textContent.trim();
 
       const notice = [
@@ -1498,9 +1518,13 @@
       catIconWrap.classList.remove("reading");
 
       await fadeCatTextTo(nextText);
+
+      scheduleCatScrollAutoClose(7000);
     }
 
     function closeCatScroll(){
+      clearCatScrollAutoCloseTimer();
+
       catOverlay.classList.remove("visible");
       catOverlay.setAttribute("aria-hidden", "true");
       catReplyText.textContent = "";
@@ -1870,6 +1894,8 @@
           catIconWrap.classList.remove("reading");
 
           await fadeCatTextTo(reply);
+          scheduleCatScrollAutoClose(7000);
+
           await holdCatText(2400);
 
           setStatus("航海記録を保存しました。");
@@ -1881,6 +1907,8 @@
           await fadeCatTextTo(
             "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。"
           );
+
+          scheduleCatScrollAutoClose(7000);
 
           await holdCatText(2400);
 
@@ -1914,7 +1942,7 @@
           const foundMessage =
             harborFindResult.message ||
             "今夜、港に小さな漂着物が流れ着きました。";
-        
+
           const harborFindDetail = {
             title:
               harborFindResult.title ||
@@ -1922,47 +1950,47 @@
               harborFindResult.item_name ||
               harborFindResult.name ||
               "港に届いた漂着物",
-        
+
             item_key:
               harborFindResult.item_key ||
               "",
-        
+
             image_path:
               harborFindResult.image_path ||
               "",
-        
+
             rarity:
               harborFindResult.rarity ||
               "",
-        
+
             area_hint:
               harborFindResult.area_hint ||
               "",
-        
+
             description:
               harborFindResult.description ||
               foundMessage ||
               "",
-        
+
             origin_text:
               harborFindResult.origin_text ||
               ""
           };
-        
+
           setHarborFindDisplay(
             "found",
             "港に漂着物が届きました。",
             foundMessage,
             harborFindDetail
           );
-        
+
           await appendCatScrollNotice(
             foundMessage,
             "Harbor Find"
           );
-        
+
           await holdCatText(2400);
-        
+
           setStatus("航海記録を保存しました。港に漂着物が届きました。");
         }else{
           setHarborFindDisplay(
@@ -1976,7 +2004,7 @@
             }
           );
         }
-        
+
         setDriftTicketDisplay(
           "checking",
           "航海券の気配を確認しています。",
