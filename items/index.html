@@ -999,18 +999,39 @@
       const sectionsHtml = areas.map(area => {
         const areaKey = area.area_key || area.key || area.id;
         const open = areaIsOpen(areaKey, openMap);
-        const areaItems = grouped.get(areaKey) || [];
-        const totalCount = poolCountMap.has(areaKey)
-          ? poolCountMap.get(areaKey).size
-          : 0;
-
+       const poolItemKeys = poolCountMap.has(areaKey)
+          ? Array.from(poolCountMap.get(areaKey))
+          : [];
+        
+        const poolItemKeySet = new Set(poolItemKeys);
+        
+        const rawAreaItems = grouped.get(areaKey) || [];
+        
+        const areaItems = poolItemKeys.length
+          ? rawAreaItems.filter((item) => {
+              const itemKey =
+                item.item_key ||
+                item.harbor_item_key ||
+                item.id ||
+                "";
+        
+              return poolItemKeySet.has(itemKey);
+            })
+          : rawAreaItems;
+        
         const foundItemKeys = new Set(
           areaItems
-            .map(item => item.item_key || item.harbor_item_key || item.id)
+            .map((item) => item.item_key || item.harbor_item_key || item.id)
             .filter(Boolean)
         );
-
-        const foundCount = foundItemKeys.size || areaItems.length;
+        
+        const totalCount = poolItemKeys.length
+          ? poolItemKeys.length
+          : areaItems.length;
+        
+        const foundCount = poolItemKeys.length
+          ? poolItemKeys.filter((itemKey) => foundItemKeys.has(itemKey)).length
+          : foundItemKeys.size;
         const progressText = areaProgressText(foundCount, totalCount);
         const progressPercent = areaProgressPercent(foundCount, totalCount);
         const progressClass = foundCount > 0 ? "area-progress" : "area-progress empty-progress";
