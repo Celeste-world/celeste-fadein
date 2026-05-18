@@ -2653,27 +2653,30 @@
       const voyageLogs = params.voyageLogs || [];
       const specialVoyageEvents = params.specialVoyageEvents || [];
       const specialVoyageFinds = params.specialVoyageFinds || [];
-
+    
       const lines = [];
-
-      lines.push("Celeste Harbor Voyage Log");
-      lines.push("Exported at: " + formatDateTimeForExport(new Date().toISOString()));
+    
+      lines.push("Celeste Harbor");
+      lines.push("Voyage Log Export");
       lines.push("");
+      lines.push("出力日時：" + formatDateTimeForExport(new Date().toISOString()));
+      lines.push("");
+      lines.push("このファイルには、あなたの航海記録と Special Voyage の記録が含まれています。");
       lines.push("保存先は、ご利用のブラウザまたは端末の設定に従います。");
       lines.push("");
-
+    
       lines.push("========================");
       lines.push("Voyage Log");
       lines.push("========================");
       lines.push("");
-
+    
       if(voyageLogs.length === 0){
-        lines.push("No voyage logs recorded yet.");
+        lines.push("まだ航海記録はありません。");
         lines.push("");
       }else{
         voyageLogs.forEach(log => {
-          lines.push(formatDateTimeForExport(log.created_at));
-          lines.push("#" + (log.tag || "Harbor"));
+          lines.push("日時：" + formatDateTimeForExport(log.created_at));
+          lines.push("タグ：#" + (log.tag || "Harbor"));
           lines.push("");
           lines.push(cleanExportText(log.content));
           lines.push("");
@@ -2681,61 +2684,61 @@
           lines.push("");
         });
       }
-
+    
       lines.push("========================");
       lines.push("Special Voyage");
       lines.push("========================");
       lines.push("");
-
+    
       if(specialVoyageEvents.length === 0){
-        lines.push("No special voyage start/end records recorded yet.");
+        lines.push("まだ Special Voyage の開始・終了記録はありません。");
         lines.push("");
       }else{
         specialVoyageEvents.forEach(event => {
-          lines.push(formatDateTimeForExport(event.created_at));
-          lines.push(event.title || event.event_key || event.event_type || "Special Voyage");
-
+          const metadata = event.metadata || {};
+    
+          lines.push("日時：" + formatDateTimeForExport(event.created_at));
+          lines.push("内容：" + (event.title || event.event_key || event.event_type || "Special Voyage"));
+    
           if(event.body){
             lines.push("");
             lines.push(cleanExportText(event.body));
           }
-
-          const metadata = event.metadata || {};
-
+    
           if(metadata.started_at){
             lines.push("");
-            lines.push("Started at: " + formatDateTimeForExport(metadata.started_at));
+            lines.push("開始：" + formatDateTimeForExport(metadata.started_at));
           }
-
+    
           if(metadata.ends_at){
-            lines.push("Ends at: " + formatDateTimeForExport(metadata.ends_at));
+            lines.push("終了予定：" + formatDateTimeForExport(metadata.ends_at));
           }
-
+    
           if(metadata.ended_at){
-            lines.push("Ended at: " + formatDateTimeForExport(metadata.ended_at));
+            lines.push("終了：" + formatDateTimeForExport(metadata.ended_at));
           }
-
+    
           if(metadata.session_type){
-            lines.push("Type: " + metadata.session_type);
+            lines.push("航海種別：" + metadata.session_type);
           }
-
+    
           if(metadata.duration_minutes){
-            lines.push("Duration: " + metadata.duration_minutes + " minutes");
+            lines.push("航海時間：" + metadata.duration_minutes + "分");
           }
-
+    
           lines.push("");
           lines.push("------------------------");
           lines.push("");
         });
       }
-
+    
       lines.push("========================");
       lines.push("Special Voyage Finds");
       lines.push("========================");
       lines.push("");
-
+    
       if(specialVoyageFinds.length === 0){
-        lines.push("No special voyage finds recorded yet.");
+        lines.push("まだ Special Voyage Finds はありません。");
         lines.push("");
       }else{
         specialVoyageFinds.forEach(event => {
@@ -2748,40 +2751,41 @@
             event.title ||
             metadata.item_key ||
             "Special Voyage Find";
-
-          lines.push(formatDateTimeForExport(event.created_at));
-          lines.push(itemName);
-
+    
+          lines.push("日時：" + formatDateTimeForExport(event.created_at));
+          lines.push("漂着物：" + itemName);
+    
           if(event.body){
             lines.push("");
             lines.push(cleanExportText(event.body));
           }
-
+    
           if(metadata.rarity){
             lines.push("");
-            lines.push("Rarity: " + metadata.rarity);
+            lines.push("レアリティ：" + metadata.rarity);
           }
-
+    
           if(metadata.item_key){
-            lines.push("Item key: " + metadata.item_key);
+            lines.push("アイテムキー：" + metadata.item_key);
           }
-
+    
           if(metadata.session_type){
-            lines.push("Voyage type: " + metadata.session_type);
+            lines.push("航海種別：" + metadata.session_type);
           }
-
+    
           if(metadata.duration_minutes){
-            lines.push("Duration: " + metadata.duration_minutes + " minutes");
+            lines.push("航海時間：" + metadata.duration_minutes + "分");
           }
-
+    
           lines.push("");
           lines.push("------------------------");
           lines.push("");
         });
       }
-
-      lines.push("CELESTE HARBOR");
-
+    
+      lines.push("この記録は、Celeste Harbor から書き出されました。");
+      lines.push("船は、まだ進んでいます。");
+    
       return lines.join("\n");
     }
 
