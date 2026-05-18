@@ -1583,6 +1583,8 @@
         return;
       }
 
+      let hiddenAreaCount = 0;
+      
       const grouped = new Map();
 
       (finds || []).forEach(item => {
@@ -1636,34 +1638,10 @@
         const progressClass = foundCount > 0 ? "area-progress" : "area-progress empty-progress";
 
         if(!open){
-          return `
-            <section class="area-section locked">
-              <div class="area-head">
-                <div>
-                  <div class="area-kicker">Beyond the Fog</div>
-                  <div class="area-title">霧の向こう</div>
-                  <p class="area-desc">
-                    まだ開かれていない海域です。漂着物の記録も、今は霧の中にあります。
-                  </p>
-                </div>
-
-                <div class="area-status-group">
-                  <div class="area-status">
-                    未開放
-                  </div>
-                  <div class="${progressClass}">
-                    ${escapeHtml(progressText)}
-                  </div>
-                </div>
-              </div>
-
-              <div class="progress-bar" aria-hidden="true">
-                <div class="progress-bar-fill" style="width:${escapeHtml(progressPercent)}%;"></div>
-              </div>
-            </section>
-          `;
+          hiddenAreaCount += 1;
+                  
+          return "";
         }
-
         areaItems.forEach(item => {
           const key = itemKeyOf(item);
 
@@ -1712,6 +1690,39 @@
         `;
       }).join("");
 
+      const hiddenProgressText = "未開放";
+      
+      const hiddenProgressPercent = 0;
+      
+      const hiddenFogHtml = hiddenAreaCount > 0
+        ? `
+          <section class="area-section locked">
+            <div class="area-head">
+              <div>
+                <div class="area-kicker">Beyond the Fog</div>
+                <div class="area-title">霧の向こう</div>
+                <p class="area-desc">
+                  まだ開かれていない海域です。漂着物の記録も、今は霧の中にあります。
+                </p>
+              </div>
+      
+              <div class="area-status-group">
+                <div class="area-status">
+                  未開放
+                </div>
+                <div class="area-progress empty-progress">
+                  ${escapeHtml(hiddenProgressText)}
+                </div>
+              </div>
+      </div>
+
+      <div class="progress-bar" aria-hidden="true">
+        <div class="progress-bar-fill" style="width:${escapeHtml(hiddenProgressPercent)}%;"></div>
+      </div>
+    </section>
+  `
+  : "";
+
       const specialVoyageItems = (finds || []).filter(item => {
         const key = itemKeyOf(item);
         return key && !displayedItemKeys.has(key);
@@ -1728,7 +1739,7 @@
         finds
       );
 
-      harborFindsEl.innerHTML = sectionsHtml + specialVoyageHtml;
+      harborFindsEl.innerHTML = sectionsHtml + hiddenFogHtml + specialVoyageHtml;
     }
 
     function closeAllModals(){
