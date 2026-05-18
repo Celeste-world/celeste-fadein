@@ -1655,7 +1655,7 @@
 
       const defaultDescription = owned
         ? (row?.description || "")
-        : "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。";
+        : "まだ霧の向こうにある船です。今の港には、その輪郭だけがかすかに見えています。";
 
       return {
         title: optionValue(options, "title", defaultTitle),
@@ -1708,7 +1708,7 @@
         const nextDetail = makeDetailFromVessel({}, {
           title: "霧の向こう",
           imagePath: fogVesselImagePath,
-          description: "次の船は、まだ霧の中にあります。必要な漂着物が集まるまで、輪郭は見えません。",
+          description: "次の船は、まだ霧の向こうにあります。今は、その存在だけが静かに示されています。",
           cabin: "",
           key: "",
           seaAreas,
@@ -1752,7 +1752,7 @@
                 </div>
 
                 <p class="vessel-line">
-                  必要な漂着物が集まるまで、次の船の輪郭は見えません。
+                  次の船は、まだ霧の向こうにあります。
                 </p>
 
                 ${detailButton(nextDetail, "霧の記録を見る")}
@@ -1916,7 +1916,7 @@
 
         const displayDesc = owned
           ? (row.description || "")
-          : "まだ港に整っていない船です。必要な漂着物が集まるまで、輪郭は霧の中にあります。";
+          : "まだ霧の向こうにある船です。今の港には、その輪郭だけがかすかに見えています。";
 
         const displayCabin = owned
           ? (row.cabin_description || "")
