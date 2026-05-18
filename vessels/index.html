@@ -241,6 +241,23 @@
       margin-top:14px;
     }
 
+    .detail-card{
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .detail-card:hover{
+      border-color:rgba(169,183,255,.52);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(5,8,17,.55);
+    }
+
+    .detail-card:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:3px;
+    }
+
     .status{
       margin-top:16px;
       color:var(--muted);
@@ -264,6 +281,8 @@
       grid-template-columns:180px 1fr;
       gap:22px;
       align-items:start;
+      padding:0;
+      border-radius:18px;
     }
 
     .image-box{
@@ -432,6 +451,8 @@
       gap:16px;
       align-items:start;
       margin-bottom:16px;
+      border-radius:16px;
+      padding:0;
     }
 
     .next-title{
@@ -1212,6 +1233,17 @@
       `;
     }
 
+    function detailCardAttributes(detail){
+      const id = registerVesselDetail(detail);
+
+      return `
+        data-vessel-detail-id="${escapeHtml(id)}"
+        role="button"
+        tabindex="0"
+        aria-label="${escapeHtml(detail.title || "船の記録")} を開く"
+      `;
+    }
+
     async function fetchSupabase(path, options = {}){
       if(!currentAccessToken){
         throw new Error("Missing access token");
@@ -1687,6 +1719,8 @@
           seaDescription: "この船で開く海域も、まだ霧の向こうにあります。"
         });
 
+        const nextCardAttrs = detailCardAttributes(nextDetail);
+
         const itemsHtml = requirements.map(item => {
           const readyClass = item.is_ready ? " ready" : "";
           const itemDescription = item.item_description || item.origin_text || "";
@@ -1709,7 +1743,7 @@
 
         nextHtml = `
           <div class="next-box">
-            <div class="next-head">
+            <div class="next-head detail-card" ${nextCardAttrs}>
               ${imageBox(fogVesselImagePath, "霧の向こう", true)}
 
               <div>
@@ -1760,9 +1794,11 @@
         `;
       }
 
+      const currentCardAttrs = detailCardAttributes(currentDetail);
+
       vesselEl.innerHTML = `
         <div class="vessel-card">
-          <div class="vessel-layout">
+          <div class="vessel-layout detail-card" ${currentCardAttrs}>
             ${imageBox(
               vessel.display_state === "owned" || vessel.is_owned === true || vessel.is_current === true
                 ? vessel.image_path
@@ -1832,7 +1868,33 @@
         `;
       }
 
-      const cardsHtml = collection.map(row => {
+      const sortedCollection = collection.slice();
+
+      const visibleCollection = [];
+      let lockedAdded = false;
+
+      sortedCollection.forEach(row => {
+        const owned =
+          normalizeBoolean(row.is_owned) ||
+          row.status === "owned" ||
+          Boolean(row.user_vessel_id);
+
+        const current =
+          normalizeBoolean(row.is_current) ||
+          normalizeBoolean(row.is_current_vessel);
+
+        if(owned || current){
+          visibleCollection.push(row);
+          return;
+        }
+
+        if(!lockedAdded){
+          visibleCollection.push(row);
+          lockedAdded = true;
+        }
+      });
+
+      const cardsHtml = visibleCollection.map(row => {
         const owned =
           normalizeBoolean(row.is_owned) ||
           row.status === "owned" ||
@@ -1843,10 +1905,10 @@
           normalizeBoolean(row.is_current_vessel);
 
         const cardClass = current
-          ? "collection-card current"
+          ? "collection-card current detail-card"
           : owned
-            ? "collection-card owned"
-            : "collection-card locked";
+            ? "collection-card owned detail-card"
+            : "collection-card locked detail-card";
 
         const displayName = owned
           ? (row.name_ja || row.name_en || row.vessel_key)
@@ -1890,8 +1952,10 @@
             : "この船が開く海域は、まだ霧の向こうにあります。"
         });
 
+        const cardAttrs = detailCardAttributes(detail);
+
         return `
-          <div class="${cardClass}">
+          <div class="${cardClass}" ${cardAttrs}>
             ${imageBox(
               owned ? row.image_path : fogVesselImagePath,
               displayName,
@@ -2218,28 +2282,29 @@
         console.warn("end special voyage on logout failed:", error);
       }
     }
-    
+
     async function logout(){
       setStatus("ログアウトしています。");
-    
+
       await endSpecialVoyageOnLogout();
-    
+
       const { error } = await client.auth.signOut();
-    
+
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-    
+
       clearActiveVoyageTimer();
-    
+
       currentUser = null;
       currentAccessToken = null;
       activeVoyageSession = null;
-    
+
       window.location.replace("/");
     }
+
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
       logout();
@@ -2253,10 +2318,10 @@
         return;
       }
 
-      const detailButtonEl = event.target.closest("[data-vessel-detail-id]");
+      const detailTarget = event.target.closest("[data-vessel-detail-id]");
 
-      if(detailButtonEl){
-        const id = detailButtonEl.dataset.vesselDetailId;
+      if(detailTarget){
+        const id = detailTarget.dataset.vesselDetailId;
         const detail = vesselDetailStore.get(id);
         openDetailModal(detail);
       }
@@ -2266,6 +2331,12 @@
       const imageBoxEl = event.target.closest("[data-image-src]");
 
       if(imageBoxEl){
+        const detailTarget = imageBoxEl.closest("[data-vessel-detail-id]");
+
+        if(detailTarget){
+          return;
+        }
+
         openImageModal(
           imageBoxEl.dataset.imageSrc,
           imageBoxEl.dataset.imageLabel
@@ -2290,6 +2361,16 @@
       }
 
       if(event.key === "Enter" || event.key === " "){
+        const detailTarget = document.activeElement?.closest?.("[data-vessel-detail-id]");
+
+        if(detailTarget){
+          event.preventDefault();
+          const id = detailTarget.dataset.vesselDetailId;
+          const detail = vesselDetailStore.get(id);
+          openDetailModal(detail);
+          return;
+        }
+
         const imageBoxEl = document.activeElement?.closest?.("[data-image-src]");
 
         if(imageBoxEl){
