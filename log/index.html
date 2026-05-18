@@ -2587,7 +2587,7 @@
 
     function isSpecialVoyageExportEvent(event){
       const type = String(event?.event_type || "").trim();
-    
+
       return (
         type === "special_voyage_started" ||
         type === "special_voyage_expired" ||
@@ -2615,75 +2615,29 @@
         : [];
     }
 
-    async function loadHarborFindsForExport(){
+    async function loadSpecialVoyageFindsForExport(){
       if(!currentUser){
         return [];
       }
 
-      const { data: userItems, error: userItemsError } = await client
-        .from("user_harbor_items")
-        .select("item_key, quantity, first_found_at, updated_at")
-        .eq("user_id", currentUser.id)
-        .order("first_found_at", { ascending: true });
+      const userId = encodeURIComponent(currentUser.id);
 
-      if(userItemsError){
-        console.error("load user_harbor_items error:", userItemsError);
-        throw new Error("Harbor Finds の読み込みに失敗しました。");
-      }
-
-      const items = Array.isArray(userItems) ? userItems : [];
-
-      const itemKeys = Array.from(
-        new Set(
-          items
-            .map(item => item.item_key)
-            .filter(Boolean)
-        )
+      const events = await fetchSupabase(
+        "/rest/v1/user_timeline_events" +
+          "?user_id=eq." + userId +
+          "&event_type=eq.special_voyage_find" +
+          "&select=id,event_type,event_key,title,body,metadata,created_at" +
+          "&order=created_at.asc" +
+          "&limit=1000"
       );
 
-      if(itemKeys.length === 0){
-        return [];
-      }
-
-      const { data: masters, error: mastersError } = await client
-        .from("harbor_items")
-        .select("item_key, name_ja, name_en, rarity")
-        .in("item_key", itemKeys);
-
-      if(mastersError){
-        console.warn("load harbor_items error:", mastersError);
-
-        return items.map(item => ({
-          ...item,
-          name_ja: null,
-          name_en: null,
-          rarity: null
-        }));
-      }
-
-      const masterByKey = new Map(
-        (masters || []).map(master => [master.item_key, master])
-      );
-
-      return items.map(item => {
-        const master = masterByKey.get(item.item_key);
-
-        return {
-          item_key: item.item_key,
-          quantity: item.quantity,
-          first_found_at: item.first_found_at,
-          updated_at: item.updated_at,
-          name_ja: master?.name_ja || null,
-          name_en: master?.name_en || null,
-          rarity: master?.rarity || null
-        };
-      });
+      return Array.isArray(events) ? events : [];
     }
 
     function buildVoyageLogExportText(params){
       const voyageLogs = params.voyageLogs || [];
       const specialVoyageEvents = params.specialVoyageEvents || [];
-      const harborFinds = params.harborFinds || [];
+      const specialVoyageFinds = params.specialVoyageFinds || [];
 
       const lines = [];
 
@@ -2733,9 +2687,25 @@
 
           const metadata = event.metadata || {};
 
-          if(metadata.ends_at){
+          if(metadata.started_at){
             lines.push("");
+            lines.push("Started at: " + formatDateTimeForExport(metadata.started_at));
+          }
+
+          if(metadata.ends_at){
             lines.push("Ends at: " + formatDateTimeForExport(metadata.ends_at));
+          }
+
+          if(metadata.ended_at){
+            lines.push("Ended at: " + formatDateTimeForExport(metadata.ended_at));
+          }
+
+          if(metadata.session_type){
+            lines.push("Type: " + metadata.session_type);
+          }
+
+          if(metadata.duration_minutes){
+            lines.push("Duration: " + metadata.duration_minutes + " minutes");
           }
 
           lines.push("");
@@ -2745,32 +2715,50 @@
       }
 
       lines.push("========================");
-      lines.push("Harbor Finds");
+      lines.push("Special Voyage Finds");
       lines.push("========================");
       lines.push("");
-      lines.push(
-        "Note: 現在のデータ構造では、通常ログ由来とSpecial Voyage由来のFindsを厳密に分離できないため、ここには保存済みのHarbor Findsを出力しています。"
-      );
-      lines.push("");
 
-      if(harborFinds.length === 0){
-        lines.push("No harbor finds recorded yet.");
+      if(specialVoyageFinds.length === 0){
+        lines.push("No special voyage finds recorded yet.");
         lines.push("");
       }else{
-        harborFinds.forEach(item => {
-          const displayName =
-            item.name_ja && item.name_en
-              ? item.name_ja + " / " + item.name_en
-              : item.name_ja || item.name_en || item.item_key;
+        specialVoyageFinds.forEach(event => {
+          const metadata = event.metadata || {};
+          const itemName =
+            metadata.item_name_ja ||
+            metadata.item_name ||
+            metadata.name_ja ||
+            metadata.name ||
+            event.title ||
+            metadata.item_key ||
+            "Special Voyage Find";
 
-          lines.push(formatDateTimeForExport(item.first_found_at || item.updated_at));
-          lines.push(displayName);
+          lines.push(formatDateTimeForExport(event.created_at));
+          lines.push(itemName);
 
-          if(item.rarity){
-            lines.push("Rarity: " + item.rarity);
+          if(event.body){
+            lines.push("");
+            lines.push(cleanExportText(event.body));
           }
 
-          lines.push("Quantity: " + (item.quantity || 1));
+          if(metadata.rarity){
+            lines.push("");
+            lines.push("Rarity: " + metadata.rarity);
+          }
+
+          if(metadata.item_key){
+            lines.push("Item key: " + metadata.item_key);
+          }
+
+          if(metadata.session_type){
+            lines.push("Voyage type: " + metadata.session_type);
+          }
+
+          if(metadata.duration_minutes){
+            lines.push("Duration: " + metadata.duration_minutes + " minutes");
+          }
+
           lines.push("");
           lines.push("------------------------");
           lines.push("");
@@ -2838,15 +2826,15 @@
             return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
           });
 
-        const [specialVoyageEvents, harborFinds] = await Promise.all([
+        const [specialVoyageEvents, specialVoyageFinds] = await Promise.all([
           loadSpecialVoyageEventsForExport(),
-          loadHarborFindsForExport()
+          loadSpecialVoyageFindsForExport()
         ]);
 
         const hasRecords =
           voyageLogs.length > 0 ||
           specialVoyageEvents.length > 0 ||
-          harborFinds.length > 0;
+          specialVoyageFinds.length > 0;
 
         if(!hasRecords){
           downloadModalError.textContent = "There are no voyage records to download yet.";
@@ -2856,7 +2844,7 @@
         const text = buildVoyageLogExportText({
           voyageLogs,
           specialVoyageEvents,
-          harborFinds
+          specialVoyageFinds
         });
 
         triggerTextDownload(text);
