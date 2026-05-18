@@ -32,6 +32,10 @@
       --dim:#747f96;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
+      --gate-height:118px;
+      --gate-bottom:18px;
+      --art-top:18px;
+      --art-safe-bottom:154px;
     }
 
     *{
@@ -47,6 +51,7 @@
 
     body{
       min-height:100vh;
+      min-height:100svh;
       background:#050811;
       color:var(--text);
       font-family:
@@ -69,17 +74,10 @@
     .entrance{
       position:relative;
       min-height:100vh;
+      min-height:100svh;
       width:100%;
       overflow:hidden;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(5,8,17,.00) 0%,
-          rgba(5,8,17,.02) 48%,
-          rgba(5,8,17,.40) 100%
-        ),
-        url("/images/harbor-entrance.png") center center / contain no-repeat,
-        #050811;
+      background:#050811;
     }
 
     .entrance::before{
@@ -90,6 +88,7 @@
         radial-gradient(circle at 50% 18%, rgba(169,183,255,.08), transparent 30%),
         radial-gradient(circle at 72% 78%, rgba(169,183,255,.05), transparent 34%);
       pointer-events:none;
+      z-index:1;
     }
 
     .entrance::after{
@@ -100,26 +99,51 @@
         linear-gradient(
           to bottom,
           rgba(3,5,11,.00) 0%,
-          rgba(3,5,11,.02) 50%,
-          rgba(3,5,11,.46) 100%
+          rgba(3,5,11,.015) 48%,
+          rgba(3,5,11,.28) 100%
         );
       pointer-events:none;
+      z-index:2;
+    }
+
+    .entrance-art{
+      position:absolute;
+      left:50%;
+      top:var(--art-top);
+      z-index:0;
+      width:100%;
+      height:calc(100svh - var(--art-safe-bottom));
+      min-height:0;
+      transform:translateX(-50%);
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(5,8,17,.00) 0%,
+          rgba(5,8,17,.015) 52%,
+          rgba(5,8,17,.18) 100%
+        ),
+        url("/images/harbor-entrance.png") center center / contain no-repeat;
+      filter:
+        brightness(.97)
+        saturate(.98)
+        contrast(1.02);
     }
 
     .gate{
       position:fixed;
       left:50%;
-      bottom:18px;
+      bottom:var(--gate-bottom);
       transform:translateX(-50%);
-      z-index:2;
+      z-index:4;
       width:min(520px, calc(100% - 28px));
+      min-height:var(--gate-height);
       padding:14px;
       border-radius:22px;
       border:1px solid rgba(169,183,255,.18);
-      background:rgba(5,8,17,.38);
+      background:rgba(5,8,17,.42);
       backdrop-filter:blur(8px);
       box-shadow:
-        0 18px 48px rgba(0,0,0,.28),
+        0 18px 48px rgba(0,0,0,.30),
         inset 0 0 0 1px rgba(255,255,255,.018);
       text-align:center;
     }
@@ -198,16 +222,28 @@
     }
 
     @media(max-width:760px){
-      .entrance{
+      :root{
+        --gate-height:156px;
+        --gate-bottom:12px;
+        --art-top:12px;
+        --art-safe-bottom:188px;
+      }
+
+      .entrance-art{
+        width:100%;
+        height:calc(100svh - var(--art-safe-bottom));
         background:
           linear-gradient(
             to bottom,
             rgba(5,8,17,.00) 0%,
-            rgba(5,8,17,.04) 52%,
-            rgba(5,8,17,.48) 100%
+            rgba(5,8,17,.02) 54%,
+            rgba(5,8,17,.22) 100%
           ),
-          url("/images/harbor-entrance.png") center center / contain no-repeat,
-          #050811;
+          url("/images/harbor-entrance.png") center center / contain no-repeat;
+        filter:
+          brightness(.97)
+          saturate(.98)
+          contrast(1.02);
       }
 
       .entrance::after{
@@ -215,17 +251,18 @@
           linear-gradient(
             to bottom,
             rgba(3,5,11,.00) 0%,
-            rgba(3,5,11,.04) 52%,
-            rgba(3,5,11,.52) 100%
+            rgba(3,5,11,.025) 54%,
+            rgba(3,5,11,.32) 100%
           );
       }
 
       .gate{
-        bottom:12px;
+        bottom:var(--gate-bottom);
         width:calc(100% - 20px);
+        min-height:var(--gate-height);
         border-radius:18px;
         padding:12px;
-        background:rgba(5,8,17,.36);
+        background:rgba(5,8,17,.42);
       }
 
       .brand{
@@ -249,8 +286,16 @@
     }
 
     @media(max-height:620px){
+      :root{
+        --gate-height:88px;
+        --gate-bottom:10px;
+        --art-top:10px;
+        --art-safe-bottom:118px;
+      }
+
       .gate{
-        bottom:10px;
+        bottom:var(--gate-bottom);
+        min-height:var(--gate-height);
         padding:10px 12px;
       }
 
@@ -260,8 +305,15 @@
     }
 
     @media(max-width:420px){
+      :root{
+        --gate-height:148px;
+        --gate-bottom:10px;
+        --art-top:10px;
+        --art-safe-bottom:176px;
+      }
+
       .gate{
-        bottom:10px;
+        bottom:var(--gate-bottom);
       }
 
       .brand{
@@ -274,11 +326,19 @@
         padding:8px 9px;
       }
     }
+
+    @media(max-width:380px){
+      :root{
+        --art-safe-bottom:188px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="entrance">
+    <div class="entrance-art" aria-hidden="true"></div>
+
     <section class="gate" aria-label="Celeste Harbor entrance">
       <div class="brand">Celeste Harbor</div>
       <div class="subline">月夜の港へ、静かに帰る。</div>
