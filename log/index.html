@@ -395,6 +395,20 @@
   color:var(--text);
 }
 
+.last-voyage-modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid rgba(160,168,187,.18);
+}
+
+.last-voyage-toggle-btn{
+  font-size:13px;
+  padding:9px 15px;
+}
+
+    
 .memory-tide-card{
   display:none;
   margin:0 0 24px;
@@ -1375,23 +1389,6 @@
         </div>
       </div>
 
-      <div
-        class="memory-tide-card"
-        id="memoryTideCard"
-        role="button"
-        tabindex="0"
-        aria-label="過去の航海記録を開く"
-      >
-        <div class="memory-tide-label">Memory Tide</div>
-        <div class="memory-tide-title" id="memoryTideTitle">
-          以前の潮が、少しだけ戻ってきました。
-        </div>
-        <div class="memory-tide-date" id="memoryTideDate"></div>
-        <div class="memory-tide-hint">
-          タップすると、浮かび上がった記録を開きます。
-        </div>
-      </div>
-      
       
       <section class="weather-panel" aria-label="Tonight's Harbor">
         <div class="weather-label">Tonight's Harbor</div>
@@ -1535,32 +1532,7 @@
       <div class="afterglow-banner" id="afterglowBanner"></div>
     </div>
 
-    <div class="memory-tide-modal-overlay" id="memoryTideModal" aria-hidden="true">
-    <div class="memory-tide-modal" role="dialog" aria-modal="true" aria-labelledby="memoryTideModalTitle">
-      <button
-        class="memory-tide-modal-close"
-        id="memoryTideModalClose"
-        type="button"
-        aria-label="Close"
-      >
-        ×
-      </button>
-  
-      <div class="memory-tide-modal-label">Memory Tide</div>
-  
-      <div class="memory-tide-modal-title" id="memoryTideModalTitle">
-        以前の潮が戻ってきました
-      </div>
-  
-      <div class="memory-tide-modal-meta">
-        <span id="memoryTideModalDate"></span>
-        <span id="memoryTideModalTag"></span>
-      </div>
-  
-      <div class="memory-tide-modal-content" id="memoryTideModalContent"></div>
-    </div>
-  </div>
-
+    
     <div class="last-voyage-modal-overlay" id="lastVoyageModal" aria-hidden="true">
     <div class="last-voyage-modal" role="dialog" aria-modal="true" aria-labelledby="lastVoyageModalTitle">
       <button
@@ -1584,6 +1556,15 @@
       </div>
   
       <div class="last-voyage-modal-content" id="lastVoyageModalContent"></div>
+      <div class="last-voyage-modal-actions" id="lastVoyageModalActions" style="display:none;">
+        <button
+          class="ghost last-voyage-toggle-btn"
+          id="lastVoyageToggleMemoryBtn"
+          type="button"
+        >
+          以前の潮を見る
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1794,22 +1775,19 @@
     const afterglowOverlay = document.getElementById("afterglowOverlay");
     const afterglowBanner = document.getElementById("afterglowBanner"); 
 
-    const memoryTideCard = document.getElementById("memoryTideCard");
-    const memoryTideTitle = document.getElementById("memoryTideTitle");
-    const memoryTideDate = document.getElementById("memoryTideDate");
-    const memoryTideModal = document.getElementById("memoryTideModal");
-    const memoryTideModalClose = document.getElementById("memoryTideModalClose");
-    const memoryTideModalDate = document.getElementById("memoryTideModalDate");
-    const memoryTideModalTag = document.getElementById("memoryTideModalTag");
-    const memoryTideModalContent = document.getElementById("memoryTideModalContent");
+    
 
     const lastVoyageCard = document.getElementById("lastVoyageCard");
     const lastVoyageDate = document.getElementById("lastVoyageDate");
     const lastVoyageModal = document.getElementById("lastVoyageModal");
     const lastVoyageModalClose = document.getElementById("lastVoyageModalClose");
+    const lastVoyageModalLabel = document.querySelector(".last-voyage-modal-label");
+    const lastVoyageModalTitle = document.getElementById("lastVoyageModalTitle");
     const lastVoyageModalDate = document.getElementById("lastVoyageModalDate");
     const lastVoyageModalTag = document.getElementById("lastVoyageModalTag");
     const lastVoyageModalContent = document.getElementById("lastVoyageModalContent");
+    const lastVoyageModalActions = document.getElementById("lastVoyageModalActions");
+    const lastVoyageToggleMemoryBtn = document.getElementById("lastVoyageToggleMemoryBtn");
 
     const contentEl = document.getElementById("content");
     const tagEl = document.getElementById("tag");
@@ -1847,8 +1825,8 @@
     let pendingDownloadFileName = "";
 
     let memoryTideLog = null;
-
     let lastVoyageLog = null;
+    let lastVoyageModalMode = "last";
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -2133,72 +2111,61 @@
     }
     
     function renderMemoryTide(){
-      if(!memoryTideCard || !memoryTideDate || !memoryTideTitle){
-        return;
-      }
-    
-      const picked = pickMemoryTideLog();
-    
-      if(!picked){
-        memoryTideLog = null;
-        memoryTideCard.classList.remove("visible");
-        memoryTideCard.style.display = "none";
-        return;
-      }
-    
-      memoryTideLog = picked;
-    
-      memoryTideTitle.textContent =
-        memoryTideTitleForTag(picked.tag);
-    
-      memoryTideDate.textContent =
-        "記録日：" + formatMemoryTideDate(picked.created_at);
-    
-      memoryTideCard.style.display = "block";
-    
-      requestAnimationFrame(function(){
-        memoryTideCard.classList.add("visible");
-      });
+      memoryTideLog = pickMemoryTideLog();
     }
     
-    function openMemoryTideModal(){
-      if(!memoryTideLog || !memoryTideModal){
+    function setLastVoyageModalMode(mode){
+      const nextMode = mode === "memory" ? "memory" : "last";
+      const sourceLog = nextMode === "memory" ? memoryTideLog : lastVoyageLog;
+    
+      if(!sourceLog){
         return;
       }
     
-      if(memoryTideModalTitle){
-        memoryTideModalTitle.textContent =
-          "以前の潮が戻ってきました";
+      lastVoyageModalMode = nextMode;
+    
+      if(lastVoyageModalLabel){
+        lastVoyageModalLabel.textContent =
+          nextMode === "memory" ? "Memory Tide" : "Last Voyage";
       }
     
-      if(memoryTideModalDate){
-        memoryTideModalDate.textContent =
-          formatMemoryTideDate(memoryTideLog.created_at);
+      if(lastVoyageModalTitle){
+        lastVoyageModalTitle.textContent =
+          nextMode === "memory"
+            ? "以前の潮が戻ってきました"
+            : "前回の航海記録";
       }
     
-      if(memoryTideModalTag){
-        memoryTideModalTag.textContent =
-          "#" + (memoryTideLog.tag || "Harbor");
+      if(lastVoyageModalDate){
+        lastVoyageModalDate.textContent =
+          formatLastVoyageDate(sourceLog.created_at);
       }
     
-      if(memoryTideModalContent){
-        memoryTideModalContent.textContent =
-          memoryTideLog.content || "記録の本文はありません。";
+      if(lastVoyageModalTag){
+        lastVoyageModalTag.textContent =
+          "#" + (sourceLog.tag || "Harbor");
       }
     
-      memoryTideModal.classList.add("visible");
-      memoryTideModal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+      if(lastVoyageModalContent){
+        lastVoyageModalContent.textContent =
+          sourceLog.content || "記録の本文はありません。";
+      }
+    
+      if(lastVoyageModalActions && lastVoyageToggleMemoryBtn){
+        if(memoryTideLog){
+          lastVoyageModalActions.style.display = "flex";
+          lastVoyageToggleMemoryBtn.textContent =
+            nextMode === "memory"
+              ? "前回の記録へ戻る"
+              : "以前の潮を見る";
+        }else{
+          lastVoyageModalActions.style.display = "none";
+        }
+      }
     }
     
     function closeMemoryTideModal(){
-      if(!memoryTideModal){
-        return;
-      }
-    
-      memoryTideModal.classList.remove("visible");
-      memoryTideModal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+      closeLastVoyageModal();
     }
     
     function openLastVoyageModal(){
@@ -2206,20 +2173,7 @@
         return;
       }
     
-      if(lastVoyageModalDate){
-        lastVoyageModalDate.textContent =
-          formatLastVoyageDate(lastVoyageLog.created_at);
-      }
-    
-      if(lastVoyageModalTag){
-        lastVoyageModalTag.textContent =
-          "#" + (lastVoyageLog.tag || "Harbor");
-      }
-    
-      if(lastVoyageModalContent){
-        lastVoyageModalContent.textContent =
-          lastVoyageLog.content || "記録の本文はありません。";
-      }
+      setLastVoyageModalMode("last");
     
       lastVoyageModal.classList.add("visible");
       lastVoyageModal.setAttribute("aria-hidden", "false");
@@ -2234,6 +2188,7 @@
       lastVoyageModal.classList.remove("visible");
       lastVoyageModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+      lastVoyageModalMode = "last";
     }
     
     function escapeHtml(str){
@@ -3961,28 +3916,17 @@
       });
     }
 
-    if(memoryTideCard){
-      memoryTideCard.addEventListener("click", openMemoryTideModal);
-    
-      memoryTideCard.addEventListener("keydown", function(event){
-        if(event.key === "Enter" || event.key === " "){
-          event.preventDefault();
-          openMemoryTideModal();
+    if(lastVoyageToggleMemoryBtn){
+      lastVoyageToggleMemoryBtn.addEventListener("click", function(){
+        if(lastVoyageModalMode === "memory"){
+          setLastVoyageModalMode("last");
+        }else{
+          setLastVoyageModalMode("memory");
         }
       });
     }
+
     
-    if(memoryTideModalClose){
-      memoryTideModalClose.addEventListener("click", closeMemoryTideModal);
-    }
-    
-    if(memoryTideModal){
-      memoryTideModal.addEventListener("click", function(event){
-        if(event.target === memoryTideModal){
-          closeMemoryTideModal();
-        }
-      });
-    }
 
     readMoreBtn.addEventListener("click", function(){
       showAllLogs = !showAllLogs;
