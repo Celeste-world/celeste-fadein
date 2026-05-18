@@ -963,8 +963,8 @@
       </div>
 
       <p class="note">
-        未開放の海域は、名前や詳細をすべて明かしません。<br>
-        霧の向こうにある、ということだけが今の港に見えています。
+        未開放の海域は、ひとつの霧として表示されます。<br>
+        その向こうに何があるのかは、航海が進むまで静かに伏せられています。
       </p>
     </main>
 
@@ -1469,32 +1469,32 @@
         return;
       }
 
+      let hasLockedArea = false;
+      
       const cardsHtml = normalized.map((area, index) => {
         const open = isAreaOpen(area, unlockedMap);
-        const stateClass = open ? "open" : "locked";
+      
+        if(!open){
+          hasLockedArea = true;
+          return "";
+        }
+      
+        const stateClass = "open";
         const positionClass = area.position_class || positionClasses[index % positionClasses.length];
-
-        const displayName = open ? area.name_ja : "霧の向こう";
-        const displayDesc = open
-          ? area.description
-          : "まだ開かれていない海域です。記録と漂着物が積もるまで、詳細は霧に包まれています。";
-
-        const kicker = open
-          ? "Open Sea Area"
-          : "Beyond the Fog";
-
-        const tagText = open
-          ? "開放中"
-          : "未開放";
-
-        const atmosphereText = areaAtmosphereText(area.area_key, open);
-
+      
+        const displayName = area.name_ja;
+        const displayDesc = area.description;
+      
+        const kicker = "Open Sea Area";
+        const tagText = "開放中";
+        const atmosphereText = areaAtmosphereText(area.area_key, true);
+      
         return `
           <article
             class="sea-card ${stateClass} ${positionClass}"
             role="button"
             tabindex="0"
-            data-area-open="${open ? "true" : "false"}"
+            data-area-open="true"
             data-area-key="${escapeHtml(area.area_key)}"
             data-area-title="${escapeHtml(displayName)}"
             data-area-desc="${escapeHtml(displayDesc)}"
@@ -1502,38 +1502,75 @@
             data-area-image="${escapeHtml(areaImagePath(area.area_key))}"
           >
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
-
+      
             <div class="sea-name">
               ${escapeHtml(displayName)}
             </div>
-
+      
             <p class="sea-desc">
               ${escapeHtml(displayDesc)}
             </p>
-
+      
             <div class="sea-atmosphere">
               <div class="sea-atmosphere-label">気配</div>
               <div class="sea-atmosphere-text">
                 ${escapeHtml(atmosphereText)}
               </div>
             </div>
-
+      
             <div class="sea-meta">
               <span class="tag ${stateClass}">
                 ${escapeHtml(tagText)}
-              </span>
-              <span class="tag">
-                Sea ${escapeHtml(index + 1)} / 7
               </span>
             </div>
           </article>
         `;
       }).join("");
-
+      
+      const fogHtml = hasLockedArea
+        ? `
+          <article
+            class="sea-card locked pos-outer"
+            role="button"
+            tabindex="0"
+            data-area-open="false"
+            data-area-key="beyond_the_fog"
+            data-area-title="霧の向こう"
+            data-area-desc="まだ開かれていない海域です。"
+            data-area-atmosphere="まだ霧の向こうにあります。"
+            data-area-image="${escapeHtml(seaChartImagePath)}"
+          >
+            <div class="sea-kicker">Beyond the Fog</div>
+      
+            <div class="sea-name">
+              霧の向こう
+            </div>
+      
+            <p class="sea-desc">
+              まだ開かれていない海域です。詳細は、航海が進むまで霧の中にあります。
+            </p>
+      
+            <div class="sea-atmosphere">
+              <div class="sea-atmosphere-label">気配</div>
+              <div class="sea-atmosphere-text">
+                まだ霧の向こうにあります。
+              </div>
+            </div>
+      
+            <div class="sea-meta">
+              <span class="tag locked">
+                未開放
+              </span>
+            </div>
+          </article>
+        `
+        : "";
+      
       mapArea.innerHTML = `
         <section class="chart-panel" aria-label="Celeste Harbor sea chart">
           <div class="sea-grid">
             ${cardsHtml}
+            ${fogHtml}
           </div>
         </section>
       `;
