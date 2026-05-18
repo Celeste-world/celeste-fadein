@@ -243,6 +243,158 @@
   line-height:2;
   color:var(--muted);
 }
+.last-voyage-card{
+  display:none;
+  margin:0 0 24px;
+  padding:18px 20px;
+  border-radius:18px;
+  border:1px solid rgba(169,183,255,.28);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+    rgba(10,14,28,.70);
+  box-shadow:0 16px 38px rgba(0,0,0,.28);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.last-voyage-card.visible{
+  display:block;
+}
+
+.last-voyage-card:hover{
+  border-color:rgba(169,183,255,.48);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.15), transparent 42%),
+    rgba(12,17,34,.78);
+}
+
+.last-voyage-card:focus-visible{
+  outline:2px solid rgba(169,183,255,.70);
+  outline-offset:3px;
+}
+
+.last-voyage-label{
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+
+.last-voyage-title{
+  font-size:15px;
+  line-height:1.9;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.last-voyage-date{
+  font-size:12px;
+  line-height:1.8;
+  color:var(--muted);
+}
+
+.last-voyage-hint{
+  margin-top:10px;
+  font-size:12px;
+  line-height:1.8;
+  color:var(--dim);
+}
+
+.last-voyage-modal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:130;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+    rgba(3,5,11,.70);
+  backdrop-filter:blur(5px);
+}
+
+.last-voyage-modal-overlay.visible{
+  display:flex;
+}
+
+.last-voyage-modal{
+  position:relative;
+  width:min(560px, 100%);
+  max-height:82vh;
+  overflow:auto;
+  border-radius:24px;
+  border:1px solid rgba(169,183,255,.32);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+    rgba(10,14,28,.96);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.58),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+  padding:24px;
+  color:var(--text);
+}
+
+.last-voyage-modal-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(160,168,187,.28);
+  background:rgba(255,255,255,.035);
+  color:var(--muted);
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  padding:0;
+}
+
+.last-voyage-modal-close:hover{
+  color:var(--text);
+  border-color:rgba(169,183,255,.48);
+}
+
+.last-voyage-modal-label{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.last-voyage-modal-title{
+  font-size:20px;
+  line-height:1.7;
+  color:var(--text);
+  margin-bottom:8px;
+}
+
+.last-voyage-modal-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 18px;
+}
+
+.last-voyage-modal-meta span{
+  font-size:12px;
+  color:var(--muted);
+  border:1px solid rgba(160,168,187,.26);
+  border-radius:999px;
+  padding:5px 10px;
+  background:rgba(255,255,255,.02);
+}
+
+.last-voyage-modal-content{
+  white-space:pre-wrap;
+  font-size:14px;
+  line-height:2.05;
+  color:var(--text);
+}
+
     .weather-panel{
       background:rgba(10,14,28,.70);
       border:1px solid rgba(70,84,132,.45);
@@ -1054,6 +1206,23 @@
         </button>
       </div>
 
+      <div
+        class="last-voyage-card"
+        id="lastVoyageCard"
+        role="button"
+        tabindex="0"
+        aria-label="前回の航海記録を開く"
+      >
+        <div class="last-voyage-label">Last Voyage</div>
+        <div class="last-voyage-title">
+          前回の言葉は、まだ港に静かに残っています。
+        </div>
+        <div class="last-voyage-date" id="lastVoyageDate"></div>
+        <div class="last-voyage-hint">
+          タップすると、前回の記録を開きます。
+        </div>
+      </div>
+
       
       <section class="weather-panel" aria-label="Tonight's Harbor">
         <div class="weather-label">Tonight's Harbor</div>
@@ -1196,6 +1365,32 @@
     <div class="afterglow-overlay" id="afterglowOverlay" aria-hidden="true">
       <div class="afterglow-banner" id="afterglowBanner"></div>
     </div>
+
+    <div class="last-voyage-modal-overlay" id="lastVoyageModal" aria-hidden="true">
+    <div class="last-voyage-modal" role="dialog" aria-modal="true" aria-labelledby="lastVoyageModalTitle">
+      <button
+        class="last-voyage-modal-close"
+        id="lastVoyageModalClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="last-voyage-modal-label">Last Voyage</div>
+  
+      <div class="last-voyage-modal-title" id="lastVoyageModalTitle">
+        前回の航海記録
+      </div>
+  
+      <div class="last-voyage-modal-meta">
+        <span id="lastVoyageModalDate"></span>
+        <span id="lastVoyageModalTag"></span>
+      </div>
+  
+      <div class="last-voyage-modal-content" id="lastVoyageModalContent"></div>
+    </div>
+  </div>
 
     <div class="download-modal-overlay" id="downloadModal" aria-hidden="true">
       <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
@@ -1404,6 +1599,14 @@
     const afterglowOverlay = document.getElementById("afterglowOverlay");
     const afterglowBanner = document.getElementById("afterglowBanner"); 
 
+    const lastVoyageCard = document.getElementById("lastVoyageCard");
+    const lastVoyageDate = document.getElementById("lastVoyageDate");
+    const lastVoyageModal = document.getElementById("lastVoyageModal");
+    const lastVoyageModalClose = document.getElementById("lastVoyageModalClose");
+    const lastVoyageModalDate = document.getElementById("lastVoyageModalDate");
+    const lastVoyageModalTag = document.getElementById("lastVoyageModalTag");
+    const lastVoyageModalContent = document.getElementById("lastVoyageModalContent");
+
     const contentEl = document.getElementById("content");
     const tagEl = document.getElementById("tag");
     const charCount = document.getElementById("charCount");
@@ -1438,6 +1641,8 @@
     let isDownloadingVoyageLog = false;
     let pendingDownloadText = "";
     let pendingDownloadFileName = "";
+
+    let lastVoyageLog = null;
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -1598,6 +1803,91 @@
           afterglowBanner.innerHTML = "";
         }, 800);
       }, 8000);
+    }
+
+    function formatLastVoyageDate(value){
+      if(!value){
+        return "";
+      }
+    
+      const date = new Date(value);
+    
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+    
+      return date.toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+    
+    function renderLastVoyage(){
+      if(!lastVoyageCard || !lastVoyageDate){
+        return;
+      }
+    
+      const latest = (allLogs || [])
+        .slice()
+        .sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        })[0];
+    
+      if(!latest){
+        lastVoyageLog = null;
+        lastVoyageCard.classList.remove("visible");
+        lastVoyageCard.style.display = "none";
+        return;
+      }
+    
+      lastVoyageLog = latest;
+    
+      lastVoyageDate.textContent =
+        "最終記録：" + formatLastVoyageDate(latest.created_at);
+    
+      lastVoyageCard.style.display = "block";
+    
+      requestAnimationFrame(function(){
+        lastVoyageCard.classList.add("visible");
+      });
+    }
+    
+    function openLastVoyageModal(){
+      if(!lastVoyageLog || !lastVoyageModal){
+        return;
+      }
+    
+      if(lastVoyageModalDate){
+        lastVoyageModalDate.textContent =
+          formatLastVoyageDate(lastVoyageLog.created_at);
+      }
+    
+      if(lastVoyageModalTag){
+        lastVoyageModalTag.textContent =
+          "#" + (lastVoyageLog.tag || "Harbor");
+      }
+    
+      if(lastVoyageModalContent){
+        lastVoyageModalContent.textContent =
+          lastVoyageLog.content || "記録の本文はありません。";
+      }
+    
+      lastVoyageModal.classList.add("visible");
+      lastVoyageModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeLastVoyageModal(){
+      if(!lastVoyageModal){
+        return;
+      }
+    
+      lastVoyageModal.classList.remove("visible");
+      lastVoyageModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
     
     function escapeHtml(str){
@@ -2340,6 +2630,7 @@
       clearActiveVoyageTimer();
       closeCatScroll();
       closeDownloadModal();
+      closeLastVoyageModal();
     
       window.location.replace("/");
     }
@@ -3074,6 +3365,7 @@
 
         allLogs = data || [];
         renderLogs();
+        renderLastVoyage();
 
       }catch(error){
         console.error("load error:", error);
@@ -3245,6 +3537,35 @@
         closeDownloadModal();
       }
     });
+
+    if(lastVoyageCard){
+      lastVoyageCard.addEventListener("click", openLastVoyageModal);
+    
+      lastVoyageCard.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          openLastVoyageModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeLastVoyageModal();
+      }
+    });
+    
+    if(lastVoyageModalClose){
+      lastVoyageModalClose.addEventListener("click", closeLastVoyageModal);
+    }
+    
+    if(lastVoyageModal){
+      lastVoyageModal.addEventListener("click", function(event){
+        if(event.target === lastVoyageModal){
+          closeLastVoyageModal();
+        }
+      });
+    }
 
     readMoreBtn.addEventListener("click", function(){
       showAllLogs = !showAllLogs;
