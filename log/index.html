@@ -2710,20 +2710,8 @@
             lines.push("開始：" + formatDateTimeForExport(metadata.started_at));
           }
     
-          if(metadata.ends_at){
-            lines.push("終了予定：" + formatDateTimeForExport(metadata.ends_at));
-          }
-    
           if(metadata.ended_at){
             lines.push("終了：" + formatDateTimeForExport(metadata.ended_at));
-          }
-    
-          if(metadata.session_type){
-            lines.push("航海種別：" + metadata.session_type);
-          }
-    
-          if(metadata.duration_minutes){
-            lines.push("航海時間：" + metadata.duration_minutes + "分");
           }
     
           lines.push("");
@@ -2736,7 +2724,7 @@
       lines.push("Special Voyage Finds");
       lines.push("========================");
       lines.push("");
-    
+      
       if(specialVoyageFinds.length === 0){
         lines.push("まだ Special Voyage Finds はありません。");
         lines.push("");
@@ -2748,35 +2736,16 @@
             metadata.item_name ||
             metadata.name_ja ||
             metadata.name ||
-            event.title ||
-            metadata.item_key ||
-            "Special Voyage Find";
-    
+            "名前のない漂着物";
+      
           lines.push("日時：" + formatDateTimeForExport(event.created_at));
           lines.push("漂着物：" + itemName);
-    
+      
           if(event.body){
             lines.push("");
             lines.push(cleanExportText(event.body));
           }
-    
-          if(metadata.rarity){
-            lines.push("");
-            lines.push("レアリティ：" + metadata.rarity);
-          }
-    
-          if(metadata.item_key){
-            lines.push("アイテムキー：" + metadata.item_key);
-          }
-    
-          if(metadata.session_type){
-            lines.push("航海種別：" + metadata.session_type);
-          }
-    
-          if(metadata.duration_minutes){
-            lines.push("航海時間：" + metadata.duration_minutes + "分");
-          }
-    
+      
           lines.push("");
           lines.push("------------------------");
           lines.push("");
