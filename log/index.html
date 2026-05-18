@@ -1130,11 +1130,11 @@
         <div class="download-modal-label">Voyage Export</div>
     
         <h2 id="downloadModalTitle">
-          Before downloading your voyage records
+          航海記録をダウンロードします
         </h2>
     
         <p id="downloadModalIntro">
-          To protect your saved logs, please confirm your registered email address.
+          記録を保護するため、登録メールアドレスを確認します。
         </p>
     
         <p class="download-note">
@@ -1143,7 +1143,7 @@
     
         <div id="downloadEmailArea">
           <label for="downloadEmailInput">
-            Email address
+            登録メールアドレス
           </label>
     
           <input
@@ -1166,11 +1166,11 @@
     
         <div class="download-modal-actions">
           <button class="ghost" id="downloadCancelBtn" type="button">
-            Cancel
+            キャンセル
           </button>
     
           <button class="primary" id="downloadConfirmBtn" type="button" data-step="email">
-            Continue
+            確認へ進む
           </button>
         </div>
       </div>
@@ -2818,7 +2818,7 @@
     
       if(currentStep === "confirm"){
         if(!pendingDownloadText){
-          downloadModalError.textContent = "Download data is not ready. Please try again.";
+          downloadModalError.textContent = "ダウンロードの準備ができていません。もう一度お試しください。";
           downloadConfirmBtn.dataset.step = "email";
           downloadConfirmBtn.textContent = "Continue";
           return;
@@ -2840,19 +2840,19 @@
       const userEmail = normalizeEmail(currentUser.email);
     
       if(!inputEmail){
-        downloadModalError.textContent = "Please enter your registered email address.";
+        downloadModalError.textContent = "登録メールアドレスを入力してください。.";
         return;
       }
     
       if(!userEmail || inputEmail !== userEmail){
-        downloadModalError.textContent = "The email address does not match your account.";
+        downloadModalError.textContent = "入力されたメールアドレスが、このアカウントと一致しません。";
         return;
       }
     
       try{
         isDownloadingVoyageLog = true;
         downloadConfirmBtn.disabled = true;
-        downloadConfirmBtn.textContent = "Preparing...";
+        downloadConfirmBtn.textContent = "準備しています...";
     
         const voyageLogs = (allLogs || [])
           .slice()
@@ -2871,7 +2871,7 @@
           specialVoyageFinds.length > 0;
     
         if(!hasRecords){
-          downloadModalError.textContent = "There are no voyage records to download yet.";
+          downloadModalError.textContent = "まだダウンロードできる航海記録がありません。";
           return;
         }
     
@@ -2896,7 +2896,7 @@
     
         if(downloadModalIntro){
           downloadModalIntro.textContent =
-            "Please review what will be included before downloading.";
+            "ダウンロード内容を確認してください";
         }
     
         if(downloadConfirmSummary){
@@ -2905,28 +2905,28 @@
     
         if(downloadSummaryText){
           downloadSummaryText.textContent =
-            "The following records will be included:\n\n" +
-            "- Voyage Log: " + voyageLogs.length + " entries\n" +
-            "- Special Voyage: " + specialVoyageEvents.length + " events\n" +
-            "- Special Voyage Finds: " + specialVoyageFinds.length + " finds\n\n" +
-            "File format: .txt\n" +
-            "File name: " + fileName + "\n\n" +
-            "保存先は、ご利用のブラウザまたは端末の設定に従います。";
+          "以下の記録をダウンロードします。\n\n" +
+          "・Voyage Log：" + voyageLogs.length + "件\n" +
+          "・Special Voyage：" + specialVoyageEvents.length + "件\n" +
+          "・Special Voyage Finds：" + specialVoyageFinds.length + "件\n\n" +
+          "形式：.txt\n" +
+          "ファイル名：" + fileName + "\n\n" +
+          "保存先は、ご利用のブラウザまたは端末の設定に従います。";
         }
     
         downloadConfirmBtn.dataset.step = "confirm";
-        downloadConfirmBtn.textContent = "Download";
+        downloadConfirmBtn.textContent = "ダウンロード";
     
       }catch(error){
         console.error("download voyage log error:", error);
         downloadModalError.textContent =
-          error.message || "Failed to prepare your voyage log.";
+          error.message || "航海記録の準備に失敗しました。";
       }finally{
         isDownloadingVoyageLog = false;
         downloadConfirmBtn.disabled = false;
     
         if(downloadConfirmBtn.dataset.step !== "confirm"){
-          downloadConfirmBtn.textContent = "Continue";
+          downloadConfirmBtn.textContent = "確認へ進む";
         }
       }
     }
