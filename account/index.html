@@ -133,7 +133,7 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.8;
-      margin-bottom:18px;
+      margin-bottom:0;
     }
 
     .actions{
@@ -399,13 +399,6 @@
       margin-bottom:16px;
     }
 
-    .empty-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:18px;
-    }
-
     .note{
       max-width:760px;
       font-size:13px;
@@ -516,6 +509,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -531,7 +525,7 @@
       <p class="lead">
         ここでは、ログイン状態と、港に残っている航海券を確認できます。
       </p>
-      
+
       <section class="panel">
         <div class="user" id="userStatus">
           ログイン状態を確認しています。
@@ -581,6 +575,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
       </div>
 
       <div>CELESTE ACCOUNT</div>
@@ -866,8 +861,22 @@
       }
     }
 
+    async function endSpecialVoyageOnLogout(){
+      try{
+        await client.functions.invoke("end-voyage-session", {
+          body: {
+            reason: "logout"
+          }
+        });
+      }catch(error){
+        console.warn("end special voyage on logout failed:", error);
+      }
+    }
+
     async function logout(){
       setStatus("ログアウトしています。");
+
+      await endSpecialVoyageOnLogout();
 
       const { error } = await client.auth.signOut();
 
@@ -976,11 +985,6 @@
             現在、有効な航海券はありません。<br>
             小さな航海券が流れ着く夜があります。<br>
             それは、少しだけ深い海へ降りるための合図です。
-
-            <div class="empty-actions">
-              <a class="btn-ghost" href="/log/">Voyage Logへ戻る</a>
-              <a class="btn-ghost" href="/tickets/">Ticketsを見る</a>
-            </div>
           </div>
         `;
         return;
@@ -1025,7 +1029,7 @@
 
             <div class="actions">
               <a class="btn-primary" href="/special-voyage/">
-                桟橋に行く
+                桟橋へ行く
               </a>
             </div>
           </div>
