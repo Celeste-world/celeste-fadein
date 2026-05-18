@@ -1917,36 +1917,34 @@
       if(!reward || reward.type !== "harbor_find" || !reward.item_key){
         return reward;
       }
-
+    
       const hasDetails =
         reward.description ||
         reward.origin_text ||
-        reward.area_hint ||
         reward.image_path;
-
+    
       if(hasDetails){
         return reward;
       }
-
+    
       try{
         const { data, error } = await client
           .from("harbor_items")
           .select("item_key, name_ja, name_en, description, origin_text, image_path")
           .eq("item_key", reward.item_key)
           .maybeSingle();
-
+    
         if(error || !data){
           console.warn("harbor item detail fetch failed", error);
           return reward;
         }
-
+    
         return {
           ...reward,
           title: data.name_ja || reward.title,
           name_en: data.name_en || "",
           description: data.description || reward.description || "",
           origin_text: data.origin_text || reward.origin_text || "",
-          
           image_path: data.image_path || reward.image_path || ""
         };
       }catch(error){
@@ -1954,17 +1952,17 @@
         return reward;
       }
     }
-
+    
     function buildHarborFindDetail(reward){
       const wrapper = document.createElement("div");
-
+    
       const top = document.createElement("div");
       top.style.display = "flex";
       top.style.gap = "16px";
       top.style.alignItems = "flex-start";
-
+    
       const imageBox = document.createElement("div");
-
+    
       if(reward.image_path){
         const img = document.createElement("img");
         img.src = reward.image_path;
@@ -1975,7 +1973,7 @@
         img.style.borderRadius = "18px";
         img.style.border = "1px solid rgba(255,255,255,.14)";
         img.style.background = "rgba(255,255,255,.04)";
-
+    
         imageBox.appendChild(img);
       }else{
         imageBox.style.width = "96px";
@@ -1989,32 +1987,29 @@
         imageBox.style.opacity = ".65";
         imageBox.innerHTML = "image<br>pending";
       }
-
+    
       const main = document.createElement("div");
       main.style.flex = "1";
-
+    
       const label = document.createElement("div");
       label.textContent = "HARBOR FIND";
       label.style.fontSize = ".72rem";
       label.style.letterSpacing = ".14em";
       label.style.opacity = ".7";
       label.style.marginBottom = "6px";
-
+    
       const title = document.createElement("h3");
       title.textContent = reward.title || "漂着物";
       title.style.margin = "0 0 10px";
       title.style.fontSize = "1.25rem";
-
-      const tags = document.createElement("div");
-      tags.style.display = "none";
-      
+    
       main.appendChild(label);
       main.appendChild(title);
-      
+    
       top.appendChild(imageBox);
       top.appendChild(main);
       wrapper.appendChild(top);
-
+    
       if(reward.description){
         const description = document.createElement("p");
         description.textContent = reward.description;
@@ -2022,7 +2017,7 @@
         description.style.margin = "18px 0 0";
         wrapper.appendChild(description);
       }
-
+    
       if(reward.origin_text){
         const origin = document.createElement("p");
         origin.textContent = reward.origin_text;
@@ -2031,10 +2026,9 @@
         origin.style.opacity = ".8";
         wrapper.appendChild(origin);
       }
-
+    
       return wrapper;
     }
-
     function buildDriftTicketDetail(reward){
       const wrapper = document.createElement("div");
 
