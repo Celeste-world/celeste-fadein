@@ -1932,7 +1932,7 @@
       try{
         const { data, error } = await client
           .from("harbor_items")
-          .select("item_key, name_ja, name_en, description, origin_text, rarity, area_hint, image_path")
+          .select("item_key, name_ja, name_en, description, origin_text, image_path")
           .eq("item_key", reward.item_key)
           .maybeSingle();
 
@@ -1947,8 +1947,7 @@
           name_en: data.name_en || "",
           description: data.description || reward.description || "",
           origin_text: data.origin_text || reward.origin_text || "",
-          rarity: data.rarity || reward.rarity || "",
-          area_hint: data.area_hint || reward.area_hint || "",
+          
           image_path: data.image_path || reward.image_path || ""
         };
       }catch(error){
@@ -2008,29 +2007,11 @@
       title.style.fontSize = "1.25rem";
 
       const tags = document.createElement("div");
-      tags.style.display = "flex";
-      tags.style.gap = "8px";
-      tags.style.flexWrap = "wrap";
-      tags.style.marginBottom = "12px";
-
-      [
-        reward.rarity,
-        reward.family,
-        reward.area_hint
-      ].filter(Boolean).forEach((text) => {
-        const tag = document.createElement("span");
-        tag.textContent = text;
-        tag.style.border = "1px solid rgba(255,255,255,.18)";
-        tag.style.borderRadius = "999px";
-        tag.style.padding = "4px 10px";
-        tag.style.fontSize = ".75rem";
-        tags.appendChild(tag);
-      });
-
+      tags.style.display = "none";
+      
       main.appendChild(label);
       main.appendChild(title);
-      main.appendChild(tags);
-
+      
       top.appendChild(imageBox);
       top.appendChild(main);
       wrapper.appendChild(top);
