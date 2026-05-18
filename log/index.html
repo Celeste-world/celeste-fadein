@@ -2533,16 +2533,61 @@
       return weatherList[weatherIndex];
     }
 
+    function latestVoyageLog(){
+      return (allLogs || [])
+        .slice()
+        .sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        })[0] || null;
+    }
+    
+    function harborMemoryLine(){
+      const latest = latestVoyageLog();
+    
+      if(!latest){
+        return "";
+      }
+    
+      const tag = String(latest.tag || "Harbor");
+    
+      if(tag === "Moonlit"){
+        return "前回の言葉が、まだ月明かりの中に静かに残っています。";
+      }
+    
+      if(tag === "Fog"){
+        return "前回の言葉は、まだ霧の向こうでかすかに揺れています。";
+      }
+    
+      if(tag === "Lighthouse"){
+        return "前回の言葉が、灯台の方を静かに向いているようです。";
+      }
+    
+      if(tag === "Storm"){
+        return "前回の言葉には、まだ波の気配が少し残っています。";
+      }
+    
+      if(tag === "Deep Current"){
+        return "前回の言葉は、深い潮の奥に静かに沈んでいます。";
+      }
+    
+      return "前回の言葉は、まだ港に静かに残っています。";
+    }
+
     async function applyHarborWeather(){
       const openedAreas = await loadUnlockedSeaAreas();
       const weather = pickWeatherFromAreas(openedAreas);
-
+      const memoryLine = harborMemoryLine();
+    
       document.getElementById("weatherMain").textContent = weather.main;
-      document.getElementById("weatherSub").textContent = weather.sub;
+    
+      document.getElementById("weatherSub").textContent = memoryLine
+        ? weather.sub + "\n" + memoryLine
+        : weather.sub;
+    
       document.getElementById("weatherSea").textContent = weather.sea;
       document.getElementById("weatherLight").textContent = weather.light;
     }
-
+    
     async function checkSession(){
       setStatus("ログイン状態を確認しています。");
 
@@ -3366,6 +3411,7 @@
         allLogs = data || [];
         renderLogs();
         renderLastVoyage();
+        await applyHarborWeather();
 
       }catch(error){
         console.error("load error:", error);
