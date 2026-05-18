@@ -727,11 +727,12 @@
 
     function isSpecialVoyageEvent(type){
       const normalized = normalizeEventType(type);
-
+    
       return normalized === "special_voyage_find" ||
         normalized === "special_voyage_started" ||
-        normalized === "special_voyage_completed" ||
+        normalized === "special_voyage_ended" ||
         normalized === "special_voyage_expired" ||
+        normalized === "special_voyage_completed" ||
         normalized === "voyage_started" ||
         normalized === "voyage_ended";
     }
@@ -755,8 +756,20 @@
         return "Sea Area";
       }
 
+      if(normalized === "special_voyage_started"){
+        return "特別航海 開始";
+      }
+      
+      if(normalized === "special_voyage_ended" || normalized === "special_voyage_expired"){
+        return "特別航海 終了";
+      }
+      
+      if(normalized === "special_voyage_find"){
+        return "特別航海の漂着物";
+      }
+      
       if(isSpecialVoyageEvent(normalized)){
-        return "Special Voyage";
+        return "特別航海";
       }
 
       if(normalized === "log_saved"){
