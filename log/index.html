@@ -176,6 +176,39 @@
       white-space:nowrap;
     }
 
+    .afterglow-banner{
+      margin:0 0 24px;
+      padding:18px 20px;
+      border-radius:18px;
+      border:1px solid rgba(169,183,255,.32);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
+        rgba(10,14,28,.74);
+      box-shadow:0 16px 38px rgba(0,0,0,.30);
+      color:var(--text);
+    }
+    
+    .afterglow-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    
+    .afterglow-title{
+      font-size:16px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+    
+    .afterglow-text{
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+    }
+
     .weather-panel{
       background:rgba(10,14,28,.70);
       border:1px solid rgba(70,84,132,.45);
@@ -987,6 +1020,8 @@
         </button>
       </div>
 
+      <div class="afterglow-banner" id="afterglowBanner" style="display:none;"></div>
+
       <section class="weather-panel" aria-label="Tonight's Harbor">
         <div class="weather-label">Tonight's Harbor</div>
 
@@ -1329,6 +1364,7 @@
     const readMoreWrap = document.getElementById("readMoreWrap");
     const readMoreBtn = document.getElementById("readMoreBtn");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
+    const afterglowBanner = document.getElementById("afterglowBanner");
 
     const contentEl = document.getElementById("content");
     const tagEl = document.getElementById("tag");
@@ -1448,6 +1484,65 @@
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
+    }
+
+    function afterglowMessage(reason){
+      if(reason === "expired"){
+        return {
+          title: "特別航海は、静かに満ちました。",
+          text: "船は時間の終わりに港へ戻り、記録だけが海の匂いを残しています。"
+        };
+      }
+    
+      if(reason === "logout"){
+        return {
+          title: "特別航海は、港で閉じられました。",
+          text: "ログアウトの前に、船は静かに航海を終えました。"
+        };
+      }
+    
+      if(reason === "user_cancelled"){
+        return {
+          title: "特別航海は、あなたの手で閉じられました。",
+          text: "船は途中で港へ戻りました。それでも、その航海は確かに記録の中に残っています。"
+        };
+      }
+    
+      return {
+        title: "特別航海は静かに閉じられました。",
+        text: "船は港へ戻り、記録だけが月明かりを残しています。"
+      };
+    }
+    
+    function showSpecialVoyageAfterglow(){
+      if(!afterglowBanner){
+        return;
+      }
+    
+      let payload = null;
+    
+      try{
+        const raw = sessionStorage.getItem("celeste_special_voyage_afterglow");
+        payload = raw ? JSON.parse(raw) : null;
+        sessionStorage.removeItem("celeste_special_voyage_afterglow");
+      }catch(error){
+        console.warn("afterglow read failed:", error);
+        sessionStorage.removeItem("celeste_special_voyage_afterglow");
+      }
+    
+      if(!payload){
+        return;
+      }
+    
+      const message = afterglowMessage(payload.reason);
+    
+      afterglowBanner.innerHTML = `
+        <div class="afterglow-label">Afterglow</div>
+        <div class="afterglow-title">${escapeHtml(message.title)}</div>
+        <div class="afterglow-text">${escapeHtml(message.text)}</div>
+      `;
+    
+      afterglowBanner.style.display = "block";
     }
 
     function escapeHtml(str){
@@ -2124,10 +2219,13 @@
         setStatus("港へ戻りました。");
         updateAuthUI();
 
+        showSpecialVoyageAfterglow();
+
         await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
+        
       }else{
         window.location.replace("/");
         return;
@@ -3126,11 +3224,14 @@
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         updateAuthUI();
-
+        
+        showSpecialVoyageAfterglow();
+        
         await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
+        
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
 
