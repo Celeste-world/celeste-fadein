@@ -178,29 +178,47 @@
 
     .afterglow-banner{
       margin:0 0 24px;
-      padding:18px 20px;
-      border-radius:18px;
-      border:1px solid rgba(169,183,255,.32);
+      padding:20px 22px;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.34);
       background:
-        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
-        rgba(10,14,28,.74);
-      box-shadow:0 16px 38px rgba(0,0,0,.30);
+        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 42%),
+        rgba(10,14,28,.88);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,.44),
+        inset 0 0 0 1px rgba(255,255,255,.025);
       color:var(--text);
+      text-align:center;
+      opacity:0;
+      transform:translateY(8px);
+      transition:
+        opacity .7s ease,
+        transform .7s ease;
+    }
+    
+    .afterglow-banner.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+    
+    .afterglow-banner.fading{
+      opacity:0;
+      transform:translateY(-4px);
     }
     
     .afterglow-label{
-      font-size:12px;
-      letter-spacing:.16em;
+      font-size:11px;
+      letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
     
     .afterglow-title{
-      font-size:16px;
-      line-height:1.8;
+      font-size:20px;
+      line-height:1.7;
       color:var(--text);
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
     
     .afterglow-text{
@@ -1489,27 +1507,27 @@
     function afterglowMessage(reason){
       if(reason === "expired"){
         return {
-          title: "特別航海は、静かに満ちました。",
-          text: "船は時間の終わりに港へ戻り、記録だけが海の匂いを残しています。"
+          title: "特別航海が終わりました",
+          text: "船は静かに港へ戻り、記録だけが海の余韻を残しています。"
         };
       }
     
       if(reason === "logout"){
         return {
-          title: "特別航海は、港で閉じられました。",
-          text: "ログアウトの前に、船は静かに航海を終えました。"
+          title: "特別航海を閉じました",
+          text: "ログアウトの前に、船は静かに港へ戻りました。"
         };
       }
     
       if(reason === "user_cancelled"){
         return {
-          title: "特別航海は、あなたの手で閉じられました。",
-          text: "船は途中で港へ戻りました。それでも、その航海は確かに記録の中に残っています。"
+          title: "港へ戻りました",
+          text: "特別航海はここで閉じられました。残った記録は、静かに港へ戻っています。"
         };
       }
     
       return {
-        title: "特別航海は静かに閉じられました。",
+        title: "特別航海が終わりました",
         text: "船は港へ戻り、記録だけが月明かりを残しています。"
       };
     }
@@ -1537,14 +1555,28 @@
       const message = afterglowMessage(payload.reason);
     
       afterglowBanner.innerHTML = `
-        <div class="afterglow-label">Afterglow</div>
+        <div class="afterglow-label">Special Voyage</div>
         <div class="afterglow-title">${escapeHtml(message.title)}</div>
         <div class="afterglow-text">${escapeHtml(message.text)}</div>
       `;
     
       afterglowBanner.style.display = "block";
+    
+      requestAnimationFrame(function(){
+        afterglowBanner.classList.add("visible");
+      });
+    
+      setTimeout(function(){
+        afterglowBanner.classList.add("fading");
+        afterglowBanner.classList.remove("visible");
+    
+        setTimeout(function(){
+          afterglowBanner.style.display = "none";
+          afterglowBanner.classList.remove("fading");
+          afterglowBanner.innerHTML = "";
+        }, 800);
+      }, 8000);
     }
-
     function escapeHtml(str){
       return String(str || "")
         .replaceAll("&", "&amp;")
