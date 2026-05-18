@@ -1636,24 +1636,19 @@
       if(!payload){
         return [];
       }
-
+    
       const rewards = [];
-
+    
       const foundItems = Array.isArray(payload.found_items)
         ? payload.found_items
         : [];
-
+    
       foundItems.forEach((item) => {
         if(!item){
           return;
         }
-
+    
         rewards.push({
-          type: "harbor_find",
-          label: "HARBOR FIND",
-          title: item.item_name || item.name_ja || item.item_key || "漂着物",
-          item_key: item.item_key || "",
-          rewards.push({
           type: "harbor_find",
           label: "HARBOR FIND",
           title: item.item_name || item.name_ja || item.item_key || "漂着物",
@@ -1663,55 +1658,52 @@
           image_path: item.image_path || ""
         });
       });
-
+    
       const findRolls = Array.isArray(payload.find_rolls)
         ? payload.find_rolls
         : [];
-
+    
       findRolls.forEach((roll) => {
         const item = roll && roll.item ? roll.item : null;
-
+    
         if(!roll || roll.found !== true || !item){
           return;
         }
-
+    
         const alreadyExists = rewards.some((reward) =>
           reward.type === "harbor_find" &&
           reward.item_key &&
           reward.item_key === item.item_key
         );
-
+    
         if(alreadyExists){
           return;
         }
-
+    
         rewards.push({
           type: "harbor_find",
           label: "HARBOR FIND",
           title: item.item_name || item.name_ja || item.item_key || "漂着物",
           item_key: item.item_key || "",
-          rarity: item.rarity || "",
-          family: item.family || "",
           description: item.description || "",
           origin_text: item.origin_text || "",
-          area_hint: item.area_hint || "",
           image_path: item.image_path || ""
         });
       });
-
+    
       const grantedTickets = []
         .concat(Array.isArray(payload.granted_tickets) ? payload.granted_tickets : [])
         .concat(Array.isArray(payload.drift_tickets) ? payload.drift_tickets : [])
         .concat(Array.isArray(payload.tickets) ? payload.tickets : []);
-
+    
       grantedTickets.forEach((ticket) => {
         if(!ticket){
           return;
         }
-
+    
         const ticketType = ticket.ticket_type || ticket.type || "drift";
         const durationMinutes = ticket.duration_minutes || ticket.duration || 5;
-
+    
         rewards.push({
           type: "drift_ticket",
           label: "DRIFT TICKET",
@@ -1725,17 +1717,17 @@
           expires_at: ticket.expires_at || ""
         });
       });
-
+    
       const harborFind = payload.harbor_find || payload;
-
+    
       if(Array.isArray(harborFind.notices)){
         harborFind.notices.forEach((notice) => {
           const text = String(notice || "").trim();
-
+    
           if(!text){
             return;
           }
-
+    
           rewards.push({
             type: "notice",
             label: "NOTICE",
@@ -1744,18 +1736,18 @@
           });
         });
       }
-
+    
       if(rewards.length > 0){
         return rewards;
       }
-
+    
       if(Array.isArray(harborFind.rolls)){
         return harborFind.rolls
           .filter((row) => row && row.found === true)
           .map((row) => {
             const result = row.result || {};
             const item = result.item || row.item || {};
-
+    
             return {
               type: "harbor_find",
               label: "HARBOR FIND",
@@ -1771,7 +1763,7 @@
             };
           });
       }
-
+    
       return [];
     }
 
