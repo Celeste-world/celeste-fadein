@@ -2586,31 +2586,13 @@
     }
 
     function isSpecialVoyageExportEvent(event){
-      const metadata = event && event.metadata ? event.metadata : {};
-
-      const text = [
-        event?.event_type || "",
-        event?.event_key || "",
-        event?.title || "",
-        event?.body || "",
-        JSON.stringify(metadata || {})
-      ].join(" ").toLowerCase();
-
-      const isSpecial =
-        text.includes("special_voyage") ||
-        text.includes("special voyage") ||
-        metadata.source === "special_voyage" ||
-        metadata.session_type === "special";
-
-      const isStartOrEnd =
-        text.includes("start") ||
-        text.includes("started") ||
-        text.includes("begin") ||
-        text.includes("end") ||
-        text.includes("ended") ||
-        Boolean(metadata.ends_at);
-
-      return isSpecial && isStartOrEnd;
+      const type = String(event?.event_type || "").trim();
+    
+      return (
+        type === "special_voyage_started" ||
+        type === "special_voyage_expired" ||
+        type === "special_voyage_ended"
+      );
     }
 
     async function loadSpecialVoyageEventsForExport(){
