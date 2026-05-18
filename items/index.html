@@ -416,17 +416,20 @@
       border-radius:16px;
       background:rgba(10,14,28,.62);
       border:1px solid rgba(70,84,132,.38);
-    }
-
-    .find-item.special-detail-card{
       cursor:pointer;
+      transition:.18s ease;
     }
 
-    .find-item.special-detail-card:hover{
+    .find-item:hover{
       border-color:rgba(169,183,255,.52);
       background:
-        radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 42%),
+        radial-gradient(circle at top left, rgba(169,183,255,.05), transparent 42%),
         rgba(10,14,28,.66);
+    }
+
+    .find-item:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:3px;
     }
 
     .image-box{
@@ -447,18 +450,12 @@
       line-height:1.7;
       text-align:center;
       padding:14px;
-      cursor:pointer;
       transition:.18s ease;
     }
 
-    .image-box:hover{
+    .find-item:hover .image-box{
       border-color:rgba(169,183,255,.48);
       transform:translateY(-1px);
-    }
-
-    .image-box:focus-visible{
-      outline:2px solid rgba(169,183,255,.7);
-      outline-offset:3px;
     }
 
     .image-box img{
@@ -538,57 +535,38 @@
       margin-bottom:34px;
     }
 
-    .image-modal,
     .item-detail-modal{
       position:fixed;
       inset:0;
-      z-index:80;
+      z-index:90;
       display:none;
       align-items:center;
       justify-content:center;
       padding:24px;
       background:
         radial-gradient(circle at center, rgba(169,183,255,.08), transparent 34%),
-        rgba(3,5,11,.72);
-      backdrop-filter:blur(4px);
-    }
-
-    .item-detail-modal{
-      z-index:90;
-      background:
-        radial-gradient(circle at center, rgba(169,183,255,.08), transparent 34%),
         rgba(3,5,11,.74);
       backdrop-filter:blur(5px);
     }
 
-    .image-modal.visible,
     .item-detail-modal.visible{
       display:flex;
     }
 
-    .image-modal-inner,
     .item-detail-modal-inner{
       position:relative;
-      width:min(760px, 100%);
+      width:min(620px, 100%);
       max-height:88vh;
       border-radius:24px;
       border:1px solid rgba(169,183,255,.28);
       background:
         radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 38%),
-        rgba(10,14,28,.94);
+        rgba(10,14,28,.96);
       box-shadow:0 28px 80px rgba(0,0,0,.58);
       padding:26px;
       overflow:auto;
     }
 
-    .item-detail-modal-inner{
-      width:min(620px, 100%);
-      background:
-        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 38%),
-        rgba(10,14,28,.96);
-    }
-
-    .image-modal-close,
     .item-detail-modal-close{
       position:absolute;
       top:12px;
@@ -606,38 +584,9 @@
       z-index:2;
     }
 
-    .image-modal-close:hover,
     .item-detail-modal-close:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.48);
-    }
-
-    .image-modal-img-wrap{
-      width:100%;
-      max-height:70vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      border-radius:18px;
-      background:
-        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
-        rgba(5,8,17,.62);
-    }
-
-    .image-modal-img{
-      max-width:100%;
-      max-height:70vh;
-      object-fit:contain;
-      display:block;
-    }
-
-    .image-modal-caption{
-      margin-top:14px;
-      text-align:center;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
     }
 
     .item-detail-layout{
@@ -693,6 +642,14 @@
       line-height:2;
       color:var(--muted);
       margin:0;
+    }
+
+    .item-detail-origin{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:14px 0 0;
+      opacity:.9;
     }
 
     .item-detail-meta{
@@ -785,27 +742,17 @@
         aspect-ratio:1 / 1;
       }
 
-      .image-modal,
       .item-detail-modal{
         align-items:flex-start;
         padding:14px;
         overflow:auto;
       }
 
-      .image-modal-inner,
       .item-detail-modal-inner{
         padding:16px;
         border-radius:20px;
         max-height:none;
         margin:24px 0;
-      }
-
-      .image-modal-img-wrap{
-        max-height:58vh;
-      }
-
-      .image-modal-img{
-        max-height:58vh;
       }
 
       .item-detail-layout{
@@ -892,20 +839,6 @@
 
   </div>
 
-  <div class="image-modal" id="imageModal" aria-hidden="true">
-    <div class="image-modal-inner">
-      <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Close">
-        ×
-      </button>
-
-      <div class="image-modal-img-wrap">
-        <img class="image-modal-img" id="imageModalImg" src="" alt="">
-      </div>
-
-      <div class="image-modal-caption" id="imageModalCaption"></div>
-    </div>
-  </div>
-
   <div class="item-detail-modal" id="itemDetailModal" aria-hidden="true">
     <div class="item-detail-modal-inner">
       <button class="item-detail-modal-close" id="itemDetailModalClose" type="button" aria-label="Close">
@@ -932,11 +865,6 @@
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
     const specialFindNotice = document.getElementById("specialFindNotice");
 
-    const imageModal = document.getElementById("imageModal");
-    const imageModalImg = document.getElementById("imageModalImg");
-    const imageModalCaption = document.getElementById("imageModalCaption");
-    const imageModalClose = document.getElementById("imageModalClose");
-
     const itemDetailModal = document.getElementById("itemDetailModal");
     const itemDetailModalClose = document.getElementById("itemDetailModalClose");
     const itemDetailModalContent = document.getElementById("itemDetailModalContent");
@@ -945,8 +873,8 @@
     let currentAccessToken = null;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
-    let specialItemDetailStore = new Map();
-    let specialItemDetailCounter = 0;
+    let itemDetailStore = new Map();
+    let itemDetailCounter = 0;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1009,14 +937,7 @@
       }
 
       return `
-        <div
-          class="image-box"
-          data-image-src="${escapeHtml(imagePath)}"
-          data-image-label="${safeLabel}"
-          role="button"
-          tabindex="0"
-          aria-label="${safeLabel} を拡大表示"
-        >
+        <div class="image-box" aria-label="${safeLabel}">
           <img
             src="${escapeHtml(imagePath)}"
             alt="${safeLabel}"
@@ -1027,13 +948,13 @@
       `;
     }
 
-    function registerSpecialItemDetail(detail){
-      const id = "special-item-detail-" + (++specialItemDetailCounter);
-      specialItemDetailStore.set(id, detail);
+    function registerItemDetail(detail){
+      const id = "item-detail-" + (++itemDetailCounter);
+      itemDetailStore.set(id, detail);
       return id;
     }
 
-    function openSpecialItemDetailModal(detail){
+    function openItemDetailModal(detail){
       if(!itemDetailModal || !itemDetailModalContent || !detail){
         return;
       }
@@ -1049,6 +970,38 @@
         `
         : "image pending";
 
+      const normalMetaHtml = `
+        ${
+          detail.quantity !== undefined && detail.quantity !== null
+            ? `<span class="tag">数量：${escapeHtml(detail.quantity)}</span>`
+            : ""
+        }
+        ${
+          detail.rarity
+            ? `<span class="tag">${escapeHtml(detail.rarity)}</span>`
+            : ""
+        }
+        ${
+          detail.area_hint
+            ? `<span class="tag">${escapeHtml(detail.area_hint)}</span>`
+            : ""
+        }
+      `;
+
+      const specialMetaHtml = `
+        <span class="tag">数量：${escapeHtml(detail.quantity)}</span>
+        <span class="tag special">Special Voyage</span>
+        <span class="tag fog">本来の海域：霧の向こう</span>
+      `;
+
+      const descriptionText =
+        detail.description ||
+        "静かに港へ届いた漂着物です。";
+
+      const originHtml = detail.origin_text && detail.origin_text !== descriptionText
+        ? `<p class="item-detail-origin">${escapeHtml(detail.origin_text)}</p>`
+        : "";
+
       itemDetailModalContent.innerHTML = `
         <div class="item-detail-layout">
           <div class="item-detail-image">
@@ -1056,20 +1009,22 @@
           </div>
 
           <div>
-            <div class="item-detail-kicker">Special Voyage Find</div>
+            <div class="item-detail-kicker">
+              ${detail.kind === "special" ? "Special Voyage Find" : "Harbor Find"}
+            </div>
 
             <div class="item-detail-title">
               ${escapeHtml(detail.title)}
             </div>
 
             <p class="item-detail-desc">
-              ${escapeHtml(detail.description)}
+              ${escapeHtml(descriptionText)}
             </p>
 
+            ${originHtml}
+
             <div class="item-detail-meta">
-              <span class="tag">数量：${escapeHtml(detail.quantity)}</span>
-              <span class="tag special">Special Voyage</span>
-              <span class="tag fog">本来の海域：霧の向こう</span>
+              ${detail.kind === "special" ? specialMetaHtml : normalMetaHtml}
             </div>
           </div>
         </div>
@@ -1080,7 +1035,7 @@
       document.body.style.overflow = "hidden";
     }
 
-    function closeSpecialItemDetailModal(){
+    function closeItemDetailModal(){
       if(!itemDetailModal || !itemDetailModalContent){
         return;
       }
@@ -1496,32 +1451,43 @@
       }
     }
 
-    function renderItemCard(item, extraMetaHtml = "", options = {}){
+    function registerDetailFromItem(item, kind){
       const name = itemNameOf(item);
 
-      const detailId = options.specialDetail
-        ? registerSpecialItemDetail({
-            title: name,
-            image_path: item.image_path || "",
-            quantity: item.quantity || 1,
-            description:
-              item.origin_text ||
-              item.description ||
-              "特別航海で見つかった漂着物です。本来の海域は、まだ霧の向こうにあります。海域が開かれると、この漂着物は本来の海域の記録へ移ります。"
-          })
-        : "";
+      return registerItemDetail({
+        kind,
+        title: name,
+        image_path: item.image_path || "",
+        quantity: item.quantity ?? 1,
+        rarity: kind === "special" ? "" : (item.rarity || ""),
+        area_hint: kind === "special" ? "" : (item.area_hint || ""),
+        description:
+          item.description ||
+          item.origin_text ||
+          (kind === "special"
+            ? "特別航海で見つかった漂着物です。本来の海域は、まだ霧の向こうにあります。海域が開かれると、この漂着物は本来の海域の記録へ移ります。"
+            : "静かに港へ届いた漂着物です。"),
+        origin_text:
+          kind === "special"
+            ? ""
+            : (item.origin_text || "")
+      });
+    }
 
-      const cardAttrs = detailId
-        ? `
-          data-special-item-detail-id="${escapeHtml(detailId)}"
-          role="button"
-          tabindex="0"
-          aria-label="${escapeHtml(name)} の詳細を開く"
-        `
-        : "";
+    function renderItemCard(item, extraMetaHtml = "", options = {}){
+      const name = itemNameOf(item);
+      const kind = options.specialDetail ? "special" : "normal";
+      const detailId = registerDetailFromItem(item, kind);
+
+      const cardAttrs = `
+        data-item-detail-id="${escapeHtml(detailId)}"
+        role="button"
+        tabindex="0"
+        aria-label="${escapeHtml(name)} の詳細を開く"
+      `;
 
       return `
-        <div class="find-item${detailId ? " special-detail-card" : ""}" ${cardAttrs}>
+        <div class="find-item${kind === "special" ? " special-detail-card" : ""}" ${cardAttrs}>
           ${imageBox(item.image_path, name)}
 
           <div>
@@ -1596,8 +1562,8 @@
     }
 
     function renderHarborFindsByArea(seaAreas, userAreas, finds, pools){
-      specialItemDetailStore = new Map();
-      specialItemDetailCounter = 0;
+      itemDetailStore = new Map();
+      itemDetailCounter = 0;
 
       const openMap = buildOpenAreaMap(userAreas);
       const itemAreaMap = buildItemAreaMap(pools);
@@ -1765,35 +1731,8 @@
       harborFindsEl.innerHTML = sectionsHtml + specialVoyageHtml;
     }
 
-    function openImageModal(src, label){
-      if(!src || !imageModal || !imageModalImg){
-        return;
-      }
-
-      imageModalImg.src = src;
-      imageModalImg.alt = label || "";
-      imageModalCaption.textContent = label || "";
-      imageModal.classList.add("visible");
-      imageModal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeImageModal(){
-      if(!imageModal || !imageModalImg){
-        return;
-      }
-
-      imageModal.classList.remove("visible");
-      imageModal.setAttribute("aria-hidden", "true");
-      imageModalImg.src = "";
-      imageModalImg.alt = "";
-      imageModalCaption.textContent = "";
-      document.body.style.overflow = "";
-    }
-
     function closeAllModals(){
-      closeImageModal();
-      closeSpecialItemDetailModal();
+      closeItemDetailModal();
     }
 
     async function endSpecialVoyageOnLogout(){
@@ -1836,33 +1775,19 @@
     });
 
     document.addEventListener("click", function(event){
-      const specialDetailCard = event.target.closest("[data-special-item-detail-id]");
+      const detailCard = event.target.closest("[data-item-detail-id]");
 
-      if(specialDetailCard){
-        const detail = specialItemDetailStore.get(
-          specialDetailCard.dataset.specialItemDetailId
+      if(detailCard){
+        const detail = itemDetailStore.get(
+          detailCard.dataset.itemDetailId
         );
 
-        openSpecialItemDetailModal(detail);
+        openItemDetailModal(detail);
         return;
-      }
-
-      const imageBoxEl = event.target.closest("[data-image-src]");
-
-      if(imageBoxEl){
-        openImageModal(
-          imageBoxEl.dataset.imageSrc,
-          imageBoxEl.dataset.imageLabel
-        );
-        return;
-      }
-
-      if(event.target === imageModal){
-        closeImageModal();
       }
 
       if(event.target === itemDetailModal){
-        closeSpecialItemDetailModal();
+        closeItemDetailModal();
       }
     });
 
@@ -1873,37 +1798,22 @@
       }
 
       if(event.key === "Enter" || event.key === " "){
-        const specialDetailCard = document.activeElement?.closest?.("[data-special-item-detail-id]");
+        const detailCard = document.activeElement?.closest?.("[data-item-detail-id]");
 
-        if(specialDetailCard){
+        if(detailCard){
           event.preventDefault();
 
-          const detail = specialItemDetailStore.get(
-            specialDetailCard.dataset.specialItemDetailId
+          const detail = itemDetailStore.get(
+            detailCard.dataset.itemDetailId
           );
 
-          openSpecialItemDetailModal(detail);
-          return;
-        }
-
-        const imageBoxEl = document.activeElement?.closest?.("[data-image-src]");
-
-        if(imageBoxEl){
-          event.preventDefault();
-          openImageModal(
-            imageBoxEl.dataset.imageSrc,
-            imageBoxEl.dataset.imageLabel
-          );
+          openItemDetailModal(detail);
         }
       }
     });
 
-    if(imageModalClose){
-      imageModalClose.addEventListener("click", closeImageModal);
-    }
-
     if(itemDetailModalClose){
-      itemDetailModalClose.addEventListener("click", closeSpecialItemDetailModal);
+      itemDetailModalClose.addEventListener("click", closeItemDetailModal);
     }
 
     client.auth.onAuthStateChange(function(event, session){
