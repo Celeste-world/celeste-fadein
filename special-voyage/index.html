@@ -1653,11 +1653,13 @@
           label: "HARBOR FIND",
           title: item.item_name || item.name_ja || item.item_key || "漂着物",
           item_key: item.item_key || "",
-          rarity: item.rarity || "",
-          family: item.family || "",
+          rewards.push({
+          type: "harbor_find",
+          label: "HARBOR FIND",
+          title: item.item_name || item.name_ja || item.item_key || "漂着物",
+          item_key: item.item_key || "",
           description: item.description || "",
           origin_text: item.origin_text || "",
-          area_hint: item.area_hint || "",
           image_path: item.image_path || ""
         });
       });
@@ -1763,11 +1765,8 @@
                 result.message ||
                 "漂着物",
               item_key: item.item_key || "",
-              rarity: item.rarity || "",
-              family: item.family || "",
               description: item.description || "",
               origin_text: item.origin_text || "",
-              area_hint: item.area_hint || "",
               image_path: item.image_path || ""
             };
           });
