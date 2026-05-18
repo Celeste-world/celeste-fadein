@@ -482,6 +482,72 @@
       line-height:1.95;
     }
 
+    .voyage-start-toast{
+      position:fixed;
+      inset:0;
+      z-index:120;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 32%),
+        rgba(3,5,11,.38);
+      backdrop-filter:blur(2px);
+      pointer-events:none;
+    }
+
+    .voyage-start-toast.visible{
+      display:flex;
+      animation:toastFadeIn .24s ease-out both;
+    }
+
+    .voyage-start-toast-inner{
+      width:min(460px, 100%);
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      text-align:center;
+    }
+
+    .voyage-start-toast-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .voyage-start-toast-title{
+      font-size:20px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+
+    .voyage-start-toast-body{
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+    }
+
+    @keyframes toastFadeIn{
+      from{
+        opacity:0;
+        transform:translateY(8px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
     .note{
       max-width:760px;
       font-size:13px;
@@ -554,6 +620,15 @@
       .btn-danger,
       button{
         width:100%;
+      }
+
+      .voyage-start-toast-inner{
+        padding:22px 18px;
+        border-radius:22px;
+      }
+
+      .voyage-start-toast-title{
+        font-size:18px;
       }
     }
   </style>
@@ -688,6 +763,18 @@
 
   </div>
 
+  <div class="voyage-start-toast" id="voyageStartToast" aria-hidden="true">
+    <div class="voyage-start-toast-inner">
+      <div class="voyage-start-toast-label">Special Voyage</div>
+      <div class="voyage-start-toast-title" id="voyageStartToastTitle">
+        航海が始まりました
+      </div>
+      <div class="voyage-start-toast-body" id="voyageStartToastBody">
+        船は、少し深い海へ向かっています。
+      </div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -715,12 +802,17 @@
     const specialFind = document.getElementById("specialFind");
     const specialFindText = document.getElementById("specialFindText");
 
+    const voyageStartToast = document.getElementById("voyageStartToast");
+    const voyageStartToastTitle = document.getElementById("voyageStartToastTitle");
+    const voyageStartToastBody = document.getElementById("voyageStartToastBody");
+
     const maxSpecialLength = 800;
 
     let currentUser = null;
     let activeSession = null;
     let countdownTimer = null;
     let isEndingVoyage = false;
+    let voyageStartToastTimer = null;
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1015,6 +1107,60 @@
       }).join("");
 
       ticketArea.innerHTML = cardsHtml;
+    }
+
+    function startToastContent(ticket){
+      const normalized = normalizeTicketType(ticket?.ticket_type);
+      const duration = Number(ticket?.duration_minutes || 0);
+
+      if(normalized === "drift"){
+        return {
+          title: "漂着チケットの航海が始まりました",
+          body: "短い航海が、静かに港を離れました。"
+        };
+      }
+
+      if(normalized === "deep_sea"){
+        return {
+          title: "深海航海が始まりました",
+          body: "船は、さらに深い海へ降りていきます。"
+        };
+      }
+
+      if(normalized === "special" && duration >= 20){
+        return {
+          title: "20分の特別航海が始まりました",
+          body: "船は、少し長い月明かりの海へ向かっています。"
+        };
+      }
+
+      return {
+        title: "特別航海が始まりました",
+        body: "船は、少し深い海へ向かっています。"
+      };
+    }
+
+    function showVoyageStartToast(ticket){
+      if(!voyageStartToast || !voyageStartToastTitle || !voyageStartToastBody){
+        return;
+      }
+
+      const content = startToastContent(ticket);
+
+      voyageStartToastTitle.textContent = content.title;
+      voyageStartToastBody.textContent = content.body;
+
+      voyageStartToast.classList.add("visible");
+      voyageStartToast.setAttribute("aria-hidden", "false");
+
+      if(voyageStartToastTimer){
+        clearTimeout(voyageStartToastTimer);
+      }
+
+      voyageStartToastTimer = setTimeout(function(){
+        voyageStartToast.classList.remove("visible");
+        voyageStartToast.setAttribute("aria-hidden", "true");
+      }, 2800);
     }
 
     async function checkSession(){
@@ -1332,6 +1478,11 @@
         }
 
         setStatus("航海が始まりました。");
+
+        showVoyageStartToast(data.ticket || {
+          ticket_type: activeSession?.session_type || "",
+          duration_minutes: activeSession?.duration_minutes || 0
+        });
 
         startCountdown(activeSession.ends_at);
 
