@@ -176,57 +176,73 @@
       white-space:nowrap;
     }
 
-    .afterglow-banner{
-      margin:0 0 24px;
-      padding:20px 22px;
-      border-radius:24px;
-      border:1px solid rgba(169,183,255,.34);
-      background:
-        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 42%),
-        rgba(10,14,28,.88);
-      box-shadow:
-        0 24px 70px rgba(0,0,0,.44),
-        inset 0 0 0 1px rgba(255,255,255,.025);
-      color:var(--text);
-      text-align:center;
-      opacity:0;
-      transform:translateY(8px);
-      transition:
-        opacity .7s ease,
-        transform .7s ease;
-    }
-    
-    .afterglow-banner.visible{
-      opacity:1;
-      transform:translateY(0);
-    }
-    
-    .afterglow-banner.fading{
-      opacity:0;
-      transform:translateY(-4px);
-    }
-    
-    .afterglow-label{
-      font-size:11px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:10px;
-    }
-    
-    .afterglow-title{
-      font-size:20px;
-      line-height:1.7;
-      color:var(--text);
-      margin-bottom:8px;
-    }
-    
-    .afterglow-text{
-      font-size:13px;
-      line-height:2;
-      color:var(--muted);
-    }
+    .afterglow-overlay{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+    rgba(3,5,11,.46);
+  backdrop-filter:blur(3px);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .7s ease;
+}
 
+.afterglow-overlay.visible{
+  display:flex;
+  opacity:1;
+}
+
+.afterglow-overlay.fading{
+  opacity:0;
+}
+
+.afterglow-banner{
+  width:min(460px, 100%);
+  border-radius:24px;
+  border:1px solid rgba(169,183,255,.34);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+    rgba(10,14,28,.96);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.58),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+  padding:24px;
+  text-align:center;
+  color:var(--text);
+  transform:translateY(8px);
+  transition:transform .7s ease;
+}
+
+.afterglow-overlay.visible .afterglow-banner{
+  transform:translateY(0);
+}
+
+.afterglow-label{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.afterglow-title{
+  font-size:20px;
+  line-height:1.7;
+  color:var(--text);
+  margin-bottom:8px;
+}
+
+.afterglow-text{
+  font-size:13px;
+  line-height:2;
+  color:var(--muted);
+}
     .weather-panel{
       background:rgba(10,14,28,.70);
       border:1px solid rgba(70,84,132,.45);
@@ -1038,8 +1054,7 @@
         </button>
       </div>
 
-      <div class="afterglow-banner" id="afterglowBanner" style="display:none;"></div>
-
+      
       <section class="weather-panel" aria-label="Tonight's Harbor">
         <div class="weather-label">Tonight's Harbor</div>
 
@@ -1177,6 +1192,10 @@
         </div>
       </section>
     </main>
+
+    <div class="afterglow-overlay" id="afterglowOverlay" aria-hidden="true">
+      <div class="afterglow-banner" id="afterglowBanner"></div>
+    </div>
 
     <div class="download-modal-overlay" id="downloadModal" aria-hidden="true">
       <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
@@ -1382,7 +1401,8 @@
     const readMoreWrap = document.getElementById("readMoreWrap");
     const readMoreBtn = document.getElementById("readMoreBtn");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
-    const afterglowBanner = document.getElementById("afterglowBanner");
+    const afterglowOverlay = document.getElementById("afterglowOverlay");
+    const afterglowBanner = document.getElementById("afterglowBanner"); 
 
     const contentEl = document.getElementById("content");
     const tagEl = document.getElementById("tag");
@@ -1533,7 +1553,7 @@
     }
     
     function showSpecialVoyageAfterglow(){
-      if(!afterglowBanner){
+      if(!afterglowOverlay || !afterglowBanner){
         return;
       }
     
@@ -1560,23 +1580,26 @@
         <div class="afterglow-text">${escapeHtml(message.text)}</div>
       `;
     
-      afterglowBanner.style.display = "block";
+      afterglowOverlay.style.display = "flex";
+      afterglowOverlay.setAttribute("aria-hidden", "false");
     
       requestAnimationFrame(function(){
-        afterglowBanner.classList.add("visible");
+        afterglowOverlay.classList.add("visible");
       });
     
       setTimeout(function(){
-        afterglowBanner.classList.add("fading");
-        afterglowBanner.classList.remove("visible");
+        afterglowOverlay.classList.add("fading");
+        afterglowOverlay.classList.remove("visible");
     
         setTimeout(function(){
-          afterglowBanner.style.display = "none";
-          afterglowBanner.classList.remove("fading");
+          afterglowOverlay.style.display = "none";
+          afterglowOverlay.classList.remove("fading");
+          afterglowOverlay.setAttribute("aria-hidden", "true");
           afterglowBanner.innerHTML = "";
         }, 800);
       }, 8000);
     }
+    
     function escapeHtml(str){
       return String(str || "")
         .replaceAll("&", "&amp;")
