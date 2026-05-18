@@ -690,19 +690,6 @@
           自分の言葉と向き合う深さを選ぶための、小さな航海券です。
         </p>
 
-        <div class="actions">
-          <a class="btn-ghost" href="/account/">
-            Accountで航海券を確認する
-          </a>
-
-          <a class="btn-ghost" href="/log/">
-            Voyage Logへ
-          </a>
-
-          <a class="btn-ghost" href="/map/">
-            Sea Chartへ
-          </a>
-        </div>
       </section>
 
     </main>
@@ -782,20 +769,34 @@
       }
     }
 
+    async function endSpecialVoyageOnLogout(){
+      try{
+        await client.functions.invoke("end-voyage-session", {
+          body: {
+            reason: "logout"
+          }
+        });
+      }catch(error){
+        console.warn("end special voyage on logout failed:", error);
+      }
+    }
+    
     async function logout(){
       setStatus("ログアウトしています。");
-
+    
+      await endSpecialVoyageOnLogout();
+    
       const { error } = await client.auth.signOut();
-
+    
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-
+    
       currentUser = null;
       currentAccessToken = null;
-
+    
       window.location.replace("/");
     }
 
