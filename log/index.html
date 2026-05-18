@@ -1128,44 +1128,53 @@
     <div class="download-modal-overlay" id="downloadModal" aria-hidden="true">
       <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
         <div class="download-modal-label">Voyage Export</div>
-
+    
         <h2 id="downloadModalTitle">
           Before downloading your voyage records
         </h2>
-
-        <p>
+    
+        <p id="downloadModalIntro">
           To protect your saved logs, please confirm your registered email address.
         </p>
-
+    
         <p class="download-note">
           保存先は、ご利用のブラウザまたは端末の設定に従います。
         </p>
-
-        <label for="downloadEmailInput">
-          Email address
-        </label>
-
-        <input
-          id="downloadEmailInput"
-          type="email"
-          autocomplete="email"
-          placeholder="you@example.com"
-        >
-
+    
+        <div id="downloadEmailArea">
+          <label for="downloadEmailInput">
+            Email address
+          </label>
+    
+          <input
+            id="downloadEmailInput"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+          >
+        </div>
+    
+        <div id="downloadConfirmSummary" style="display:none;">
+          <div class="download-modal-label" style="margin-top:18px;">
+            Ready to download
+          </div>
+    
+          <p id="downloadSummaryText" style="white-space:pre-wrap;"></p>
+        </div>
+    
         <div class="download-modal-error" id="downloadModalError"></div>
-
+    
         <div class="download-modal-actions">
           <button class="ghost" id="downloadCancelBtn" type="button">
             Cancel
           </button>
-
-          <button class="primary" id="downloadConfirmBtn" type="button">
-            Download
+    
+          <button class="primary" id="downloadConfirmBtn" type="button" data-step="email">
+            Continue
           </button>
         </div>
       </div>
     </div>
-
     <footer>
       <div class="footer-links">
         <a href="/log/">Voyage Log</a>
@@ -1334,10 +1343,14 @@
 
     const downloadVoyageBtn = document.getElementById("downloadVoyageBtn");
     const downloadModal = document.getElementById("downloadModal");
+    const downloadEmailArea = document.getElementById("downloadEmailArea");
     const downloadEmailInput = document.getElementById("downloadEmailInput");
+    const downloadModalIntro = document.getElementById("downloadModalIntro");
     const downloadModalError = document.getElementById("downloadModalError");
     const downloadCancelBtn = document.getElementById("downloadCancelBtn");
     const downloadConfirmBtn = document.getElementById("downloadConfirmBtn");
+    const downloadConfirmSummary = document.getElementById("downloadConfirmSummary");
+    const downloadSummaryText = document.getElementById("downloadSummaryText");
 
     const maxContentLength = 800;
 
@@ -1349,6 +1362,8 @@
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
     let isDownloadingVoyageLog = false;
+    let pendingDownloadText = "";
+    let pendingDownloadFileName = "";
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -2770,22 +2785,24 @@
       return lines.join("\n");
     }
 
-    function triggerTextDownload(text){
-      const fileName =
-        "celeste-harbor-voyage-log-" + formatDateForFileName() + ".txt";
-
+    function buildDownloadFileName(){
+      return "celeste-harbor-voyage-log-" + formatDateForFileName() + ".txt";
+    }
+    
+    function triggerTextDownload(text, fileName){
       const blob = new Blob([text], {
         type: "text/plain;charset=utf-8"
       });
-
+    
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
-
+    
       anchor.href = url;
-      anchor.download = fileName;
+      anchor.download = fileName || buildDownloadFileName();
+    
       document.body.appendChild(anchor);
       anchor.click();
-
+    
       document.body.removeChild(anchor);
       URL.revokeObjectURL(url);
     }
@@ -2794,72 +2811,123 @@
       if(isDownloadingVoyageLog){
         return;
       }
-
+    
       downloadModalError.textContent = "";
-
+    
+      const currentStep = downloadConfirmBtn.dataset.step || "email";
+    
+      if(currentStep === "confirm"){
+        if(!pendingDownloadText){
+          downloadModalError.textContent = "Download data is not ready. Please try again.";
+          downloadConfirmBtn.dataset.step = "email";
+          downloadConfirmBtn.textContent = "Continue";
+          return;
+        }
+    
+        triggerTextDownload(pendingDownloadText, pendingDownloadFileName);
+    
+        closeDownloadModal();
+        setStatus("航海記録をダウンロードしました。");
+        return;
+      }
+    
       if(!currentUser){
         downloadModalError.textContent = "Please log in first.";
         return;
       }
-
+    
       const inputEmail = normalizeEmail(downloadEmailInput.value);
       const userEmail = normalizeEmail(currentUser.email);
-
+    
       if(!inputEmail){
         downloadModalError.textContent = "Please enter your registered email address.";
         return;
       }
-
+    
       if(!userEmail || inputEmail !== userEmail){
         downloadModalError.textContent = "The email address does not match your account.";
         return;
       }
-
+    
       try{
         isDownloadingVoyageLog = true;
         downloadConfirmBtn.disabled = true;
         downloadConfirmBtn.textContent = "Preparing...";
-
+    
         const voyageLogs = (allLogs || [])
           .slice()
           .sort((a, b) => {
             return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
           });
-
+    
         const [specialVoyageEvents, specialVoyageFinds] = await Promise.all([
           loadSpecialVoyageEventsForExport(),
           loadSpecialVoyageFindsForExport()
         ]);
-
+    
         const hasRecords =
           voyageLogs.length > 0 ||
           specialVoyageEvents.length > 0 ||
           specialVoyageFinds.length > 0;
-
+    
         if(!hasRecords){
           downloadModalError.textContent = "There are no voyage records to download yet.";
           return;
         }
-
+    
         const text = buildVoyageLogExportText({
           voyageLogs,
           specialVoyageEvents,
           specialVoyageFinds
         });
-
-        triggerTextDownload(text);
-
-        closeDownloadModal();
-        setStatus("航海記録をダウンロードしました。");
-
+    
+        const fileName = buildDownloadFileName();
+    
+        pendingDownloadText = text;
+        pendingDownloadFileName = fileName;
+    
+        if(downloadEmailInput){
+          downloadEmailInput.disabled = true;
+        }
+    
+        if(downloadEmailArea){
+          downloadEmailArea.style.display = "none";
+        }
+    
+        if(downloadModalIntro){
+          downloadModalIntro.textContent =
+            "Please review what will be included before downloading.";
+        }
+    
+        if(downloadConfirmSummary){
+          downloadConfirmSummary.style.display = "block";
+        }
+    
+        if(downloadSummaryText){
+          downloadSummaryText.textContent =
+            "The following records will be included:\n\n" +
+            "- Voyage Log: " + voyageLogs.length + " entries\n" +
+            "- Special Voyage: " + specialVoyageEvents.length + " events\n" +
+            "- Special Voyage Finds: " + specialVoyageFinds.length + " finds\n\n" +
+            "File format: .txt\n" +
+            "File name: " + fileName + "\n\n" +
+            "保存先は、ご利用のブラウザまたは端末の設定に従います。";
+        }
+    
+        downloadConfirmBtn.dataset.step = "confirm";
+        downloadConfirmBtn.textContent = "Download";
+    
       }catch(error){
         console.error("download voyage log error:", error);
         downloadModalError.textContent =
-          error.message || "Failed to download your voyage log.";
+          error.message || "Failed to prepare your voyage log.";
       }finally{
         isDownloadingVoyageLog = false;
         downloadConfirmBtn.disabled = false;
-        downloadConfirmBtn.textContent = "Download";
+    
+        if(downloadConfirmBtn.dataset.step !== "confirm"){
+          downloadConfirmBtn.textContent = "Continue";
+        }
       }
     }
 
