@@ -267,10 +267,9 @@
       border:1px solid rgba(70,84,132,.55);
       border-radius:26px;
       box-shadow:0 20px 48px rgba(0,0,0,.42);
-      overflow:hidden;
-      margin-bottom:28px;
+      overflow:visible;
+      margin-bottom:56px;
     }
-
     .chart-panel::before{
       content:"";
       position:absolute;
@@ -956,7 +955,7 @@
         </div>
       </section>
 
-      <div class="chart-actions">
+      <div class="chart-actions" style="display:none;">
         <button class="chart-zoom-button" id="chartZoomButton" type="button">
           海図を拡大
         </button>
@@ -1459,7 +1458,7 @@
         .map((area, index) => normalizeArea(area, index))
         .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0))
         .slice(0, 7);
-
+    
       if(normalized.length === 0){
         mapArea.innerHTML = `
           <div class="empty">
@@ -1468,27 +1467,29 @@
         `;
         return;
       }
-
+    
       let hasLockedArea = false;
-      
+    
       const cardsHtml = normalized.map((area, index) => {
         const open = isAreaOpen(area, unlockedMap);
-      
+    
         if(!open){
           hasLockedArea = true;
           return "";
         }
-      
+    
         const stateClass = "open";
-        const positionClass = area.position_class || positionClasses[index % positionClasses.length];
-      
+        const positionClass =
+          area.position_class ||
+          positionClasses[index % positionClasses.length];
+    
         const displayName = area.name_ja;
         const displayDesc = area.description;
-      
+    
         const kicker = "Open Sea Area";
         const tagText = "開放中";
         const atmosphereText = areaAtmosphereText(area.area_key, true);
-      
+    
         return `
           <article
             class="sea-card ${stateClass} ${positionClass}"
@@ -1502,22 +1503,22 @@
             data-area-image="${escapeHtml(areaImagePath(area.area_key))}"
           >
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
-      
+    
             <div class="sea-name">
               ${escapeHtml(displayName)}
             </div>
-      
+    
             <p class="sea-desc">
               ${escapeHtml(displayDesc)}
             </p>
-      
+    
             <div class="sea-atmosphere">
               <div class="sea-atmosphere-label">気配</div>
               <div class="sea-atmosphere-text">
                 ${escapeHtml(atmosphereText)}
               </div>
             </div>
-      
+    
             <div class="sea-meta">
               <span class="tag ${stateClass}">
                 ${escapeHtml(tagText)}
@@ -1526,7 +1527,7 @@
           </article>
         `;
       }).join("");
-      
+    
       const fogHtml = hasLockedArea
         ? `
           <article
@@ -1541,22 +1542,22 @@
             data-area-image="${escapeHtml(seaChartImagePath)}"
           >
             <div class="sea-kicker">Beyond the Fog</div>
-      
+    
             <div class="sea-name">
               霧の向こう
             </div>
-      
+    
             <p class="sea-desc">
               まだ開かれていない海域です。詳細は、航海が進むまで霧の中にあります。
             </p>
-      
+    
             <div class="sea-atmosphere">
               <div class="sea-atmosphere-label">気配</div>
               <div class="sea-atmosphere-text">
                 まだ霧の向こうにあります。
               </div>
             </div>
-      
+    
             <div class="sea-meta">
               <span class="tag locked">
                 未開放
@@ -1565,7 +1566,7 @@
           </article>
         `
         : "";
-      
+    
       mapArea.innerHTML = `
         <section class="chart-panel" aria-label="Celeste Harbor sea chart">
           <div class="sea-grid">
@@ -1575,7 +1576,7 @@
         </section>
       `;
     }
-
+    
     function resetModalContent(){
       imageModalContent.className = "image-modal-img-wrap";
       imageModalContent.innerHTML = `
