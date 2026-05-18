@@ -102,7 +102,7 @@
       margin:-42px 0 30px;
       display:none;
     }
-    
+
     .active-voyage-banner{
       display:flex;
       align-items:center;
@@ -119,27 +119,27 @@
       text-decoration:none;
       backdrop-filter:blur(8px);
     }
-    
+
     .active-voyage-banner:hover{
       border-color:rgba(169,183,255,.55);
       background:
         radial-gradient(circle at top left, rgba(169,183,255,.22), transparent 44%),
         rgba(13,18,36,.96);
     }
-    
+
     .active-voyage-main{
       font-size:13px;
       line-height:1.7;
       color:var(--text);
     }
-    
+
     .active-voyage-time{
       font-size:12px;
       line-height:1.7;
       color:var(--accent);
       white-space:nowrap;
     }
-    
+
     .active-voyage-link{
       font-size:12px;
       line-height:1.7;
@@ -148,7 +148,7 @@
       padding-left:12px;
       white-space:nowrap;
     }
-    
+
     .active-voyage-banner:hover .active-voyage-link{
       color:var(--text);
     }
@@ -192,15 +192,7 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.8;
-      margin-bottom:18px;
-    }
-
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:20px;
+      margin-bottom:0;
     }
 
     button,
@@ -504,26 +496,26 @@
         margin-bottom:44px;
       }
 
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
       #activeVoyageBanner{
         top:10px;
         margin:-22px 0 24px;
       }
-      
+
       .active-voyage-banner{
         align-items:flex-start;
         flex-direction:column;
         border-radius:18px;
         gap:6px;
       }
-      
+
       .active-voyage-link{
         border-left:0;
         padding-left:0;
-      }
-
-      .nav{
-        gap:12px;
-        font-size:12px;
       }
 
       h1{ font-size:31px; }
@@ -531,10 +523,6 @@
       .panel,
       .timeline-card{
         padding:20px;
-      }
-
-      .actions{
-        gap:10px;
       }
 
       .btn-ghost,
@@ -604,7 +592,7 @@
     </header>
 
     <div id="activeVoyageBanner"></div>
-    
+
     <main>
       <div class="label">Cabin Log</div>
 
@@ -614,19 +602,14 @@
       </h1>
 
       <p class="lead">
-        Cabin Log は、Voyage Log の保存、Harbor Cat の応答、
-        漂着物、船の変化、特別航海の気配を静かに残す場所です。<br>
-        進行のためだけではなく、港に積もっていく記録としてここに残ります。
+        Cabin Log は、港に残った出来事を時系列で確認する場所です。<br>
+        航海の記録、漂着物、航海券、船の変化、Special Voyage の気配が、
+        静かにここへ積もっていきます。
       </p>
 
       <section class="panel">
         <div class="user" id="userStatus">
           ログイン状態を確認しています。
-        </div>
-
-        <div class="actions">
-          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
-          <a class="btn-ghost" href="/account/">Accountへ</a>
         </div>
 
         <div class="status" id="status"></div>
@@ -646,8 +629,8 @@
         </div>
 
         <p class="note">
-          Harbor Cat は診断をせず、ただ港に漂う気配を静かに返します。<br>
-          その夜に何かが流れ着いたなら、その記録もここに残ります。
+          Cabin Log は進行のためだけではなく、港に積もっていく記録です。<br>
+          その夜に何かが流れ着いたなら、その小さな出来事もここに残ります。
         </p>
       </section>
     </main>
@@ -670,12 +653,12 @@
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
-  
+
     const client = window.supabase.createClient(
       supabaseUrl,
       supabaseKey
     );
-  
+
     const userStatus = document.getElementById("userStatus");
     const statusEl = document.getElementById("status");
     const logoutLink = document.getElementById("logoutLink");
@@ -683,21 +666,21 @@
     const readMoreWrap = document.getElementById("readMoreWrap");
     const readMoreBtn = document.getElementById("readMoreBtn");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
-  
+
     let currentUser = null;
     let currentAccessToken = null;
     let allTimelineEvents = [];
     let showAllTimeline = false;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
-  
+
     const initialTimelineLimit = 5;
-  
+
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
     }
-  
+
     function escapeHtml(str){
       return String(str || "")
         .replaceAll("&", "&amp;")
@@ -706,12 +689,12 @@
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
     }
-  
+
     function accountDisplayName(user){
       if(!user){
         return "Guest";
       }
-  
+
       return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
@@ -720,12 +703,12 @@
         "Account"
       );
     }
-  
+
     function formatTimelineDate(value){
       if(!value){
         return "";
       }
-  
+
       return new Date(value).toLocaleString("ja-JP", {
         year:"numeric",
         month:"2-digit",
@@ -734,17 +717,17 @@
         minute:"2-digit"
       });
     }
-  
+
     function normalizeEventType(type){
       return String(type || "")
         .trim()
         .toLowerCase()
         .replaceAll("-", "_");
     }
-  
+
     function isSpecialVoyageEvent(type){
       const normalized = normalizeEventType(type);
-  
+
       return normalized === "special_voyage_find" ||
         normalized === "special_voyage_started" ||
         normalized === "special_voyage_completed" ||
@@ -752,133 +735,133 @@
         normalized === "voyage_started" ||
         normalized === "voyage_ended";
     }
-  
+
     function eventTypeLabel(type){
       const normalized = normalizeEventType(type);
-  
+
       if(normalized === "harbor_find" || normalized === "item_found"){
         return "Harbor Find";
       }
-  
+
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return "Vessel";
       }
-  
+
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return "Drift Ticket";
       }
-  
+
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         return "Sea Area";
       }
-  
+
       if(isSpecialVoyageEvent(normalized)){
         return "Special Voyage";
       }
-  
+
       if(normalized === "log_saved"){
         return "Voyage Log";
       }
-  
+
       if(normalized === "cat_reply"){
         return "Harbor Cat";
       }
-  
+
       return type || "Cabin Log";
     }
-  
+
     function eventClassName(type){
       const normalized = normalizeEventType(type);
-  
+
       if(normalized === "harbor_find" || normalized === "item_found"){
         return "harbor-find";
       }
-  
+
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return "vessel-acquired";
       }
-  
+
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return "ticket-drifted";
       }
-  
+
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         return "sea-area-opened";
       }
-  
+
       if(isSpecialVoyageEvent(normalized)){
         return "special-voyage";
       }
-  
+
       if(normalized === "cat_reply"){
         return "cat-reply";
       }
-  
+
       if(normalized === "log_saved"){
         return "log-saved";
       }
-  
+
       return "default";
     }
-  
+
     function eventSymbol(type){
       const normalized = normalizeEventType(type);
-  
+
       if(normalized === "harbor_find" || normalized === "item_found"){
         return {
           symbol: "✦",
           label: "Find"
         };
       }
-  
+
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return {
           symbol: "⛵",
           label: "Vessel"
         };
       }
-  
+
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return {
           symbol: "⌁",
           label: "Ticket"
         };
       }
-  
+
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         return {
           symbol: "☽",
           label: "Sea"
         };
       }
-  
+
       if(isSpecialVoyageEvent(normalized)){
         return {
           symbol: "☽",
           label: "Voyage"
         };
       }
-  
+
       if(normalized === "cat_reply"){
         return {
           symbol: "🐾",
           label: "Cat"
         };
       }
-  
+
       if(normalized === "log_saved"){
         return {
           symbol: "✎",
           label: "Log"
         };
       }
-  
+
       return {
         symbol: "•",
         label: "Log"
       };
     }
-  
+
     function timelineImagePath(event){
       return (
         event.image_path ||
@@ -890,7 +873,7 @@
         ""
       );
     }
-  
+
     function timelineImageAlt(event){
       return (
         event.image_alt ||
@@ -901,12 +884,12 @@
         eventTypeLabel(event.event_type)
       );
     }
-  
+
     function renderTimelineImage(event){
       const imagePath = timelineImagePath(event);
       const alt = timelineImageAlt(event);
       const fallback = eventSymbol(event.event_type);
-  
+
       if(imagePath){
         return `
           <div class="timeline-image">
@@ -919,7 +902,7 @@
           </div>
         `;
       }
-  
+
       return `
         <div class="timeline-image">
           <div class="timeline-image-symbol">
@@ -929,12 +912,12 @@
         </div>
       `;
     }
-  
+
     async function fetchSupabase(path, options = {}){
       if(!currentAccessToken){
         throw new Error("Missing access token");
       }
-  
+
       const response = await fetch(
         supabaseUrl + path,
         {
@@ -948,80 +931,80 @@
           body: options.body ? JSON.stringify(options.body) : undefined
         }
       );
-  
+
       let result = null;
-  
+
       try{
         result = await response.json();
       }catch(error){
         result = null;
       }
-  
+
       if(!response.ok){
         console.error("Supabase fetch error:", result);
         throw new Error((result && result.message) ? result.message : "Supabase request failed");
       }
-  
+
       return result;
     }
-  
+
     function clearActiveVoyageTimer(){
       if(activeVoyageTimer){
         clearInterval(activeVoyageTimer);
         activeVoyageTimer = null;
       }
     }
-  
+
     function formatRemainingTime(endsAtValue){
       const endsAt = new Date(endsAtValue);
       const now = new Date();
       const remainingMs = Math.max(0, endsAt.getTime() - now.getTime());
-  
+
       const totalSeconds = Math.floor(remainingMs / 1000);
       const minutes = Math.floor(totalSeconds / 60);
       const seconds = totalSeconds % 60;
-  
+
       return (
         String(minutes).padStart(2, "0") +
         ":" +
         String(seconds).padStart(2, "0")
       );
     }
-  
+
     function activeVoyageLabel(session){
       const sessionType = String(session?.session_type || "");
       const durationMinutes = Number(session?.duration_minutes || 0);
-  
+
       if(sessionType === "drift"){
         return "漂着チケットの航海が続いています";
       }
-  
+
       if(sessionType === "deep_sea"){
         return "深海航海が続いています";
       }
-  
+
       if(sessionType === "special" && durationMinutes >= 20){
         return "少し長い特別航海が続いています";
       }
-  
+
       return "特別航海が続いています";
     }
-  
+
     function renderActiveVoyageBanner(){
       if(!activeVoyageBanner){
         return;
       }
-  
+
       if(!activeVoyageSession){
         activeVoyageBanner.innerHTML = "";
         activeVoyageBanner.style.display = "none";
         clearActiveVoyageTimer();
         return;
       }
-  
+
       const endsAt = new Date(activeVoyageSession.ends_at);
       const now = new Date();
-  
+
       if(!activeVoyageSession.ends_at || endsAt <= now){
         activeVoyageSession = null;
         activeVoyageBanner.innerHTML = "";
@@ -1029,7 +1012,7 @@
         clearActiveVoyageTimer();
         return;
       }
-  
+
       activeVoyageBanner.style.display = "block";
       activeVoyageBanner.innerHTML = `
         <a class="active-voyage-banner" href="/special-voyage/">
@@ -1045,16 +1028,16 @@
         </a>
       `;
     }
-  
+
     async function loadActiveSpecialVoyageBanner(){
       if(!currentUser || !currentAccessToken){
         return;
       }
-  
+
       try{
         const userId = encodeURIComponent(currentUser.id);
         const now = encodeURIComponent(new Date().toISOString());
-  
+
         const sessions = await fetchSupabase(
           "/rest/v1/voyage_sessions" +
           "?user_id=eq." + userId +
@@ -1064,16 +1047,16 @@
           "&order=started_at.desc" +
           "&limit=1"
         );
-  
+
         activeVoyageSession =
           Array.isArray(sessions) && sessions.length > 0
             ? sessions[0]
             : null;
-  
+
         renderActiveVoyageBanner();
-  
+
         clearActiveVoyageTimer();
-  
+
         if(activeVoyageSession){
           activeVoyageTimer = setInterval(renderActiveVoyageBanner, 1000);
         }
@@ -1083,149 +1066,7 @@
         renderActiveVoyageBanner();
       }
     }
-  
-    async function checkSession(){
-      setStatus("ログイン状態を確認しています。");
-  
-      const { data, error } = await client.auth.getSession();
-  
-      if(error){
-        console.error("getSession error:", error);
-        window.location.replace("/");
-        return;
-      }
-  
-      if(data.session && data.session.user){
-        currentUser = data.session.user;
-        currentAccessToken = data.session.access_token;
-  
-        document.body.classList.remove("auth-locked");
-  
-        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("Cabin Log を確認しています。");
-  
-        await loadActiveSpecialVoyageBanner();
-        await loadTimeline();
-      }else{
-        window.location.replace("/");
-      }
-    }
-  
-    async function loadTimeline(){
-      if(!currentUser || !currentAccessToken){
-        return;
-      }
-  
-      try{
-        const userId = encodeURIComponent(currentUser.id);
-  
-        const events = await fetchSupabase(
-          "/rest/v1/user_timeline_events_view?user_id=eq." + userId + "&select=*&order=created_at.desc&limit=50"
-        );
-  
-        allTimelineEvents = (Array.isArray(events) ? events : []).filter((event) => {
-          const normalizedType = normalizeEventType(event.event_type);
-          const sessionType = event.metadata?.session_type;
-  
-          const isOldSpecialVoyageEvent =
-            ["voyage_started", "voyage_ended"].includes(normalizedType) &&
-            ["drift", "special", "deep_sea"].includes(sessionType);
-  
-          return !isOldSpecialVoyageEvent;
-        });
-  
-        showAllTimeline = false;
-  
-        renderTimeline();
-        setStatus("Cabin Log を確認しました。");
-      }catch(error){
-        console.error("load timeline error:", error);
-  
-        timelineEl.innerHTML = `
-          <div class="empty">
-            Cabin Log を読み込めませんでした。<br>
-            ${escapeHtml(error.message)}
-          </div>
-        `;
-  
-        if(readMoreWrap){
-          readMoreWrap.style.display = "none";
-        }
-  
-        setStatus("Cabin Log を読み込めませんでした：" + error.message, true);
-      }
-    }
-  
-    function renderTimeline(){
-      const events = allTimelineEvents;
-  
-      if(!events || events.length === 0){
-        timelineEl.innerHTML = `
-          <div class="empty">
-            まだ船室に残った記録はありません。<br>
-            Voyage Log を残した夜や、何かが港へ流れ着いた夜に、ここへ静かに記録されます。
-          </div>
-        `;
-  
-        if(readMoreWrap){
-          readMoreWrap.style.display = "none";
-        }
-  
-        return;
-      }
-  
-      const visibleEvents = showAllTimeline
-        ? events
-        : events.slice(0, initialTimelineLimit);
-  
-      const itemsHtml = visibleEvents.map(event => {
-        const typeClass = eventClassName(event.event_type);
-  
-        return `
-          <div class="timeline-item ${typeClass}">
-            ${renderTimelineImage(event)}
-  
-            <div class="timeline-content">
-              <div class="timeline-date">
-                ${escapeHtml(formatTimelineDate(event.created_at))}
-              </div>
-  
-              <div class="timeline-title">
-                ${escapeHtml(event.title)}
-              </div>
-  
-              ${
-                event.body
-                  ? `<p class="timeline-body">${escapeHtml(event.body)}</p>`
-                  : ""
-              }
-  
-              <div class="timeline-type ${typeClass}">
-                ${escapeHtml(eventTypeLabel(event.event_type))}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join("");
-  
-      timelineEl.innerHTML = `
-        <div class="timeline-card">
-          <div class="timeline-list">
-            ${itemsHtml}
-          </div>
-        </div>
-      `;
-  
-      if(readMoreWrap && readMoreBtn){
-        if(events.length > initialTimelineLimit){
-          readMoreWrap.style.display = "flex";
-          readMoreBtn.textContent = showAllTimeline ? "Show less" : "Read more";
-        }else{
-          readMoreWrap.style.display = "none";
-        }
-      }
-    }
-  
+
     async function endSpecialVoyageOnLogout(){
       try{
         await client.functions.invoke("end-voyage-session", {
@@ -1237,72 +1078,214 @@
         console.warn("end special voyage on logout failed:", error);
       }
     }
-    
+
+    async function checkSession(){
+      setStatus("ログイン状態を確認しています。");
+
+      const { data, error } = await client.auth.getSession();
+
+      if(error){
+        console.error("getSession error:", error);
+        window.location.replace("/");
+        return;
+      }
+
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+        currentAccessToken = data.session.access_token;
+
+        document.body.classList.remove("auth-locked");
+
+        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
+        setStatus("Cabin Log を確認しています。");
+
+        await loadActiveSpecialVoyageBanner();
+        await loadTimeline();
+      }else{
+        window.location.replace("/");
+      }
+    }
+
+    async function loadTimeline(){
+      if(!currentUser || !currentAccessToken){
+        return;
+      }
+
+      try{
+        const userId = encodeURIComponent(currentUser.id);
+
+        const events = await fetchSupabase(
+          "/rest/v1/user_timeline_events_view?user_id=eq." + userId + "&select=*&order=created_at.desc&limit=50"
+        );
+
+        allTimelineEvents = (Array.isArray(events) ? events : []).filter((event) => {
+          const normalizedType = normalizeEventType(event.event_type);
+          const sessionType = event.metadata?.session_type;
+
+          const isOldSpecialVoyageEvent =
+            ["voyage_started", "voyage_ended"].includes(normalizedType) &&
+            ["drift", "special", "deep_sea"].includes(sessionType);
+
+          return !isOldSpecialVoyageEvent;
+        });
+
+        showAllTimeline = false;
+
+        renderTimeline();
+        setStatus("Cabin Log を確認しました。");
+      }catch(error){
+        console.error("load timeline error:", error);
+
+        timelineEl.innerHTML = `
+          <div class="empty">
+            Cabin Log を読み込めませんでした。<br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+
+        if(readMoreWrap){
+          readMoreWrap.style.display = "none";
+        }
+
+        setStatus("Cabin Log を読み込めませんでした：" + error.message, true);
+      }
+    }
+
+    function renderTimeline(){
+      const events = allTimelineEvents;
+
+      if(!events || events.length === 0){
+        timelineEl.innerHTML = `
+          <div class="empty">
+            まだ船室に残った記録はありません。<br>
+            Voyage Log を残した夜や、何かが港へ流れ着いた夜に、ここへ静かに記録されます。
+          </div>
+        `;
+
+        if(readMoreWrap){
+          readMoreWrap.style.display = "none";
+        }
+
+        return;
+      }
+
+      const visibleEvents = showAllTimeline
+        ? events
+        : events.slice(0, initialTimelineLimit);
+
+      const itemsHtml = visibleEvents.map(event => {
+        const typeClass = eventClassName(event.event_type);
+
+        return `
+          <div class="timeline-item ${typeClass}">
+            ${renderTimelineImage(event)}
+
+            <div class="timeline-content">
+              <div class="timeline-date">
+                ${escapeHtml(formatTimelineDate(event.created_at))}
+              </div>
+
+              <div class="timeline-title">
+                ${escapeHtml(event.title)}
+              </div>
+
+              ${
+                event.body
+                  ? `<p class="timeline-body">${escapeHtml(event.body)}</p>`
+                  : ""
+              }
+
+              <div class="timeline-type ${typeClass}">
+                ${escapeHtml(eventTypeLabel(event.event_type))}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      timelineEl.innerHTML = `
+        <div class="timeline-card">
+          <div class="timeline-list">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+
+      if(readMoreWrap && readMoreBtn){
+        if(events.length > initialTimelineLimit){
+          readMoreWrap.style.display = "flex";
+          readMoreBtn.textContent = showAllTimeline ? "Show less" : "Read more";
+        }else{
+          readMoreWrap.style.display = "none";
+        }
+      }
+    }
+
     async function logout(){
       setStatus("ログアウトしています。");
-    
+
       await endSpecialVoyageOnLogout();
-    
+
       const { error } = await client.auth.signOut();
-    
+
       if(error){
         console.error("logout error:", error);
         setStatus(error.message, true);
         return;
       }
-    
+
       clearActiveVoyageTimer();
-    
+
       currentUser = null;
       currentAccessToken = null;
       activeVoyageSession = null;
-    
+
       window.location.replace("/");
     }
-  
+
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
       logout();
     });
-  
+
     if(readMoreBtn){
       readMoreBtn.addEventListener("click", function(){
         showAllTimeline = !showAllTimeline;
         renderTimeline();
       });
     }
-  
+
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
         currentUser = session.user;
         currentAccessToken = session.access_token;
-  
+
         document.body.classList.remove("auth-locked");
-  
+
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-  
+
         setTimeout(function(){
           loadActiveSpecialVoyageBanner().catch(function(error){
             console.error("auth state active voyage banner error:", error);
           });
-  
+
           loadTimeline().catch(function(error){
             console.error("auth state timeline load error:", error);
           });
         }, 0);
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
-  
+
         currentUser = null;
         currentAccessToken = null;
         activeVoyageSession = null;
-  
+
         window.location.replace("/");
       }
     });
-  
+
     checkSession();
-</script>
+  </script>
 
 </body>
 </html>
