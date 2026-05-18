@@ -395,6 +395,158 @@
   color:var(--text);
 }
 
+.memory-tide-card{
+  display:none;
+  margin:0 0 24px;
+  padding:18px 20px;
+  border-radius:18px;
+  border:1px solid rgba(169,183,255,.24);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.085), transparent 42%),
+    rgba(10,14,28,.62);
+  box-shadow:0 16px 38px rgba(0,0,0,.24);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.memory-tide-card.visible{
+  display:block;
+}
+
+.memory-tide-card:hover{
+  border-color:rgba(169,183,255,.44);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.13), transparent 42%),
+    rgba(12,17,34,.72);
+}
+
+.memory-tide-card:focus-visible{
+  outline:2px solid rgba(169,183,255,.70);
+  outline-offset:3px;
+}
+
+.memory-tide-label{
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+
+.memory-tide-title{
+  font-size:15px;
+  line-height:1.9;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.memory-tide-date{
+  font-size:12px;
+  line-height:1.8;
+  color:var(--muted);
+}
+
+.memory-tide-hint{
+  margin-top:10px;
+  font-size:12px;
+  line-height:1.8;
+  color:var(--dim);
+}
+
+.memory-tide-modal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:131;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+    rgba(3,5,11,.72);
+  backdrop-filter:blur(5px);
+}
+
+.memory-tide-modal-overlay.visible{
+  display:flex;
+}
+
+.memory-tide-modal{
+  position:relative;
+  width:min(560px, 100%);
+  max-height:82vh;
+  overflow:auto;
+  border-radius:24px;
+  border:1px solid rgba(169,183,255,.32);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+    rgba(10,14,28,.96);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.58),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+  padding:24px;
+  color:var(--text);
+}
+
+.memory-tide-modal-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(160,168,187,.28);
+  background:rgba(255,255,255,.035);
+  color:var(--muted);
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  padding:0;
+}
+
+.memory-tide-modal-close:hover{
+  color:var(--text);
+  border-color:rgba(169,183,255,.48);
+}
+
+.memory-tide-modal-label{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.memory-tide-modal-title{
+  font-size:20px;
+  line-height:1.7;
+  color:var(--text);
+  margin-bottom:8px;
+}
+
+.memory-tide-modal-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 18px;
+}
+
+.memory-tide-modal-meta span{
+  font-size:12px;
+  color:var(--muted);
+  border:1px solid rgba(160,168,187,.26);
+  border-radius:999px;
+  padding:5px 10px;
+  background:rgba(255,255,255,.02);
+}
+
+.memory-tide-modal-content{
+  white-space:pre-wrap;
+  font-size:14px;
+  line-height:2.05;
+  color:var(--text);
+}
+
     .weather-panel{
       background:rgba(10,14,28,.70);
       border:1px solid rgba(70,84,132,.45);
@@ -1223,6 +1375,23 @@
         </div>
       </div>
 
+      <div
+        class="memory-tide-card"
+        id="memoryTideCard"
+        role="button"
+        tabindex="0"
+        aria-label="過去の航海記録を開く"
+      >
+        <div class="memory-tide-label">Memory Tide</div>
+        <div class="memory-tide-title" id="memoryTideTitle">
+          以前の潮が、少しだけ戻ってきました。
+        </div>
+        <div class="memory-tide-date" id="memoryTideDate"></div>
+        <div class="memory-tide-hint">
+          タップすると、浮かび上がった記録を開きます。
+        </div>
+      </div>
+      
       
       <section class="weather-panel" aria-label="Tonight's Harbor">
         <div class="weather-label">Tonight's Harbor</div>
@@ -1365,6 +1534,32 @@
     <div class="afterglow-overlay" id="afterglowOverlay" aria-hidden="true">
       <div class="afterglow-banner" id="afterglowBanner"></div>
     </div>
+
+    <div class="memory-tide-modal-overlay" id="memoryTideModal" aria-hidden="true">
+    <div class="memory-tide-modal" role="dialog" aria-modal="true" aria-labelledby="memoryTideModalTitle">
+      <button
+        class="memory-tide-modal-close"
+        id="memoryTideModalClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="memory-tide-modal-label">Memory Tide</div>
+  
+      <div class="memory-tide-modal-title" id="memoryTideModalTitle">
+        以前の潮が戻ってきました
+      </div>
+  
+      <div class="memory-tide-modal-meta">
+        <span id="memoryTideModalDate"></span>
+        <span id="memoryTideModalTag"></span>
+      </div>
+  
+      <div class="memory-tide-modal-content" id="memoryTideModalContent"></div>
+    </div>
+  </div>
 
     <div class="last-voyage-modal-overlay" id="lastVoyageModal" aria-hidden="true">
     <div class="last-voyage-modal" role="dialog" aria-modal="true" aria-labelledby="lastVoyageModalTitle">
@@ -1599,6 +1794,15 @@
     const afterglowOverlay = document.getElementById("afterglowOverlay");
     const afterglowBanner = document.getElementById("afterglowBanner"); 
 
+    const memoryTideCard = document.getElementById("memoryTideCard");
+    const memoryTideTitle = document.getElementById("memoryTideTitle");
+    const memoryTideDate = document.getElementById("memoryTideDate");
+    const memoryTideModal = document.getElementById("memoryTideModal");
+    const memoryTideModalClose = document.getElementById("memoryTideModalClose");
+    const memoryTideModalDate = document.getElementById("memoryTideModalDate");
+    const memoryTideModalTag = document.getElementById("memoryTideModalTag");
+    const memoryTideModalContent = document.getElementById("memoryTideModalContent");
+
     const lastVoyageCard = document.getElementById("lastVoyageCard");
     const lastVoyageDate = document.getElementById("lastVoyageDate");
     const lastVoyageModal = document.getElementById("lastVoyageModal");
@@ -1641,6 +1845,8 @@
     let isDownloadingVoyageLog = false;
     let pendingDownloadText = "";
     let pendingDownloadFileName = "";
+
+    let memoryTideLog = null;
 
     let lastVoyageLog = null;
 
@@ -1853,6 +2059,146 @@
       requestAnimationFrame(function(){
         lastVoyageCard.classList.add("visible");
       });
+    }
+
+    function formatMemoryTideDate(value){
+      if(!value){
+        return "";
+      }
+    
+      const date = new Date(value);
+    
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+    
+      return date.toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+    
+    function memoryTideTitleForTag(tag){
+      const normalized = String(tag || "Harbor");
+    
+      if(normalized === "Fog"){
+        return "霧の中に残っていた言葉が、少しだけ浮かび上がりました。";
+      }
+    
+      if(normalized === "Moonlit"){
+        return "月明かりの下に置かれた言葉が、静かに戻ってきました。";
+      }
+    
+      if(normalized === "Storm"){
+        return "波の強かった日の記録が、港の水面に浮かんでいます。";
+      }
+    
+      if(normalized === "Deep Current"){
+        return "深い潮に沈んでいた言葉が、静かに戻ってきました。";
+      }
+    
+      if(normalized === "Lighthouse"){
+        return "灯台の方を向いていた言葉が、もう一度港に届きました。";
+      }
+    
+      return "以前の潮が、少しだけ戻ってきました。";
+    }
+    
+    function pickMemoryTideLog(){
+      const logs = (allLogs || [])
+        .slice()
+        .sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+    
+      if(logs.length < 3){
+        return null;
+      }
+    
+      const olderLogs = logs.slice(1);
+    
+      if(olderLogs.length === 0){
+        return null;
+      }
+    
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const seed = todayKey.split("-").join("");
+      const numericSeed = Number(seed) || new Date().getDate();
+      const index = numericSeed % olderLogs.length;
+    
+      return olderLogs[index];
+    }
+    
+    function renderMemoryTide(){
+      if(!memoryTideCard || !memoryTideDate || !memoryTideTitle){
+        return;
+      }
+    
+      const picked = pickMemoryTideLog();
+    
+      if(!picked){
+        memoryTideLog = null;
+        memoryTideCard.classList.remove("visible");
+        memoryTideCard.style.display = "none";
+        return;
+      }
+    
+      memoryTideLog = picked;
+    
+      memoryTideTitle.textContent =
+        memoryTideTitleForTag(picked.tag);
+    
+      memoryTideDate.textContent =
+        "記録日：" + formatMemoryTideDate(picked.created_at);
+    
+      memoryTideCard.style.display = "block";
+    
+      requestAnimationFrame(function(){
+        memoryTideCard.classList.add("visible");
+      });
+    }
+    
+    function openMemoryTideModal(){
+      if(!memoryTideLog || !memoryTideModal){
+        return;
+      }
+    
+      if(memoryTideModalTitle){
+        memoryTideModalTitle.textContent =
+          "以前の潮が戻ってきました";
+      }
+    
+      if(memoryTideModalDate){
+        memoryTideModalDate.textContent =
+          formatMemoryTideDate(memoryTideLog.created_at);
+      }
+    
+      if(memoryTideModalTag){
+        memoryTideModalTag.textContent =
+          "#" + (memoryTideLog.tag || "Harbor");
+      }
+    
+      if(memoryTideModalContent){
+        memoryTideModalContent.textContent =
+          memoryTideLog.content || "記録の本文はありません。";
+      }
+    
+      memoryTideModal.classList.add("visible");
+      memoryTideModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeMemoryTideModal(){
+      if(!memoryTideModal){
+        return;
+      }
+    
+      memoryTideModal.classList.remove("visible");
+      memoryTideModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
     
     function openLastVoyageModal(){
@@ -2676,6 +3022,7 @@
       closeCatScroll();
       closeDownloadModal();
       closeLastVoyageModal();
+      closeMemoryTideModal();
     
       window.location.replace("/");
     }
@@ -3411,6 +3758,7 @@
         allLogs = data || [];
         renderLogs();
         renderLastVoyage();
+        renderMemoryTide();
         await applyHarborWeather();
 
       }catch(error){
@@ -3609,6 +3957,29 @@
       lastVoyageModal.addEventListener("click", function(event){
         if(event.target === lastVoyageModal){
           closeLastVoyageModal();
+        }
+      });
+    }
+
+    if(memoryTideCard){
+      memoryTideCard.addEventListener("click", openMemoryTideModal);
+    
+      memoryTideCard.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          openMemoryTideModal();
+        }
+      });
+    }
+    
+    if(memoryTideModalClose){
+      memoryTideModalClose.addEventListener("click", closeMemoryTideModal);
+    }
+    
+    if(memoryTideModal){
+      memoryTideModal.addEventListener("click", function(event){
+        if(event.target === memoryTideModal){
+          closeMemoryTideModal();
         }
       });
     }
