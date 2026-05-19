@@ -1847,6 +1847,9 @@
       ticket: [
         "/images/harbor-cat/cat-ticket-glow.png"
       ],
+      welcome: [
+        "/images/harbor-cat/cat-welcome-home.png"
+      ],
       reply: [
         "/images/harbor-cat/cat-harbor-main.png",
         "/images/harbor-cat/cat-looking-lighthouse.png"
@@ -1855,7 +1858,6 @@
         "/images/harbor-cat/cat-looking-lighthouse.png"
       ]
     };
-
     function pickRandom(items){
       return items[Math.floor(Math.random() * items.length)];
     }
@@ -1947,6 +1949,22 @@
         text: "船は港へ戻り、記録だけが月明かりを残しています。"
       };
     }
+
+    function harborCatWelcomeMessage(reason){
+      if(reason === "expired"){
+        return "Harbor Cat が、静かに桟橋へ戻ってきた船を見ています。\n\n船は戻りました。\n今夜の海は、記録だけを港に残していったようです。";
+      }
+    
+      if(reason === "logout"){
+        return "Harbor Cat が、ランタンのそばで小さく瞬きしました。\n\nおかえりなさい。\n船は静かに港へ戻り、夜の余韻だけが残っています。";
+      }
+    
+      if(reason === "user_cancelled"){
+        return "Harbor Cat が、戻ってきた船のそばで小さく瞬きしました。\n\n港へ戻りました。\n残った余韻は、ここで静かに休ませておきましょう。";
+      }
+    
+      return "Harbor Cat が、桟橋の端でこちらを見ています。\n\nおかえりなさい。\n特別航海の余韻は、まだ少しだけ港に残っているようです。";
+    }
     
     function showSpecialVoyageAfterglow(){
       if(!afterglowOverlay || !afterglowBanner){
@@ -1969,6 +1987,8 @@
       }
     
       const message = afterglowMessage(payload.reason);
+      
+      showSpecialVoyageWelcomeCat(payload);
     
       afterglowBanner.innerHTML = `
         <div class="afterglow-label">Special Voyage</div>
@@ -1994,6 +2014,30 @@
           afterglowBanner.innerHTML = "";
         }, 800);
       }, 8000);
+    }
+
+    async function showSpecialVoyageWelcomeCat(payload){
+      if(!payload || !catOverlay || !catReplyText || !catIcon){
+        return;
+      }
+    
+      await sleep(9000);
+    
+      openCatScroll(
+        "Harbor Cat が、桟橋で帰りを待っています…",
+        "welcome"
+      );
+    
+      catScrollSub.textContent = "Special Voyage の帰港";
+      catIconWrap.classList.remove("reading");
+    
+      await holdCatText(900);
+    
+      await fadeCatTextTo(
+        harborCatWelcomeMessage(payload.reason)
+      );
+    
+      scheduleCatScrollAutoClose(8000);
     }
 
     function formatLastVoyageDate(value){
@@ -2724,6 +2768,10 @@
     
       if(mode === "ticket"){
         icons = catIcons.ticket;
+      }
+    
+      if(mode === "welcome"){
+        icons = catIcons.welcome;
       }
     
       if(mode === "fallback"){
