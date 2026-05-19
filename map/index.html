@@ -804,6 +804,102 @@
         font-size:11px;
         line-height:1.6;
       }
+
+      .area-journal{
+        margin:12px auto 0;
+        padding:12px 14px;
+        max-width:620px;
+        border-radius:16px;
+        border:1px solid rgba(169,183,255,.18);
+        background:
+          radial-gradient(circle at top left, rgba(169,183,255,.07), transparent 44%),
+          rgba(255,255,255,.022);
+        text-align:left;
+      }
+      
+      .area-journal-label{
+        font-size:11px;
+        letter-spacing:.16em;
+        text-transform:uppercase;
+        color:var(--accent);
+        margin-bottom:8px;
+      }
+      
+      .area-journal-main{
+        font-size:13px;
+        line-height:1.8;
+        color:var(--text);
+        margin-bottom:10px;
+      }
+      
+      .area-journal-list{
+        display:grid;
+        gap:8px;
+        margin-top:8px;
+      }
+      
+      .area-journal-item{
+        display:grid;
+        grid-template-columns:38px 1fr;
+        gap:10px;
+        align-items:center;
+        padding:8px;
+        border-radius:12px;
+        border:1px solid rgba(160,168,187,.16);
+        background:rgba(5,8,17,.34);
+      }
+      
+      .area-journal-item-img{
+        width:38px;
+        height:38px;
+        border-radius:10px;
+        border:1px solid rgba(169,183,255,.18);
+        background:
+          radial-gradient(circle at top, rgba(169,183,255,.10), transparent 58%),
+          rgba(5,8,17,.62);
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:var(--dim);
+        font-size:11px;
+      }
+      
+      .area-journal-item-img img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+      }
+      
+      .area-journal-item-name{
+        font-size:12px;
+        line-height:1.7;
+        color:var(--muted);
+      }
+      
+      .area-journal-empty{
+        font-size:12px;
+        line-height:1.8;
+        color:var(--muted);
+      }
+      
+      .area-journal-link{
+        display:inline-flex;
+        margin-top:12px;
+        font-size:12px;
+        color:var(--accent);
+        border:1px solid rgba(169,183,255,.28);
+        border-radius:999px;
+        padding:6px 12px;
+        background:rgba(169,183,255,.045);
+      }
+      
+      .area-journal-link:hover{
+        color:var(--text);
+        border-color:rgba(169,183,255,.48);
+      }
+   
     }
 
     .area-caption-chapter{
@@ -1263,6 +1359,7 @@
     let currentAccessToken = null;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
+    let areaJournalItems = [];
 
     const fallbackAreas = [
       {
@@ -1583,6 +1680,17 @@
         const userAreas = await fetchSupabase(
           "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
         );
+
+        try{
+          const journalRows = await fetchSupabase(
+            "/rest/v1/user_harbor_items_view?user_id=eq." + userId + "&select=*"
+          );
+        
+          areaJournalItems = Array.isArray(journalRows) ? journalRows : [];
+        }catch(journalError){
+          console.warn("area journal load failed:", journalError);
+          areaJournalItems = [];
+        }
     
         const areas = Array.isArray(seaAreas) && seaAreas.length > 0
           ? seaAreas
@@ -1817,6 +1925,163 @@
 
     function areaImagePath(areaKey){
       return areaImagePaths[areaKey] || seaChartImagePath;
+    }
+
+    function normalizeAreaKeyValue(value){
+      const raw = String(value || "").trim();
+    
+      if(!raw){
+        return "";
+      }
+    
+      const lower = raw.toLowerCase()
+        .replaceAll(" ", "_")
+        .replaceAll("-", "_");
+    
+      const map = {
+        harbor: "harbor",
+        港: "harbor",
+    
+        silent_water: "silent_water",
+        静かな水域: "silent_water",
+        silent: "silent_water",
+    
+        lighthouse_coast: "lighthouse_coast",
+        lighthouse: "lighthouse_coast",
+        灯台海岸: "lighthouse_coast",
+    
+        fog_sea: "fog_sea",
+        fog: "fog_sea",
+        霧の海: "fog_sea",
+    
+        moonlit_sea: "moonlit_sea",
+        moonlit: "moonlit_sea",
+        moonlit_sea: "moonlit_sea",
+        月光の海: "moonlit_sea",
+        月明かりの海: "moonlit_sea",
+    
+        deep_current: "deep_current",
+        deep: "deep_current",
+        深潮: "deep_current",
+        深い潮: "deep_current",
+    
+        unnamed_waters: "unnamed_waters",
+        unnamed: "unnamed_waters",
+        名前のない海域: "unnamed_waters",
+        名もなき海: "unnamed_waters"
+      };
+    
+      return map[raw] || map[lower] || lower;
+    }
+    
+    function journalItemAreaKey(item){
+      return normalizeAreaKeyValue(
+        item.area_key ||
+        item.sea_area_key ||
+        item.area_hint ||
+        item.area_name_ja ||
+        item.area_name ||
+        item.area ||
+        ""
+      );
+    }
+    
+    function journalItemName(item){
+      return (
+        item.name_ja ||
+        item.item_name_ja ||
+        item.item_name ||
+        item.name ||
+        "名前のない漂着物"
+      );
+    }
+    
+    function journalItemImage(item){
+      return (
+        item.image_path ||
+        item.item_image_path ||
+        item.harbor_item_image_path ||
+        ""
+      );
+    }
+    
+    function discoveredItemsForArea(areaKey){
+      const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
+      const seen = new Set();
+    
+      return (areaJournalItems || [])
+        .filter(function(item){
+          return journalItemAreaKey(item) === normalizedAreaKey;
+        })
+        .filter(function(item){
+          const key = item.item_key || journalItemName(item);
+    
+          if(seen.has(key)){
+            return false;
+          }
+    
+          seen.add(key);
+          return true;
+        });
+    }
+    
+    function areaJournalHtml(areaKey){
+      const items = discoveredItemsForArea(areaKey);
+      const count = items.length;
+      const previewItems = items.slice(0, 3);
+    
+      if(count === 0){
+        return `
+          <div class="area-journal">
+            <div class="area-journal-label">Sea Area Journal</div>
+            <div class="area-journal-main">
+              この海で見つけた漂着物：0
+            </div>
+            <div class="area-journal-empty">
+              この海に残る漂着物の記録は、まだ静かです。<br>
+              航海が進むと、ここに見つけたものが少しずつ残っていきます。
+            </div>
+            <a class="area-journal-link" href="/items/">
+              漂着物を見る
+            </a>
+          </div>
+        `;
+      }
+    
+      return `
+        <div class="area-journal">
+          <div class="area-journal-label">Sea Area Journal</div>
+          <div class="area-journal-main">
+            この海で見つけた漂着物：${escapeHtml(count)}
+          </div>
+    
+          <div class="area-journal-list">
+            ${previewItems.map(function(item){
+              const image = journalItemImage(item);
+              const name = journalItemName(item);
+    
+              return `
+                <div class="area-journal-item">
+                  <div class="area-journal-item-img">
+                    ${
+                      image
+                        ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(name)}" loading="lazy">`
+                        : "✦"
+                    }
+                  </div>
+                  <div class="area-journal-item-name">
+                    ${escapeHtml(name)}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+    
+          <a class="area-journal-link" href="/items/">
+            漂着物を見る
+          </a>
+        </div>
+      `;
     }
 
     function renderSeaChart(rawAreas, unlockedMap){
@@ -2082,8 +2347,10 @@
         <div class="area-caption-atmosphere">
           気配：${escapeHtml(areaData.atmosphere || "")}
         </div>
+      
+        ${areaJournalHtml(areaData.key)}
       `;
-
+      
       imageModal.classList.add("visible");
       imageModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
