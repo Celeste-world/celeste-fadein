@@ -1590,7 +1590,7 @@
     
         renderSeaChart(areas, unlockedMap);
         setStatus("海図を確認しました。");
-        openRequestedMapAreaIfAny();
+        
     
         const newlyUnlocked = newlyUnlockedAreaKeys(
           Array.isArray(beforeUserAreas) ? beforeUserAreas : [],
@@ -1942,46 +1942,7 @@
       `;
     }
 
-    function openRequestedMapAreaIfAny(){
-      let payload = null;
     
-      try{
-        const raw = sessionStorage.getItem("celeste_open_map_area");
-        payload = raw ? JSON.parse(raw) : null;
-        sessionStorage.removeItem("celeste_open_map_area");
-      }catch(error){
-        console.warn("open map area read failed:", error);
-        sessionStorage.removeItem("celeste_open_map_area");
-      }
-    
-      if(!payload || !payload.area_key){
-        return;
-      }
-    
-      const card = mapArea.querySelector(
-        '.sea-card[data-area-key="' + CSS.escape(String(payload.area_key)) + '"]'
-      );
-    
-      if(!card){
-        return;
-      }
-    
-      if(card.dataset.areaOpen !== "true"){
-        return;
-      }
-    
-      setTimeout(function(){
-        openAreaModal({
-          open: card.dataset.areaOpen,
-          key: card.dataset.areaKey,
-          title: card.dataset.areaTitle,
-          desc: card.dataset.areaDesc,
-          atmosphere: card.dataset.areaAtmosphere,
-          chapter: card.dataset.areaChapter,
-          image: card.dataset.areaImage
-        });
-      }, 500);
-    }
     
     function resetModalContent(){
       imageModalContent.className = "image-modal-img-wrap";
