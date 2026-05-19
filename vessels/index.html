@@ -2884,6 +2884,17 @@
 
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
+    
+      const confirmed = window.confirm(
+        "ログアウトしますか？\n\n" +
+        "港を離れると、もう一度入るにはGoogleログインが必要です。\n" +
+        "進行中の特別航海がある場合は、静かに閉じられます。"
+      );
+    
+      if(!confirmed){
+        return;
+      }
+    
       logout();
     });
 
