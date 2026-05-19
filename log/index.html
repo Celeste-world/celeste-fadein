@@ -1953,18 +1953,18 @@
 
     function harborCatWelcomeMessage(reason){
       if(reason === "expired"){
-        return "Harbor Cat が、静かに桟橋へ戻ってきた船を見ています。\n\n船は戻りました。\n今夜の海は、記録だけを港に残していったようです。";
+        return "Harbor Cat が、戻ってきた船を静かに見ています。\n\n時間の海は閉じました。\nでも、残った記録はちゃんと港へ戻っています。";
       }
     
       if(reason === "logout"){
-        return "Harbor Cat が、ランタンのそばで小さく瞬きしました。\n\nおかえりなさい。\n船は静かに港へ戻り、夜の余韻だけが残っています。";
+        return "Harbor Cat が、ランタンのそばで小さく瞬きしました。\n\nおかえりなさい。\n船は静かに港へ戻りました。";
       }
     
       if(reason === "user_cancelled"){
-        return "Harbor Cat が、戻ってきた船のそばで小さく瞬きしました。\n\n港へ戻りました。\n残った余韻は、ここで静かに休ませておきましょう。";
+        return "Harbor Cat が、桟橋の端でこちらを見ています。\n\n港へ戻りました。\n今夜の余韻は、ここで少し休ませておきましょう。";
       }
     
-      return "Harbor Cat が、桟橋の端でこちらを見ています。\n\nおかえりなさい。\n特別航海の余韻は、まだ少しだけ港に残っているようです。";
+      return "Harbor Cat が、桟橋で帰りを待っていました。\n\nおかえりなさい。\n特別航海の余韻は、まだ港に静かに残っています。";
     }
     
     function showSpecialVoyageAfterglow(){
@@ -2044,14 +2044,14 @@
         return;
       }
     
-      await sleep(9000);
+      await sleep(8600);
     
       openCatScroll(
         "Harbor Cat が、桟橋で帰りを待っています…",
         "welcome"
       );
     
-      catScrollSub.textContent = "Special Voyage の帰港";
+      catScrollSub.textContent = "Harbor Cat が出迎えています";
       catIconWrap.classList.remove("reading");
     
       await holdCatText(900);
@@ -2060,7 +2060,7 @@
         harborCatWelcomeMessage(payload.reason)
       );
     
-      scheduleCatScrollAutoClose(8000);
+      scheduleCatScrollAutoClose(7000);
     }
     function formatLastVoyageDate(value){
       if(!value){
