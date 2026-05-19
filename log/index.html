@@ -607,6 +607,41 @@
       padding:12px;
     }
 
+    .harbor-light-panel{
+      margin-top:16px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(255,227,163,.22);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.08), transparent 44%),
+        rgba(255,255,255,.022);
+    }
+    
+    .harbor-light-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:6px;
+    }
+    
+    .harbor-light-main{
+      font-size:14px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+    
+    .harbor-light-count{
+      color:#ffe3a3;
+    }
+    
+    .harbor-light-text{
+      font-size:12px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
     .chip-label{
       font-size:11px;
       letter-spacing:.14em;
@@ -1414,6 +1449,17 @@
             <div class="chip-value" id="weatherLight">Checking</div>
           </div>
         </div>
+        <div class="harbor-light-panel" id="harborLightPanel" style="display:none;">
+        <div class="harbor-light-label">Harbor Light</div>
+      
+        <div class="harbor-light-main">
+          港の灯り：<span class="harbor-light-count" id="harborLightCount">0</span>
+        </div>
+      
+        <div class="harbor-light-text" id="harborLightText">
+          港の灯りが、静かに残っています。
+        </div>
+      </div>
       </section>
 
       <section class="panel">
@@ -1795,6 +1841,9 @@
     const contentEl = document.getElementById("content");
     const tagEl = document.getElementById("tag");
     const charCount = document.getElementById("charCount");
+    const harborLightPanel = document.getElementById("harborLightPanel");
+    const harborLightCount = document.getElementById("harborLightCount");
+    const harborLightText = document.getElementById("harborLightText");
 
     const catOverlay = document.getElementById("catOverlay");
     const catReplyText = document.getElementById("catReplyText");
@@ -2970,6 +3019,89 @@
       return "前回の言葉は、まだ港に静かに残っています。";
     }
 
+    function localDateKey(value){
+      const date = new Date(value);
+    
+      if(Number.isNaN(date.getTime())){
+        return "";
+      }
+    
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+    
+      return year + "-" + month + "-" + day;
+    }
+    
+    function daysBetweenToday(dateKey){
+      if(!dateKey){
+        return Infinity;
+      }
+    
+      const todayKey = localDateKey(new Date());
+      const todayDate = new Date(todayKey + "T00:00:00");
+      const targetDate = new Date(dateKey + "T00:00:00");
+    
+      if(Number.isNaN(todayDate.getTime()) || Number.isNaN(targetDate.getTime())){
+        return Infinity;
+      }
+    
+      return Math.floor(
+        (todayDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+    }
+    
+    function harborLightValue(){
+      const recentDateKeys = new Set();
+    
+      (allLogs || []).forEach(function(log){
+        const key = localDateKey(log.created_at);
+        const diff = daysBetweenToday(key);
+    
+        if(diff >= 0 && diff <= 6){
+          recentDateKeys.add(key);
+        }
+      });
+    
+      return recentDateKeys.size;
+    }
+    
+    function harborLightMessage(value){
+      if(value >= 5){
+        return "港の灯りが、いくつも水面に映っています。";
+      }
+    
+      if(value >= 3){
+        return "港の灯りが、まだ消えずに残っています。";
+      }
+    
+      if(value >= 1){
+        return "港の灯りが、静かにひとつ残っています。";
+      }
+    
+      return "";
+    }
+    
+    function renderHarborLight(){
+      if(!harborLightPanel || !harborLightCount || !harborLightText){
+        return;
+      }
+    
+      const value = harborLightValue();
+      const message = harborLightMessage(value);
+    
+      if(value <= 0){
+        harborLightPanel.style.display = "none";
+        harborLightCount.textContent = "0";
+        harborLightText.textContent = "";
+        return;
+      }
+    
+      harborLightCount.textContent = String(value);
+      harborLightText.textContent = message;
+      harborLightPanel.style.display = "block";
+    }
+
     async function applyHarborWeather(){
       const openedAreas = await loadUnlockedSeaAreas();
       const weather = pickWeatherFromAreas(openedAreas);
@@ -2983,6 +3115,8 @@
     
       document.getElementById("weatherSea").textContent = weather.sea;
       document.getElementById("weatherLight").textContent = weather.light;
+    
+      renderHarborLight();
     }
     
     async function checkSession(){
