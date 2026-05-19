@@ -1840,6 +1840,13 @@
       reading: [
         "/images/harbor-cat/cat-reading-map-warm.png"
       ],
+      found: [
+        "/images/harbor-cat/cat-found-drift.png",
+        "/images/harbor-cat/cat-found-drift-close.png"
+      ],
+      ticket: [
+        "/images/harbor-cat/cat-ticket-glow.png"
+      ],
       reply: [
         "/images/harbor-cat/cat-harbor-main.png",
         "/images/harbor-cat/cat-looking-lighthouse.png"
@@ -2706,15 +2713,23 @@
 
     function setCatIcon(mode){
       let icons = catIcons.reply;
-
+    
       if(mode === "reading"){
         icons = catIcons.reading;
       }
-
+    
+      if(mode === "found"){
+        icons = catIcons.found;
+      }
+    
+      if(mode === "ticket"){
+        icons = catIcons.ticket;
+      }
+    
       if(mode === "fallback"){
         icons = catIcons.fallback;
       }
-
+    
       catIcon.src = pickRandom(icons);
     }
 
@@ -2738,28 +2753,37 @@
       }
     }
 
-    async function appendCatScrollNotice(message, label = "Harbor Find"){
+    async function appendCatScrollNotice(message, label = "Harbor Find", mode = "reply"){
       clearCatScrollAutoCloseTimer();
-
+    
       const current = catReplyText.textContent.trim();
-
+    
       const notice = [
         "── " + label + " ──",
         message
       ].join("\n\n");
-
+    
       const nextText = current
         ? current + "\n\n" + notice
         : notice;
-
+    
       catOverlay.classList.add("visible");
       catOverlay.setAttribute("aria-hidden", "false");
-
-      catScrollSub.textContent = "港からの静かな返事";
+    
+      setCatIcon(mode);
+    
+      if(mode === "found"){
+        catScrollSub.textContent = "港に漂着の気配があります";
+      }else if(mode === "ticket"){
+        catScrollSub.textContent = "小さな航海券が届いたようです";
+      }else{
+        catScrollSub.textContent = "港からの静かな返事";
+      }
+    
       catIconWrap.classList.remove("reading");
-
+    
       await fadeCatTextTo(nextText);
-
+    
       scheduleCatScrollAutoClose(7000);
     }
 
@@ -3200,7 +3224,8 @@
 
           await appendCatScrollNotice(
             harborFindResult.hint_message,
-            "漂着の気配"
+            "漂着の気配",
+            "found"
           );
 
           await holdCatText(2200);
@@ -3254,7 +3279,8 @@
 
           await appendCatScrollNotice(
             foundMessage,
-            "Harbor Find"
+            "Harbor Find",
+            "found"
           );
 
           await holdCatText(2400);
@@ -3293,8 +3319,9 @@
           );
 
           await appendCatScrollNotice(
-            driftMessage,
-            "Drift Ticket"
+            ticketMessage,
+            "Drift Ticket",
+            "ticket"
           );
 
           await holdCatText(2400);
