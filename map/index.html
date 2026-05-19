@@ -1000,6 +1000,21 @@
         color:var(--text);
         margin-bottom:10px;
       }
+
+      .area-journal-sub{
+        font-size:12px;
+        line-height:1.8;
+        color:var(--muted);
+        margin:0 0 12px;
+      }
+      
+      .area-journal-list-label{
+        font-size:11px;
+        letter-spacing:.12em;
+        text-transform:uppercase;
+        color:var(--dim);
+        margin:10px 0 6px;
+      }
       
       .area-journal-list{
         display:grid;
@@ -2262,11 +2277,11 @@
           <div class="area-journal">
             <div class="area-journal-label">Sea Area Journal</div>
             <div class="area-journal-main">
-              この海で見つけた漂着物：0
+              この海に残った漂着物：0
             </div>
             <div class="area-journal-empty">
-              この海に残る漂着物の記録は、まだ静かです。<br>
-              航海が進むと、ここに見つけたものが少しずつ残っていきます。
+              この海には、まだ漂着物の記録が残っていません。<br>
+              けれど、波は静かに何かを運び続けています。
             </div>
             <a class="area-journal-link" href="/items/">
               漂着物を見る
@@ -2279,9 +2294,17 @@
         <div class="area-journal">
           <div class="area-journal-label">Sea Area Journal</div>
           <div class="area-journal-main">
-            この海で見つけた漂着物：${escapeHtml(count)}
+            この海に残った漂着物：${escapeHtml(count)}
           </div>
-    
+          
+          <div class="area-journal-sub">
+            この海は、少しずつあなたの航海を覚え始めています。
+          </div>
+          
+          <div class="area-journal-list-label">
+            この海に残っているもの
+          </div>
+          
           <div class="area-journal-list">
             ${previewItems.map(function(item){
               const image = journalItemImage(item);
