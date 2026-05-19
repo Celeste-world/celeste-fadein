@@ -681,6 +681,169 @@
       margin-top:14px;
     }
 
+    .unlock-modal{
+      position:fixed;
+      inset:0;
+      z-index:90;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.12), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(5px);
+    }
+    
+    .unlock-modal.visible{
+      display:flex;
+    }
+    
+    .unlock-modal-card{
+      position:relative;
+      width:min(580px, 100%);
+      max-height:88vh;
+      overflow:auto;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      color:var(--text);
+      text-align:center;
+    }
+    
+    .unlock-modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+    }
+    
+    .unlock-modal-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    .unlock-modal-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .unlock-modal-title{
+      font-size:24px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+    
+    .unlock-modal-text{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin-bottom:18px;
+      white-space:pre-wrap;
+    }
+    
+    .unlock-modal-image-wrap{
+      width:100%;
+      max-height:260px;
+      border-radius:18px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
+        rgba(5,8,17,.62);
+      border:1px solid rgba(169,183,255,.16);
+      margin:0 0 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    
+    .unlock-modal-image{
+      width:100%;
+      max-height:260px;
+      object-fit:contain;
+      display:block;
+    }
+    
+    .unlock-modal-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    
+    .unlock-modal-actions a,
+    .unlock-modal-actions button{
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+    
+    .unlock-modal-primary{
+      border:1px solid transparent;
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+    
+    .unlock-modal-ghost{
+      border:1px solid rgba(160,168,187,.28);
+      background:transparent;
+      color:var(--muted);
+    }
+    
+    .unlock-modal-ghost:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    @media(max-width:700px){
+      .unlock-modal{
+        align-items:flex-start;
+        padding:18px;
+        overflow:auto;
+      }
+    
+      .unlock-modal-card{
+        margin:36px 0;
+        padding:20px;
+      }
+    
+      .unlock-modal-title{
+        font-size:21px;
+      }
+    
+      .unlock-modal-image-wrap,
+      .unlock-modal-image{
+        max-height:220px;
+      }
+    
+      .unlock-modal-actions a,
+      .unlock-modal-actions button{
+        width:100%;
+      }
+    }
+
     .image-modal,
     .detail-modal{
       position:fixed;
@@ -1090,6 +1253,80 @@
 
   </div>
 
+  <div class="unlock-modal" id="vesselUnlockModal" aria-hidden="true">
+    <div class="unlock-modal-card" role="dialog" aria-modal="true" aria-labelledby="vesselUnlockTitle">
+      <button
+        class="unlock-modal-close"
+        id="vesselUnlockClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="unlock-modal-label">New Vessel</div>
+  
+      <div class="unlock-modal-title" id="vesselUnlockTitle">
+        新しい船が、港に姿を現しました
+      </div>
+  
+      <div class="unlock-modal-text" id="vesselUnlockText">
+        これまで集めた漂着物が、静かにひとつの形になりました。
+      </div>
+  
+      <div class="unlock-modal-image-wrap">
+        <img class="unlock-modal-image" id="vesselUnlockImage" src="" alt="">
+      </div>
+  
+      <div class="unlock-modal-actions">
+        <button class="unlock-modal-ghost" id="vesselUnlockLaterBtn" type="button">
+          閉じる
+        </button>
+  
+        <button class="unlock-modal-primary" id="vesselUnlockNextBtn" type="button">
+          次へ
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="unlock-modal" id="seaUnlockModal" aria-hidden="true">
+    <div class="unlock-modal-card" role="dialog" aria-modal="true" aria-labelledby="seaUnlockTitle">
+      <button
+        class="unlock-modal-close"
+        id="seaUnlockClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="unlock-modal-label">New Sea Area</div>
+  
+      <div class="unlock-modal-title" id="seaUnlockTitle">
+        新しい海が開きました
+      </div>
+  
+      <div class="unlock-modal-text" id="seaUnlockText">
+        霧の向こうに、新しい海が姿を見せました。
+      </div>
+  
+      <div class="unlock-modal-image-wrap">
+        <img class="unlock-modal-image" id="seaUnlockImage" src="" alt="">
+      </div>
+  
+      <div class="unlock-modal-actions">
+        <button class="unlock-modal-ghost" id="seaUnlockLaterBtn" type="button">
+          閉じる
+        </button>
+  
+        <a class="unlock-modal-primary" href="/map/">
+          海図を見る
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="image-modal" id="imageModal" aria-hidden="true">
     <div class="image-modal-inner">
       <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Close">
@@ -1137,6 +1374,20 @@
     const detailModal = document.getElementById("detailModal");
     const detailModalClose = document.getElementById("detailModalClose");
     const detailModalContent = document.getElementById("detailModalContent");
+    const vesselUnlockModal = document.getElementById("vesselUnlockModal");
+    const vesselUnlockClose = document.getElementById("vesselUnlockClose");
+    const vesselUnlockLaterBtn = document.getElementById("vesselUnlockLaterBtn");
+    const vesselUnlockNextBtn = document.getElementById("vesselUnlockNextBtn");
+    const vesselUnlockTitle = document.getElementById("vesselUnlockTitle");
+    const vesselUnlockText = document.getElementById("vesselUnlockText");
+    const vesselUnlockImage = document.getElementById("vesselUnlockImage");
+    
+    const seaUnlockModal = document.getElementById("seaUnlockModal");
+    const seaUnlockClose = document.getElementById("seaUnlockClose");
+    const seaUnlockLaterBtn = document.getElementById("seaUnlockLaterBtn");
+    const seaUnlockTitle = document.getElementById("seaUnlockTitle");
+    const seaUnlockText = document.getElementById("seaUnlockText");
+    const seaUnlockImage = document.getElementById("seaUnlockImage");
 
     let currentUser = null;
     let currentAccessToken = null;
@@ -1145,8 +1396,20 @@
     let vesselDetailCounter = 0;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
+    let pendingSeaUnlockArea = null;
 
     const fogVesselImagePath = "/images/vessels/vessel-fog.png";
+    const seaChartImagePath = "/images/sea-chart-z.png";
+
+    const areaImagePaths = {
+      harbor: "/images/areas/harbor.png",
+      silent_water: "/images/areas/silent-water.png",
+      lighthouse_coast: "/images/areas/lighthouse-coast.png",
+      fog_sea: "/images/areas/fog-sea.png",
+      moonlit_sea: "/images/areas/moonlit-sea.png",
+      deep_current: "/images/areas/deep-current.png",
+      unnamed_waters: "/images/areas/unnamed-waters.png"
+    };
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1543,6 +1806,58 @@
       return sorted[stage - 1] || null;
     }
 
+    function areaKey(area){
+      return String(
+        area?.area_key ||
+        area?.key ||
+        area?.slug ||
+        area?.id ||
+        ""
+      );
+    }
+    
+    function areaChapterTitle(areaKeyValue, fallbackName){
+      const titles = {
+        harbor: "第一章　港",
+        silent_water: "第二章　静かな水域",
+        lighthouse_coast: "第三章　灯台海岸",
+        fog_sea: "第四章　霧の海",
+        moonlit_sea: "第五章　月明かりの海",
+        deep_current: "第六章　深い潮",
+        unnamed_waters: "第七章　名もなき海"
+      };
+    
+      return titles[areaKeyValue] || fallbackName || "開かれた海域";
+    }
+    
+    function seaUnlockMessage(areaKeyValue){
+      const messages = {
+        silent_water:
+          "港の外に、低い波の海が開きました。\nここから先は、もう岸辺だけの航海ではありません。",
+    
+        lighthouse_coast:
+          "遠くの灯台が、海の向こうに姿を見せました。\n進む方角を、もう一度思い出すための光です。",
+    
+        fog_sea:
+          "霧の海が、静かに航路の前へ現れました。\n見えないまま進む夜が、ここから始まります。",
+    
+        moonlit_sea:
+          "月明かりの海が、水面に細い道を描きました。\nどこへ続くか分からなくても、その道は確かにあります。",
+    
+        deep_current:
+          "深い潮が、海の下でゆっくりと動き始めました。\n大きく舵を切らず、ただ保つことが必要な海です。",
+    
+        unnamed_waters:
+          "海図の外側に、名もなき海が開きました。\nこれは終点ではなく、まだ見ぬ航海への入口です。"
+      };
+    
+      return messages[areaKeyValue] || "霧の向こうに、新しい海が静かに開きました。";
+    }
+    
+    function areaImagePath(areaKeyValue){
+      return areaImagePaths[areaKeyValue] || seaChartImagePath;
+    }
+
     function seaAreaName(area){
       if(!area){
         return "まだ海域は開きません";
@@ -1854,6 +2169,87 @@
       `;
     }
 
+    function collectionArrayFromResult(result){
+      return result && Array.isArray(result.vessels)
+        ? result.vessels
+        : [];
+    }
+    
+    function isOwnedVessel(row){
+      return (
+        normalizeBoolean(row?.is_owned) ||
+        row?.status === "owned" ||
+        Boolean(row?.user_vessel_id)
+      );
+    }
+    
+    function ownedVesselKeySet(collection){
+      const set = new Set();
+    
+      (collection || []).forEach(function(row){
+        if(isOwnedVessel(row) && row.vessel_key){
+          set.add(String(row.vessel_key));
+        }
+      });
+    
+      return set;
+    }
+    
+    function findNewlyOwnedVessel(beforeCollection, afterCollection){
+      const before = ownedVesselKeySet(beforeCollection);
+    
+      return (afterCollection || []).find(function(row){
+        return isOwnedVessel(row) &&
+          row.vessel_key &&
+          !before.has(String(row.vessel_key));
+      }) || null;
+    }
+    
+    function unlockedAreaKeySet(userAreas){
+      const set = new Set();
+    
+      (userAreas || []).forEach(function(row){
+        const key =
+          row.area_key ||
+          row.sea_area_key ||
+          row.area_id ||
+          row.sea_area_id;
+    
+        const status =
+          row.status ||
+          row.unlock_status ||
+          row.state ||
+          "open";
+    
+        if(key && (status === "open" || status === "unlocked" || status === "active")){
+          set.add(String(key));
+        }
+      });
+    
+      return set;
+    }
+    
+    function newlyUnlockedAreaKeys(beforeAreas, afterAreas){
+      const before = unlockedAreaKeySet(beforeAreas);
+      const after = unlockedAreaKeySet(afterAreas);
+    
+      const newly = [];
+    
+      after.forEach(function(key){
+        if(!before.has(key) && key !== "harbor"){
+          newly.push(key);
+        }
+      });
+    
+      return newly;
+    }
+    
+    function findSeaAreaByKey(seaAreas, key){
+      return (seaAreas || []).find(function(area){
+        return areaKey(area) === String(key);
+      }) || null;
+    }
+
     function normalizeBoolean(value){
       return value === true || value === "true" || value === 1 || value === "1";
     }
@@ -2018,6 +2414,132 @@
       `;
     }
 
+    function vesselUnlockMessage(vessel){
+      const name = vessel?.name_ja || vessel?.name_en || "新しい船";
+    
+      return (
+        name + " が、港に姿を現しました。\n\n" +
+        "これまで集めた漂着物が、静かにひとつの形になりました。\n" +
+        "船は、次の海へ向かう準備を整えています。"
+      );
+    }
+    
+    function openVesselUnlockModal(vessel, nextSeaArea = null){
+      if(!vessel || !vesselUnlockModal){
+        if(nextSeaArea){
+          openSeaUnlockModal(nextSeaArea);
+        }
+        return;
+      }
+    
+      pendingSeaUnlockArea = nextSeaArea || null;
+    
+      const name = vessel.name_ja || vessel.name_en || vessel.vessel_key || "新しい船";
+      const imagePath = vessel.image_path || fogVesselImagePath;
+    
+      if(vesselUnlockTitle){
+        vesselUnlockTitle.textContent = name;
+      }
+    
+      if(vesselUnlockText){
+        vesselUnlockText.textContent = vesselUnlockMessage(vessel);
+      }
+    
+      if(vesselUnlockImage){
+        vesselUnlockImage.src = imagePath;
+        vesselUnlockImage.alt = name;
+        vesselUnlockImage.onerror = function(){
+          this.onerror = null;
+          this.src = fogVesselImagePath;
+        };
+      }
+    
+      if(vesselUnlockNextBtn){
+        vesselUnlockNextBtn.textContent = pendingSeaUnlockArea
+          ? "開いた海を見る"
+          : "閉じる";
+      }
+    
+      vesselUnlockModal.classList.add("visible");
+      vesselUnlockModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeVesselUnlockModal(){
+      if(!vesselUnlockModal){
+        return;
+      }
+    
+      vesselUnlockModal.classList.remove("visible");
+      vesselUnlockModal.setAttribute("aria-hidden", "true");
+    
+      if(vesselUnlockImage){
+        vesselUnlockImage.src = "";
+        vesselUnlockImage.alt = "";
+      }
+    
+      const nextSeaArea = pendingSeaUnlockArea;
+      pendingSeaUnlockArea = null;
+    
+      if(nextSeaArea){
+        setTimeout(function(){
+          openSeaUnlockModal(nextSeaArea);
+        }, 300);
+        return;
+      }
+    
+      document.body.style.overflow = "";
+    }
+    
+    function openSeaUnlockModal(area){
+      if(!area || !seaUnlockModal){
+        document.body.style.overflow = "";
+        return;
+      }
+    
+      const key = areaKey(area);
+      const title = areaChapterTitle(key, seaAreaName(area));
+      const message = seaUnlockMessage(key);
+      const imagePath = areaImagePath(key);
+    
+      if(seaUnlockTitle){
+        seaUnlockTitle.textContent = title;
+      }
+    
+      if(seaUnlockText){
+        seaUnlockText.textContent = message;
+      }
+    
+      if(seaUnlockImage){
+        seaUnlockImage.src = imagePath;
+        seaUnlockImage.alt = title;
+        seaUnlockImage.onerror = function(){
+          this.onerror = null;
+          this.src = seaChartImagePath;
+        };
+      }
+    
+      seaUnlockModal.classList.add("visible");
+      seaUnlockModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeSeaUnlockModal(){
+      if(!seaUnlockModal){
+        return;
+      }
+    
+      seaUnlockModal.classList.remove("visible");
+      seaUnlockModal.setAttribute("aria-hidden", "true");
+    
+      if(seaUnlockImage){
+        seaUnlockImage.src = "";
+        seaUnlockImage.alt = "";
+      }
+    
+      document.body.style.overflow = "";
+    }
+
     function openImageModal(src, label){
       if(!src || !imageModal || !imageModalImg){
         return;
@@ -2145,15 +2667,16 @@
       if(!currentUser || !currentAccessToken){
         return;
       }
-
+    
       const button = document.getElementById("unlockVesselBtn");
       const messageEl = document.getElementById("unlockMessage");
-
+      const userId = encodeURIComponent(currentUser.id);
+    
       if(button){
         button.disabled = true;
         button.textContent = "確認しています...";
       }
-
+    
       if(messageEl){
         messageEl.innerHTML = `
           <div class="unlock-message">
@@ -2161,8 +2684,22 @@
           </div>
         `;
       }
-
+    
       try{
+        const beforeCollectionResult = await fetchSupabase(
+          "/rest/v1/rpc/get_user_vessels_collection",
+          {
+            method: "POST",
+            body: {}
+          }
+        );
+    
+        const beforeCollection = collectionArrayFromResult(beforeCollectionResult);
+    
+        const beforeUserAreas = await fetchSupabase(
+          "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+        );
+    
         const result = await fetchSupabase(
           "/rest/v1/rpc/check_and_unlock_next_vessel",
           {
@@ -2170,10 +2707,10 @@
             body: {}
           }
         );
-
+    
         if(result && result.unlocked){
           setStatus(result.message || "新しい船が整いました。");
-
+    
           try{
             await fetchSupabase(
               "/rest/v1/rpc/check_and_unlock_sea_areas",
@@ -2185,7 +2722,35 @@
           }catch(seaError){
             console.error("check_and_unlock_sea_areas error:", seaError);
           }
-
+    
+          const afterCollectionResult = await fetchSupabase(
+            "/rest/v1/rpc/get_user_vessels_collection",
+            {
+              method: "POST",
+              body: {}
+            }
+          );
+    
+          const afterCollection = collectionArrayFromResult(afterCollectionResult);
+    
+          const afterUserAreas = await fetchSupabase(
+            "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+          );
+    
+          const newlyOwnedVessel = findNewlyOwnedVessel(
+            beforeCollection,
+            afterCollection
+          );
+    
+          const newlyUnlockedSeaKeys = newlyUnlockedAreaKeys(
+            Array.isArray(beforeUserAreas) ? beforeUserAreas : [],
+            Array.isArray(afterUserAreas) ? afterUserAreas : []
+          );
+    
+          const firstNewSeaArea = newlyUnlockedSeaKeys.length > 0
+            ? findSeaAreaByKey(seaAreasCache, newlyUnlockedSeaKeys[0])
+            : null;
+    
           if(messageEl){
             messageEl.innerHTML = `
               <div class="unlock-message success">
@@ -2196,26 +2761,35 @@
               </div>
             `;
           }
-
+    
           if(button){
             button.style.display = "none";
           }
-
+    
           await loadVesselDisplay();
+    
+          setTimeout(function(){
+            if(newlyOwnedVessel){
+              openVesselUnlockModal(newlyOwnedVessel, firstNewSeaArea);
+            }else if(firstNewSeaArea){
+              openSeaUnlockModal(firstNewSeaArea);
+            }
+          }, 500);
+    
           return;
         }
-
+    
         if(result && result.reason === "requirements_not_met"){
           const missing = Array.isArray(result.missing_items)
             ? result.missing_items
             : [];
-
+    
           const missingText = missing.length
             ? missing.map(item => {
                 return `${escapeHtml(item.name_ja)}：${escapeHtml(item.owned_count)} / ${escapeHtml(item.required_count)}`;
               }).join("<br>")
             : "まだ必要な漂着物が少し足りません。";
-
+    
           if(messageEl){
             messageEl.innerHTML = `
               <div class="unlock-message">
@@ -2224,11 +2798,11 @@
               </div>
             `;
           }
-
+    
           setStatus("出航準備はまだ整っていません。");
           return;
         }
-
+    
         if(result && result.already_owned){
           if(messageEl){
             messageEl.innerHTML = `
@@ -2237,12 +2811,12 @@
               </div>
             `;
           }
-
+    
           setStatus(result.message || "この船はすでに港にあります。");
           await loadVesselDisplay();
           return;
         }
-
+    
         if(messageEl){
           messageEl.innerHTML = `
             <div class="unlock-message">
@@ -2250,11 +2824,11 @@
             </div>
           `;
         }
-
+    
         setStatus((result && result.message) || "出航準備を確認しました。");
       }catch(error){
         console.error("check_and_unlock_next_vessel error:", error);
-
+    
         if(messageEl){
           messageEl.innerHTML = `
             <div class="unlock-message error">
@@ -2263,7 +2837,7 @@
             </div>
           `;
         }
-
+    
         setStatus("出航準備の確認に失敗しました：" + error.message, true);
       }finally{
         if(button){
@@ -2272,7 +2846,6 @@
         }
       }
     }
-
     async function endSpecialVoyageOnLogout(){
       try{
         await client.functions.invoke("end-voyage-session", {
@@ -2357,6 +2930,8 @@
 
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
+        closeVesselUnlockModal();
+        closeSeaUnlockModal();
         closeImageModal();
         closeDetailModal();
         return;
@@ -2385,6 +2960,42 @@
         }
       }
     });
+
+    if(vesselUnlockClose){
+      vesselUnlockClose.addEventListener("click", closeVesselUnlockModal);
+    }
+    
+    if(vesselUnlockLaterBtn){
+      vesselUnlockLaterBtn.addEventListener("click", closeVesselUnlockModal);
+    }
+    
+    if(vesselUnlockNextBtn){
+      vesselUnlockNextBtn.addEventListener("click", closeVesselUnlockModal);
+    }
+    
+    if(vesselUnlockModal){
+      vesselUnlockModal.addEventListener("click", function(event){
+        if(event.target === vesselUnlockModal){
+          closeVesselUnlockModal();
+        }
+      });
+    }
+    
+    if(seaUnlockClose){
+      seaUnlockClose.addEventListener("click", closeSeaUnlockModal);
+    }
+    
+    if(seaUnlockLaterBtn){
+      seaUnlockLaterBtn.addEventListener("click", closeSeaUnlockModal);
+    }
+    
+    if(seaUnlockModal){
+      seaUnlockModal.addEventListener("click", function(event){
+        if(event.target === seaUnlockModal){
+          closeSeaUnlockModal();
+        }
+      });
+    }
 
     if(imageModalClose){
       imageModalClose.addEventListener("click", closeImageModal);
