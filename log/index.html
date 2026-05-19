@@ -1411,6 +1411,7 @@
 
       <nav class="nav">
         <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Harbor Status</a>
         <a href="/timeline/">Cabin Log</a>
         <a href="/voyage-archive/">Archive</a>
         <a href="/items/">Items</a>
@@ -1440,13 +1441,6 @@
         </button>
       </div>
 
-      <div
-        class="last-voyage-card"
-        id="lastVoyageCard"
-        role="button"
-        tabindex="0"
-        aria-label="前回の航海記録を開く"
-      >
         <div class="last-voyage-label">Last Voyage</div>
         <div class="last-voyage-title">
           前回の言葉は、まだ港に静かに残っています。
@@ -1481,28 +1475,8 @@
           </div>
         </div>
         
-        <div class="harbor-light-panel" id="harborLightPanel" style="display:none;">
-          <div class="harbor-light-label">Harbor Light</div>
         
-          <div class="harbor-light-main">
-            港の灯り：<span class="harbor-light-count" id="harborLightCount">0</span>
-          </div>
         
-          <div class="harbor-light-text" id="harborLightText">
-            港の灯りが、静かに残っています。
-          </div>
-        </div>
-        <div class="sea-title-panel" id="seaTitlePanel" style="display:none;">
-          <div class="sea-title-label">今の航海の気配</div>
-        
-          <div class="sea-title-name" id="seaTitleName">
-            静かな潮を渡る人
-          </div>
-        
-          <div class="sea-title-text" id="seaTitleText">
-            最近の記録には、静かな潮のような時間が流れています。
-          </div>
-        </div>
       </section>
 
       <section class="panel">
@@ -1623,42 +1597,6 @@
       <div class="afterglow-banner" id="afterglowBanner"></div>
     </div>
 
-    
-    <div class="last-voyage-modal-overlay" id="lastVoyageModal" aria-hidden="true">
-    <div class="last-voyage-modal" role="dialog" aria-modal="true" aria-labelledby="lastVoyageModalTitle">
-      <button
-        class="last-voyage-modal-close"
-        id="lastVoyageModalClose"
-        type="button"
-        aria-label="Close"
-      >
-        ×
-      </button>
-  
-      <div class="last-voyage-modal-label">Last Voyage</div>
-  
-      <div class="last-voyage-modal-title" id="lastVoyageModalTitle">
-        前回の航海記録
-      </div>
-  
-      <div class="last-voyage-modal-meta">
-        <span id="lastVoyageModalDate"></span>
-        <span id="lastVoyageModalTag"></span>
-      </div>
-  
-      <div class="last-voyage-modal-content" id="lastVoyageModalContent"></div>
-      <div class="last-voyage-modal-actions" id="lastVoyageModalActions" style="display:none;">
-        <button
-          class="ghost last-voyage-toggle-btn"
-          id="lastVoyageToggleMemoryBtn"
-          type="button"
-        >
-          以前の潮を見る
-        </button>
-      </div>
-    </div>
-  </div>
-
     <div class="download-modal-overlay" id="downloadModal" aria-hidden="true">
       <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
         <div class="download-modal-label">Voyage Export</div>
@@ -1712,6 +1650,7 @@
     <footer>
       <div class="footer-links">
         <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Harbor Status</a>
         <a href="/timeline/">Cabin Log</a>
         <a href="/voyage-archive/">Archive</a>
         <a href="/items/">Items</a>
