@@ -627,6 +627,18 @@
       }
     }
 
+    .area-caption-chapter{
+      display:inline-block;
+      color:var(--accent);
+      border:1px solid rgba(169,183,255,.24);
+      background:rgba(169,183,255,.045);
+      border-radius:14px;
+      padding:8px 12px;
+      font-size:12px;
+      line-height:1.8;
+      margin:4px 0 8px;
+    }
+
     .area-caption-atmosphere{
       display:inline-block;
       color:var(--ready);
@@ -1465,6 +1477,33 @@
       return titles[areaKey] || fallbackName || "開かれた海域";
     }
 
+    function areaChapterAfterglow(areaKey){
+      const messages = {
+        harbor:
+          "ここから、すべての航海が始まります。まだ岸辺に近い、静かな第一章です。",
+    
+        silent_water:
+          "港の外へ出た船が、はじめて低い波に触れる章です。航海は、もう岸辺だけには留まりません。",
+    
+        lighthouse_coast:
+          "遠くの灯台が、進む方角を思い出させる章です。光は近づくためではなく、見失わないためにあります。",
+    
+        fog_sea:
+          "視界が閉じても、海そのものは続いていることを知る章です。確信よりも、継続が頼りになります。",
+    
+        moonlit_sea:
+          "月明かりが水面に細い道を描く章です。どこへ続くか分からなくても、その道は確かにあります。",
+    
+        deep_current:
+          "見えている波よりも、深い潮の流れを感じる章です。大きく舵を切らず、ただ保つことが必要になります。",
+    
+        unnamed_waters:
+          "海図の外側へ向かう章です。ここは終点ではなく、まだ名のない海への入口です。"
+      };
+    
+      return messages[areaKey] || "この海域は、航海の中で静かに開かれた章です。";
+    }
+
     function areaImagePath(areaKey){
       return areaImagePaths[areaKey] || seaChartImagePath;
     }
@@ -1516,6 +1555,7 @@
             data-area-title="${escapeHtml(displayName)}"
             data-area-desc="${escapeHtml(displayDesc)}"
             data-area-atmosphere="${escapeHtml(atmosphereText)}"
+            data-area-chapter="${escapeHtml(areaChapterAfterglow(area.area_key))}"
             data-area-image="${escapeHtml(areaImagePath(area.area_key))}"
           >
             <div class="sea-kicker">${escapeHtml(kicker)}</div>
@@ -1671,7 +1711,15 @@
 
       imageModalCaption.innerHTML = `
         <div class="area-caption-title">${escapeHtml(areaData.title || "")}</div>
-        <div class="area-caption-desc">${escapeHtml(areaData.desc || "")}</div>
+      
+        <div class="area-caption-chapter">
+          ${escapeHtml(areaData.chapter || "この海域は、航海の中で静かに開かれた章です。")}
+        </div>
+      
+        <div class="area-caption-desc">
+          ${escapeHtml(areaData.desc || "")}
+        </div>
+      
         <div class="area-caption-atmosphere">
           気配：${escapeHtml(areaData.atmosphere || "")}
         </div>
@@ -1752,6 +1800,7 @@
         title: card.dataset.areaTitle,
         desc: card.dataset.areaDesc,
         atmosphere: card.dataset.areaAtmosphere,
+        chapter: card.dataset.areaChapter,
         image: card.dataset.areaImage
       });
     });
@@ -1775,6 +1824,7 @@
         title: card.dataset.areaTitle,
         desc: card.dataset.areaDesc,
         atmosphere: card.dataset.areaAtmosphere,
+        chapter: card.dataset.areaChapter,
         image: card.dataset.areaImage
       });
     });
