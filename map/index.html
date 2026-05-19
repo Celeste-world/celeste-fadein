@@ -509,6 +509,166 @@
       background:rgba(255,255,255,.015);
     }
 
+    .unlock-modal{
+      position:fixed;
+      inset:0;
+      z-index:90;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.12), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(5px);
+    }
+    
+    .unlock-modal.visible{
+      display:flex;
+    }
+    
+    .unlock-modal-card{
+      position:relative;
+      width:min(560px, 100%);
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      color:var(--text);
+      text-align:center;
+    }
+    
+    .unlock-modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+    }
+    
+    .unlock-modal-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    .unlock-modal-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .unlock-modal-title{
+      font-size:24px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+    
+    .unlock-modal-text{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+    
+    .unlock-modal-image-wrap{
+      width:100%;
+      max-height:260px;
+      border-radius:18px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 56%),
+        rgba(5,8,17,.62);
+      border:1px solid rgba(169,183,255,.16);
+      margin:0 0 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    
+    .unlock-modal-image{
+      width:100%;
+      max-height:260px;
+      object-fit:cover;
+      display:block;
+    }
+    
+    .unlock-modal-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    
+    .unlock-modal-actions a,
+    .unlock-modal-actions button{
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+    
+    .unlock-modal-primary{
+      border:1px solid transparent;
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+    
+    .unlock-modal-ghost{
+      border:1px solid rgba(160,168,187,.28);
+      background:transparent;
+      color:var(--muted);
+    }
+    
+    .unlock-modal-ghost:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    @media(max-width:640px){
+      .unlock-modal{
+        align-items:flex-start;
+        padding:18px;
+        overflow:auto;
+      }
+    
+      .unlock-modal-card{
+        margin:36px 0;
+        padding:20px;
+      }
+    
+      .unlock-modal-title{
+        font-size:21px;
+      }
+    
+      .unlock-modal-image-wrap,
+      .unlock-modal-image{
+        max-height:220px;
+      }
+    
+      .unlock-modal-actions a,
+      .unlock-modal-actions button{
+        width:100%;
+      }
+    }
+
     .image-modal{
       position:fixed;
       inset:0;
@@ -1012,9 +1172,46 @@
 
       <div>CELESTE SEA CHART</div>
     </footer>
-
+  
+   </div>
+  
+  <div class="unlock-modal" id="seaUnlockModal" aria-hidden="true">
+    <div class="unlock-modal-card" role="dialog" aria-modal="true" aria-labelledby="seaUnlockTitle">
+      <button
+        class="unlock-modal-close"
+        id="seaUnlockClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="unlock-modal-label">New Sea Area</div>
+  
+      <div class="unlock-modal-title" id="seaUnlockTitle">
+        新しい海が開きました
+      </div>
+  
+      <div class="unlock-modal-text" id="seaUnlockText">
+        霧の向こうに、新しい海が姿を見せました。
+      </div>
+  
+      <div class="unlock-modal-image-wrap" id="seaUnlockImageWrap">
+        <img class="unlock-modal-image" id="seaUnlockImage" src="" alt="">
+      </div>
+  
+      <div class="unlock-modal-actions">
+        <button class="unlock-modal-ghost" id="seaUnlockLaterBtn" type="button">
+          閉じる
+        </button>
+  
+        <a class="unlock-modal-primary" href="/map/">
+          海図を見る
+        </a>
+      </div>
+    </div>
   </div>
-
+  
   <div class="image-modal" id="imageModal" aria-hidden="true">
     <div class="image-modal-inner">
       <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Close">
@@ -1050,6 +1247,12 @@
     const imageModalImg = document.getElementById("imageModalImg");
     const imageModalCaption = document.getElementById("imageModalCaption");
     const imageModalClose = document.getElementById("imageModalClose");
+    const seaUnlockModal = document.getElementById("seaUnlockModal");
+    const seaUnlockClose = document.getElementById("seaUnlockClose");
+    const seaUnlockLaterBtn = document.getElementById("seaUnlockLaterBtn");
+    const seaUnlockTitle = document.getElementById("seaUnlockTitle");
+    const seaUnlockText = document.getElementById("seaUnlockText");
+    const seaUnlockImage = document.getElementById("seaUnlockImage");
 
     const seaChartImagePath = "/images/sea-chart-z.png";
     const seaChartLabel = "Celeste Harbor Sea Chart";
@@ -1355,10 +1558,14 @@
       if(!currentUser || !currentAccessToken){
         return;
       }
-
+    
       try{
         const userId = encodeURIComponent(currentUser.id);
-
+    
+        const beforeUserAreas = await fetchSupabase(
+          "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
+        );
+    
         await fetchSupabase(
           "/rest/v1/rpc/check_and_unlock_sea_areas",
           {
@@ -1366,37 +1573,56 @@
             body: {}
           }
         );
-
+    
         const seaAreas = await fetchSupabase(
           "/rest/v1/sea_areas?select=*&order=sort_order.asc"
         );
-
+    
         const userAreas = await fetchSupabase(
           "/rest/v1/user_sea_areas?user_id=eq." + userId + "&select=*"
         );
-
+    
         const areas = Array.isArray(seaAreas) && seaAreas.length > 0
           ? seaAreas
           : fallbackAreas;
-
+    
         const unlockedMap = buildUnlockedMap(Array.isArray(userAreas) ? userAreas : []);
-
+    
         renderSeaChart(areas, unlockedMap);
         setStatus("海図を確認しました。");
+    
+        const newlyUnlocked = newlyUnlockedAreaKeys(
+          Array.isArray(beforeUserAreas) ? beforeUserAreas : [],
+          Array.isArray(userAreas) ? userAreas : []
+        );
+    
+        if(newlyUnlocked.length > 0){
+          const normalizedAreas = areas.map((area, index) => normalizeArea(area, index));
+          const firstNewAreaKey = newlyUnlocked[0];
+    
+          const newArea = normalizedAreas.find(function(area){
+            return String(area.area_key) === String(firstNewAreaKey);
+          });
+    
+          if(newArea){
+            setTimeout(function(){
+              openSeaUnlockModal(newArea);
+            }, 600);
+          }
+        }
       }catch(error){
         console.error("load sea chart error:", error);
-
+    
         mapArea.innerHTML = `
           <div class="empty">
             海図を読み込めませんでした。<br>
             ${escapeHtml(error.message)}
           </div>
         `;
-
+    
         setStatus("海図を読み込めませんでした：" + error.message, true);
       }
     }
-
     function buildUnlockedMap(userAreas){
       const map = new Map();
 
@@ -1419,6 +1645,45 @@
       });
 
       return map;
+    }
+
+    function unlockedAreaKeySet(userAreas){
+      const set = new Set();
+    
+      (userAreas || []).forEach(function(row){
+        const key =
+          row.area_key ||
+          row.sea_area_key ||
+          row.area_id ||
+          row.sea_area_id;
+    
+        const status =
+          row.status ||
+          row.unlock_status ||
+          row.state ||
+          "open";
+    
+        if(key && (status === "open" || status === "unlocked" || status === "active")){
+          set.add(String(key));
+        }
+      });
+    
+      return set;
+    }
+    
+    function newlyUnlockedAreaKeys(beforeAreas, afterAreas){
+      const before = unlockedAreaKeySet(beforeAreas);
+      const after = unlockedAreaKeySet(afterAreas);
+    
+      const newly = [];
+    
+      after.forEach(function(key){
+        if(!before.has(key) && key !== "harbor"){
+          newly.push(key);
+        }
+      });
+    
+      return newly;
     }
 
     function normalizeArea(area, index){
@@ -1521,6 +1786,30 @@
       };
     
       return messages[areaKey] || "この海域は、航海の中で静かに開かれた章です。";
+    }
+
+    function seaUnlockMessage(areaKey){
+      const messages = {
+        silent_water:
+          "港の外に、低い波の海が開きました。\nここから先は、もう岸辺だけの航海ではありません。",
+    
+        lighthouse_coast:
+          "遠くの灯台が、海の向こうに姿を見せました。\n進む方角を、もう一度思い出すための光です。",
+    
+        fog_sea:
+          "霧の海が、静かに航路の前へ現れました。\n見えないまま進む夜が、ここから始まります。",
+    
+        moonlit_sea:
+          "月明かりの海が、水面に細い道を描きました。\nどこへ続くか分からなくても、その道は確かにあります。",
+    
+        deep_current:
+          "深い潮が、海の下でゆっくりと動き始めました。\n大きく舵を切らず、ただ保つことが必要な海です。",
+    
+        unnamed_waters:
+          "海図の外側に、名もなき海が開きました。\nこれは終点ではなく、まだ見ぬ航海への入口です。"
+      };
+    
+      return messages[areaKey] || "霧の向こうに、新しい海が静かに開きました。";
     }
 
     function areaImagePath(areaKey){
@@ -1677,6 +1966,52 @@
       imageModal.classList.add("visible");
       imageModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+    }
+
+    function openSeaUnlockModal(area){
+      if(!area || !seaUnlockModal){
+        return;
+      }
+    
+      const title = areaChapterTitle(area.area_key, area.name_ja);
+      const message = seaUnlockMessage(area.area_key);
+      const imagePath = areaImagePath(area.area_key);
+    
+      if(seaUnlockTitle){
+        seaUnlockTitle.textContent = title;
+      }
+    
+      if(seaUnlockText){
+        seaUnlockText.textContent = message;
+      }
+    
+      if(seaUnlockImage){
+        seaUnlockImage.src = imagePath;
+        seaUnlockImage.alt = title;
+        seaUnlockImage.onerror = function(){
+          this.onerror = null;
+          this.src = seaChartImagePath;
+        };
+      }
+    
+      seaUnlockModal.classList.add("visible");
+      seaUnlockModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeSeaUnlockModal(){
+      if(!seaUnlockModal){
+        return;
+      }
+    
+      seaUnlockModal.classList.remove("visible");
+      seaUnlockModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    
+      if(seaUnlockImage){
+        seaUnlockImage.src = "";
+        seaUnlockImage.alt = "";
+      }
     }
 
     function openAreaModal(areaData){
@@ -1848,6 +2183,22 @@
       });
     });
 
+    if(seaUnlockClose){
+      seaUnlockClose.addEventListener("click", closeSeaUnlockModal);
+    }
+    
+    if(seaUnlockLaterBtn){
+      seaUnlockLaterBtn.addEventListener("click", closeSeaUnlockModal);
+    }
+    
+    if(seaUnlockModal){
+      seaUnlockModal.addEventListener("click", function(event){
+        if(event.target === seaUnlockModal){
+          closeSeaUnlockModal();
+        }
+      });
+    }
+
     if(imageModalClose){
       imageModalClose.addEventListener("click", closeImageModal);
     }
@@ -1860,6 +2211,7 @@
 
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
+        closeSeaUnlockModal();
         closeImageModal();
       }
     });
