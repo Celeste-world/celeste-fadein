@@ -1451,6 +1451,20 @@
       return areaAtmospheres[areaKey] || "まだ名前のない気配が、海の上に残っています。";
     }
 
+    function areaChapterTitle(areaKey, fallbackName){
+      const titles = {
+        harbor: "第一章　港",
+        silent_water: "第二章　静かな水域",
+        lighthouse_coast: "第三章　灯台海岸",
+        fog_sea: "第四章　霧の海",
+        moonlit_sea: "第五章　月明かりの海",
+        deep_current: "第六章　深い潮",
+        unnamed_waters: "第七章　名もなき海"
+      };
+    
+      return titles[areaKey] || fallbackName || "開かれた海域";
+    }
+
     function areaImagePath(areaKey){
       return areaImagePaths[areaKey] || seaChartImagePath;
     }
@@ -1485,7 +1499,7 @@
           area.position_class ||
           positionClasses[index % positionClasses.length];
     
-        const displayName = area.name_ja;
+        const displayName = areaChapterTitle(area.area_key, area.name_ja);
         const displayDesc = area.description;
     
         const kicker = "Open Sea Area";
