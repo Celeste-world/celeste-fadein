@@ -298,6 +298,13 @@
         rgba(10,14,28,.62);
     }
 
+    .timeline-item.sea-area-opened{
+      border-color:rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 42%),
+        rgba(10,14,28,.62);
+    }
+
     .timeline-item.special-voyage{
       border-color:rgba(169,183,255,.32);
       background:
@@ -417,6 +424,12 @@
       color:var(--gold);
       border-color:rgba(255,227,163,.32);
       background:rgba(255,227,163,.06);
+    }
+
+    .timeline-type.sea-area-opened{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.34);
+      background:rgba(169,183,255,.07);
     }
 
     .timeline-type.special-voyage{
@@ -569,6 +582,15 @@
 
       .timeline-item.ticket-drifted .timeline-image img{
         padding:18px;
+      }
+
+      .timeline-item.sea-area-opened .timeline-image img{
+        opacity:.88;
+        filter:
+          saturate(.9)
+          brightness(.92)
+          contrast(.94);
+        padding:10px;
       }
     }
   </style>
@@ -755,7 +777,7 @@
       }
 
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-        return "Sea Area";
+        return "New Sea Area";
       }
 
       if(normalized === "special_voyage_started"){
