@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Voyage Archive – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
+    .wrap{
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a,
+    .logout-link{
+      color:var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .nav a:hover,
+    .logout-link:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:30px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin:0 0 22px;
+    }
+
+    .status{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+      margin:0 0 22px;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .archive-layout{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .month-list,
+    .month-detail{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 20px 48px rgba(0,0,0,.36);
+    }
+
+    .section-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:14px;
+    }
+
+    .month-card{
+      width:100%;
+      text-align:left;
+      margin:0 0 12px;
+      padding:15px;
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.20);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(5,8,17,.52);
+      color:var(--text);
+      font-family:inherit;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .month-card:hover{
+      border-color:rgba(169,183,255,.44);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.13), transparent 44%),
+        rgba(8,12,24,.72);
+    }
+
+    .month-card.active{
+      border-color:rgba(169,183,255,.62);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.18), transparent 44%),
+        rgba(12,17,34,.82);
+    }
+
+    .month-title{
+      font-size:16px;
+      line-height:1.8;
+      margin-bottom:4px;
+    }
+
+    .month-meta{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.8;
+    }
+
+    .month-tag{
+      display:inline-block;
+      margin-top:9px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.26);
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+      padding:12px 0;
+    }
+
+    .detail-head{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+      margin-bottom:20px;
+      border-bottom:1px solid rgba(160,168,187,.16);
+      padding-bottom:16px;
+    }
+
+    .detail-title{
+      font-size:22px;
+      line-height:1.7;
+      margin:0 0 6px;
+      font-weight:500;
+    }
+
+    .detail-sub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin:0;
+    }
+
+    .back-btn{
+      display:none;
+      border:1px solid rgba(160,168,187,.26);
+      background:transparent;
+      color:var(--muted);
+      border-radius:999px;
+      padding:9px 14px;
+      font-family:inherit;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .back-btn:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.44);
+    }
+
+    .log{
+      border:1px solid rgba(70,84,132,.42);
+      background:rgba(5,8,17,.46);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:14px;
+    }
+
+    .log-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:12px;
+    }
+
+    .date{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+    }
+
+    .tag{
+      flex:0 0 auto;
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.26);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .content{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.95;
+    }
+
+    .archive-note{
+      margin-top:24px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+    }
+
+    footer{
+      margin-top:42px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:760px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .archive-layout{
+        grid-template-columns:1fr;
+      }
+
+      .month-list.mobile-hidden{
+        display:none;
+      }
+
+      .month-detail.mobile-hidden{
+        display:none;
+      }
+
+      .back-btn{
+        display:inline-block;
+      }
+
+      .detail-head{
+        flex-direction:column;
+      }
+
+      .log-top{
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-locked">
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <h1>Voyage Archive</h1>
+
+        <p class="lead">
+          月ごとに、これまでの航海記録を静かに見返す場所です。<br>
+          ここでは、過去の言葉が月明かりのように並びます。
+        </p>
+      </div>
+
+      <div class="user" id="userStatus">
+        ログイン状態を確認しています。
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <div class="archive-layout">
+        <section class="month-list" id="monthListPanel">
+          <div class="section-label">Months</div>
+          <div id="monthList"></div>
+
+          <div class="archive-note">
+            Voyage Log の記録を月ごとにまとめています。<br>
+            詳細は月を選ぶと表示されます。
+          </div>
+        </section>
+
+        <section class="month-detail mobile-hidden" id="monthDetailPanel">
+          <div class="detail-head">
+            <div>
+              <div class="section-label">Archive Detail</div>
+              <h2 class="detail-title" id="detailTitle">月を選んでください</h2>
+              <p class="detail-sub" id="detailSub">
+                左の一覧から、見返したい月を選びます。
+              </p>
+            </div>
+
+            <button class="back-btn" id="backToMonthsBtn" type="button">
+              月一覧へ戻る
+            </button>
+          </div>
+
+          <div id="monthLogs">
+            <div class="empty">
+              まだ月が選ばれていません。
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/log/">Voyage Log</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutLink = document.getElementById("logoutLink");
+
+    const monthList = document.getElementById("monthList");
+    const monthLogs = document.getElementById("monthLogs");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailSub = document.getElementById("detailSub");
+    const monthListPanel = document.getElementById("monthListPanel");
+    const monthDetailPanel = document.getElementById("monthDetailPanel");
+    const backToMonthsBtn = document.getElementById("backToMonthsBtn");
+
+    let currentUser = null;
+    let allLogs = [];
+    let monthGroups = [];
+    let selectedMonthKey = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    function formatDateTime(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+
+      return date.toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+
+    function formatShortDate(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+
+      return date.toLocaleDateString("ja-JP", {
+        month:"2-digit",
+        day:"2-digit"
+      });
+    }
+
+    function monthKeyFromDate(value){
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return "unknown";
+      }
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+
+      return year + "-" + month;
+    }
+
+    function monthLabelFromKey(key){
+      if(!key || key === "unknown"){
+        return "日付不明";
+      }
+
+      const parts = key.split("-");
+      const year = parts[0];
+      const month = Number(parts[1]);
+
+      return year + "年" + month + "月";
+    }
+
+    function mostFrequentTag(logs){
+      const counts = {};
+
+      logs.forEach(function(log){
+        const tag = log.tag || "Harbor";
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+
+      let bestTag = "Harbor";
+      let bestCount = 0;
+
+      Object.entries(counts).forEach(function(entry){
+        const tag = entry[0];
+        const count = entry[1];
+
+        if(count > bestCount){
+          bestTag = tag;
+          bestCount = count;
+        }
+      });
+
+      return bestTag;
+    }
+
+    function buildMonthGroups(logs){
+      const map = new Map();
+
+      logs.forEach(function(log){
+        const key = monthKeyFromDate(log.created_at);
+
+        if(!map.has(key)){
+          map.set(key, []);
+        }
+
+        map.get(key).push(log);
+      });
+
+      const groups = Array.from(map.entries()).map(function(entry){
+        const key = entry[0];
+        const items = entry[1].slice().sort(function(a, b){
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+
+        return {
+          key,
+          label: monthLabelFromKey(key),
+          logs: items,
+          count: items.length,
+          topTag: mostFrequentTag(items),
+          lastDate: items[0]?.created_at || null
+        };
+      });
+
+      groups.sort(function(a, b){
+        if(a.key === "unknown"){
+          return 1;
+        }
+
+        if(b.key === "unknown"){
+          return -1;
+        }
+
+        return b.key.localeCompare(a.key);
+      });
+
+      return groups;
+    }
+
+    function renderMonthList(){
+      if(monthGroups.length === 0){
+        monthList.innerHTML = `
+          <div class="empty">
+            まだ航海記録がありません。<br>
+            Voyage Log に記録が残ると、ここに月ごとの記録が現れます。
+          </div>
+        `;
+        return;
+      }
+
+      monthList.innerHTML = monthGroups.map(function(group){
+        const active = group.key === selectedMonthKey ? " active" : "";
+
+        return `
+          <button class="month-card${active}" type="button" data-month="${escapeHtml(group.key)}">
+            <div class="month-title">${escapeHtml(group.label)}</div>
+            <div class="month-meta">記録 ${group.count}件</div>
+            <div class="month-meta">最後の記録：${escapeHtml(formatDateTime(group.lastDate))}</div>
+            <div class="month-tag">多かった気配：${escapeHtml(group.topTag)}</div>
+          </button>
+        `;
+      }).join("");
+
+      monthList.querySelectorAll(".month-card").forEach(function(button){
+        button.addEventListener("click", function(){
+          selectMonth(button.dataset.month);
+        });
+      });
+    }
+
+    function renderMonthDetail(group){
+      if(!group){
+        detailTitle.textContent = "月を選んでください";
+        detailSub.textContent = "左の一覧から、見返したい月を選びます。";
+        monthLogs.innerHTML = `
+          <div class="empty">
+            まだ月が選ばれていません。
+          </div>
+        `;
+        return;
+      }
+
+      detailTitle.textContent = group.label + "の航海";
+      detailSub.textContent =
+        "記録 " + group.count + "件。多かった気配：" + group.topTag + "。";
+
+      monthLogs.innerHTML = group.logs.map(function(log){
+        return `
+          <article class="log">
+            <div class="log-top">
+              <div class="date">${escapeHtml(formatShortDate(log.created_at))}　${escapeHtml(formatDateTime(log.created_at))}</div>
+              <div class="tag">#${escapeHtml(log.tag || "Harbor")}</div>
+            </div>
+
+            <div class="content">${escapeHtml(log.content || "")}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function selectMonth(key){
+      selectedMonthKey = key;
+
+      const group = monthGroups.find(function(item){
+        return item.key === key;
+      });
+
+      renderMonthList();
+      renderMonthDetail(group);
+
+      if(window.matchMedia("(max-width:760px)").matches){
+        monthListPanel.classList.add("mobile-hidden");
+        monthDetailPanel.classList.remove("mobile-hidden");
+      }
+    }
+
+    async function loadLogs(){
+      if(!currentUser){
+        return;
+      }
+
+      setStatus("Voyage Archive を読み込んでいます。");
+
+      const { data, error } = await client
+        .from("voyage_logs")
+        .select("id,content,tag,created_at")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending:false })
+        .limit(1000);
+
+      if(error){
+        console.error(error);
+        setStatus("航海記録の読み込みに失敗しました。", true);
+        return;
+      }
+
+      allLogs = Array.isArray(data) ? data : [];
+      monthGroups = buildMonthGroups(allLogs);
+
+      selectedMonthKey = monthGroups[0]?.key || null;
+
+      renderMonthList();
+
+      if(selectedMonthKey){
+        const firstGroup = monthGroups.find(function(group){
+          return group.key === selectedMonthKey;
+        });
+
+        renderMonthDetail(firstGroup);
+      }else{
+        renderMonthDetail(null);
+      }
+
+      setStatus("");
+    }
+
+    async function logout(){
+      await client.auth.signOut();
+      window.location.href = "/";
+    }
+
+    async function init(){
+      const { data } = await client.auth.getSession();
+      const session = data.session;
+
+      if(!session || !session.user){
+        window.location.href = "/";
+        return;
+      }
+
+      currentUser = session.user;
+
+      document.body.classList.remove("auth-locked");
+
+      userStatus.textContent =
+        accountDisplayName(currentUser) + " としてログイン中";
+
+      await loadLogs();
+    }
+
+    if(logoutLink){
+      logoutLink.addEventListener("click", async function(event){
+        event.preventDefault();
+        await logout();
+      });
+    }
+
+    if(backToMonthsBtn){
+      backToMonthsBtn.addEventListener("click", function(){
+        monthDetailPanel.classList.add("mobile-hidden");
+        monthListPanel.classList.remove("mobile-hidden");
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
