@@ -1222,9 +1222,17 @@
       const normalized = normalizeEventType(event.event_type);
     
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
+        const metadata = event.metadata || {};
+        const areaKey =
+          metadata.area_key ||
+          metadata.sea_area_key ||
+          event.event_key ||
+          "";
+      
         return {
           href: "/map/",
-          label: "海図を見る"
+          label: "海図を見る",
+          areaKey
         };
       }
     
@@ -1398,7 +1406,11 @@
           ${
             action
               ? `
-                <a class="timeline-detail-primary" href="${escapeHtml(action.href)}">
+                <a
+                  class="timeline-detail-primary"
+                  href="${escapeHtml(action.href)}"
+                  data-open-area-key="${escapeHtml(action.areaKey || "")}"
+                >
                   ${escapeHtml(action.label)}
                 </a>
               `
@@ -1410,6 +1422,27 @@
     
         if(closeBtn){
           closeBtn.addEventListener("click", closeTimelineDetailModal);
+        }
+        const areaLink = timelineDetailActions.querySelector("[data-open-area-key]");
+
+        if(areaLink){
+          areaLink.addEventListener("click", function(){
+            const areaKey = areaLink.dataset.openAreaKey;
+        
+            if(areaKey){
+              try{
+                sessionStorage.setItem(
+                  "celeste_open_map_area",
+                  JSON.stringify({
+                    area_key: areaKey,
+                    from: "timeline"
+                  })
+                );
+              }catch(error){
+                console.warn("open map area save failed:", error);
+              }
+            }
+          });
         }
       }
     
