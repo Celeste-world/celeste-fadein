@@ -225,6 +225,52 @@
       color:var(--text);
     }
 
+    .month-tags{
+      margin:0 0 20px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.18);
+      background:rgba(5,8,17,.34);
+    }
+    
+    .month-tags-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:10px;
+    }
+    
+    .month-tags-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    
+    .month-tag-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.24);
+      background:rgba(255,255,255,.025);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+    
+    .month-tag-chip.primary{
+      color:var(--text);
+      border-color:rgba(169,183,255,.44);
+      background:rgba(169,183,255,.08);
+    }
+    
+    .month-tag-count{
+      color:var(--accent);
+      font-size:11px;
+    }
+
     .detail-head{
       display:flex;
       justify-content:space-between;
@@ -454,6 +500,11 @@
             <div class="month-afterglow-text" id="monthAfterglowText"></div>
           </div>
 
+          <div class="month-tags" id="monthTags" style="display:none;">
+            <div class="month-tags-label">Monthly Tags</div>
+            <div class="month-tags-list" id="monthTagsList"></div>
+          </div>
+
           <div id="monthLogs">
             <div class="empty">
               まだ月が選ばれていません。
@@ -497,6 +548,8 @@
     const monthLogs = document.getElementById("monthLogs");
     const monthAfterglow = document.getElementById("monthAfterglow");
     const monthAfterglowText = document.getElementById("monthAfterglowText");
+    const monthTags = document.getElementById("monthTags");
+    const monthTagsList = document.getElementById("monthTagsList");
     const detailTitle = document.getElementById("detailTitle");
     const detailSub = document.getElementById("detailSub");
     const monthListPanel = document.getElementById("monthListPanel");
@@ -664,6 +717,57 @@
       return "この月の言葉は、港の灯りの中に静かに残っています。";
     }
 
+    function tagCountsForLogs(logs){
+      const counts = {};
+    
+      (logs || []).forEach(function(log){
+        const tag = log.tag || "Harbor";
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    
+      return Object.entries(counts)
+        .map(function(entry){
+          return {
+            tag: entry[0],
+            count: entry[1]
+          };
+        })
+        .sort(function(a, b){
+          if(b.count !== a.count){
+            return b.count - a.count;
+          }
+    
+          return a.tag.localeCompare(b.tag);
+        });
+    }
+
+    function renderMonthTags(group){
+      if(!monthTags || !monthTagsList){
+        return;
+      }
+    
+      if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
+        monthTags.style.display = "none";
+        monthTagsList.innerHTML = "";
+        return;
+      }
+    
+      const counts = tagCountsForLogs(group.logs);
+    
+      monthTagsList.innerHTML = counts.map(function(item, index){
+        const primary = index === 0 ? " primary" : "";
+    
+        return `
+          <span class="month-tag-chip${primary}">
+            <span>${escapeHtml(item.tag)}</span>
+            <span class="month-tag-count">${item.count}</span>
+          </span>
+        `;
+      }).join("");
+    
+      monthTags.style.display = "block";
+    }
+
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -751,6 +855,8 @@
         if(monthAfterglowText){
           monthAfterglowText.textContent = "";
         }
+
+        renderMonthTags(null);
       
         monthLogs.innerHTML = `
           <div class="empty">
@@ -768,6 +874,8 @@
           monthAfterglowText.textContent = monthlyAfterglowText(group);
           monthAfterglow.style.display = "block";
         }
+
+        renderMonthTags(group);
 
       monthLogs.innerHTML = group.logs.map(function(log){
         return `
