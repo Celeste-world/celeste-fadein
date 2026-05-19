@@ -19,5 +19,6 @@ Disallow: /auth/
 Disallow: /login/
 Disallow: /legacy/
 Disallow: /celeste-console.html
+Disallow: /voyage-archive/
 
 Sitemap: https://celeste.world/sitemap.xml
