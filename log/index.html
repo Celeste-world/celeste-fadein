@@ -616,6 +616,37 @@
         radial-gradient(circle at top left, rgba(255,227,163,.08), transparent 44%),
         rgba(255,255,255,.022);
     }
+
+    .sea-title-panel{
+      margin-top:12px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .sea-title-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:6px;
+    }
+    
+    .sea-title-name{
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+    
+    .sea-title-text{
+      font-size:12px;
+      line-height:1.85;
+      color:var(--muted);
+    }
     
     .harbor-light-label{
       font-size:11px;
@@ -1449,17 +1480,29 @@
             <div class="chip-value" id="weatherLight">Checking</div>
           </div>
         </div>
+        
         <div class="harbor-light-panel" id="harborLightPanel" style="display:none;">
-        <div class="harbor-light-label">Harbor Light</div>
-      
-        <div class="harbor-light-main">
-          港の灯り：<span class="harbor-light-count" id="harborLightCount">0</span>
+          <div class="harbor-light-label">Harbor Light</div>
+        
+          <div class="harbor-light-main">
+            港の灯り：<span class="harbor-light-count" id="harborLightCount">0</span>
+          </div>
+        
+          <div class="harbor-light-text" id="harborLightText">
+            港の灯りが、静かに残っています。
+          </div>
         </div>
-      
-        <div class="harbor-light-text" id="harborLightText">
-          港の灯りが、静かに残っています。
+        <div class="sea-title-panel" id="seaTitlePanel" style="display:none;">
+          <div class="sea-title-label">今の航海の気配</div>
+        
+          <div class="sea-title-name" id="seaTitleName">
+            静かな潮を渡る人
+          </div>
+        
+          <div class="sea-title-text" id="seaTitleText">
+            最近の記録には、静かな潮のような時間が流れています。
+          </div>
         </div>
-      </div>
       </section>
 
       <section class="panel">
@@ -1844,6 +1887,9 @@
     const harborLightPanel = document.getElementById("harborLightPanel");
     const harborLightCount = document.getElementById("harborLightCount");
     const harborLightText = document.getElementById("harborLightText");
+    const seaTitlePanel = document.getElementById("seaTitlePanel");
+    const seaTitleName = document.getElementById("seaTitleName");
+    const seaTitleText = document.getElementById("seaTitleText");
 
     const catOverlay = document.getElementById("catOverlay");
     const catReplyText = document.getElementById("catReplyText");
@@ -3102,6 +3148,157 @@
       harborLightPanel.style.display = "block";
     }
 
+    function recentSeaTitleLogs(){
+      const logs = (allLogs || [])
+        .slice()
+        .sort(function(a, b){
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+    
+      if(logs.length === 0){
+        return [];
+      }
+    
+      const now = new Date();
+      const recent = logs.filter(function(log){
+        const date = new Date(log.created_at);
+    
+        if(Number.isNaN(date.getTime())){
+          return false;
+        }
+    
+        const diffDays = Math.floor(
+          (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+        );
+    
+        return diffDays >= 0 && diffDays <= 13;
+      });
+    
+      return (recent.length ? recent : logs).slice(0, 7);
+    }
+    
+    function dominantSeaTitleTag(logs){
+      const counts = {};
+      const latestIndex = {};
+    
+      (logs || []).forEach(function(log, index){
+        const tag = String(log.tag || "Harbor");
+    
+        counts[tag] = (counts[tag] || 0) + 1;
+    
+        if(latestIndex[tag] === undefined){
+          latestIndex[tag] = index;
+        }
+      });
+    
+      let bestTag = "Harbor";
+      let bestCount = 0;
+      let bestLatestIndex = Infinity;
+    
+      Object.keys(counts).forEach(function(tag){
+        const count = counts[tag];
+        const index = latestIndex[tag];
+    
+        if(
+          count > bestCount ||
+          (count === bestCount && index < bestLatestIndex)
+        ){
+          bestTag = tag;
+          bestCount = count;
+          bestLatestIndex = index;
+        }
+      });
+    
+      return bestTag;
+    }
+    
+    function seaTitleForTag(tag){
+      const normalized = String(tag || "Harbor");
+    
+      if(normalized === "Moonlit"){
+        return {
+          name: "月明かりの道を進む人",
+          text: "最近の記録には、暗い海の上に細い光を見つけようとする気配があります。"
+        };
+      }
+    
+      if(normalized === "Fog"){
+        return {
+          name: "霧の中で舵を保つ人",
+          text: "最近の記録には、見えないまま進む静かな強さがあります。"
+        };
+      }
+    
+      if(normalized === "Lighthouse"){
+        return {
+          name: "灯台を見失わない人",
+          text: "最近の記録には、遠くの小さな光を頼りにする気配があります。"
+        };
+      }
+    
+      if(normalized === "Storm"){
+        return {
+          name: "波の中で船を離さない人",
+          text: "最近の記録には、揺れの中でも舵を離さない気配があります。"
+        };
+      }
+    
+      if(normalized === "Deep Current"){
+        return {
+          name: "深い潮を渡る人",
+          text: "最近の記録には、水面の下を流れるものに耳を澄ませる気配があります。"
+        };
+      }
+    
+      if(normalized === "Calm Tide"){
+        return {
+          name: "静かな潮を渡る人",
+          text: "最近の記録には、穏やかな水面をゆっくり進む気配があります。"
+        };
+      }
+    
+      if(normalized === "Drift"){
+        return {
+          name: "流れの中で言葉を拾う人",
+          text: "最近の記録には、流れ着いたものを静かに受け取る気配があります。"
+        };
+      }
+    
+      if(normalized === "Return"){
+        return {
+          name: "港へ戻る道を知る人",
+          text: "最近の記録には、戻る場所を忘れない静かな余韻があります。"
+        };
+      }
+    
+      return {
+        name: "港の灯りを守る人",
+        text: "最近の記録には、港に言葉を残し続ける小さな灯りがあります。"
+      };
+    }
+    
+    function renderSeaTitle(){
+      if(!seaTitlePanel || !seaTitleName || !seaTitleText){
+        return;
+      }
+    
+      const logs = recentSeaTitleLogs();
+    
+      if(logs.length === 0){
+        seaTitlePanel.style.display = "none";
+        seaTitleName.textContent = "";
+        seaTitleText.textContent = "";
+        return;
+      }
+    
+      const tag = dominantSeaTitleTag(logs);
+      const title = seaTitleForTag(tag);
+    
+      seaTitleName.textContent = title.name;
+      seaTitleText.textContent = title.text;
+      seaTitlePanel.style.display = "block";
+    }
+
     async function applyHarborWeather(){
       const openedAreas = await loadUnlockedSeaAreas();
       const weather = pickWeatherFromAreas(openedAreas);
@@ -3117,6 +3314,7 @@
       document.getElementById("weatherLight").textContent = weather.light;
     
       renderHarborLight();
+      renderSeaTitle();
     }
     
     async function checkSession(){
