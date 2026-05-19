@@ -1988,7 +1988,14 @@
     
       const message = afterglowMessage(payload.reason);
       
-      showSpecialVoyageWelcomeCat(payload);
+      try{
+        sessionStorage.setItem(
+          "celeste_special_voyage_welcome_cat",
+          JSON.stringify(payload)
+        );
+      }catch(error){
+        console.warn("welcome cat payload save failed:", error);
+      }
     
       afterglowBanner.innerHTML = `
         <div class="afterglow-label">Special Voyage</div>
@@ -2016,8 +2023,23 @@
       }, 8000);
     }
 
-    async function showSpecialVoyageWelcomeCat(payload){
-      if(!payload || !catOverlay || !catReplyText || !catIcon){
+    async function showSpecialVoyageWelcomeCat(){
+      if(!catOverlay || !catReplyText || !catIcon){
+        return;
+      }
+    
+      let payload = null;
+    
+      try{
+        const raw = sessionStorage.getItem("celeste_special_voyage_welcome_cat");
+        payload = raw ? JSON.parse(raw) : null;
+        sessionStorage.removeItem("celeste_special_voyage_welcome_cat");
+      }catch(error){
+        console.warn("welcome cat payload read failed:", error);
+        sessionStorage.removeItem("celeste_special_voyage_welcome_cat");
+      }
+    
+      if(!payload){
         return;
       }
     
@@ -2039,7 +2061,6 @@
     
       scheduleCatScrollAutoClose(8000);
     }
-
     function formatLastVoyageDate(value){
       if(!value){
         return "";
@@ -2983,7 +3004,8 @@
         updateAuthUI();
 
         showSpecialVoyageAfterglow();
-
+        showSpecialVoyageWelcomeCat();
+        
         await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
         await applyHarborWeather();
