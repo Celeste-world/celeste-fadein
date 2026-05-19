@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Harbor Status – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --gold:#ffe3a3;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a,
+    .logout-link{
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .nav a:hover,
+    .logout-link:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:30px;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+      max-width:46rem;
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin:0 0 18px;
+    }
+
+    .status{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      min-height:1.8em;
+      margin-bottom:22px;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .status-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .card{
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 42%),
+        rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 20px 48px rgba(0,0,0,.34);
+      margin-bottom:20px;
+    }
+
+    .card.wide{
+      grid-column:1 / -1;
+    }
+
+    .card-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .card-title{
+      font-size:20px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:8px;
+      font-weight:500;
+    }
+
+    .card-text{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
+    .harbor-light-number{
+      font-size:34px;
+      line-height:1.3;
+      color:var(--gold);
+      margin-bottom:8px;
+    }
+
+    .small-meta{
+      margin-top:12px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
+    }
+
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .chip{
+      display:inline-flex;
+      border:1px solid rgba(160,168,187,.26);
+      border-radius:999px;
+      padding:5px 10px;
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .chip.accent{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.38);
+      background:rgba(169,183,255,.06);
+    }
+
+    .memory-card{
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .memory-card:hover{
+      border-color:rgba(169,183,255,.50);
+      transform:translateY(-1px);
+    }
+
+    .memory-card:focus-visible{
+      outline:2px solid rgba(169,183,255,.70);
+      outline-offset:3px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .btn{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .btn-primary{
+      border:1px solid transparent;
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    .btn-ghost:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.44);
+    }
+
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      z-index:90;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(5px);
+    }
+
+    .modal-overlay.visible{
+      display:flex;
+    }
+
+    .modal{
+      position:relative;
+      width:min(580px, 100%);
+      max-height:84vh;
+      overflow:auto;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.32);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      color:var(--text);
+    }
+
+    .modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .modal-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+
+    .modal-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+
+    .modal-title{
+      font-size:21px;
+      line-height:1.7;
+      color:var(--text);
+      margin:0 34px 8px 0;
+    }
+
+    .modal-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:0 0 18px;
+    }
+
+    .modal-meta span{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.26);
+      border-radius:999px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .modal-content{
+      white-space:pre-wrap;
+      font-size:14px;
+      line-height:2.05;
+      color:var(--text);
+    }
+
+    footer{
+      margin-top:42px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:760px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .status-grid{
+        grid-template-columns:1fr;
+      }
+
+      .card.wide{
+        grid-column:auto;
+      }
+
+      .modal-overlay{
+        align-items:flex-start;
+        padding:14px;
+        overflow:auto;
+      }
+
+      .modal{
+        margin:24px 0;
+        max-height:none;
+        padding:20px;
+      }
+
+      .actions .btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-locked">
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Harbor Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <div class="label">Harbor Status</div>
+
+        <h1>
+          今の港に、<br>
+          残っている気配。
+        </h1>
+
+        <p class="lead">
+          ここでは、最近の航海記録から残っている灯りや、今の航海に漂う気配を静かに確認できます。<br>
+          記録を書く場所ではなく、港の現在地を眺める場所です。
+        </p>
+      </div>
+
+      <div class="user" id="userStatus">
+        ログイン状態を確認しています。
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <section class="status-grid">
+        <article class="card">
+          <div class="card-label">Harbor Light</div>
+          <div class="card-title">港の灯り</div>
+          <div class="harbor-light-number" id="harborLightNumber">—</div>
+          <div class="card-text" id="harborLightText">
+            港の灯りを確認しています。
+          </div>
+          <div class="small-meta">
+            過去7日間のうち、航海記録を残した日数です。連続記録ではありません。
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-label">Current Voyage Atmosphere</div>
+          <div class="card-title">今の航海の気配</div>
+          <div class="card-text" id="seaTitleName">
+            気配を確認しています。
+          </div>
+          <div class="small-meta" id="seaTitleText"></div>
+          <div class="chip-row" id="tagChips"></div>
+        </article>
+
+        <article
+          class="card wide memory-card"
+          id="lastVoyageCard"
+          role="button"
+          tabindex="0"
+          aria-label="前回の航海記録を開く"
+          style="display:none;"
+        >
+          <div class="card-label">Last Voyage</div>
+          <div class="card-title">前回の言葉は、まだ港に静かに残っています。</div>
+          <div class="card-text" id="lastVoyagePreview"></div>
+          <div class="small-meta" id="lastVoyageMeta"></div>
+        </article>
+
+        <article
+          class="card wide memory-card"
+          id="memoryTideCard"
+          role="button"
+          tabindex="0"
+          aria-label="以前の航海記録を開く"
+          style="display:none;"
+        >
+          <div class="card-label">Memory Tide</div>
+          <div class="card-title" id="memoryTideTitle">
+            以前の潮が、少しだけ戻ってきました。
+          </div>
+          <div class="card-text" id="memoryTidePreview"></div>
+          <div class="small-meta" id="memoryTideMeta"></div>
+        </article>
+
+        <article class="card wide">
+          <div class="card-label">Next</div>
+          <div class="card-title">今日の航海を書く</div>
+          <div class="card-text">
+            港の気配を確認したら、今日の航海を残すこともできます。
+          </div>
+
+          <div class="actions">
+            <a class="btn btn-primary" href="/log/">Voyage Log へ</a>
+            <a class="btn btn-ghost" href="/voyage-archive/">Archive を見る</a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Harbor Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR STATUS</div>
+    </footer>
+
+  </div>
+
+  <div class="modal-overlay" id="recordModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
+      <button class="modal-close" id="recordModalClose" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div class="modal-label" id="recordModalLabel">Voyage Record</div>
+      <h2 class="modal-title" id="recordModalTitle">航海記録</h2>
+
+      <div class="modal-meta">
+        <span id="recordModalDate"></span>
+        <span id="recordModalTag"></span>
+      </div>
+
+      <div class="modal-content" id="recordModalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutLink = document.getElementById("logoutLink");
+
+    const harborLightNumber = document.getElementById("harborLightNumber");
+    const harborLightText = document.getElementById("harborLightText");
+
+    const seaTitleName = document.getElementById("seaTitleName");
+    const seaTitleText = document.getElementById("seaTitleText");
+    const tagChips = document.getElementById("tagChips");
+
+    const lastVoyageCard = document.getElementById("lastVoyageCard");
+    const lastVoyagePreview = document.getElementById("lastVoyagePreview");
+    const lastVoyageMeta = document.getElementById("lastVoyageMeta");
+
+    const memoryTideCard = document.getElementById("memoryTideCard");
+    const memoryTideTitle = document.getElementById("memoryTideTitle");
+    const memoryTidePreview = document.getElementById("memoryTidePreview");
+    const memoryTideMeta = document.getElementById("memoryTideMeta");
+
+    const recordModal = document.getElementById("recordModal");
+    const recordModalClose = document.getElementById("recordModalClose");
+    const recordModalLabel = document.getElementById("recordModalLabel");
+    const recordModalTitle = document.getElementById("recordModalTitle");
+    const recordModalDate = document.getElementById("recordModalDate");
+    const recordModalTag = document.getElementById("recordModalTag");
+    const recordModalContent = document.getElementById("recordModalContent");
+
+    let currentUser = null;
+    let allLogs = [];
+    let lastVoyageLog = null;
+    let memoryTideLog = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    function formatDateTime(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+
+      return date.toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+
+    function localDateKey(value){
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return "";
+      }
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return year + "-" + month + "-" + day;
+    }
+
+    function daysBetweenToday(dateKey){
+      if(!dateKey){
+        return Infinity;
+      }
+
+      const todayKey = localDateKey(new Date());
+      const todayDate = new Date(todayKey + "T00:00:00");
+      const targetDate = new Date(dateKey + "T00:00:00");
+
+      if(Number.isNaN(todayDate.getTime()) || Number.isNaN(targetDate.getTime())){
+        return Infinity;
+      }
+
+      return Math.floor(
+        (todayDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+    }
+
+    function previewText(value, length = 100){
+      const text = String(value || "").trim();
+
+      if(text.length <= length){
+        return text;
+      }
+
+      return text.slice(0, length) + "…";
+    }
+
+    function harborLightValue(){
+      const recentDateKeys = new Set();
+
+      (allLogs || []).forEach(function(log){
+        const key = localDateKey(log.created_at);
+        const diff = daysBetweenToday(key);
+
+        if(diff >= 0 && diff <= 6){
+          recentDateKeys.add(key);
+        }
+      });
+
+      return recentDateKeys.size;
+    }
+
+    function harborLightMessage(value){
+      if(value >= 5){
+        return "港の灯りが、いくつも水面に映っています。";
+      }
+
+      if(value >= 3){
+        return "港の灯りが、まだ消えずに残っています。";
+      }
+
+      if(value >= 1){
+        return "港の灯りが、静かにひとつ残っています。";
+      }
+
+      return "いま港は静かです。また言葉が戻る夜を、灯りは待っています。";
+    }
+
+    function recentSeaTitleLogs(){
+      const logs = (allLogs || [])
+        .slice()
+        .sort(function(a, b){
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+
+      if(logs.length === 0){
+        return [];
+      }
+
+      const now = new Date();
+
+      const recent = logs.filter(function(log){
+        const date = new Date(log.created_at);
+
+        if(Number.isNaN(date.getTime())){
+          return false;
+        }
+
+        const diffDays = Math.floor(
+          (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        return diffDays >= 0 && diffDays <= 13;
+      });
+
+      return (recent.length ? recent : logs).slice(0, 7);
+    }
+
+    function tagCountsForLogs(logs){
+      const counts = {};
+      const latestIndex = {};
+
+      (logs || []).forEach(function(log, index){
+        const tag = String(log.tag || "Harbor");
+
+        counts[tag] = (counts[tag] || 0) + 1;
+
+        if(latestIndex[tag] === undefined){
+          latestIndex[tag] = index;
+        }
+      });
+
+      return Object.keys(counts)
+        .map(function(tag){
+          return {
+            tag,
+            count: counts[tag],
+            latestIndex: latestIndex[tag]
+          };
+        })
+        .sort(function(a, b){
+          if(b.count !== a.count){
+            return b.count - a.count;
+          }
+
+          return a.latestIndex - b.latestIndex;
+        });
+    }
+
+    function seaTitleForTag(tag){
+      const normalized = String(tag || "Harbor");
+
+      if(normalized === "Moonlit"){
+        return {
+          name: "月明かりの道を進む人",
+          text: "最近の記録には、暗い海の上に細い光を見つけようとする気配があります。"
+        };
+      }
+
+      if(normalized === "Fog"){
+        return {
+          name: "霧の中で舵を保つ人",
+          text: "最近の記録には、見えないまま進む静かな強さがあります。"
+        };
+      }
+
+      if(normalized === "Lighthouse"){
+        return {
+          name: "灯台を見失わない人",
+          text: "最近の記録には、遠くの小さな光を頼りにする気配があります。"
+        };
+      }
+
+      if(normalized === "Storm"){
+        return {
+          name: "波の中で船を離さない人",
+          text: "最近の記録には、揺れの中でも舵を離さない気配があります。"
+        };
+      }
+
+      if(normalized === "Deep Current"){
+        return {
+          name: "深い潮を渡る人",
+          text: "最近の記録には、水面の下を流れるものに耳を澄ませる気配があります。"
+        };
+      }
+
+      if(normalized === "Calm Tide"){
+        return {
+          name: "静かな潮を渡る人",
+          text: "最近の記録には、穏やかな水面をゆっくり進む気配があります。"
+        };
+      }
+
+      if(normalized === "Drift"){
+        return {
+          name: "流れの中で言葉を拾う人",
+          text: "最近の記録には、流れ着いたものを静かに受け取る気配があります。"
+        };
+      }
+
+      if(normalized === "Return"){
+        return {
+          name: "港へ戻る道を知る人",
+          text: "最近の記録には、戻る場所を忘れない静かな余韻があります。"
+        };
+      }
+
+      return {
+        name: "港の灯りを守る人",
+        text: "最近の記録には、港に言葉を残し続ける小さな灯りがあります。"
+      };
+    }
+
+    function renderHarborLight(){
+      const value = harborLightValue();
+
+      harborLightNumber.textContent = String(value);
+      harborLightText.textContent = harborLightMessage(value);
+    }
+
+    function renderSeaTitle(){
+      const logs = recentSeaTitleLogs();
+
+      if(logs.length === 0){
+        seaTitleName.textContent = "まだ気配は静かです。";
+        seaTitleText.textContent = "航海記録が残ると、ここに今の航海の気配が現れます。";
+        tagChips.innerHTML = "";
+        return;
+      }
+
+      const counts = tagCountsForLogs(logs);
+      const dominant = counts[0]?.tag || "Harbor";
+      const title = seaTitleForTag(dominant);
+
+      seaTitleName.textContent = title.name;
+      seaTitleText.textContent = title.text;
+
+      tagChips.innerHTML = counts.map(function(item, index){
+        return `
+          <span class="chip ${index === 0 ? "accent" : ""}">
+            ${escapeHtml(item.tag)} ${escapeHtml(item.count)}
+          </span>
+        `;
+      }).join("");
+    }
+
+    function pickMemoryTideLog(){
+      const logs = (allLogs || [])
+        .slice()
+        .sort(function(a, b){
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+
+      if(logs.length < 3){
+        return null;
+      }
+
+      const olderLogs = logs.slice(1);
+
+      if(olderLogs.length === 0){
+        return null;
+      }
+
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const seed = todayKey.split("-").join("");
+      const numericSeed = Number(seed) || new Date().getDate();
+      const index = numericSeed % olderLogs.length;
+
+      return olderLogs[index];
+    }
+
+    function memoryTideTitleForTag(tag){
+      const normalized = String(tag || "Harbor");
+
+      if(normalized === "Fog"){
+        return "霧の中に残っていた言葉が、少しだけ浮かび上がりました。";
+      }
+
+      if(normalized === "Moonlit"){
+        return "月明かりの下に置かれた言葉が、静かに戻ってきました。";
+      }
+
+      if(normalized === "Storm"){
+        return "波の強かった日の記録が、港の水面に浮かんでいます。";
+      }
+
+      if(normalized === "Deep Current"){
+        return "深い潮に沈んでいた言葉が、静かに戻ってきました。";
+      }
+
+      if(normalized === "Lighthouse"){
+        return "灯台の方を向いていた言葉が、もう一度港に届きました。";
+      }
+
+      return "以前の潮が、少しだけ戻ってきました。";
+    }
+
+    function renderMemoryCards(){
+      const sortedLogs = (allLogs || [])
+        .slice()
+        .sort(function(a, b){
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+
+      lastVoyageLog = sortedLogs[0] || null;
+      memoryTideLog = pickMemoryTideLog();
+
+      if(lastVoyageLog){
+        lastVoyagePreview.textContent = previewText(lastVoyageLog.content, 120);
+        lastVoyageMeta.textContent =
+          formatDateTime(lastVoyageLog.created_at) + "　#" + (lastVoyageLog.tag || "Harbor");
+        lastVoyageCard.style.display = "block";
+      }else{
+        lastVoyageCard.style.display = "none";
+      }
+
+      if(memoryTideLog){
+        memoryTideTitle.textContent = memoryTideTitleForTag(memoryTideLog.tag);
+        memoryTidePreview.textContent = previewText(memoryTideLog.content, 120);
+        memoryTideMeta.textContent =
+          formatDateTime(memoryTideLog.created_at) + "　#" + (memoryTideLog.tag || "Harbor");
+        memoryTideCard.style.display = "block";
+      }else{
+        memoryTideCard.style.display = "none";
+      }
+    }
+
+    function openRecordModal(log, mode){
+      if(!log || !recordModal){
+        return;
+      }
+
+      recordModalLabel.textContent = mode === "memory" ? "Memory Tide" : "Last Voyage";
+      recordModalTitle.textContent =
+        mode === "memory" ? "以前の潮が戻ってきました" : "前回の航海記録";
+      recordModalDate.textContent = formatDateTime(log.created_at);
+      recordModalTag.textContent = "#" + (log.tag || "Harbor");
+      recordModalContent.textContent = log.content || "記録の本文はありません。";
+
+      recordModal.classList.add("visible");
+      recordModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeRecordModal(){
+      if(!recordModal){
+        return;
+      }
+
+      recordModal.classList.remove("visible");
+      recordModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    async function loadLogs(){
+      if(!currentUser){
+        return;
+      }
+
+      setStatus("港の状態を確認しています。");
+
+      const { data, error } = await client
+        .from("voyage_logs")
+        .select("id,content,tag,created_at")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending:false })
+        .limit(1000);
+
+      if(error){
+        console.error(error);
+        setStatus("港の状態を読み込めませんでした。", true);
+        return;
+      }
+
+      allLogs = Array.isArray(data) ? data : [];
+
+      renderHarborLight();
+      renderSeaTitle();
+      renderMemoryCards();
+
+      setStatus("");
+    }
+
+    async function logout(){
+      await client.auth.signOut();
+      window.location.href = "/";
+    }
+
+    async function init(){
+      const { data } = await client.auth.getSession();
+      const session = data.session;
+
+      if(!session || !session.user){
+        window.location.href = "/";
+        return;
+      }
+
+      currentUser = session.user;
+
+      document.body.classList.remove("auth-locked");
+
+      userStatus.textContent =
+        accountDisplayName(currentUser) + " としてログイン中";
+
+      await loadLogs();
+    }
+
+    if(logoutLink){
+      logoutLink.addEventListener("click", async function(event){
+        event.preventDefault();
+        await logout();
+      });
+    }
+
+    if(lastVoyageCard){
+      lastVoyageCard.addEventListener("click", function(){
+        openRecordModal(lastVoyageLog, "last");
+      });
+
+      lastVoyageCard.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          openRecordModal(lastVoyageLog, "last");
+        }
+      });
+    }
+
+    if(memoryTideCard){
+      memoryTideCard.addEventListener("click", function(){
+        openRecordModal(memoryTideLog, "memory");
+      });
+
+      memoryTideCard.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+          event.preventDefault();
+          openRecordModal(memoryTideLog, "memory");
+        }
+      });
+    }
+
+    if(recordModalClose){
+      recordModalClose.addEventListener("click", closeRecordModal);
+    }
+
+    if(recordModal){
+      recordModal.addEventListener("click", function(event){
+        if(event.target === recordModal){
+          closeRecordModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeRecordModal();
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>
