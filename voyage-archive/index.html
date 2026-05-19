@@ -295,6 +295,36 @@
       margin:0;
     }
 
+    .detail-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    
+    .download-month-btn{
+      border:1px solid rgba(169,183,255,.32);
+      background:rgba(255,255,255,.025);
+      color:var(--muted);
+      border-radius:999px;
+      padding:9px 14px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    
+    .download-month-btn:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.52);
+    }
+    
+    .download-month-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
     .back-btn{
       display:none;
       border:1px solid rgba(160,168,187,.26);
@@ -357,6 +387,141 @@
       color:var(--dim);
       font-size:12px;
       line-height:1.9;
+    }
+
+    .download-modal-overlay{
+      position:fixed;
+      inset:0;
+      z-index:9998;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background:rgba(3,5,11,.68);
+      backdrop-filter:blur(6px);
+    }
+    
+    .download-modal-overlay.visible{
+      display:flex;
+    }
+    
+    .download-modal{
+      width:min(520px, 100%);
+      border-radius:22px;
+      border:1px solid rgba(169,183,255,.32);
+      background:
+        linear-gradient(180deg, rgba(18,22,36,.98), rgba(8,12,24,.98)),
+        radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 40%);
+      box-shadow:0 28px 80px rgba(0,0,0,.58);
+      padding:24px;
+    }
+    
+    .download-modal-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    
+    .download-modal h2{
+      margin:0 0 12px;
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+    }
+    
+    .download-modal p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+    
+    .download-note{
+      margin-top:10px;
+      color:var(--dim);
+      font-size:12px;
+    }
+    
+    .download-modal label{
+      display:block;
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+    }
+    
+    .download-modal input{
+      width:100%;
+      background:rgba(5,8,17,.85);
+      border:1px solid rgba(160,168,187,.25);
+      color:var(--text);
+      border-radius:14px;
+      padding:14px;
+      font-family:inherit;
+      font-size:15px;
+      outline:none;
+      margin-top:6px;
+    }
+    
+    .download-modal input:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+    
+    .download-modal-error{
+      min-height:1.8em;
+      margin-top:10px;
+      color:var(--danger);
+      font-size:13px;
+      line-height:1.8;
+    }
+    
+    .download-modal-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:20px;
+      flex-wrap:wrap;
+    }
+    
+    .download-modal-actions button{
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+    }
+    
+    .download-modal-actions .primary{
+      border:0;
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+    
+    .download-modal-actions .ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+    
+    @media(max-width:760px){
+      .download-modal{
+        padding:20px;
+      }
+    
+      .download-modal-actions button{
+        width:100%;
+      }
+    
+      .detail-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+    
+      .download-month-btn{
+        width:100%;
+      }
     }
 
     footer{
@@ -490,9 +655,20 @@
               </p>
             </div>
 
-            <button class="back-btn" id="backToMonthsBtn" type="button">
-              月一覧へ戻る
-            </button>
+            <div class="detail-actions">
+              <button
+                class="download-month-btn"
+                id="downloadMonthBtn"
+                type="button"
+                disabled
+              >
+                この月をダウンロード
+              </button>
+            
+              <button class="back-btn" id="backToMonthsBtn" type="button">
+                月一覧へ戻る
+              </button>
+            </div>
           </div>
 
           <div class="month-afterglow" id="monthAfterglow" style="display:none;">
@@ -513,6 +689,57 @@
         </section>
       </div>
     </main>
+
+    <div class="download-modal-overlay" id="monthDownloadModal" aria-hidden="true">
+      <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="monthDownloadModalTitle">
+        <div class="download-modal-label">Monthly Export</div>
+    
+        <h2 id="monthDownloadModalTitle">
+          この月の航海記録をダウンロードします
+        </h2>
+    
+        <p id="monthDownloadModalIntro">
+          記録を保護するため、登録メールアドレスを確認します。
+        </p>
+    
+        <p class="download-note">
+          保存先は、ご利用のブラウザまたは端末の設定に従います。
+        </p>
+    
+        <div id="monthDownloadEmailArea">
+          <label for="monthDownloadEmailInput">
+            登録メールアドレス
+          </label>
+    
+          <input
+            id="monthDownloadEmailInput"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+          >
+        </div>
+    
+        <div id="monthDownloadConfirmSummary" style="display:none;">
+          <div class="download-modal-label" style="margin-top:18px;">
+            Ready to download
+          </div>
+    
+          <p id="monthDownloadSummaryText" style="white-space:pre-wrap;"></p>
+        </div>
+    
+        <div class="download-modal-error" id="monthDownloadModalError"></div>
+    
+        <div class="download-modal-actions">
+          <button class="ghost" id="monthDownloadCancelBtn" type="button">
+            キャンセル
+          </button>
+    
+          <button class="primary" id="monthDownloadConfirmBtn" type="button" data-step="email">
+            確認へ進む
+          </button>
+        </div>
+      </div>
+    </div>
 
     <footer>
       <div class="footer-links">
@@ -556,10 +783,26 @@
     const monthDetailPanel = document.getElementById("monthDetailPanel");
     const backToMonthsBtn = document.getElementById("backToMonthsBtn");
 
+    const downloadMonthBtn = document.getElementById("downloadMonthBtn");
+    
+    const monthDownloadModal = document.getElementById("monthDownloadModal");
+    const monthDownloadEmailArea = document.getElementById("monthDownloadEmailArea");
+    const monthDownloadEmailInput = document.getElementById("monthDownloadEmailInput");
+    const monthDownloadModalIntro = document.getElementById("monthDownloadModalIntro");
+    const monthDownloadModalError = document.getElementById("monthDownloadModalError");
+    const monthDownloadCancelBtn = document.getElementById("monthDownloadCancelBtn");
+    const monthDownloadConfirmBtn = document.getElementById("monthDownloadConfirmBtn");
+    const monthDownloadConfirmSummary = document.getElementById("monthDownloadConfirmSummary");
+    const monthDownloadSummaryText = document.getElementById("monthDownloadSummaryText");
+
     let currentUser = null;
     let allLogs = [];
     let monthGroups = [];
     let selectedMonthKey = null;
+
+    let isDownloadingMonthlyArchive = false;
+    let pendingMonthlyDownloadText = "";
+    let pendingMonthlyDownloadFileName = "";
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -768,6 +1011,316 @@
       monthTags.style.display = "block";
     }
 
+    function normalizeEmail(value){
+      return String(value || "").trim().toLowerCase();
+    }
+    
+    function cleanExportText(value){
+      return String(value || "").replace(/\r\n/g, "\n").trim();
+    }
+    
+    function formatDateForFileName(){
+      return new Date().toISOString().slice(0, 10);
+    }
+    
+    function buildMonthlyArchiveFileName(group){
+      const key = group?.key || formatDateForFileName();
+      return "celeste-harbor-voyage-archive-" + key + ".txt";
+    }
+    
+    function triggerTextDownload(text, fileName){
+      const blob = new Blob([text], {
+        type: "text/plain;charset=utf-8"
+      });
+    
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+    
+      anchor.href = url;
+      anchor.download = fileName || "celeste-harbor-voyage-archive.txt";
+    
+      document.body.appendChild(anchor);
+      anchor.click();
+    
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+    }
+    
+    function selectedMonthGroup(){
+      if(!selectedMonthKey){
+        return null;
+      }
+    
+      return monthGroups.find(function(group){
+        return group.key === selectedMonthKey;
+      }) || null;
+    }
+    
+    function monthRangeText(group){
+      if(!group || !group.logs || group.logs.length === 0){
+        return "";
+      }
+    
+      const sorted = group.logs.slice().sort(function(a, b){
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      });
+    
+      const first = sorted[0]?.created_at;
+      const last = sorted[sorted.length - 1]?.created_at;
+    
+      return formatDateTime(first) + " 〜 " + formatDateTime(last);
+    }
+    
+    function buildMonthlyArchiveExportText(group){
+      const logs = (group?.logs || [])
+        .slice()
+        .sort(function(a, b){
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        });
+    
+      const tagCounts = tagCountsForLogs(logs);
+    
+      const lines = [];
+    
+      lines.push("Celeste Harbor");
+      lines.push("Voyage Archive Monthly Export");
+      lines.push("");
+      lines.push("出力日時：" + formatDateTime(new Date().toISOString()));
+      lines.push("対象月：" + (group?.label || "日付不明"));
+      lines.push("記録数：" + logs.length + "件");
+      lines.push("多かった気配：" + (group?.topTag || "Harbor"));
+      lines.push("");
+    
+      lines.push("========================");
+      lines.push("Monthly Afterglow");
+      lines.push("========================");
+      lines.push("");
+      lines.push(monthlyAfterglowText(group));
+      lines.push("");
+    
+      lines.push("========================");
+      lines.push("Monthly Tags");
+      lines.push("========================");
+      lines.push("");
+    
+      if(tagCounts.length === 0){
+        lines.push("タグ記録はありません。");
+      }else{
+        tagCounts.forEach(function(item){
+          lines.push("#" + item.tag + "：" + item.count + "件");
+        });
+      }
+    
+      lines.push("");
+      lines.push("========================");
+      lines.push("Voyage Logs");
+      lines.push("========================");
+      lines.push("");
+    
+      if(logs.length === 0){
+        lines.push("この月の航海記録はありません。");
+        lines.push("");
+      }else{
+        logs.forEach(function(log){
+          lines.push("日時：" + formatDateTime(log.created_at));
+          lines.push("タグ：#" + (log.tag || "Harbor"));
+          lines.push("");
+          lines.push(cleanExportText(log.content));
+          lines.push("");
+          lines.push("------------------------");
+          lines.push("");
+        });
+      }
+    
+      lines.push("この記録は、Celeste Harbor から書き出されました。");
+      lines.push("船は、まだ進んでいます。");
+    
+      return lines.join("\n");
+    }
+
+    function resetMonthDownloadModal(){
+      pendingMonthlyDownloadText = "";
+      pendingMonthlyDownloadFileName = "";
+    
+      if(monthDownloadEmailInput){
+        monthDownloadEmailInput.value = "";
+        monthDownloadEmailInput.disabled = false;
+      }
+    
+      if(monthDownloadModalError){
+        monthDownloadModalError.textContent = "";
+      }
+    
+      if(monthDownloadEmailArea){
+        monthDownloadEmailArea.style.display = "block";
+      }
+    
+      if(monthDownloadConfirmSummary){
+        monthDownloadConfirmSummary.style.display = "none";
+      }
+    
+      if(monthDownloadSummaryText){
+        monthDownloadSummaryText.textContent = "";
+      }
+    
+      if(monthDownloadModalIntro){
+        monthDownloadModalIntro.textContent =
+          "記録を保護するため、登録メールアドレスを確認します。";
+      }
+    
+      if(monthDownloadConfirmBtn){
+        monthDownloadConfirmBtn.dataset.step = "email";
+        monthDownloadConfirmBtn.textContent = "確認へ進む";
+        monthDownloadConfirmBtn.disabled = false;
+      }
+    }
+    
+    function openMonthDownloadModal(){
+      if(!currentUser){
+        setStatus("先にログインしてください。", true);
+        return;
+      }
+    
+      const group = selectedMonthGroup();
+    
+      if(!group || !group.logs || group.logs.length === 0){
+        setStatus("ダウンロードできる月の記録がありません。", true);
+        return;
+      }
+    
+      resetMonthDownloadModal();
+    
+      monthDownloadModal.classList.add("visible");
+      monthDownloadModal.setAttribute("aria-hidden", "false");
+    
+      setTimeout(function(){
+        monthDownloadEmailInput.focus();
+      }, 50);
+    }
+    
+    function closeMonthDownloadModal(){
+      if(!monthDownloadModal){
+        return;
+      }
+    
+      monthDownloadModal.classList.remove("visible");
+      monthDownloadModal.setAttribute("aria-hidden", "true");
+      resetMonthDownloadModal();
+    }
+    
+    async function handleMonthDownload(){
+      if(isDownloadingMonthlyArchive){
+        return;
+      }
+    
+      monthDownloadModalError.textContent = "";
+    
+      const currentStep = monthDownloadConfirmBtn.dataset.step || "email";
+    
+      if(currentStep === "confirm"){
+        if(!pendingMonthlyDownloadText){
+          monthDownloadModalError.textContent =
+            "ダウンロードの準備ができていません。もう一度お試しください。";
+          monthDownloadConfirmBtn.dataset.step = "email";
+          monthDownloadConfirmBtn.textContent = "確認へ進む";
+          return;
+        }
+    
+        triggerTextDownload(
+          pendingMonthlyDownloadText,
+          pendingMonthlyDownloadFileName
+        );
+    
+        closeMonthDownloadModal();
+        setStatus("この月の航海記録をダウンロードしました。");
+        return;
+      }
+    
+      if(!currentUser){
+        monthDownloadModalError.textContent = "先にログインしてください。";
+        return;
+      }
+    
+      const inputEmail = normalizeEmail(monthDownloadEmailInput.value);
+      const userEmail = normalizeEmail(currentUser.email);
+    
+      if(!inputEmail){
+        monthDownloadModalError.textContent =
+          "登録メールアドレスを入力してください。";
+        return;
+      }
+    
+      if(!userEmail || inputEmail !== userEmail){
+        monthDownloadModalError.textContent =
+          "入力されたメールアドレスが、このアカウントと一致しません。";
+        return;
+      }
+    
+      const group = selectedMonthGroup();
+    
+      if(!group || !group.logs || group.logs.length === 0){
+        monthDownloadModalError.textContent =
+          "この月にはダウンロードできる航海記録がありません。";
+        return;
+      }
+    
+      try{
+        isDownloadingMonthlyArchive = true;
+        monthDownloadConfirmBtn.disabled = true;
+        monthDownloadConfirmBtn.textContent = "準備しています...";
+    
+        const text = buildMonthlyArchiveExportText(group);
+        const fileName = buildMonthlyArchiveFileName(group);
+    
+        pendingMonthlyDownloadText = text;
+        pendingMonthlyDownloadFileName = fileName;
+    
+        if(monthDownloadEmailInput){
+          monthDownloadEmailInput.disabled = true;
+        }
+    
+        if(monthDownloadEmailArea){
+          monthDownloadEmailArea.style.display = "none";
+        }
+    
+        if(monthDownloadModalIntro){
+          monthDownloadModalIntro.textContent =
+            "ダウンロード内容を確認してください。";
+        }
+    
+        if(monthDownloadConfirmSummary){
+          monthDownloadConfirmSummary.style.display = "block";
+        }
+    
+        if(monthDownloadSummaryText){
+          monthDownloadSummaryText.textContent =
+            "以下の月次記録をダウンロードします。\n\n" +
+            "・対象月：" + group.label + "\n" +
+            "・記録数：" + group.count + "件\n" +
+            "・期間：" + monthRangeText(group) + "\n" +
+            "・多かった気配：" + group.topTag + "\n\n" +
+            "形式：.txt\n" +
+            "ファイル名：" + fileName + "\n\n" +
+            "保存先は、ご利用のブラウザまたは端末の設定に従います。";
+        }
+    
+        monthDownloadConfirmBtn.dataset.step = "confirm";
+        monthDownloadConfirmBtn.textContent = "ダウンロード";
+    
+      }catch(error){
+        console.error("monthly archive download error:", error);
+        monthDownloadModalError.textContent =
+          error.message || "月次記録の準備に失敗しました。";
+      }finally{
+        isDownloadingMonthlyArchive = false;
+        monthDownloadConfirmBtn.disabled = false;
+    
+        if(monthDownloadConfirmBtn.dataset.step !== "confirm"){
+          monthDownloadConfirmBtn.textContent = "確認へ進む";
+        }
+      }
+    }
+
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -847,6 +1400,10 @@
       if(!group){
         detailTitle.textContent = "月を選んでください";
         detailSub.textContent = "左の一覧から、見返したい月を選びます。";
+
+        if(downloadMonthBtn){
+          downloadMonthBtn.disabled = true;
+        }
       
         if(monthAfterglow){
           monthAfterglow.style.display = "none";
@@ -869,6 +1426,10 @@
       detailTitle.textContent = group.label + "の航海";
       detailSub.textContent =
         "記録 " + group.count + "件。多かった気配：" + group.topTag + "。";
+
+      if(downloadMonthBtn){
+        downloadMonthBtn.disabled = !group.logs || group.logs.length === 0;
+      }
       
         if(monthAfterglow && monthAfterglowText){
           monthAfterglowText.textContent = monthlyAfterglowText(group);
@@ -982,6 +1543,39 @@
       backToMonthsBtn.addEventListener("click", function(){
         monthDetailPanel.classList.add("mobile-hidden");
         monthListPanel.classList.remove("mobile-hidden");
+      });
+    }
+
+    if(downloadMonthBtn){
+      downloadMonthBtn.addEventListener("click", openMonthDownloadModal);
+    }
+    
+    if(monthDownloadCancelBtn){
+      monthDownloadCancelBtn.addEventListener("click", closeMonthDownloadModal);
+    }
+    
+    if(monthDownloadConfirmBtn){
+      monthDownloadConfirmBtn.addEventListener("click", handleMonthDownload);
+    }
+    
+    if(monthDownloadModal){
+      monthDownloadModal.addEventListener("click", function(event){
+        if(event.target === monthDownloadModal){
+          closeMonthDownloadModal();
+        }
+      });
+    }
+    
+    if(monthDownloadEmailInput){
+      monthDownloadEmailInput.addEventListener("keydown", function(event){
+        if(event.key === "Enter"){
+          event.preventDefault();
+          handleMonthDownload();
+        }
+    
+        if(event.key === "Escape"){
+          closeMonthDownloadModal();
+        }
       });
     }
 
