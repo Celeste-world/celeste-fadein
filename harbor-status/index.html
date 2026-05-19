@@ -7,7 +7,7 @@
   <title>Harbor Status – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-
+<article class="card wide">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -232,6 +232,15 @@
       gap:10px;
       flex-wrap:wrap;
       margin-top:18px;
+    }
+
+    .next-card .card-text{
+      text-align:left;
+      max-width:none;
+    }
+    
+    .next-card .actions{
+      justify-content:flex-start;
     }
 
     .btn{
@@ -521,13 +530,13 @@
           <div class="small-meta" id="memoryTideMeta"></div>
         </article>
 
-        <article class="card wide">
+        <article class="card wide next-card">
           <div class="card-label">Next</div>
           <div class="card-title">今日の航海を書く</div>
           <div class="card-text">
             港の気配を確認したら、今日の航海を残すこともできます。
           </div>
-
+        
           <div class="actions">
             <a class="btn btn-primary" href="/log/">Voyage Log へ</a>
             <a class="btn btn-ghost" href="/voyage-archive/">Archive を見る</a>
