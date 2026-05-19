@@ -200,6 +200,31 @@
       padding:12px 0;
     }
 
+    .month-afterglow{
+      margin:0 0 18px;
+      padding:16px 18px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.24);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 44%),
+        rgba(5,8,17,.44);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+    
+    .month-afterglow-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+    
+    .month-afterglow-text{
+      color:var(--text);
+    }
+
     .detail-head{
       display:flex;
       justify-content:space-between;
@@ -424,6 +449,11 @@
             </button>
           </div>
 
+          <div class="month-afterglow" id="monthAfterglow" style="display:none;">
+            <div class="month-afterglow-label">Monthly Afterglow</div>
+            <div class="month-afterglow-text" id="monthAfterglowText"></div>
+          </div>
+
           <div id="monthLogs">
             <div class="empty">
               まだ月が選ばれていません。
@@ -465,6 +495,8 @@
 
     const monthList = document.getElementById("monthList");
     const monthLogs = document.getElementById("monthLogs");
+    const monthAfterglow = document.getElementById("monthAfterglow");
+    const monthAfterglowText = document.getElementById("monthAfterglowText");
     const detailTitle = document.getElementById("detailTitle");
     const detailSub = document.getElementById("detailSub");
     const monthListPanel = document.getElementById("monthListPanel");
@@ -590,6 +622,48 @@
       return bestTag;
     }
 
+    function monthlyAfterglowText(group){
+      if(!group){
+        return "";
+      }
+    
+      const tag = String(group.topTag || "Harbor");
+    
+      if(tag === "Moonlit"){
+        return "この月の言葉は、月明かりの下に静かに並んでいます。";
+      }
+    
+      if(tag === "Fog"){
+        return "この月の記録には、霧の向こうを進んでいた気配があります。";
+      }
+    
+      if(tag === "Lighthouse"){
+        return "この月の言葉は、遠くの灯台の方を向いていたようです。";
+      }
+    
+      if(tag === "Storm"){
+        return "この月の記録には、波の強かった夜の気配が残っています。";
+      }
+    
+      if(tag === "Deep Current"){
+        return "この月の言葉は、深い潮の奥に静かに沈んでいます。";
+      }
+    
+      if(tag === "Calm Tide"){
+        return "この月の記録には、静かな潮のような時間が流れています。";
+      }
+    
+      if(tag === "Drift"){
+        return "この月には、流れに身を預けながら残された言葉があります。";
+      }
+    
+      if(tag === "Return"){
+        return "この月の記録には、港へ戻る足音のような余韻があります。";
+      }
+    
+      return "この月の言葉は、港の灯りの中に静かに残っています。";
+    }
+
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -669,6 +743,15 @@
       if(!group){
         detailTitle.textContent = "月を選んでください";
         detailSub.textContent = "左の一覧から、見返したい月を選びます。";
+      
+        if(monthAfterglow){
+          monthAfterglow.style.display = "none";
+        }
+      
+        if(monthAfterglowText){
+          monthAfterglowText.textContent = "";
+        }
+      
         monthLogs.innerHTML = `
           <div class="empty">
             まだ月が選ばれていません。
@@ -680,6 +763,11 @@
       detailTitle.textContent = group.label + "の航海";
       detailSub.textContent =
         "記録 " + group.count + "件。多かった気配：" + group.topTag + "。";
+      
+        if(monthAfterglow && monthAfterglowText){
+          monthAfterglowText.textContent = monthlyAfterglowText(group);
+          monthAfterglow.style.display = "block";
+        }
 
       monthLogs.innerHTML = group.logs.map(function(log){
         return `
