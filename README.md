@@ -76,6 +76,24 @@ Cabin Log。
 - イベント種別ごとの色分け
 - Read more / Show less 表示
 
+### `/voyage-archive/`
+
+Voyage Archive。
+
+Voyage Log を月ごとに見返すための内部アーカイブページです。
+
+含まれるもの：
+
+- 月別の Voyage Log 一覧
+- 月ごとの記録数
+- 月ごとの多かった気配
+- 最後の記録日時
+- 月を選択した時のログ一覧表示
+
+`/archive/` は旧Celeste記録への内部アーカイブ入口として残し、  
+Voyage Log の月次アーカイブは `/voyage-archive/` に分けて管理します。
+
+
 ### `/items/`
 
 Harbor Finds。
