@@ -948,6 +948,21 @@
     let timelineEventCounter = 0;
 
     const initialTimelineLimit = 8;
+    const seaChartImagePath = "/images/sea-chart-z.png";
+    
+    const areaImagePaths = {
+      harbor: "/images/areas/harbor.png",
+      silent_water: "/images/areas/silent-water.png",
+      lighthouse_coast: "/images/areas/lighthouse-coast.png",
+      fog_sea: "/images/areas/fog-sea.png",
+      moonlit_sea: "/images/areas/moonlit-sea.png",
+      deep_current: "/images/areas/deep-current.png",
+      unnamed_waters: "/images/areas/unnamed-waters.png"
+    };
+    
+    function areaImagePath(areaKey){
+      return areaImagePaths[areaKey] || seaChartImagePath;
+    }
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1222,17 +1237,9 @@
       const normalized = normalizeEventType(event.event_type);
     
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-        const metadata = event.metadata || {};
-        const areaKey =
-          metadata.area_key ||
-          metadata.sea_area_key ||
-          event.event_key ||
-          "";
-      
         return {
           href: "/map/",
-          label: "海図を見る",
-          areaKey
+          label: "海図で確認する"
         };
       }
     
@@ -1289,11 +1296,11 @@
       const normalized = normalizeEventType(event.event_type);
       const metadata = event.metadata || {};
     
-      if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
+     if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
         const base = event.body || "";
         const chapter = areaChapterAfterglow(areaKey);
-    
+      
         return base
           ? base + "\n\n" + chapter
           : chapter;
@@ -1355,7 +1362,18 @@
       const label = eventTypeLabel(event.event_type);
       const title = timelineDetailTitleForEvent(event);
       const body = timelineDetailBodyForEvent(event);
-      const imagePath = timelineImagePath(event);
+      const metadata = event.metadata || {};
+      const normalized = normalizeEventType(event.event_type);
+      const areaKey =
+        metadata.area_key ||
+        metadata.sea_area_key ||
+        event.event_key ||
+        "";
+      
+      const imagePath =
+        normalized === "sea_area_opened" || normalized === "sea_area_unlocked"
+          ? areaImagePath(areaKey)
+          : timelineImagePath(event);
       const imageAlt = timelineImageAlt(event);
       const action = timelineDetailAction(event);
     
@@ -1406,11 +1424,7 @@
           ${
             action
               ? `
-                <a
-                  class="timeline-detail-primary"
-                  href="${escapeHtml(action.href)}"
-                  data-open-area-key="${escapeHtml(action.areaKey || "")}"
-                >
+                <a class="timeline-detail-primary" href="${escapeHtml(action.href)}">
                   ${escapeHtml(action.label)}
                 </a>
               `
@@ -1422,27 +1436,6 @@
     
         if(closeBtn){
           closeBtn.addEventListener("click", closeTimelineDetailModal);
-        }
-        const areaLink = timelineDetailActions.querySelector("[data-open-area-key]");
-
-        if(areaLink){
-          areaLink.addEventListener("click", function(){
-            const areaKey = areaLink.dataset.openAreaKey;
-        
-            if(areaKey){
-              try{
-                sessionStorage.setItem(
-                  "celeste_open_map_area",
-                  JSON.stringify({
-                    area_key: areaKey,
-                    from: "timeline"
-                  })
-                );
-              }catch(error){
-                console.warn("open map area save failed:", error);
-              }
-            }
-          });
         }
       }
     
