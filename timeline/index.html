@@ -1297,14 +1297,10 @@
       const metadata = event.metadata || {};
     
      if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-        const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
-        const base = event.body || "";
-        const chapter = areaChapterAfterglow(areaKey);
-      
-        return base
-          ? base + "\n\n" + chapter
-          : chapter;
-      }
+      const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
+    
+      return areaChapterAfterglow(areaKey);
+    }
     
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return event.body || "新しい船が、港に姿を現しました。";
