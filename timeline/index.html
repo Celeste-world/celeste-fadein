@@ -633,11 +633,23 @@
         font-size:20px;
       }
     
-      .timeline-detail-actions a,
-      .timeline-detail-actions button{
-        width:100%;
-      }
+        .timeline-detail-actions{
+          justify-content:stretch;
+        }
+      
+        .timeline-detail-actions a,
+        .timeline-detail-actions button{
+          width:100%;
+          min-height:44px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          margin:0;
+        }
     }
+
+    
 
     .read-more-wrap{
       display:flex;
@@ -1410,7 +1422,6 @@
       if(timelineDetailMeta){
         timelineDetailMeta.innerHTML = `
           <span class="timeline-detail-chip">${escapeHtml(label)}</span>
-          <span class="timeline-detail-chip">${escapeHtml(typeClass)}</span>
         `;
       }
     
