@@ -1117,6 +1117,31 @@
         color:var(--dim);
         margin-top:2px;
       }
+
+      .area-journal-milestone{
+        margin-top:12px;
+        padding:11px 12px;
+        border-radius:14px;
+        border:1px solid rgba(255,227,163,.18);
+        background:
+          radial-gradient(circle at top left, rgba(255,227,163,.055), transparent 44%),
+          rgba(255,255,255,.018);
+      }
+      
+      .area-journal-milestone-label{
+        font-size:11px;
+        letter-spacing:.14em;
+        text-transform:uppercase;
+        color:#ffe3a3;
+        margin-bottom:5px;
+      }
+      
+      .area-journal-milestone-text{
+        font-size:12px;
+        line-height:1.85;
+        color:var(--muted);
+        white-space:pre-wrap;
+      }
       
       .area-journal-after{
         margin-top:12px;
@@ -2355,6 +2380,52 @@
       return "記憶が深まった海";
     }
 
+    function areaJournalMilestoneText(areaKey, count){
+      const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
+    
+      if(count <= 0){
+        return "この海の節目は、まだ静かに待っています。";
+      }
+    
+      if(count === 1){
+        return "最初の漂着物が、この海に記録されました。\nここはもう、ただ通り過ぎるだけの海ではありません。";
+      }
+    
+      if(count <= 2){
+        return "小さな漂着物の記録が、この海に残り始めています。\n航海の跡が、少しずつ水面に浮かんでいます。";
+      }
+    
+      if(count <= 4){
+        return "この海には、いくつかの航海の跡が残っています。\n漂着物は、ここを通った夜の小さな証です。";
+      }
+    
+      const messages = {
+        harbor:
+          "港には、いくつもの航海の跡が積もり始めています。\nここは戻る場所であり、記録が静かに残る場所でもあります。",
+    
+        silent_water:
+          "静かな水域には、いくつもの小さな記録が残っています。\n港の外へ出た最初の航路が、少しずつ確かなものになっています。",
+    
+        lighthouse_coast:
+          "灯台海岸には、進むための目印がいくつも残っています。\n遠い光の下で、航海は少しずつ形を持ち始めています。",
+    
+        fog_sea:
+          "霧の海には、見えないまま進んだ記録が積もっています。\nこの海は、確信よりも継続を覚えています。",
+    
+        moonlit_sea:
+          "月明かりの海には、夜の航路を照らすものが集まり始めています。\n静かな光の中で、航海の記憶が深まっています。",
+    
+        deep_current:
+          "深い潮には、沈まなかった航海の証が残っています。\n水面の下で、記録は静かに深まっています。",
+    
+        unnamed_waters:
+          "名もなき海には、まだ知らなかった航海の跡が残っています。\n未知だった場所が、少しずつあなたの海になっています。"
+      };
+    
+      return messages[normalizedAreaKey] ||
+        "この海には、いくつもの航海の跡が残っています。\nここはもう、ただ通り過ぎた海ではありません。";
+    }
+
     function areaJournalAfterText(areaKey, count){
       const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
     
@@ -2500,9 +2571,15 @@
               ${escapeHtml(areaJournalMemoryTitle(count))}
             </div>
            <div class="area-journal-empty">${escapeHtml(areaJournalIntro(areaKey, count))}</div>
-            <a class="area-journal-link" href="/items/">
-              漂着物を見る
-            </a>
+
+          <div class="area-journal-milestone">
+            <div class="area-journal-milestone-label">この海の節目</div>
+            <div class="area-journal-milestone-text">${escapeHtml(areaJournalMilestoneText(areaKey, count))}</div>
+          </div>
+          
+          <a class="area-journal-link" href="/items/">
+            漂着物を見る
+          </a>
           </div>
         `;
       }
@@ -2556,6 +2633,11 @@
               `;
             }).join("")}
           </div>
+          <div class="area-journal-milestone">
+            <div class="area-journal-milestone-label">この海の節目</div>
+            <div class="area-journal-milestone-text">${escapeHtml(areaJournalMilestoneText(areaKey, count))}</div>
+          </div>
+          
           <div class="area-journal-after">
             ${escapeHtml(areaJournalAfterText(areaKey, count))}
           </div>
