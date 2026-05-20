@@ -2473,22 +2473,19 @@
     }
     
     function buildSpecialVoyageResponseText(serverReply, payload, rewards){
-      const seaBase = seaResponseBaseText(activeSession);
+      const serverText = String(serverReply || "").trim();
+    
+      if(serverText){
+        return serverText;
+      }
+    
+      const fallback = seaResponseBaseText(activeSession);
       const reusedText = seaResponseForReusedRolls(payload, rewards);
       const findText = reusedText || seaResponseForFinds(rewards, payload);
     
-      const parts = [];
-    
-      if(seaBase){
-        parts.push(seaBase);
-      }
-    
-      if(findText){
-        parts.push(findText);
-      }
-    
-      return parts.join("\n\n");
+      return [fallback, findText].filter(Boolean).join("\n\n");
     }
+    
     function renderHarborFindNotice(payload){
       if(!specialFind || !specialFindText){
         return;
@@ -2870,9 +2867,7 @@
           notices
         );
         
-        const serverReplyText = String(data.reply || "").trim();
-        
-        specialReplyText.textContent = serverReplyText || responseText;
+        specialReplyText.textContent = responseText;
         specialReply.style.display = "block";
         
         openSeaResponseModal(responseText);
