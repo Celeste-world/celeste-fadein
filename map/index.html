@@ -1110,6 +1110,22 @@
         line-height:1.7;
         color:var(--muted);
       }
+
+      .area-journal-item-desc{
+        font-size:11px;
+        line-height:1.7;
+        color:var(--dim);
+        margin-top:2px;
+      }
+      
+      .area-journal-after{
+        margin-top:12px;
+        padding-top:10px;
+        border-top:1px solid rgba(160,168,187,.14);
+        font-size:12px;
+        line-height:1.8;
+        color:var(--muted);
+      }
       
       .area-journal-empty{
         font-size:12px;
@@ -2282,6 +2298,26 @@
         ""
       );
     }
+
+    function journalItemDescription(item){
+      const text = String(
+        item.description ||
+        item.item_description ||
+        item.origin_text ||
+        item.origin ||
+        ""
+      ).trim();
+    
+      if(!text){
+        return "この海に、静かに記録された漂着物です。";
+      }
+    
+      if(text.length <= 42){
+        return text;
+      }
+    
+      return text.slice(0, 42) + "…";
+    }
     
     function discoveredItemsForArea(areaKey){
       const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
@@ -2317,6 +2353,26 @@
       }
     
       return "記憶が深まった海";
+    }
+
+    function areaJournalAfterText(areaKey, count){
+      const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
+    
+      if(count <= 0){
+        return "まだ何かが流れ着く夜もあるかもしれません。";
+      }
+    
+      const messages = {
+        harbor: "港には、まだ小さなものが流れ着く夜があるかもしれません。",
+        silent_water: "低い波は、まだ知らない漂着物を運んでくるかもしれません。",
+        lighthouse_coast: "灯台の光の近くには、まだ小さな目印が眠っているかもしれません。",
+        fog_sea: "霧の向こうから、まだ何かが静かに届くかもしれません。",
+        moonlit_sea: "月明かりの道には、まだ拾われていない光が残っているかもしれません。",
+        deep_current: "深い潮の奥には、まだ沈まずに残っているものがあるかもしれません。",
+        unnamed_waters: "名もなき海には、まだ知らない漂着物が流れ着くかもしれません。"
+      };
+    
+      return messages[normalizedAreaKey] || "この海には、まだ何かが流れ着く夜もあるかもしれません。";
     }
 
     function areaJournalIntro(areaKey, count){
@@ -2488,14 +2544,22 @@
                         : "✦"
                     }
                   </div>
-                  <div class="area-journal-item-name">
-                    ${escapeHtml(name)}
+                  <div>
+                    <div class="area-journal-item-name">
+                      ${escapeHtml(name)}
+                    </div>
+                    <div class="area-journal-item-desc">
+                      ${escapeHtml(journalItemDescription(item))}
+                    </div>
                   </div>
                 </div>
               `;
             }).join("")}
           </div>
-    
+          <div class="area-journal-after">
+            ${escapeHtml(areaJournalAfterText(areaKey, count))}
+          </div>
+          
           <a class="area-journal-link" href="/items/">
             漂着物を見る
           </a>
