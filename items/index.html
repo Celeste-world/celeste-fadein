@@ -370,6 +370,22 @@
       background:rgba(255,255,255,.015);
     }
 
+    .area-map-link{
+      display:inline-flex;
+      margin-top:10px;
+      font-size:12px;
+      color:var(--accent);
+      border:1px solid rgba(169,183,255,.28);
+      border-radius:999px;
+      padding:6px 12px;
+      background:rgba(169,183,255,.045);
+    }
+    
+    .area-map-link:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+
     .area-memory{
       margin:12px 0 16px;
       padding:13px 14px;
@@ -1830,6 +1846,9 @@
                 <p class="area-desc">
                   ${escapeHtml(area.description || area.description_ja || "")}
                 </p>
+                <a class="area-map-link" href="/map/">
+                  この海を海図で見る
+                </a>
               </div>
 
               <div class="area-status-group">
