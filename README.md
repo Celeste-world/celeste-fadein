@@ -300,6 +300,103 @@ Cabin Log。
 - イベント種別ごとの色分け
 - Read more / Show less 表示
 
+### Cabin Log 詳細モーダルと関連導線
+
+`/timeline/` の Cabin Log では、各イベントカードをタップすると中央モーダルで詳細を表示します。
+
+Cabin Log は単なる時系列一覧ではなく、港で起きた出来事をあとから開き直せる記録棚として扱います。
+
+対象イベント：
+
+```txt
+Harbor Find
+Special Voyage Find
+Vessel acquired
+Sea Area opened
+Drift Ticket
+Special Voyage started / ended
+Voyage Log
+Harbor Cat
+
+詳細モーダルに表示するもの：
+
+イベント種別
+タイトル
+発生日時
+画像
+本文
+関連導線
+
+画像は user_timeline_events_view.image_path を優先し、存在しない場合は以下のフォールバック列を参照します。
+
+item_image_path
+harbor_item_image_path
+vessel_image_path
+ticket_image_path
+related_image_path
+
+画像がない場合、イベント種別に応じた静かなアイコンを表示します。
+
+Cabin Log からの関連導線
+
+イベント種別ごとに、詳細モーダル下部へ関連ページへの導線を表示します。
+
+Harbor Find / Special Voyage Find
+  → この漂着物を見る
+  → /items/
+
+Vessel acquired / Vessel unlocked
+  → この船の記録を見る
+  → /vessels/
+
+Sea Area opened / Sea Area unlocked
+  → この海の記憶を見る
+  → /map/
+
+Drift Ticket / Ticket granted
+  → 航海券を見る
+  → /tickets/
+
+Special Voyage started / ended
+  → Voyage Log へ
+  → /log/
+
+海域開放イベントでは、/map/ の Sea Area Journal とつながるように、導線文言を この海の記憶を見る とします。
+
+ただし、Cabin Log から /map/ へ移動した際に、該当海域モーダルを自動で開く挙動は採用しません。
+まず Cabin Log 内で出来事の詳細を確認し、必要に応じてユーザー自身が関連ページへ進む設計にします。
+
+表示方針
+
+Cabin Log 詳細モーダルでは、ユーザーに見せてよい出来事だけを表示します。
+
+表示する：
+
+イベントタイトル
+本文
+発生日時
+画像
+開放済みの船
+開放済みの海域
+発見済みの漂着物
+航海券の概要
+
+表示しない：
+
+未開放船名
+未開放海域名
+未開放数
+rarity
+item_key
+area_key
+roll_value
+session_id
+ticket_id
+内部DBキー
+
+Cabin Log は、進行ログではなく、港に積もった出来事の記録です。
+そのため、詳細モーダルも報酬画面ではなく、あとから出来事を静かに見返すための表示として扱います。
+
 ### `/voyage-archive/`
 
 Voyage Archive。
