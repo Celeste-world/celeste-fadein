@@ -1502,6 +1502,20 @@
     
       return map[raw] || map[lower] || lower;
     }
+
+    function areaChapterTitle(areaKey, fallbackName){
+      const titles = {
+        harbor: "第一章　港",
+        silent_water: "第二章　静かな水域",
+        lighthouse_coast: "第三章　灯台海岸",
+        fog_sea: "第四章　霧の海",
+        moonlit_sea: "第五章　月明かりの海",
+        deep_current: "第六章　深い潮",
+        unnamed_waters: "第七章　名もなき海"
+      };
+    
+      return titles[areaKey] || fallbackName || "開かれた海域";
+    }
     
     function areaMemoryStage(foundCount){
       if(foundCount <= 0){
@@ -1991,7 +2005,7 @@
             <div class="area-head">
               <div>
                 <div class="area-kicker">Open Sea Area</div>
-                <div class="area-title">${escapeHtml(area.name_ja || area.name || areaKey)}</div>
+                <div class="area-title">${escapeHtml(areaChapterTitle(areaKey, area.name_ja || area.name || areaKey))}</div>
                 <p class="area-desc">
                   ${escapeHtml(area.description || area.description_ja || "")}
                 </p>
