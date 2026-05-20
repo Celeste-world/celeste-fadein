@@ -2273,16 +2273,31 @@
     }
     
     function buildSpecialVoyageResponseText(serverReply, payload, rewards){
-      const baseReply = String(serverReply || "").trim();
-      const base = baseReply || seaResponseBaseText(activeSession);
+      const seaBase = seaResponseBaseText(activeSession);
+      const serverText = String(serverReply || "").trim();
+    
       const reusedText = seaResponseForReusedRolls(payload, rewards);
       const findText = reusedText || seaResponseForFinds(rewards, payload);
     
-      if(findText){
-        return base + "\n\n" + findText;
+      const parts = [];
+    
+      // 必ず、まず「海からの応答」を出す
+      if(seaBase){
+        parts.push(seaBase);
       }
     
-      return base;
+      // サーバー側の返答がある場合は、その後に添える
+      // ただし同じ文が重複する場合は出さない
+      if(serverText && serverText !== seaBase){
+        parts.push(serverText);
+      }
+    
+      // 漂着物が届いた場合、または既存roll再利用の場合の説明
+      if(findText){
+        parts.push(findText);
+      }
+    
+      return parts.join("\n\n");
     }
 
     function renderHarborFindNotice(payload){
@@ -2648,10 +2663,6 @@
           setStatus("航海の返答に失敗しました：" + error.message, true);
           return;
         }
-
-        
-
-        
 
         const payload = {
           harbor_find: data.harbor_find,
