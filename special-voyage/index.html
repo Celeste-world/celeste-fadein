@@ -395,6 +395,38 @@
       display:block;
     }
 
+    .current-depth{
+      margin:0 0 20px;
+      padding:16px 17px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .current-depth-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    
+    .current-depth-title{
+      font-size:16px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:5px;
+    }
+    
+    .current-depth-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
     .voyage-title{
       font-size:20px;
       font-weight:500;
@@ -726,6 +758,12 @@
         </div>
 
         <div class="voyage-box" id="activeVoyageBox">
+          <div class="current-depth" id="currentDepth" style="display:none;">
+            <div class="current-depth-label">Current Depth</div>
+            <div class="current-depth-title" id="currentDepthTitle"></div>
+            <div class="current-depth-text" id="currentDepthText"></div>
+          </div>
+        
           <h2 class="voyage-title">航海中</h2>
 
           <p class="voyage-text" id="activeVoyageMessage">
@@ -832,6 +870,9 @@
     const ticketArea = document.getElementById("ticketArea");
 
     const activeVoyageBox = document.getElementById("activeVoyageBox");
+    const currentDepth = document.getElementById("currentDepth");
+    const currentDepthTitle = document.getElementById("currentDepthTitle");
+    const currentDepthText = document.getElementById("currentDepthText");
     const activeVoyageMessage = document.getElementById("activeVoyageMessage");
     const remainingTime = document.getElementById("remainingTime");
 
@@ -1182,6 +1223,64 @@
       ticketArea.innerHTML = cardsHtml;
     }
 
+    function currentDepthContent(session){
+      const sessionType = normalizeTicketType(session?.session_type);
+      const duration = Number(session?.duration_minutes || 0);
+    
+      if(sessionType === "drift"){
+        return {
+          title: "漂着チケットの航海",
+          text:
+            "港の外れにある、短い深みを進んでいます。\n" +
+            "今は、置きたい言葉だけを静かに持っていく時間です。"
+        };
+      }
+    
+      if(sessionType === "deep_sea"){
+        return {
+          title: "深海航海",
+          text:
+            "水面の下にある、静かな流れの中を進んでいます。\n" +
+            "急がず、まだ言葉にならないものを少し深い場所で扱う航海です。"
+        };
+      }
+    
+      if(sessionType === "special" && duration >= 20){
+        return {
+          title: "少し長い特別航海",
+          text:
+            "いつもの港より少し遠く、月明かりの海を進んでいます。\n" +
+            "言葉をもう少し奥まで運ぶための時間です。"
+        };
+      }
+    
+      return {
+        title: "特別航海",
+        text:
+          "いつもの港より少し遠く、言葉を整える海にいます。\n" +
+          "この短い時間だけ、港の外に静かな航路が開いています。"
+      };
+    }
+    
+    function renderCurrentDepth(session){
+      if(!currentDepth || !currentDepthTitle || !currentDepthText){
+        return;
+      }
+    
+      if(!session){
+        currentDepth.style.display = "none";
+        currentDepthTitle.textContent = "";
+        currentDepthText.textContent = "";
+        return;
+      }
+    
+      const content = currentDepthContent(session);
+    
+      currentDepthTitle.textContent = content.title;
+      currentDepthText.textContent = content.text;
+      currentDepth.style.display = "block";
+    }
+
     function startToastContent(ticket){
       const normalized = normalizeTicketType(ticket?.ticket_type);
       const duration = Number(ticket?.duration_minutes || 0);
@@ -1369,6 +1468,7 @@
         }
     
         activeSession = null;
+        renderCurrentDepth(null);
     
         remainingTime.textContent = "00:00";
     
@@ -1480,6 +1580,8 @@
       activeVoyageBox.classList.add("visible");
       specialMessage.disabled = false;
       sendSpecialBtn.disabled = false;
+      
+      renderCurrentDepth(activeSession);
 
       if(endVoyageBtn){
         endVoyageBtn.disabled = false;
@@ -1556,6 +1658,8 @@
         activeVoyageBox.classList.add("visible");
         specialMessage.disabled = false;
         sendSpecialBtn.disabled = false;
+        
+        renderCurrentDepth(activeSession);
 
         if(endVoyageBtn){
           endVoyageBtn.disabled = false;
@@ -1652,6 +1756,7 @@
 
           expireActiveSession();
           activeSession = null;
+          renderCurrentDepth(null);
 
           startReturnCountdown();
         }
