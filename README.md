@@ -820,6 +820,11 @@ available などの内部状態表示
 - Harbor Find 詳細モーダル
 - Drift Ticket 詳細モーダル
 
+/special-voyage/
+- チケット種別ごとに Current Depth を表示
+- Drift / Special / Deep Sea で航海中の現在地文言を変える
+- 報酬表示ではなく、航海中の没入感を補助する表示
+
 ### `/fragments/`
 
 港内部の Fragment Archive。
