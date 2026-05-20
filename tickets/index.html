@@ -307,6 +307,43 @@
       margin:0 0 16px;
     }
 
+    .ticket-entry{
+      margin-top:16px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.18);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .ticket-entry-label{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    
+    .ticket.drift .ticket-entry-label{
+      color:var(--ready);
+    }
+    
+    .ticket.special .ticket-entry-label{
+      color:var(--ticket);
+    }
+    
+    .ticket.deep .ticket-entry-label{
+      color:var(--deep);
+    }
+    
+    .ticket-entry-text{
+      font-size:13px;
+      line-height:1.95;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
     .benefit-box{
       margin-top:18px;
       padding:16px;
@@ -636,6 +673,14 @@
               Harbor Cat は、答えを返すためではなく、
               記録が港に届いたことを静かに知らせるためにいます。
             </p>
+
+            <div class="ticket-entry">
+              <div class="ticket-entry-label">港の入口</div>
+              <div class="ticket-entry-text">
+                ここは、深い航海へ出る前に戻ってくる場所です。
+                Harbor Cat は、記録が港に届いたことを静かに見届けます。
+              </div>
+            </div>
             <div class="meta">
               <span class="tag">無料</span>
               <span class="tag">1〜2行</span>
@@ -660,6 +705,13 @@
               購入するものではなく、Voyage Log のあとに港へ届くことがあります。
               「少しだけ試してみたい夜」のためのチケットです。
             </p>
+            <div class="ticket-entry">
+              <div class="ticket-entry-label">航海の入口</div>
+              <div class="ticket-entry-text">
+                港の外れに、5分だけ開く小さな航路があります。
+                少しだけ深い海へ降りるための、軽い合図です。
+              </div>
+            </div>
 
             <div class="benefit-box">
               <div class="benefit-title">このチケットで変わること</div>
@@ -695,6 +747,13 @@
               チケットは 10分 と 20分 の2種類です。
               短い時間の中で、今の言葉を静かに整えるための航海です。
             </p>
+            <div class="ticket-entry">
+            <div class="ticket-entry-label">航海の入口</div>
+            <div class="ticket-entry-text">
+              いつもの港より少し遠くへ出るための航海券です。
+              使う時だけ、港の外に静かな航路が開きます。
+            </div>
+          </div>
 
             <div class="benefit-box">
               <div class="benefit-title">このチケットで変わること</div>
@@ -730,6 +789,14 @@
               すべての夜に必要なものではありません。
               必要だと感じる時だけ開く、深い海への入口です。
             </p>
+            
+            <div class="ticket-entry">
+              <div class="ticket-entry-label">深い航海の入口</div>
+              <div class="ticket-entry-text">
+                水面の下へ、もう少し深く降りるための入口です。
+                急ぐためではなく、まだ言葉にならないものを静かに扱うために開きます。
+              </div>
+            </div>
 
             <div class="benefit-box">
               <div class="benefit-title">このチケットで変わること</div>
