@@ -2207,6 +2207,84 @@
       return [];
     }
 
+    function seaResponseBaseText(session){
+      const sessionType = normalizeTicketType(session?.session_type);
+      const duration = Number(session?.duration_minutes || 0);
+    
+      if(sessionType === "drift"){
+        return "短い航海の中で、その言葉は静かに海へ置かれました。\n港へ戻る時、少しだけ余韻が残りそうです。";
+      }
+    
+      if(sessionType === "deep_sea"){
+        return "その言葉は、水面の下へゆっくり沈んでいきました。\n急いで形にしなくても大丈夫です。\n深い潮は、まだ静かに動いています。";
+      }
+    
+      if(sessionType === "special" && duration >= 20){
+        return "その言葉は、少し遠い海まで運ばれていきました。\nすぐに答えになるものではありません。\nけれど、海は確かにそれを受け取りました。";
+      }
+    
+      return "その言葉は、少し深いところまで沈んでいきました。\nすぐに答えになるものではありません。\nけれど、海は確かにそれを受け取りました。";
+    }
+    
+    function seaResponseForFinds(rewards, payload){
+      const foundRewards = (rewards || []).filter(function(reward){
+        return reward && reward.type === "harbor_find";
+      });
+    
+      if(foundRewards.length === 0){
+        return "";
+      }
+    
+      const names = foundRewards
+        .map(function(reward){
+          return reward.title || "";
+        })
+        .filter(Boolean);
+    
+      if(names.length === 0){
+        return "そのあと、波の間から小さな漂着物が届いています。\nこれは、この航海の中で見つかったものです。";
+      }
+    
+      if(names.length === 1){
+        return "そのあと、波の間から「" + names[0] + "」が届きました。\nこれは、この航海の中で見つかった漂着物です。";
+      }
+    
+      return "そのあと、波の間からいくつかの漂着物が届きました。\n" +
+        names.slice(0, 3).map(function(name){
+          return "・" + name;
+        }).join("\n") +
+        "\nこれらは、この航海の中で見つかったものです。";
+    }
+    
+    function seaResponseForReusedRolls(payload, rewards){
+      if(!payload || payload.reused_existing_rolls !== true){
+        return "";
+      }
+    
+      const foundRewards = (rewards || []).filter(function(reward){
+        return reward && reward.type === "harbor_find";
+      });
+    
+      if(foundRewards.length > 0){
+        return "この航海で届いたものは、すでに船に収められています。\n新しい漂着ではありませんが、その記録はまだ航海の中に残っています。";
+      }
+    
+      return "";
+    }
+    
+    function buildSpecialVoyageResponseText(serverReply, payload, rewards){
+      const baseReply = String(serverReply || "").trim();
+      const base = baseReply || seaResponseBaseText(activeSession);
+      const reusedText = seaResponseForReusedRolls(payload, rewards);
+      const findText = reusedText || seaResponseForFinds(rewards, payload);
+    
+      if(findText){
+        return base + "\n\n" + findText;
+      }
+    
+      return base;
+    }
+
     function renderHarborFindNotice(payload){
       if(!specialFind || !specialFindText){
         return;
@@ -2571,13 +2649,9 @@
           return;
         }
 
-        if(!data || !data.reply){
-          setStatus("航海から返答がありませんでした。", true);
-          return;
-        }
+        
 
-        specialReplyText.textContent = data.reply;
-        specialReply.style.display = "block";
+        
 
         const payload = {
           harbor_find: data.harbor_find,
@@ -2587,13 +2661,23 @@
           ticket_rule: data.ticket_rule,
           reused_existing_rolls: data.reused_existing_rolls
         };
-
+        
+        const notices = extractHarborFindRewards(payload);
+        
+        const responseText = buildSpecialVoyageResponseText(
+          data.reply,
+          payload,
+          notices
+        );
+        
+        specialReplyText.textContent = responseText;
+        specialReply.style.display = "block";
+        
         renderHarborFindNotice(payload);
-
+        
         specialMessage.value = "";
         updateSpecialCount();
-
-        const notices = extractHarborFindRewards(payload);
+        
         recordVoyageLogbookEntry(notices);
 
         if(notices.length){
