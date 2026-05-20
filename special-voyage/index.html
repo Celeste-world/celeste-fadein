@@ -427,6 +427,72 @@
       white-space:pre-wrap;
     }
 
+    .voyage-logbook{
+      margin:0 0 20px;
+      padding:16px 17px;
+      border-radius:16px;
+      border:1px solid rgba(255,227,163,.20);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.06), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .voyage-logbook-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#ffe3a3;
+      margin-bottom:8px;
+    }
+    
+    .voyage-logbook-title{
+      font-size:16px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+    
+    .voyage-logbook-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:10px 0 12px;
+    }
+    
+    .voyage-logbook-chip{
+      border:1px solid rgba(160,168,187,.22);
+      border-radius:14px;
+      padding:10px 11px;
+      background:rgba(5,8,17,.34);
+    }
+    
+    .voyage-logbook-chip-label{
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:4px;
+    }
+    
+    .voyage-logbook-chip-value{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+    
+    .voyage-logbook-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+    
+    @media(max-width:640px){
+      .voyage-logbook-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
     .voyage-title{
       font-size:20px;
       font-weight:500;
@@ -762,6 +828,33 @@
             <div class="current-depth-label">Current Depth</div>
             <div class="current-depth-title" id="currentDepthTitle"></div>
             <div class="current-depth-text" id="currentDepthText"></div>
+            <div class="voyage-logbook" id="voyageLogbook" style="display:none;">
+            <div class="voyage-logbook-label">Voyage Logbook</div>
+          
+            <div class="voyage-logbook-title" id="voyageLogbookTitle">
+              航海中の記録
+            </div>
+          
+            <div class="voyage-logbook-grid">
+              <div class="voyage-logbook-chip">
+                <div class="voyage-logbook-chip-label">Words</div>
+                <div class="voyage-logbook-chip-value" id="voyageLogbookWords">
+                  残された言葉：0
+                </div>
+              </div>
+          
+              <div class="voyage-logbook-chip">
+                <div class="voyage-logbook-chip-label">Finds</div>
+                <div class="voyage-logbook-chip-value" id="voyageLogbookFinds">
+                  漂着の気配：まだ静か
+                </div>
+              </div>
+            </div>
+          
+            <div class="voyage-logbook-text" id="voyageLogbookText">
+              この航海は、まだ最初の言葉を待っています。
+            </div>
+          </div>
           </div>
         
           <h2 class="voyage-title">航海中</h2>
@@ -870,6 +963,11 @@
     const ticketArea = document.getElementById("ticketArea");
 
     const activeVoyageBox = document.getElementById("activeVoyageBox");
+    const voyageLogbook = document.getElementById("voyageLogbook");
+    const voyageLogbookTitle = document.getElementById("voyageLogbookTitle");
+    const voyageLogbookWords = document.getElementById("voyageLogbookWords");
+    const voyageLogbookFinds = document.getElementById("voyageLogbookFinds");
+    const voyageLogbookText = document.getElementById("voyageLogbookText");
     const currentDepth = document.getElementById("currentDepth");
     const currentDepthTitle = document.getElementById("currentDepthTitle");
     const currentDepthText = document.getElementById("currentDepthText");
@@ -896,6 +994,10 @@
     let countdownTimer = null;
     let isEndingVoyage = false;
     let voyageStartToastTimer = null;
+    let specialVoyageLogbook = {
+      words: 0,
+      finds: []
+    };
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1281,6 +1383,157 @@
       currentDepth.style.display = "block";
     }
 
+    function voyageLogbookStorageKey(session){
+      const sessionId = session?.id || activeSession?.id || "unknown";
+      return "celeste_special_voyage_logbook:" + sessionId;
+    }
+    
+    function loadVoyageLogbookState(session){
+      specialVoyageLogbook = {
+        words: 0,
+        finds: []
+      };
+    
+      if(!session || !session.id){
+        return;
+      }
+    
+      try{
+        const raw = sessionStorage.getItem(voyageLogbookStorageKey(session));
+        const parsed = raw ? JSON.parse(raw) : null;
+    
+        if(parsed){
+          specialVoyageLogbook = {
+            words: Number(parsed.words || 0),
+            finds: Array.isArray(parsed.finds) ? parsed.finds : []
+          };
+        }
+      }catch(error){
+        console.warn("voyage logbook read failed:", error);
+      }
+    }
+    
+    function saveVoyageLogbookState(){
+      const session = activeSession;
+    
+      if(!session || !session.id){
+        return;
+      }
+    
+      try{
+        sessionStorage.setItem(
+          voyageLogbookStorageKey(session),
+          JSON.stringify(specialVoyageLogbook)
+        );
+      }catch(error){
+        console.warn("voyage logbook save failed:", error);
+      }
+    }
+    
+    function resetVoyageLogbookState(session){
+      specialVoyageLogbook = {
+        words: 0,
+        finds: []
+      };
+    
+      if(session && session.id){
+        try{
+          sessionStorage.removeItem(voyageLogbookStorageKey(session));
+        }catch(error){
+          console.warn("voyage logbook reset failed:", error);
+        }
+      }
+    }
+    
+    function voyageLogbookMessage(){
+      const words = Number(specialVoyageLogbook.words || 0);
+      const finds = Array.isArray(specialVoyageLogbook.finds)
+        ? specialVoyageLogbook.finds.length
+        : 0;
+    
+      if(words <= 0){
+        return "この航海は、まだ最初の言葉を待っています。";
+      }
+    
+      if(finds > 0){
+        return "この航海には、言葉と漂着の気配が残っています。\n船は、少しだけ深い海の記録を港へ持ち帰ろうとしています。";
+      }
+    
+      if(words === 1){
+        return "この航海には、ひとつの言葉が残っています。\n海は、次の言葉を静かに待っています。";
+      }
+    
+      return "この航海には、いくつかの言葉が残っています。\n短い時間の中で、海は少しずつ記録を受け取っています。";
+    }
+    
+    function renderVoyageLogbook(){
+      if(!voyageLogbook || !voyageLogbookWords || !voyageLogbookFinds || !voyageLogbookText){
+        return;
+      }
+    
+      if(!activeSession){
+        voyageLogbook.style.display = "none";
+        return;
+      }
+    
+      const words = Number(specialVoyageLogbook.words || 0);
+      const finds = Array.isArray(specialVoyageLogbook.finds)
+        ? specialVoyageLogbook.finds.length
+        : 0;
+    
+      voyageLogbookWords.textContent =
+        "残された言葉：" + words;
+    
+      voyageLogbookFinds.textContent =
+        finds > 0
+          ? "漂着の気配：" + finds
+          : "漂着の気配：まだ静か";
+    
+      voyageLogbookText.textContent = voyageLogbookMessage();
+      voyageLogbook.style.display = "block";
+    }
+    
+    function addVoyageLogbookFinds(rewards){
+      const finds = Array.isArray(specialVoyageLogbook.finds)
+        ? specialVoyageLogbook.finds
+        : [];
+    
+      (rewards || [])
+        .filter(function(reward){
+          return reward && reward.type === "harbor_find";
+        })
+        .forEach(function(reward){
+          const key = reward.item_key || reward.title || "";
+    
+          if(!key){
+            return;
+          }
+    
+          const exists = finds.some(function(item){
+            return item.key === key;
+          });
+    
+          if(!exists){
+            finds.push({
+              key,
+              title: reward.title || "漂着物"
+            });
+          }
+        });
+    
+      specialVoyageLogbook.finds = finds;
+    }
+    
+    function recordVoyageLogbookEntry(rewards){
+      specialVoyageLogbook.words =
+        Number(specialVoyageLogbook.words || 0) + 1;
+    
+      addVoyageLogbookFinds(rewards);
+    
+      saveVoyageLogbookState();
+      renderVoyageLogbook();
+    }
+
     function startToastContent(ticket){
       const normalized = normalizeTicketType(ticket?.ticket_type);
       const duration = Number(ticket?.duration_minutes || 0);
@@ -1468,6 +1721,7 @@
         }
     
         activeSession = null;
+        renderVoyageLogbook();
         renderCurrentDepth(null);
     
         remainingTime.textContent = "00:00";
@@ -1537,6 +1791,8 @@
       currentUser = null;
       activeSession = null;
 
+      renderVoyageLogbook();
+
       if(countdownTimer){
         clearInterval(countdownTimer);
         countdownTimer = null;
@@ -1580,6 +1836,9 @@
       activeVoyageBox.classList.add("visible");
       specialMessage.disabled = false;
       sendSpecialBtn.disabled = false;
+
+      loadVoyageLogbookState(activeSession);
+      renderVoyageLogbook();
       
       renderCurrentDepth(activeSession);
 
@@ -1648,6 +1907,7 @@
         }
 
         activeSession = data.session;
+        resetVoyageLogbookState(activeSession);
 
         ticketArea.innerHTML = "";
 
@@ -1658,6 +1918,7 @@
         activeVoyageBox.classList.add("visible");
         specialMessage.disabled = false;
         sendSpecialBtn.disabled = false;
+        renderVoyageLogbook();
         
         renderCurrentDepth(activeSession);
 
@@ -1756,6 +2017,7 @@
 
           expireActiveSession();
           activeSession = null;
+          renderVoyageLogbook();
           renderCurrentDepth(null);
 
           startReturnCountdown();
@@ -2332,6 +2594,7 @@
         updateSpecialCount();
 
         const notices = extractHarborFindRewards(payload);
+        recordVoyageLogbookEntry(notices);
 
         if(notices.length){
           setStatus("航海記録を残しました。港に漂着の気配があります。");
