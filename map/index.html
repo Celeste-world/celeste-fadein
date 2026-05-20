@@ -1002,6 +1002,24 @@
         margin-bottom:10px;
       }
 
+      .area-journal-memory{
+        display:inline-flex;
+        align-items:center;
+        margin:0 0 12px;
+        padding:6px 11px;
+        border-radius:999px;
+        border:1px solid rgba(255,227,163,.24);
+        background:rgba(255,227,163,.045);
+        color:#ffe3a3;
+        font-size:12px;
+        line-height:1.6;
+      }
+      
+      .area-journal-memory-label{
+        color:var(--dim);
+        margin-right:6px;
+      }
+
       .area-journal-sub{
         font-size:12px;
         line-height:1.8;
@@ -2285,6 +2303,22 @@
         });
     }
 
+    function areaJournalMemoryTitle(count){
+      if(count <= 0){
+        return "まだ静かな海";
+      }
+    
+      if(count <= 2){
+        return "気配が残り始めた海";
+      }
+    
+      if(count <= 4){
+        return "航海を覚え始めた海";
+      }
+    
+      return "記憶が深まった海";
+    }
+
     function areaJournalIntro(areaKey, count){
       const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
     
@@ -2405,6 +2439,10 @@
             <div class="area-journal-main">
               この海に残った漂着物：0
             </div>
+            <div class="area-journal-memory">
+              <span class="area-journal-memory-label">航海の記憶</span>
+              ${escapeHtml(areaJournalMemoryTitle(count))}
+            </div>
            <div class="area-journal-empty">${escapeHtml(areaJournalIntro(areaKey, count))}</div>
             <a class="area-journal-link" href="/items/">
               漂着物を見る
@@ -2418,6 +2456,11 @@
           <div class="area-journal-label">Sea Area Journal</div>
           <div class="area-journal-main">
             この海に残った漂着物：${escapeHtml(count)}
+          </div>
+          
+          <div class="area-journal-memory">
+            <span class="area-journal-memory-label">航海の記憶</span>
+            ${escapeHtml(areaJournalMemoryTitle(count))}
           </div>
           
           <div class="area-journal-sub">${escapeHtml(areaJournalIntro(areaKey, count))}</div>
