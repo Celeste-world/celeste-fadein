@@ -642,22 +642,7 @@
       <section>
         <h2 class="section-title">Available Tickets</h2>
 
-        <div class="ticket-summary" id="ticketSummary" style="display:none;">
-          <div class="summary-card drift">
-            <div class="summary-label">Drift</div>
-            <div class="summary-value" id="summaryDrift">0</div>
-          </div>
-
-          <div class="summary-card special">
-            <div class="summary-label">Special</div>
-            <div class="summary-value" id="summarySpecial">0</div>
-          </div>
-
-          <div class="summary-card deep">
-            <div class="summary-label">Deep Sea</div>
-            <div class="summary-value" id="summaryDeepSea">0</div>
-          </div>
-        </div>
+        
 
         <div id="tickets">
           <div class="empty">
@@ -705,11 +690,7 @@
     const ticketsEl = document.getElementById("tickets");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
 
-    const ticketSummary = document.getElementById("ticketSummary");
-    const summaryDrift = document.getElementById("summaryDrift");
-    const summarySpecial = document.getElementById("summarySpecial");
-    const summaryDeepSea = document.getElementById("summaryDeepSea");
-
+    
     let currentUser = null;
     let currentAccessToken = null;
     let activeVoyageSession = null;
@@ -1168,53 +1149,13 @@
           </div>
         `;
 
-        if(ticketSummary){
-          ticketSummary.style.display = "none";
-        }
+        
 
         setStatus("航海券の読み込みに失敗しました：" + error.message, true);
       }
     }
 
-    function updateTicketSummary(validTickets){
-      const counts = {
-        drift:0,
-        special:0,
-        deep_sea:0
-      };
-
-      validTickets.forEach(ticket => {
-        const normalized = normalizeTicketType(ticket.ticket_type);
-
-        if(normalized === "drift"){
-          counts.drift += 1;
-        }
-
-        if(normalized === "special"){
-          counts.special += 1;
-        }
-
-        if(normalized === "deep_sea"){
-          counts.deep_sea += 1;
-        }
-      });
-
-      if(summaryDrift){
-        summaryDrift.textContent = counts.drift;
-      }
-
-      if(summarySpecial){
-        summarySpecial.textContent = counts.special;
-      }
-
-      if(summaryDeepSea){
-        summaryDeepSea.textContent = counts.deep_sea;
-      }
-
-      if(ticketSummary){
-        ticketSummary.style.display = "grid";
-      }
-    }
+    
 
     function renderTickets(tickets){
       ticketsEl.innerHTML = "";
@@ -1229,7 +1170,7 @@
         return new Date(ticket.expires_at) > now;
       });
 
-      updateTicketSummary(validTickets);
+      
 
       if(validTickets.length === 0){
         ticketsEl.innerHTML = `
@@ -1283,7 +1224,7 @@
             <div class="ticket-meta">
               <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
               <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
-              <span class="tag">${escapeHtml(ticket.status || "available")}</span>
+              <span class="tag">保持上限：1枚</span>
             </div>
 
             <div class="actions">
