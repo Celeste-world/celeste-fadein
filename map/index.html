@@ -1594,6 +1594,28 @@
         overflow-wrap:anywhere;
       }
     }
+    @media(max-width:640px){
+      .item-detail-actions{
+        justify-content:stretch;
+        gap:10px;
+      }
+    
+      .item-detail-actions button,
+      .item-detail-actions a{
+        width:100%;
+        min-height:44px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        margin:0;
+      }
+    
+      .item-detail-ghost,
+      .item-detail-primary{
+        width:100%;
+      }
+    }
   </style>
 </head>
 
