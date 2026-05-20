@@ -996,6 +996,38 @@
       text-align:left;
     }
 
+    .vessel-memory{
+      margin-top:16px;
+      padding:15px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,227,163,.20);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.06), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .vessel-memory-label{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:#ffe3a3;
+      margin-bottom:8px;
+    }
+    
+    .vessel-memory-title{
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+    
+    .vessel-memory-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
     .detail-section{
       margin-top:16px;
       padding:15px 16px;
@@ -1963,6 +1995,81 @@
         : fallback;
     }
 
+    function vesselMemoryTitle(stage){
+      const value = Number(stage || 0);
+    
+      if(value <= 1){
+        return "港に残る最初の船";
+      }
+    
+      if(value === 2){
+        return "港の外へ出る船";
+      }
+    
+      if(value === 3){
+        return "灯台を探す船";
+      }
+    
+      if(value === 4){
+        return "霧の中を進む船";
+      }
+    
+      if(value === 5){
+        return "月明かりを渡る船";
+      }
+    
+      if(value === 6){
+        return "深い潮を越える船";
+      }
+    
+      if(value >= 7){
+        return "名もなき海へ向かう船";
+      }
+    
+      return "航海の記憶を持つ船";
+    }
+    
+    function vesselMemoryText(stage, seaName){
+      const value = Number(stage || 0);
+      const openedSea = seaName || "開かれた海";
+    
+      if(value <= 1){
+        return "この船は、すべての航海が戻ってくる港にあります。\nまだ遠くへ進むためではなく、記録を始めるための船です。";
+      }
+    
+      if(value === 2){
+        return "この船は、港の外へ出る最初の航路を開きました。\n" +
+          openedSea + " は、岸辺を離れた航海の静かな始まりです。";
+      }
+    
+      if(value === 3){
+        return "この船は、遠くの灯台を見つけるための航路を開きました。\n" +
+          openedSea + " には、進む方角を思い出させる光があります。";
+      }
+    
+      if(value === 4){
+        return "この船は、霧の中を進むための航路を開きました。\n" +
+          openedSea + " では、見えないまま舵を保つことが必要になります。";
+      }
+    
+      if(value === 5){
+        return "この船は、月明かりの道を渡る航路を開きました。\n" +
+          openedSea + " には、夜の海に細く続く光があります。";
+      }
+    
+      if(value === 6){
+        return "この船は、深い潮へ降りる航路を開きました。\n" +
+          openedSea + " では、水面の下にある流れを感じることになります。";
+      }
+    
+      if(value >= 7){
+        return "この船は、海図の外側へ向かう航路を開きました。\n" +
+          openedSea + " は、終点ではなく、まだ見ぬ海への入口です。";
+      }
+    
+      return "この船には、これまでの航海の記憶が静かに残っています。";
+    }
+
     function makeDetailFromVessel(row, options = {}){
       const stage = optionValue(options, "stage", stageNumber(row));
       const sea = seaAreaDetail(stage, optionValue(options, "seaAreas", seaAreasCache));
@@ -1992,6 +2099,17 @@
             ? sea.description
             : "この船が開く海域は、まだ霧の向こうにあります。"
         ),
+        memoryTitle: optionValue(
+          options,
+          "memoryTitle",
+          owned ? vesselMemoryTitle(stage) : ""
+        ),
+        memoryText: optionValue(
+          options,
+          "memoryText",
+          owned ? vesselMemoryText(stage, sea.name) : ""
+        ),
+        owned
         owned
       };
     }
@@ -2615,6 +2733,19 @@
                     <p class="detail-section-text">
                       ${escapeHtml(detail.cabin)}
                     </p>
+                  </div>
+                `
+                : ""
+            }
+            ${
+              detail.owned !== false && detail.memoryText
+                ? `
+                  <div class="vessel-memory">
+                    <div class="vessel-memory-label">Vessel Memory</div>
+                    <div class="vessel-memory-title">
+                      ${escapeHtml(detail.memoryTitle || "航海の記憶を持つ船")}
+                    </div>
+                    <div class="vessel-memory-text">${escapeHtml(detail.memoryText)}</div>
                   </div>
                 `
                 : ""
