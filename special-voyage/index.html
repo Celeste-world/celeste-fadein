@@ -618,6 +618,144 @@
       line-height:1.95;
     }
 
+    .sea-response-modal{
+      position:fixed;
+      inset:0;
+      z-index:130;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+        rgba(3,5,11,.72);
+      backdrop-filter:blur(5px);
+    }
+    
+    .sea-response-modal.visible{
+      display:flex;
+    }
+    
+    .sea-response-card{
+      position:relative;
+      width:min(560px, 100%);
+      max-height:84vh;
+      overflow:auto;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.32);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      color:var(--text);
+    }
+    
+    .sea-response-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      padding:0;
+    }
+    
+    .sea-response-close:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    .sea-response-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .sea-response-title{
+      font-size:21px;
+      line-height:1.7;
+      color:var(--text);
+      margin:0 34px 12px 0;
+    }
+    
+    .sea-response-text{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:14px;
+      line-height:2.05;
+    }
+    
+    .sea-response-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:22px;
+      padding-top:16px;
+      border-top:1px solid rgba(160,168,187,.16);
+    }
+    
+    .sea-response-actions button{
+      border-radius:999px;
+      padding:9px 15px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+    }
+    
+    .sea-response-ghost{
+      border:1px solid rgba(160,168,187,.28);
+      background:transparent;
+      color:var(--muted);
+    }
+    
+    .sea-response-ghost:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.48);
+    }
+    
+    @media(max-width:640px){
+      .sea-response-modal{
+        align-items:flex-start;
+        padding:14px;
+        overflow:auto;
+      }
+    
+      .sea-response-card{
+        margin:24px 0;
+        padding:20px;
+        max-height:none;
+      }
+    
+      .sea-response-title{
+        font-size:20px;
+      }
+    
+      .sea-response-actions{
+        justify-content:stretch;
+      }
+    
+      .sea-response-actions button{
+        width:100%;
+        min-height:44px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+      }
+    }
+
     .voyage-start-toast{
       position:fixed;
       inset:0;
@@ -936,6 +1074,33 @@
 
   </div>
 
+  <div class="sea-response-modal" id="seaResponseModal" aria-hidden="true">
+    <div class="sea-response-card" role="dialog" aria-modal="true" aria-labelledby="seaResponseTitle">
+      <button
+        class="sea-response-close"
+        id="seaResponseClose"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+  
+      <div class="sea-response-label">Special Voyage</div>
+  
+      <h2 class="sea-response-title" id="seaResponseTitle">
+        海が言葉を受け取りました
+      </h2>
+  
+      <div class="sea-response-text" id="seaResponseText"></div>
+  
+      <div class="sea-response-actions">
+        <button class="sea-response-ghost" id="seaResponseCloseBtn" type="button">
+          航海へ戻る
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="voyage-start-toast" id="voyageStartToast" aria-hidden="true">
     <div class="voyage-start-toast-inner">
       <div class="voyage-start-toast-label">Special Voyage</div>
@@ -983,6 +1148,11 @@
     const specialFind = document.getElementById("specialFind");
     const specialFindText = document.getElementById("specialFindText");
 
+    const seaResponseModal = document.getElementById("seaResponseModal");
+    const seaResponseClose = document.getElementById("seaResponseClose");
+    const seaResponseCloseBtn = document.getElementById("seaResponseCloseBtn");
+    const seaResponseText = document.getElementById("seaResponseText");
+    
     const voyageStartToast = document.getElementById("voyageStartToast");
     const voyageStartToastTitle = document.getElementById("voyageStartToastTitle");
     const voyageStartToastBody = document.getElementById("voyageStartToastBody");
@@ -1721,6 +1891,7 @@
         }
     
         activeSession = null;
+        closeSeaResponseModal();
         renderVoyageLogbook();
         renderCurrentDepth(null);
     
@@ -1740,6 +1911,7 @@
     
         if(!silent){
           setStatus("航海を閉じました。Voyage Logへ戻ります。");
+          closeSeaResponseModal();
         }
     
         if(redirect){
@@ -2017,6 +2189,7 @@
 
           expireActiveSession();
           activeSession = null;
+          closeSeaResponseModal();
           renderVoyageLogbook();
           renderCurrentDepth(null);
 
@@ -2205,6 +2378,33 @@
       }
     
       return [];
+    }
+
+    function openSeaResponseModal(text){
+      if(!seaResponseModal || !seaResponseText){
+        return;
+      }
+    
+      seaResponseText.textContent = text || "";
+    
+      seaResponseModal.classList.add("visible");
+      seaResponseModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeSeaResponseModal(){
+      if(!seaResponseModal){
+        return;
+      }
+    
+      seaResponseModal.classList.remove("visible");
+      seaResponseModal.setAttribute("aria-hidden", "true");
+    
+      if(seaResponseText){
+        seaResponseText.textContent = "";
+      }
+    
+      document.body.style.overflow = "";
     }
 
     function seaResponseBaseText(session){
@@ -2683,6 +2883,8 @@
         
         specialReplyText.textContent = responseText;
         specialReply.style.display = "block";
+
+        openSeaResponseModal(responseText);
         
         renderHarborFindNotice(payload);
         
@@ -2703,6 +2905,22 @@
       }finally{
         sendSpecialBtn.disabled = false;
       }
+    }
+
+    if(seaResponseClose){
+      seaResponseClose.addEventListener("click", closeSeaResponseModal);
+    }
+    
+    if(seaResponseCloseBtn){
+      seaResponseCloseBtn.addEventListener("click", closeSeaResponseModal);
+    }
+    
+    if(seaResponseModal){
+      seaResponseModal.addEventListener("click", function(event){
+        if(event.target === seaResponseModal){
+          closeSeaResponseModal();
+        }
+      });
     }
 
     logoutLink.addEventListener("click", function(event){
@@ -2783,6 +3001,11 @@
     });
 
     updateSpecialCount();
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeSeaResponseModal();
+      }
+    });
     checkSession();
   </script>
 </body>
