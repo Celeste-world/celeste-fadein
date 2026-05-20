@@ -315,6 +315,44 @@
       line-height:2;
     }
 
+    .ticket-entry{
+      margin-top:16px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.18);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .ticket-entry-label{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+    
+    .ticket.drift .ticket-entry-label{
+      color:var(--ready);
+    }
+    
+    .ticket.special .ticket-entry-label{
+      color:var(--ticket);
+    }
+    
+    .ticket.deep-sea .ticket-entry-label{
+      color:var(--deep);
+    }
+    
+    .ticket-entry-text{
+      font-size:13px;
+      line-height:1.95;
+      color:var(--muted);
+      white-space:normal;
+      text-align:left;
+    }
+
     .benefit-box{
       margin-top:18px;
       padding:16px;
@@ -932,6 +970,29 @@
       return "航海券";
     }
 
+    function voyageEntryText(ticket){
+      const normalized = normalizeTicketType(ticket?.ticket_type);
+      const duration = Number(ticket?.duration_minutes || 0);
+    
+      if(normalized === "drift"){
+        return "港の外れに、" + duration + "分だけ開く小さな航路があります。<br>" +
+          "少しだけ深い海へ降りるための、軽い合図です。";
+      }
+    
+      if(normalized === "deep_sea"){
+        return "水面の下へ、もう少し深く降りるための入口です。<br>" +
+          "急ぐためではなく、まだ言葉にならないものを静かに扱うために開きます。";
+      }
+    
+      if(normalized === "special" && duration >= 20){
+        return "いつもの港より少し遠くへ、" + duration + "分だけ進むための航海券です。<br>" +
+          "短い夜の中で、言葉をもう少し奥まで運ぶための入口です。";
+      }
+    
+      return "いつもの港より少し遠くへ、" + duration + "分だけ進むための航海券です。<br>" +
+        "使う時だけ、港の外に静かな航路が開きます。";
+    }
+
     function voyageEntryContent(ticket){
       const normalized = normalizeTicketType(ticket?.ticket_type);
       const duration = Number(ticket?.duration_minutes || 0);
@@ -1074,7 +1135,7 @@
               </div>
 
               <div class="ticket-status ready">
-                ${escapeHtml(ticket.status || "available")}
+                航海可能
               </div>
             </div>
 
@@ -1082,14 +1143,22 @@
               期限：${escapeHtml(formatDate(ticket.expires_at))}
             </p>
 
+            <div class="ticket-entry">
+              <div class="ticket-entry-label">航海の入口</div>
+              <div class="ticket-entry-text">
+                ${voyageEntryText(ticket)}
+              </div>
+            </div>
+
             <div class="ticket-meta">
               <span class="tag ready">${escapeHtml(sourceLabel(ticket.source))}</span>
               <span class="tag">届いた日：${escapeHtml(formatDate(ticket.created_at))}</span>
               <span class="tag">${escapeHtml(ticket.duration_minutes)}分</span>
+              <span class="tag">保持上限：1枚</span>
             </div>
 
             <div class="benefit-box">
-              <div class="benefit-title">${escapeHtml(content.title)}</div>
+              <div class="benefit-title">この航海で変わること</div>
               <p class="ticket-line">${escapeHtml(content.lead)}</p>
               <p class="ticket-line">${escapeHtml(content.note)}</p>
               <ul class="benefit-list">
