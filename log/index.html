@@ -2756,26 +2756,57 @@
 
         await ensureUserVessel();
 
+        let saveResult = null;
+
         try{
-          await fetchSupabase(
-            "/rest/v1/voyage_logs",
+          const result = await fetchSupabase(
+            "/rest/v1/rpc/save_voyage_log_with_limit",
             {
               method: "POST",
               body: {
-                user_id: currentUser.id,
-                content: content,
-                tag: tag
+                p_content: content,
+                p_tag: tag,
+                p_user_id: currentUser.id,
+                p_month_key: null
               }
             }
           );
+        
+          saveResult =
+            Array.isArray(result) && result.length > 0
+              ? result[0]
+              : null;
+        
         }catch(error){
-          console.error("insert voyage_logs error:", error);
+          console.error("save_voyage_log_with_limit error:", error);
           setStatus("保存失敗：" + error.message, true);
           resetHarborFindDisplay();
           resetDriftTicketDisplay();
+          await loadMonthlyLogLimit();
           return;
         }
-
+        
+        if(!saveResult || saveResult.out_allowed !== true){
+          const reason = saveResult?.out_reason || "save_not_allowed";
+        
+          if(reason === "monthly_limit_reached"){
+            setStatus(
+              "今月の航海記録の上限に達しています。必要であれば、来月または追加の航海枠をご利用ください。",
+              true
+            );
+          }else if(reason === "content_required"){
+            setStatus("航海記録が空です。", true);
+          }else if(reason === "content_too_long"){
+            setStatus("航海記録が長すぎます。少し短くしてください。", true);
+          }else{
+            setStatus("航海記録を保存できませんでした：" + reason, true);
+          }
+        
+          resetHarborFindDisplay();
+          resetDriftTicketDisplay();
+          await loadMonthlyLogLimit();
+          return;
+        }
         setStatus("航海記録を保存しました。Harbor Cat が、巻物を読んでいます。");
 
         openCatScroll(
