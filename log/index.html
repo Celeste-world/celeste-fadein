@@ -1496,6 +1496,7 @@
     let isDownloadingVoyageLog = false;
     let pendingDownloadText = "";
     let pendingDownloadFileName = "";
+    let monthlyLogRemainingCount = null;
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -1841,7 +1842,9 @@
       }
     
       if(!row){
+        monthlyLogRemainingCount = null;
         monthlyLogLimit.style.display = "none";
+        updateAuthUI();
         return;
       }
     
@@ -1854,6 +1857,8 @@
       const remaining =
         Number(row.out_remaining_count ?? row.remaining_count ?? Math.max(total - consumed, 0));
     
+      monthlyLogRemainingCount = remaining;
+    
       monthlyLogLimitMain.innerHTML =
         '今月の航海記録：<span class="monthly-log-limit-count">' +
         consumed +
@@ -1861,10 +1866,17 @@
         total +
         "</span>";
     
-      monthlyLogLimitSub.textContent =
-        "今月あと " + remaining + " 回、航海記録を残せます。";
+      if(remaining <= 0){
+        monthlyLogLimitSub.textContent =
+          "今月の航海記録は上限に達しています。必要であれば、来月または追加の航海枠をご利用ください。";
+      }else{
+        monthlyLogLimitSub.textContent =
+          "今月あと " + remaining + " 回、航海記録を残せます。";
+      }
     
       monthlyLogLimit.style.display = "block";
+    
+      updateAuthUI();
     }
     
     async function loadMonthlyLogLimit(){
@@ -2298,20 +2310,28 @@
 
     function updateAuthUI(){
       const loggedIn = Boolean(currentUser);
-
+      const reachedMonthlyLimit =
+        monthlyLogRemainingCount !== null && monthlyLogRemainingCount <= 0;
+    
       loginBtn.style.display = loggedIn ? "none" : "inline-flex";
       logoutLink.style.display = loggedIn ? "inline" : "none";
       deleteAllBtn.style.display = loggedIn ? "inline-flex" : "none";
-
+    
       if(downloadVoyageBtn){
         downloadVoyageBtn.style.display = loggedIn ? "inline-flex" : "none";
       }
-
-      saveBtn.disabled = !loggedIn;
-      tagEl.disabled = !loggedIn;
-      contentEl.disabled = !loggedIn;
+    
+      saveBtn.disabled = !loggedIn || reachedMonthlyLimit;
+      tagEl.disabled = !loggedIn || reachedMonthlyLimit;
+      contentEl.disabled = !loggedIn || reachedMonthlyLimit;
+    
+      if(reachedMonthlyLimit){
+        contentEl.placeholder =
+          "今月の航海記録は上限に達しています。";
+      }else if(loggedIn){
+        setPlaceholder();
+      }
     }
-
     function setCatIcon(mode){
       let icons = catIcons.reply;
     
