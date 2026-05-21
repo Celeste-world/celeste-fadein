@@ -1093,9 +1093,10 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("航海券を確認しています。");
 
-       await loadActiveSpecialVoyageBanner();
-     　await loadTickets();
-       await loadTideLetters();
+        await loadActiveSpecialVoyageBanner();
+        await expireMyTideLetters();
+        await loadTickets();
+        await loadTideLetters();
         
       }else{
         window.location.replace("/");
@@ -1137,6 +1138,21 @@
       window.location.replace("/");
     }
 
+    async function expireMyTideLetters(){
+      try{
+        const { data, error } = await client.rpc("expire_my_tide_letters");
+    
+        if(error){
+          console.warn("expire tide letters rpc error:", error);
+          return;
+        }
+    
+        console.log("expire_my_tide_letters:", data);
+      }catch(error){
+        console.warn("expire tide letters error:", error);
+      }
+    }
+
     async function loadTideLetters(){
       if(!currentUser || !currentAccessToken){
         return;
@@ -1148,7 +1164,7 @@
         const data = await fetchSupabase(
           "/rest/v1/tide_letters" +
           "?user_id=eq." + userId +
-          "&status=in.(delivered,claimed)" +
+          "&status=in.(delivered,claimed,expired)" +
           "&select=id,month_key,ticket_type,duration_minutes,status,claim_deadline,claimed_at,created_at" +
           "&order=created_at.desc"
         );
