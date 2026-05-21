@@ -446,6 +446,7 @@
       font-size:12px;
       line-height:1.85;
       color:var(--muted);
+      white-space:pre-line;
     }
 
     .ticket-meta{
@@ -1178,12 +1179,12 @@
       try{
         const userId = encodeURIComponent(currentUser.id);
     
-        const data = await fetchSupabase(
+       const data = await fetchSupabase(
           "/rest/v1/tide_letters" +
           "?user_id=eq." + userId +
           "&status=in.(delivered,claimed,expired)" +
-          "&select=id,month_key,ticket_type,duration_minutes,status,claim_deadline,claimed_at,created_at" +
-          "&order=created_at.desc"　+
+          "&select=id,month_key,ticket_type,duration_minutes,status,claim_deadline,claimed_at,created_at,letter_title,letter_body,summary" +
+          "&order=created_at.desc" +
           "&limit=12"
         );
     
@@ -1373,7 +1374,7 @@
             <div class="ticket-top">
               <div>
                 <div class="ticket-type">
-                  潮の便り ${escapeHtml(letter.month_key)}
+                  ${escapeHtml(letter.letter_title || "潮の便り " + letter.month_key)}
                 </div>
                 <p class="ticket-line">
                   ${escapeHtml(ticketLabel(letter.ticket_type))}
@@ -1388,6 +1389,19 @@
             <p class="ticket-line">
               ${escapeHtml(tideLetterMessage(letter))}
             </p>
+
+            ${
+              letter.letter_body
+                ? `
+                  <div class="ticket-readiness">
+                    <div class="ticket-readiness-label">月の便り</div>
+                    <div class="ticket-readiness-text">
+                      ${escapeHtml(letter.letter_body)}
+                    </div>
+                  </div>
+                `
+                : ""
+            }
     
             <p class="ticket-line">
               受け取り期限：${escapeHtml(formatDate(letter.claim_deadline))}
