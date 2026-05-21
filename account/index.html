@@ -1220,7 +1220,7 @@
       const now = new Date();
     
       if(letter.status === "claimed"){
-        return "この潮の便りは、すでに受け取り済みです。";
+        return "この潮の便りは、航海券として手元に届きました。";
       }
     
       if(letter.claim_deadline && new Date(letter.claim_deadline) < now){
