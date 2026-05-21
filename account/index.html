@@ -1240,6 +1240,24 @@
         Number(ticket.duration_minutes) === Number(letter.duration_minutes)
       );
     }
+
+    function canClaimTideLetter(letter){
+      const now = new Date();
+    
+      if(letter.status !== "delivered"){
+        return false;
+      }
+    
+      if(letter.claim_deadline && new Date(letter.claim_deadline) < now){
+        return false;
+      }
+    
+      if(hasSameAvailableTicket(letter)){
+        return false;
+      }
+    
+      return true;
+    }
     
     function renderTideLetters(letters){
       if(!tideLettersEl){
@@ -1296,6 +1314,23 @@
               <span class="tag">${escapeHtml(letter.duration_minutes)}分</span>
               <span class="tag">同じ航海券は1枚まで</span>
             </div>
+
+            ${
+              canClaimTideLetter(letter)
+                ? `
+                  <div class="actions">
+                    <button
+                      class="btn-primary"
+                      type="button"
+                      data-tide-letter-id="${escapeHtml(letter.id)}"
+                    >
+                      受け取る
+                    </button>
+                  </div>
+                `
+                : ""
+            }
+            
           </div>
         `;
     
