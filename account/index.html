@@ -1258,6 +1258,52 @@
     
       return true;
     }
+
+    async function claimTideLetter(tideLetterId){
+      if(!tideLetterId){
+        return;
+      }
+    
+      setStatus("潮の便りを受け取っています。");
+    
+      try{
+        const { data, error } = await client.rpc("claim_tide_letter", {
+          p_tide_letter_id: tideLetterId
+        });
+    
+        if(error){
+          console.error("claim tide letter rpc error:", error);
+          setStatus("潮の便りを受け取れませんでした：" + error.message, true);
+          return;
+        }
+    
+        if(!data || data.ok !== true){
+          const reason = data?.reason || "unknown";
+    
+          if(reason === "blocked_same_ticket_exists"){
+            setStatus("同じ航海券をすでに持っています。その航海を終えると、この便りを受け取れます。");
+          }else if(reason === "expired"){
+            setStatus("この潮の便りは、受け取り期限を過ぎています。");
+          }else if(reason === "already_claimed"){
+            setStatus("この潮の便りは、すでに受け取り済みです。");
+          }else{
+            setStatus("潮の便りを受け取れませんでした：" + reason, true);
+          }
+    
+          await loadTickets();
+          await loadTideLetters();
+          return;
+        }
+    
+        setStatus("潮の便りから、航海券を受け取りました。");
+    
+        await loadTickets();
+        await loadTideLetters();
+      }catch(error){
+        console.error("claim tide letter error:", error);
+        setStatus("潮の便りを受け取れませんでした：" + error.message, true);
+      }
+    }
     
     function renderTideLetters(letters){
       if(!tideLettersEl){
@@ -1417,6 +1463,23 @@
         `;
 
         ticketsEl.appendChild(div);
+      });
+    }
+
+    if(tideLettersEl){
+      tideLettersEl.addEventListener("click", function(event){
+        const button = event.target.closest("[data-tide-letter-id]");
+    
+        if(!button){
+          return;
+        }
+    
+        const tideLetterId = button.getAttribute("data-tide-letter-id");
+    
+        button.disabled = true;
+        button.textContent = "受け取り中...";
+    
+        claimTideLetter(tideLetterId);
       });
     }
 
