@@ -1138,6 +1138,191 @@ Special Voyage Ticket 10分 を受け取れます。
 Celeste Harbor では、課金を「強くなるため」ではなく、
 より深く航海するための入口 として扱います。
 
+## Voyage Log 月間回数制限
+
+Celeste Harbor では、Voyage Log の保存回数を月単位で管理します。
+
+これは単なる利用制限ではなく、課金プラン・航海燃料・港の維持灯と連動する基盤です。
+
+### 基本方針
+
+Voyage Log は、保存が成立した時点で今月の航海回数として数えます。
+
+```txt
+Voyage Log 保存成功
+↓
+今月の consumed_count を +1
+
+一度保存した航海記録は、あとから削除しても consumed_count は戻しません。
+
+理由：
+
+記録を書く
+↓
+Harbor Find / Drift Ticket 抽選が発生する
+↓
+ログを削除して回数を戻す
+
+という抜け道を防ぐためです。
+
+ユーザー向けには、以下のように説明します。
+
+航海の記録は削除できますが、
+その夜に航海した事実は今月の回数に残ります。
+monthly_log_allowances
+
+monthly_log_allowances は、ユーザーごとの月間 Voyage Log 上限を管理するテーブルです。
+
+管理するもの：
+
+user_id
+month_key
+base_limit
+support_bonus
+fuel_bonus
+total_limit
+consumed_count
+
+month_key は JST 基準の月として扱います。
+
+例：2026-05
+回数計算
+
+月間上限は以下の合算で決まります。
+
+base_limit
+  無料枠。基本は10回。
+
+support_bonus
+  港の維持灯による追加枠。+30回。
+
+fuel_bonus
+  航海燃料による追加枠。1回購入ごとに+50回。
+
+total_limit
+  base_limit + support_bonus + fuel_bonus
+
+例：
+
+無料のみ
+  10回
+
+港の維持灯
+  10 + 30 = 40回
+
+航海燃料1回
+  10 + 50 = 60回
+
+港の維持灯 + 航海燃料1回
+  10 + 30 + 50 = 90回
+
+港の維持灯 + 航海燃料2回
+  10 + 30 + 100 = 140回
+consumed_count
+
+consumed_count は、その月に保存成立した Voyage Log の回数です。
+
+保存成功時に +1
+削除しても戻さない
+保存失敗時は増やさない
+空欄・文字数エラーでは増やさない
+
+この値は、現在残っているログ件数ではありません。
+「その月に航海した回数」として扱います。
+
+ensure_monthly_log_allowance()
+
+ensure_monthly_log_allowance() は、その月の allowance 行を作成・更新するRPCです。
+
+役割：
+
+今月の allowance 行を用意する
+港の維持灯が active なら support_bonus を反映する
+航海燃料購入分を fuel_bonus に反映する
+total_limit を再計算する
+consumed_count はリセットしない
+
+表示用途：
+
+/log/ で今月の航海記録数を表示する
+
+表示例：
+
+今月の航海記録：1 / 10
+今月あと9回、航海記録を残せます。
+save_voyage_log_with_limit()
+
+save_voyage_log_with_limit() は、Voyage Log 保存と月間回数消費を一体化するRPCです。
+
+処理順：
+
+入力チェック
+↓
+今月の allowance を確認
+↓
+上限に達していなければ voyage_logs に保存
+↓
+保存成功後に consumed_count を +1
+↓
+保存結果を返す
+
+保存に失敗した場合、consumed_count は増やしません。
+
+/log/ での表示
+
+/log/ では、入力欄の上に今月の航海記録数を表示します。
+
+Monthly Voyage Log
+
+今月の航海記録：1 / 10
+今月あと9回、航海記録を残せます。
+
+上限に達した場合：
+
+今月の航海記録：10 / 10
+今月の航海記録は上限に達しています。
+必要であれば、来月または追加の航海枠をご利用ください。
+
+上限到達時のUI：
+
+textarea を無効化する
+タグ選択を無効化する
+航海記録を残すボタンを無効化する
+
+保存ボタンを押してから初めてエラーを出すのではなく、
+書く前に上限到達が分かるようにします。
+
+設計上の注意
+
+Voyage Log の保存回数制限は、Harbor Find や Drift Ticket 抽選と関係します。
+
+そのため、以下を必ず守ります。
+
+ログ保存が成立した時点で1回消費する
+削除しても consumed_count は戻さない
+保存失敗時は消費しない
+同時送信で上限を超えないようにする
+
+今後、保存処理はできるだけ save_voyage_log_with_limit() を通して行います。
+
+今後の接続先
+
+この仕組みは、以下の課金要素と連動します。
+
+港の入口
+  月10回まで
+
+港の維持灯
+  +30回
+
+航海燃料
+  1回購入ごとに +50回
+  購入月の月末まで有効
+  翌月へ繰り越さない
+
+潮の便りは Voyage Log の回数を増やしません。
+潮の便りは、毎月届く航海券と月の便りのための別軸のサブスクとして扱います。
+
 
 
 ### `/special-voyage/`
