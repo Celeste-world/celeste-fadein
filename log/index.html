@@ -304,6 +304,41 @@
       color:var(--muted);
     }
 
+    .monthly-log-limit{
+      margin:0 0 18px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+    }
+    
+    .monthly-log-limit-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+    
+    .monthly-log-limit-main{
+      font-size:14px;
+      line-height:1.8;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+    
+    .monthly-log-limit-sub{
+      font-size:12px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+    
+    .monthly-log-limit-count{
+      color:#ffe3a3;
+    }
+
     .panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
@@ -1090,6 +1125,18 @@
           ログイン状態を確認しています。
         </div>
 
+        <div class="monthly-log-limit" id="monthlyLogLimit" style="display:none;">
+          <div class="monthly-log-limit-label">Monthly Voyage Log</div>
+        
+          <div class="monthly-log-limit-main" id="monthlyLogLimitMain">
+            今月の航海記録を確認しています。
+          </div>
+        
+          <div class="monthly-log-limit-sub" id="monthlyLogLimitSub">
+            保存可能回数を読み込んでいます。
+          </div>
+        </div>
+
         <textarea
           id="content"
           maxlength="800"
@@ -1413,6 +1460,9 @@
     const afterglowBanner = document.getElementById("afterglowBanner"); 
     
     const contentEl = document.getElementById("content");
+    const monthlyLogLimit = document.getElementById("monthlyLogLimit");
+    const monthlyLogLimitMain = document.getElementById("monthlyLogLimitMain");
+    const monthlyLogLimitSub = document.getElementById("monthlyLogLimitSub");
     const tagEl = document.getElementById("tag");
     const charCount = document.getElementById("charCount");
     
@@ -1783,6 +1833,74 @@
           </span>
         </a>
       `;
+    }
+
+    function renderMonthlyLogLimit(row){
+      if(!monthlyLogLimit || !monthlyLogLimitMain || !monthlyLogLimitSub){
+        return;
+      }
+    
+      if(!row){
+        monthlyLogLimit.style.display = "none";
+        return;
+      }
+    
+      const total =
+        Number(row.out_total_limit ?? row.total_limit ?? 0);
+    
+      const consumed =
+        Number(row.out_consumed_count ?? row.consumed_count ?? 0);
+    
+      const remaining =
+        Number(row.out_remaining_count ?? row.remaining_count ?? Math.max(total - consumed, 0));
+    
+      monthlyLogLimitMain.innerHTML =
+        '今月の航海記録：<span class="monthly-log-limit-count">' +
+        consumed +
+        " / " +
+        total +
+        "</span>";
+    
+      monthlyLogLimitSub.textContent =
+        "今月あと " + remaining + " 回、航海記録を残せます。";
+    
+      monthlyLogLimit.style.display = "block";
+    }
+    
+    async function loadMonthlyLogLimit(){
+      if(!currentUser || !currentAccessToken){
+        return;
+      }
+    
+      try{
+        const result = await fetchSupabase(
+          "/rest/v1/rpc/ensure_monthly_log_allowance",
+          {
+            method: "POST",
+            body: {
+              p_user_id: currentUser.id,
+              p_month_key: null
+            }
+          }
+        );
+    
+        const row =
+          Array.isArray(result) && result.length > 0
+            ? result[0]
+            : null;
+    
+        renderMonthlyLogLimit(row);
+      }catch(error){
+        console.warn("monthly log limit load failed:", error);
+    
+        if(monthlyLogLimit && monthlyLogLimitMain && monthlyLogLimitSub){
+          monthlyLogLimitMain.textContent =
+            "今月の航海記録を確認できませんでした。";
+          monthlyLogLimitSub.textContent =
+            "記録の保存は通常通り試すことができます。";
+          monthlyLogLimit.style.display = "block";
+        }
+      }
     }
 
     async function loadActiveSpecialVoyageBanner(){
@@ -2426,9 +2544,11 @@
         showSpecialVoyageWelcomeCat();
         
         await loadActiveSpecialVoyageBanner();
+        await loadMonthlyLogLimit();
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
+        await loadMonthlyLogLimit();
         
       }else{
         window.location.replace("/");
@@ -2829,6 +2949,7 @@
 
         await applyHarborWeather();
         await loadLogs();
+        await loadMonthlyLogLimit();
 
       }catch(error){
         console.error("saveLog catch:", error);
@@ -3312,6 +3433,7 @@
 
         setStatus("航海記録を削除しました。");
         await loadLogs();
+        await loadMonthlyLogLimit();
 
       }catch(error){
         console.error("delete error:", error);
@@ -3450,6 +3572,7 @@
         await ensureUserVessel();
         await applyHarborWeather();
         await loadLogs();
+        await loadMonthlyLogLimit();
         
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
