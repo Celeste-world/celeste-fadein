@@ -1183,6 +1183,7 @@
           "&status=in.(delivered,claimed,expired)" +
           "&select=id,month_key,ticket_type,duration_minutes,status,claim_deadline,claimed_at,created_at" +
           "&order=created_at.desc"
+          "&limit=6"
         );
     
         renderTideLetters(Array.isArray(data) ? data : []);
