@@ -640,9 +640,17 @@
       </section>
 
       <section>
-        <h2 class="section-title">Available Tickets</h2>
+        <h2 class="section-title">Tide Letters</h2>
+      
+        <div id="tideLetters">
+          <div class="empty">
+            潮の便りを確認しています...
+          </div>
+        </div>
+      </section>
 
-        
+      <section>
+        <h2 class="section-title">Available Tickets</h2>
 
         <div id="tickets">
           <div class="empty">
@@ -688,6 +696,7 @@
     const statusEl = document.getElementById("status");
     const logoutLink = document.getElementById("logoutLink");
     const ticketsEl = document.getElementById("tickets");
+    const tideLettersEl = document.getElementById("tideLetters");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
 
     
@@ -1084,7 +1093,9 @@
         setStatus("航海券を確認しています。");
 
         await loadActiveSpecialVoyageBanner();
+        await loadTideLetters();
         await loadTickets();
+        
       }else{
         window.location.replace("/");
         return;
@@ -1125,6 +1136,35 @@
       window.location.replace("/");
     }
 
+    async function loadTideLetters(){
+      if(!currentUser || !currentAccessToken){
+        return;
+      }
+    
+      try{
+        const userId = encodeURIComponent(currentUser.id);
+    
+        const data = await fetchSupabase(
+          "/rest/v1/tide_letters" +
+          "?user_id=eq." + userId +
+          "&status=in.(delivered,claimed)" +
+          "&select=id,month_key,ticket_type,duration_minutes,status,claim_deadline,claimed_at,created_at" +
+          "&order=created_at.desc"
+        );
+    
+        renderTideLetters(Array.isArray(data) ? data : []);
+      }catch(error){
+        console.error("tide letters load error:", error);
+    
+        tideLettersEl.innerHTML = `
+          <div class="empty">
+            潮の便りを読み込めませんでした。<br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
     async function loadTickets(){
       if(!currentUser || !currentAccessToken){
         return;
@@ -1155,7 +1195,95 @@
       }
     }
 
+    function tideLetterStatusText(letter){
+      const now = new Date();
     
+      if(letter.status === "claimed"){
+        return "受け取り済み";
+      }
+    
+      if(letter.claim_deadline && new Date(letter.claim_deadline) < now){
+        return "期限切れ";
+      }
+    
+      return "受け取り待ち";
+    }
+    
+    function tideLetterMessage(letter){
+      const now = new Date();
+    
+      if(letter.status === "claimed"){
+        return "この潮の便りは、すでに受け取り済みです。";
+      }
+    
+      if(letter.claim_deadline && new Date(letter.claim_deadline) < now){
+        return "この潮の便りは、静かに流れていきました。";
+      }
+    
+      return "潮の便りが届いています。まだ受け取られていない航海券があります。";
+    }
+    
+    function renderTideLetters(letters){
+      if(!tideLettersEl){
+        return;
+      }
+    
+      tideLettersEl.innerHTML = "";
+    
+      if(!letters || letters.length === 0){
+        tideLettersEl.innerHTML = `
+          <div class="empty">
+            現在、受け取り待ちの潮の便りはありません。<br>
+            月のはじめに、港へ小さな便りが届くことがあります。
+          </div>
+        `;
+        return;
+      }
+    
+      letters.forEach(letter => {
+        const div = document.createElement("div");
+        const className = ticketClass(letter.ticket_type);
+    
+        div.className = "ticket " + className;
+    
+        div.innerHTML = `
+          ${renderTicketImage(letter)}
+    
+          <div>
+            <div class="ticket-top">
+              <div>
+                <div class="ticket-type">
+                  潮の便り ${escapeHtml(letter.month_key)}
+                </div>
+                <p class="ticket-line">
+                  ${escapeHtml(ticketLabel(letter.ticket_type))}
+                </p>
+              </div>
+    
+              <div class="ticket-status">
+                ${escapeHtml(tideLetterStatusText(letter))}
+              </div>
+            </div>
+    
+            <p class="ticket-line">
+              ${escapeHtml(tideLetterMessage(letter))}
+            </p>
+    
+            <p class="ticket-line">
+              受け取り期限：${escapeHtml(formatDate(letter.claim_deadline))}
+            </p>
+    
+            <div class="ticket-meta">
+              <span class="tag">潮の便り</span>
+              <span class="tag">${escapeHtml(letter.duration_minutes)}分</span>
+              <span class="tag">同じ航海券は1枚まで</span>
+            </div>
+          </div>
+        `;
+    
+        tideLettersEl.appendChild(div);
+      });
+    }
 
     function renderTickets(tickets){
       ticketsEl.innerHTML = "";
