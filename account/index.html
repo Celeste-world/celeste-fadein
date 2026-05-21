@@ -1095,6 +1095,7 @@
 
         await loadActiveSpecialVoyageBanner();
         await expireMyTideLetters();
+        await expireMyVoyageTickets();
         await loadTickets();
         await loadTideLetters();
         
@@ -1150,6 +1151,21 @@
         console.log("expire_my_tide_letters:", data);
       }catch(error){
         console.warn("expire tide letters error:", error);
+      }
+    }
+
+    async function expireMyVoyageTickets(){
+      try{
+        const { data, error } = await client.rpc("expire_my_voyage_tickets");
+    
+        if(error){
+          console.warn("expire voyage tickets rpc error:", error);
+          return;
+        }
+    
+        console.log("expire_my_voyage_tickets:", data);
+      }catch(error){
+        console.warn("expire voyage tickets error:", error);
       }
     }
 
