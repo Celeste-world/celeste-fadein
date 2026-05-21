@@ -407,6 +407,72 @@
       background:rgba(185,246,202,.06);
     }
 
+    .ticket-next{
+      max-width:880px;
+      margin:0 0 48px;
+      padding:24px;
+      border-radius:20px;
+      border:1px solid rgba(169,183,255,.28);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(10,14,28,.72);
+      box-shadow:0 18px 42px rgba(0,0,0,.30);
+    }
+    
+    .ticket-next-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .ticket-next-title{
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+      color:var(--text);
+      margin:0 0 10px;
+    }
+    
+    .ticket-next-text{
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0;
+    }
+    
+    .ticket-next-note{
+      margin-top:12px;
+      font-size:12px;
+      line-height:1.8;
+      color:var(--dim);
+    }
+    
+    .ticket-next-actions{
+      margin-top:20px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+    }
+    
+    .ticket-next-actions .btn-primary,
+    .ticket-next-actions .btn-ghost{
+      min-width:180px;
+    }
+    
+    @media(max-width:700px){
+      .ticket-next{
+        padding:20px;
+      }
+    
+      .ticket-next-actions .btn-primary,
+      .ticket-next-actions .btn-ghost{
+        width:100%;
+      }
+    }
+
     .flow{
       max-width:880px;
       background:rgba(10,14,28,.62);
@@ -818,6 +884,33 @@
         </article>
 
       </section>
+
+      <section class="ticket-next">
+      <div class="ticket-next-label">Next Voyage</div>
+    
+      <h2 class="ticket-next-title">
+        次の航海へ
+      </h2>
+    
+      <p class="ticket-next-text">
+        チケットの意味を確認したら、手元に残っている航海券を見ることができます。<br>
+        有効な航海券があれば、そこから桟橋へ向かえます。
+      </p>
+    
+      <p class="ticket-next-note">
+        将来的にチケット販売を行う場合、この場所に「航海券を手に入れる」導線を追加します。
+      </p>
+    
+      <div class="ticket-next-actions">
+        <a class="btn-primary" href="/account/">
+          手元の航海券を確認する
+        </a>
+    
+        <a class="btn-ghost" href="/special-voyage/">
+          桟橋へ向かう
+        </a>
+      </div>
+    </section>
 
       <section class="flow">
         <h2>航海の深さ</h2>
