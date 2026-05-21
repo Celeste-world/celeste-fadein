@@ -704,6 +704,7 @@
     let currentAccessToken = null;
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
+    let availableTickets = [];
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1092,9 +1093,9 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("航海券を確認しています。");
 
-        await loadActiveSpecialVoyageBanner();
-        await loadTideLetters();
-        await loadTickets();
+       await loadActiveSpecialVoyageBanner();
+     　await loadTickets();
+       await loadTideLetters();
         
       }else{
         window.location.replace("/");
@@ -1176,9 +1177,11 @@
         const data = await fetchSupabase(
           "/rest/v1/voyage_tickets?user_id=eq." + userId + "&status=eq.available&select=*&order=created_at.desc"
         );
-
-        renderTickets(Array.isArray(data) ? data : []);
+        availableTickets = Array.isArray(data) ? data : [];
+        
+        renderTickets(availableTickets);
         setStatus("航海券を確認しました。");
+        
       }catch(error){
         console.error("ticket load error:", error);
 
@@ -1206,6 +1209,10 @@
         return "期限切れ";
       }
     
+      if(hasSameAvailableTicket(letter)){
+        return "今は受け取れません";
+      }
+    
       return "受け取り待ち";
     }
     
@@ -1220,7 +1227,18 @@
         return "この潮の便りは、静かに流れていきました。";
       }
     
+      if(hasSameAvailableTicket(letter)){
+        return "同じ航海券をすでに持っています。その航海を終えると、この便りを受け取れます。";
+      }
+    
       return "潮の便りが届いています。まだ受け取られていない航海券があります。";
+    }
+
+    function hasSameAvailableTicket(letter){
+      return availableTickets.some(ticket =>
+        normalizeTicketType(ticket.ticket_type) === normalizeTicketType(letter.ticket_type) &&
+        Number(ticket.duration_minutes) === Number(letter.duration_minutes)
+      );
     }
     
     function renderTideLetters(letters){
