@@ -2441,19 +2441,19 @@
         .filter(Boolean);
     
       if(names.length === 0){
-        return "そのあと、波の間から小さな漂着物が届いています。\nこれは、この航海の中で見つかったものです。";
+        return "漂着物が届きました。\n波の間から届いたものが、この航海の記録として船に収められています。";
       }
     
       if(names.length === 1){
-        return "そのあと、波の間から「" + names[0] + "」が届きました。\nこれは、この航海の中で見つかった漂着物です。";
+        return "漂着物が届きました。\n「" + names[0] + "」が、この航海の余韻として船に収められています。";
       }
     
-      return "そのあと、波の間からいくつかの漂着物が届きました。\n" +
+      return "漂着物が届きました。\n" +
         names.slice(0, 3).map(function(name){
           return "・" + name;
         }).join("\n") +
-        "\nこれらは、この航海の中で見つかったものです。";
-    }
+        "\nこれらは、この航海の余韻として船に収められています。";
+  　  }
     
     function seaResponseForReusedRolls(payload, rewards){
       if(!payload || payload.reused_existing_rolls !== true){
