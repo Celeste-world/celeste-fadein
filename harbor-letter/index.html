@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Harbor Letter – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    .logout-link{
+      color:var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .logout-link:hover{
+      color:var(--text);
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 28px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin:0 0 8px;
+    }
+
+    select,
+    textarea{
+      width:100%;
+      background:rgba(5,8,17,.85);
+      border:1px solid rgba(160,168,187,.25);
+      color:var(--text);
+      border-radius:14px;
+      padding:14px;
+      font-family:inherit;
+      font-size:15px;
+      outline:none;
+      margin-bottom:18px;
+    }
+
+    textarea{
+      min-height:220px;
+      line-height:1.9;
+      resize:vertical;
+    }
+
+    select:focus,
+    textarea:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+
+    .note{
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+      margin:-6px 0 18px;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      padding:11px 18px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+    }
+
+    .primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    button:hover{
+      opacity:.92;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .status{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      min-height:1.9em;
+      white-space:pre-wrap;
+    }
+
+    .status.success{
+      color:var(--ready);
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .user{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .actions button{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-locked">
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/">Letter</a>
+        <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Harbor Letter<br>港への便り</h1>
+
+      <p class="lead">
+        Celeste Harbor を使っていて気づいたこと、不具合、違和感、改善してほしいことがあれば、ここから静かに届けられます。<br>
+        すぐに返事ができないこともありますが、届いた便りは確認します。
+      </p>
+
+      <section class="panel">
+        <div class="user" id="userStatus">
+          ログイン状態を確認しています。
+        </div>
+
+        <label for="letterType">便りの種類</label>
+        <select id="letterType">
+          <option value="bug">不具合報告</option>
+          <option value="feedback">表示や文言の違和感</option>
+          <option value="request">改善要望</option>
+          <option value="other">その他</option>
+        </select>
+
+        <label for="message">内容</label>
+        <textarea
+          id="message"
+          maxlength="2000"
+          placeholder="気づいたことを、ここに書いてください。"
+        ></textarea>
+
+        <div class="note">
+          送信時に、現在のページURLとブラウザ情報も一緒に保存されます。不具合の確認に使います。
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="sendBtn" type="button">
+            港へ便りを送る
+          </button>
+
+          <button class="ghost" id="loginBtn" type="button">
+            Googleでログイン
+          </button>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/">Letter</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const letterType = document.getElementById("letterType");
+    const messageEl = document.getElementById("message");
+    const sendBtn = document.getElementById("sendBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutLink = document.getElementById("logoutLink");
+
+    let currentUser = null;
+
+    function setStatus(message, type = ""){
+      statusEl.textContent = message || "";
+      statusEl.className = type ? "status " + type : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    function updateAuthUI(){
+      if(currentUser){
+        userStatus.textContent =
+          "ログイン中：" + accountDisplayName(currentUser);
+
+        loginBtn.style.display = "none";
+        sendBtn.disabled = false;
+      }else{
+        userStatus.textContent =
+          "便りを送るにはログインが必要です。";
+
+        loginBtn.style.display = "inline-block";
+        sendBtn.disabled = true;
+      }
+    }
+
+    async function checkSession(){
+      const { data } = await client.auth.getSession();
+
+      currentUser = data.session?.user || null;
+
+      updateAuthUI();
+
+      document.body.classList.remove("auth-locked");
+    }
+
+    async function login(){
+      const redirectTo =
+        window.location.origin + "/harbor-letter/";
+
+      await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo
+        }
+      });
+    }
+
+    async function logout(){
+      await client.auth.signOut();
+      currentUser = null;
+      updateAuthUI();
+    }
+
+    async function sendHarborLetter(){
+      if(!currentUser){
+        setStatus("ログインしてから、もう一度送信してください。", "error");
+        return;
+      }
+
+      const type = letterType.value || "feedback";
+      const message = messageEl.value.trim();
+
+      if(!message){
+        setStatus("内容を入力してください。", "error");
+        return;
+      }
+
+      if(message.length > 2000){
+        setStatus("内容は2000文字以内で入力してください。", "error");
+        return;
+      }
+
+      sendBtn.disabled = true;
+      setStatus("港へ便りを送っています。");
+
+      const { error } = await client
+        .from("user_feedback")
+        .insert({
+          user_id: currentUser.id,
+          type,
+          message,
+          page_path: window.location.pathname + window.location.search,
+          user_agent: navigator.userAgent,
+          status: "open"
+        });
+
+      if(error){
+        console.error(error);
+        setStatus(
+          "便りを送れませんでした。少し時間を置いて、もう一度お試しください。",
+          "error"
+        );
+        sendBtn.disabled = false;
+        return;
+      }
+
+      messageEl.value = "";
+      letterType.value = "feedback";
+
+      setStatus(
+        "港への便りを受け取りました。\n届いた内容は、あとで静かに確認します。",
+        "success"
+      );
+
+      sendBtn.disabled = false;
+    }
+
+    loginBtn.addEventListener("click", login);
+
+    logoutLink.addEventListener("click", async function(event){
+      event.preventDefault();
+      await logout();
+    });
+
+    sendBtn.addEventListener("click", sendHarborLetter);
+
+    checkSession();
+  </script>
+</body>
+</html>
