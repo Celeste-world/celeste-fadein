@@ -789,6 +789,15 @@
       background:rgba(5,8,17,.72);
       box-shadow:0 18px 42px rgba(0,0,0,.36);
     }
+
+    .cat-scroll.special-welcome-mode .cat-icon-wrap{
+      display:none;
+    }
+    
+    .cat-scroll.special-welcome-mode .cat-scroll-head{
+      align-items:flex-start;
+      margin-bottom:18px;
+    }
     
     .cat-special-welcome-image{
       display:block;
@@ -1506,6 +1515,7 @@
     const catIcon = document.getElementById("catIcon");
     const catScrollSub = document.getElementById("catScrollSub");
     const catCloseBtn = document.getElementById("catCloseBtn");
+    const catScroll = document.querySelector(".cat-scroll");
 
     const catSpecialWelcomeImageWrap =
       document.getElementById("catSpecialWelcomeImageWrap");
@@ -1610,6 +1620,10 @@
       if(catSpecialWelcomeImageWrap){
         catSpecialWelcomeImageWrap.hidden = true;
       }
+    
+      if(catScroll){
+        catScroll.classList.remove("special-welcome-mode");
+      }
     }
     
     function showSpecialWelcomeImage(){
@@ -1619,6 +1633,10 @@
     
       catSpecialWelcomeImage.src = SPECIAL_RETURN_HARBOR_CAT_IMAGE;
       catSpecialWelcomeImageWrap.hidden = false;
+    
+      if(catScroll){
+        catScroll.classList.add("special-welcome-mode");
+      }
     }
 
     function scheduleCatScrollAutoClose(delay = 7000){
