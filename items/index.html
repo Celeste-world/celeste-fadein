@@ -894,7 +894,7 @@
       </h1>
 
       <p class="lead">
-        ここでは、これまでに見つかった Harbor Finds を海域ごとに確認できます。<br>
+        ここでは、これまでに見つかった漂着物を海域ごとに確認できます。<br>
         開いた海から届いたものだけが、静かに港へ積もっていきます。
       </p>
 
@@ -1026,23 +1026,23 @@
 
     function imageBox(imagePath, label){
       const safeLabel = escapeHtml(label || "Image");
-
+    
       if(!imagePath){
         return `
           <div class="image-box">
             ${safeLabel}<br>
-            image pending
+            まだ姿は見えません
           </div>
         `;
       }
-
+    
       return `
         <div class="image-box" aria-label="${safeLabel}">
           <img
             src="${escapeHtml(imagePath)}"
             alt="${safeLabel}"
             loading="lazy"
-            onerror="this.style.display='none'; this.parentElement.innerHTML='${safeLabel}<br>image pending';"
+            onerror="this.style.display='none'; this.parentElement.innerHTML='${safeLabel}<br>まだ姿は見えません';"
           >
         </div>
       `;
@@ -1068,7 +1068,7 @@
             onerror="this.remove(); this.parentElement.innerHTML='image pending';"
           >
         `
-        : "image pending";
+        : "まだ姿は見えません";
 
       const normalMetaHtml = `
         ${
@@ -1585,119 +1585,7 @@
       `;
     }
 
-    function normalizeAreaKeyValue(value){
-      const raw = String(value || "").trim();
     
-      if(!raw){
-        return "";
-      }
-    
-      const lower = raw.toLowerCase()
-        .replaceAll(" ", "_")
-        .replaceAll("-", "_");
-    
-      const map = {
-        harbor: "harbor",
-        港: "harbor",
-    
-        silent_water: "silent_water",
-        静かな水域: "silent_water",
-        silent: "silent_water",
-    
-        lighthouse_coast: "lighthouse_coast",
-        lighthouse: "lighthouse_coast",
-        灯台海岸: "lighthouse_coast",
-    
-        fog_sea: "fog_sea",
-        fog: "fog_sea",
-        霧の海: "fog_sea",
-    
-        moonlit_sea: "moonlit_sea",
-        moonlit: "moonlit_sea",
-        月光の海: "moonlit_sea",
-        月明かりの海: "moonlit_sea",
-    
-        deep_current: "deep_current",
-        deep: "deep_current",
-        深潮: "deep_current",
-        深い潮: "deep_current",
-    
-        unnamed_waters: "unnamed_waters",
-        unnamed: "unnamed_waters",
-        名前のない海域: "unnamed_waters",
-        名もなき海: "unnamed_waters"
-      };
-    
-      return map[raw] || map[lower] || lower;
-    }
-    
-    function areaMemoryStage(foundCount){
-      if(foundCount <= 0){
-        return "まだ静かな海";
-      }
-    
-      if(foundCount <= 2){
-        return "気配が残り始めた海";
-      }
-    
-      if(foundCount <= 4){
-        return "航海を覚え始めた海";
-      }
-    
-      return "記憶が深まった海";
-    }
-    
-    function areaMemoryText(areaKey, foundCount){
-      const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
-    
-      if(foundCount <= 0){
-        const emptyMessages = {
-          harbor: "港には、まだ新しい漂着物の記録は残っていません。\nけれど、浅瀬にはいつも小さな気配があります。",
-          silent_water: "静かな水域には、まだ漂着物の記録は残っていません。\nけれど低い波は、港の外から何かを運び続けています。",
-          lighthouse_coast: "灯台海岸には、まだ漂着物の記録は残っていません。\nそれでも遠くの光は、海の向こうで静かに灯っています。",
-          fog_sea: "霧の海には、まだ漂着物の記録は残っていません。\nけれど見えない水面の向こうで、何かが静かに流れています。",
-          moonlit_sea: "月明かりの海には、まだ漂着物の記録は残っていません。\nそれでも水面には、細い光の道が揺れています。",
-          deep_current: "深い潮には、まだ漂着物の記録は残っていません。\nけれど水面の下では、静かな流れが動き続けています。",
-          unnamed_waters: "名もなき海には、まだ漂着物の記録は残っていません。\nけれど海図の外側には、まだ知らない夜が広がっています。"
-        };
-    
-        return emptyMessages[normalizedAreaKey] ||
-          "この海には、まだ漂着物の記録が残っていません。\nけれど、波は静かに何かを運び続けています。";
-      }
-    
-      if(foundCount <= 2){
-        return "小さな漂着物の記録が、この海に残り始めています。\n航海の跡が、少しずつ水面に浮かんでいます。";
-      }
-    
-      if(foundCount <= 4){
-        return "この海には、いくつかの航海の跡が残っています。\n漂着物は、ここを通った夜の小さな証です。";
-      }
-    
-      const manyMessages = {
-        harbor: "港には、いくつもの航海の跡が積もり始めています。\nここは戻る場所であり、記録が静かに残る場所でもあります。",
-        silent_water: "静かな水域には、いくつもの小さな記録が残っています。\n港の外へ出た最初の航路が、少しずつ確かなものになっています。",
-        lighthouse_coast: "灯台海岸には、進むための目印がいくつも残っています。\n遠い光の下で、航海は少しずつ形を持ち始めています。",
-        fog_sea: "霧の海には、見えないまま進んだ記録が積もっています。\nこの海は、確信よりも継続を覚えています。",
-        moonlit_sea: "月明かりの海には、夜の航路を照らすものが集まり始めています。\n静かな光の中で、航海の記憶が深まっています。",
-        deep_current: "深い潮には、沈まなかった航海の証が残っています。\n水面の下で、記録は静かに深まっています。",
-        unnamed_waters: "名もなき海には、まだ知らなかった航海の跡が残っています。\n未知だった場所が、少しずつあなたの海になっています。"
-      };
-    
-      return manyMessages[normalizedAreaKey] ||
-        "この海には、いくつもの航海の跡が残っています。\nここはもう、ただ通り過ぎた海ではありません。";
-    }
-    
-    function areaMemoryHtml(areaKey, foundCount){
-      return `
-        <div class="area-memory">
-          <div class="area-memory-stage">
-            <span class="area-memory-label">航海の記憶</span>
-            ${escapeHtml(areaMemoryStage(foundCount))}
-          </div>
-          <div class="area-memory-text">${escapeHtml(areaMemoryText(areaKey, foundCount))}</div>
-        </div>
-      `;
-    }
 
     function specialFindStorageKey(){
       return currentUser
