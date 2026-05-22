@@ -1336,6 +1336,8 @@
     const itemAcquiredClose = document.getElementById("itemAcquiredClose");
     
     let itemAcquiredTimer = null;
+    let itemAcquiredQueue = [];
+    let currentItemAcquiredIndex = 0;
     
     const seaResponseClose = document.getElementById("seaResponseClose");
     const seaResponseCloseBtn = document.getElementById("seaResponseCloseBtn");
@@ -2579,8 +2581,18 @@
       document.body.style.overflow = "hidden";
     }
 
-    function closeItemAcquiredModal(){
+    function closeItemAcquiredModal(forceCloseAll = false){
       if(!itemAcquiredModal || !itemAcquiredItem){
+        return;
+      }
+    
+      if(itemAcquiredTimer){
+        clearTimeout(itemAcquiredTimer);
+        itemAcquiredTimer = null;
+      }
+    
+      if(!forceCloseAll && currentItemAcquiredIndex + 1 < itemAcquiredQueue.length){
+        showNextItemAcquiredModal();
         return;
       }
     
@@ -2588,37 +2600,22 @@
       itemAcquiredModal.setAttribute("aria-hidden", "true");
       itemAcquiredItem.innerHTML = "";
     
-      if(itemAcquiredTimer){
-        clearTimeout(itemAcquiredTimer);
-        itemAcquiredTimer = null;
-      }
+      itemAcquiredQueue = [];
+      currentItemAcquiredIndex = 0;
     }
 
-    function showItemAcquiredModal(rewards, payload){
+    function renderItemAcquiredModalItem(reward){
       if(!itemAcquiredModal || !itemAcquiredItem){
         return;
       }
     
-      if(payload && payload.reused_existing_rolls === true){
-        return;
-      }
-    
-      const foundRewards = (rewards || []).filter(function(reward){
-        return reward && reward.type === "harbor_find";
-      });
-    
-      if(foundRewards.length === 0){
-        return;
-      }
-    
-      const first = foundRewards[0];
-      const title = first.title || "漂着物";
+      const title = reward.title || "漂着物";
       const description =
-        first.description ||
-        first.origin_text ||
+        reward.description ||
+        reward.origin_text ||
         "波の間から届いたものです。";
     
-      const imagePath = first.image_path || "";
+      const imagePath = reward.image_path || "";
     
       itemAcquiredItem.innerHTML = `
         <div class="item-acquired-image">
@@ -2647,10 +2644,47 @@
       }
     
       itemAcquiredTimer = setTimeout(function(){
-        itemAcquiredModal.classList.remove("visible");
-        itemAcquiredModal.setAttribute("aria-hidden", "true");
-        itemAcquiredItem.innerHTML = "";
+        showNextItemAcquiredModal();
       }, 7000);
+    }
+    
+    function showNextItemAcquiredModal(){
+      if(itemAcquiredTimer){
+        clearTimeout(itemAcquiredTimer);
+        itemAcquiredTimer = null;
+      }
+    
+      currentItemAcquiredIndex += 1;
+    
+      if(currentItemAcquiredIndex >= itemAcquiredQueue.length){
+        closeItemAcquiredModal(true);
+        return;
+      }
+    
+      renderItemAcquiredModalItem(itemAcquiredQueue[currentItemAcquiredIndex]);
+    }
+    
+    function showItemAcquiredModal(rewards, payload){
+      if(!itemAcquiredModal || !itemAcquiredItem){
+        return;
+      }
+    
+      if(payload && payload.reused_existing_rolls === true){
+        return;
+      }
+    
+      const foundRewards = (rewards || []).filter(function(reward){
+        return reward && reward.type === "harbor_find";
+      });
+    
+      if(foundRewards.length === 0){
+        return;
+      }
+    
+      itemAcquiredQueue = foundRewards;
+      currentItemAcquiredIndex = 0;
+    
+      renderItemAcquiredModalItem(itemAcquiredQueue[currentItemAcquiredIndex]);
     }
     
     function closeSeaResponseModal(){
