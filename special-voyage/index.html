@@ -1338,6 +1338,7 @@
     let itemAcquiredTimer = null;
     let itemAcquiredQueue = [];
     let currentItemAcquiredIndex = 0;
+    let seaResponseTimer = null;
     
     const seaResponseClose = document.getElementById("seaResponseClose");
     const seaResponseCloseBtn = document.getElementById("seaResponseCloseBtn");
@@ -2579,6 +2580,14 @@
       seaResponseModal.classList.add("visible");
       seaResponseModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+    
+      if(seaResponseTimer){
+        clearTimeout(seaResponseTimer);
+      }
+    
+      seaResponseTimer = setTimeout(function(){
+        closeSeaResponseModal();
+      }, 10000);
     }
 
     function closeItemAcquiredModal(forceCloseAll = false){
@@ -2690,6 +2699,11 @@
     function closeSeaResponseModal(){
       if(!seaResponseModal){
         return;
+      }
+    
+      if(seaResponseTimer){
+        clearTimeout(seaResponseTimer);
+        seaResponseTimer = null;
       }
     
       seaResponseModal.classList.remove("visible");
