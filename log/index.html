@@ -1622,50 +1622,53 @@
       };
     }
 
+    function pickRandomLine(lines){
+      return lines[Math.floor(Math.random() * lines.length)];
+    }
+    
+    const harborCatExpiredLines = [
+      "Harbor Cat が、戻ってきた船を静かに見ています。\n\n時間の海は閉じました。\nでも、残った記録はちゃんと港へ戻っています。",
+      "Harbor Cat が、桟橋の端でしっぽを揺らしました。\n\n今日はここまでです。\n船は無事に、港へ戻っています。",
+      "Harbor Cat が、ランタンのそばでこちらを見ています。\n\n時間は満ちました。\nそれでも、航海した分だけ記録は残っています。",
+      "Harbor Cat が、濡れた桟橋の上で静かに待っていました。\n\n海は閉じました。\nでも、戻ってきたことも航海の一部です。",
+      "Harbor Cat が、小さく瞬きをしました。\n\n今夜の航海はここまでです。\n続きはまた、潮が合うときに。"
+    ];
+    
+    const harborCatLogoutLines = [
+      "Harbor Cat が、ランタンのそばで小さく瞬きしました。\n\nおかえりなさい。\n船は静かに港へ戻りました。",
+      "Harbor Cat が、港の灯りの下で待っていました。\n\nおかえりなさい。\n今日はここで、少し休みましょう。",
+      "Harbor Cat が、足元のロープのそばからこちらを見ています。\n\n港へ戻りました。\n船はまだ、次の海を覚えています。",
+      "Harbor Cat が、桟橋で静かに迎えています。\n\nおかえりなさい。\nログアウトしても、港の灯りは残っています。"
+    ];
+    
+    const harborCatCancelledLines = [
+      "Harbor Cat が、桟橋の端でこちらを見ています。\n\n港へ戻りました。\n今夜の余韻は、ここで少し休ませておきましょう。",
+      "Harbor Cat が、船のそばで静かに座っています。\n\n自分で港へ戻ることも、航海の大事な判断です。",
+      "Harbor Cat が、ランタンの光の中でこちらを見上げました。\n\nここで戻ると決めたのですね。\nそれで大丈夫です。",
+      "Harbor Cat が、ゆっくり目を細めました。\n\n航海は閉じました。\nでも、ここまで進んだことは消えません。"
+    ];
+    
+    const harborCatDefaultLines = [
+      "Harbor Cat が、桟橋で帰りを待っていました。\n\nおかえりなさい。\n特別航海の余韻は、まだ港に静かに残っています。",
+      "Harbor Cat が、港の灯りの下でこちらを見ています。\n\nおかえりなさい。\n船はちゃんと戻ってきました。",
+      "Harbor Cat が、静かな波音の中で待っていました。\n\n今日の海も、あなたを港まで運んでくれました。",
+      "Harbor Cat が、桟橋の上で小さく身じろぎしました。\n\nおかえりなさい。\n今夜の航海は、静かに記録されています。"
+    ];
+    
     function harborCatWelcomeMessage(reason){
-      const messages = {
-        expired: [
-          "Harbor Cat が、戻ってきた船を静かに見ています。\n\n時間の海は閉じました。\nでも、残った記録はちゃんと港へ戻っています。",
+      if(reason === "expired"){
+        return pickRandomLine(harborCatExpiredLines);
+      }
     
-          "Harbor Cat が、桟橋の灯りのそばで待っていました。\n\n航海の時間は終わりました。\n海に置いてきた言葉は、まだ少し波の音をまとっています。",
+      if(reason === "logout"){
+        return pickRandomLine(harborCatLogoutLines);
+      }
     
-          "Harbor Cat が、濡れた桟橋をゆっくり歩いてきました。\n\n時間は尽きましたが、船は港へ戻っています。\nその静けさも、今夜の記録の一部です。",
+      if(reason === "user_cancelled"){
+        return pickRandomLine(harborCatCancelledLines);
+      }
     
-          "Harbor Cat が、船の影を見上げています。\n\n特別航海は閉じられました。\nでも、持ち帰った余韻は、すぐには消えないようです。"
-        ],
-    
-        logout: [
-          "Harbor Cat が、ランタンのそばで小さく瞬きしました。\n\nおかえりなさい。\n船は静かに港へ戻りました。",
-    
-          "Harbor Cat が、港の入口で尻尾を揺らしています。\n\nログアウトの前に、船はちゃんと戻ってきました。\n今夜の海は、ここで静かに閉じられます。",
-    
-          "Harbor Cat が、巻物を閉じてこちらを見ました。\n\n船は港へ戻っています。\n残った言葉は、また次の夜までここに置いておけます。"
-        ],
-    
-        user_cancelled: [
-          "Harbor Cat が、桟橋の端でこちらを見ています。\n\n港へ戻りました。\n今夜の余韻は、ここで少し休ませておきましょう。",
-    
-          "Harbor Cat が、戻ってきた船にそっと近づきました。\n\n自分で港へ戻ると決めたことも、ひとつの航海の終わり方です。",
-    
-          "Harbor Cat が、ロープのそばに座っています。\n\n船は静かに戻ってきました。\n今日はここで、十分かもしれません。",
-    
-          "Harbor Cat が、港の灯りの下で待っていました。\n\n海に残した言葉は、ちゃんと記録されています。\n今は、船を休ませてもよさそうです。"
-        ],
-    
-        default: [
-          "Harbor Cat が、桟橋で帰りを待っていました。\n\nおかえりなさい。\n特別航海の余韻は、まだ港に静かに残っています。",
-    
-          "Harbor Cat が、船の帰りに気づいたようです。\n\n海は閉じました。\nでも、そこに置かれた言葉は、港の奥でまだ揺れています。",
-    
-          "Harbor Cat が、月明かりの下で小さく鳴きました。\n\nおかえりなさい。\n船は、少しだけ深い海の気配を連れて戻ってきました。",
-    
-          "Harbor Cat が、桟橋の影から顔を出しました。\n\n戻ってきましたね。\n今夜の航海は、静かな余韻として港に残っています。"
-        ]
-      };
-    
-      const list = messages[reason] || messages.default;
-    
-      return pickRandom(list);
+      return pickRandomLine(harborCatDefaultLines);
     }
     
     function showSpecialVoyageAfterglow(){
