@@ -756,6 +756,135 @@
       }
     }
 
+    .item-acquired-modal{
+      position:fixed;
+      inset:0;
+      z-index:160;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(185,246,202,.10), transparent 34%),
+        rgba(3,5,11,.56);
+      backdrop-filter:blur(4px);
+      pointer-events:none;
+    }
+    
+    .item-acquired-modal.visible{
+      display:flex;
+      animation:itemAcquiredFadeIn .22s ease-out both;
+    }
+    
+    .item-acquired-card{
+      width:min(420px, 100%);
+      border-radius:24px;
+      border:1px solid rgba(185,246,202,.34);
+      background:
+        radial-gradient(circle at top left, rgba(185,246,202,.13), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      text-align:center;
+    }
+    
+    .item-acquired-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--ready);
+      margin-bottom:10px;
+    }
+    
+    .item-acquired-title{
+      font-size:20px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:16px;
+    }
+    
+    .item-acquired-item{
+      display:grid;
+      grid-template-columns:72px 1fr;
+      gap:14px;
+      align-items:center;
+      text-align:left;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(185,246,202,.22);
+      background:rgba(255,255,255,.025);
+      margin-bottom:14px;
+    }
+    
+    .item-acquired-image{
+      width:72px;
+      height:72px;
+      border-radius:16px;
+      border:1px solid rgba(185,246,202,.22);
+      background:
+        radial-gradient(circle at top, rgba(185,246,202,.12), transparent 58%),
+        rgba(5,8,17,.62);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--dim);
+      font-size:24px;
+    }
+    
+    .item-acquired-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      padding:10px;
+      display:block;
+    }
+    
+    .item-acquired-name{
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+    }
+    
+    .item-acquired-desc{
+      font-size:12px;
+      line-height:1.8;
+      color:var(--muted);
+      margin-top:4px;
+    }
+    
+    .item-acquired-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+    }
+    
+    @keyframes itemAcquiredFadeIn{
+      from{
+        opacity:0;
+        transform:translateY(8px) scale(.98);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+    
+    @media(max-width:460px){
+      .item-acquired-item{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+    
+      .item-acquired-image{
+        width:100%;
+        height:auto;
+        aspect-ratio:16 / 9;
+      }
+    }
+
     .voyage-start-toast{
       position:fixed;
       inset:0;
@@ -1107,6 +1236,22 @@
     </div>
   </div>
 
+  <div class="item-acquired-modal" id="itemAcquiredModal" aria-hidden="true">
+    <div class="item-acquired-card">
+      <div class="item-acquired-label">Harbor Find</div>
+  
+      <div class="item-acquired-title">
+        漂着物が届きました
+      </div>
+  
+      <div class="item-acquired-item" id="itemAcquiredItem"></div>
+  
+      <div class="item-acquired-text">
+        この航海の余韻として、船に収められています。
+      </div>
+    </div>
+  </div>
+
   <div class="voyage-start-toast" id="voyageStartToast" aria-hidden="true">
     <div class="voyage-start-toast-inner">
       <div class="voyage-start-toast-label">Special Voyage</div>
@@ -1155,6 +1300,11 @@
     const specialFindText = document.getElementById("specialFindText");
 
     const seaResponseModal = document.getElementById("seaResponseModal");
+    const itemAcquiredModal = document.getElementById("itemAcquiredModal");
+    const itemAcquiredItem = document.getElementById("itemAcquiredItem");
+    
+    let itemAcquiredTimer = null;
+    
     const seaResponseClose = document.getElementById("seaResponseClose");
     const seaResponseCloseBtn = document.getElementById("seaResponseCloseBtn");
     const seaResponseText = document.getElementById("seaResponseText");
@@ -2396,6 +2546,65 @@
       seaResponseModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
+
+    function showItemAcquiredModal(rewards, payload){
+      if(!itemAcquiredModal || !itemAcquiredItem){
+        return;
+      }
+    
+      if(payload && payload.reused_existing_rolls === true){
+        return;
+      }
+    
+      const foundRewards = (rewards || []).filter(function(reward){
+        return reward && reward.type === "harbor_find";
+      });
+    
+      if(foundRewards.length === 0){
+        return;
+      }
+    
+      const first = foundRewards[0];
+      const title = first.title || "漂着物";
+      const description =
+        first.description ||
+        first.origin_text ||
+        "波の間から届いたものです。";
+    
+      const imagePath = first.image_path || "";
+    
+      itemAcquiredItem.innerHTML = `
+        <div class="item-acquired-image">
+          ${
+            imagePath
+              ? `<img src="${escapeHtml(imagePath)}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.remove(); this.parentElement.textContent='✦';">`
+              : "✦"
+          }
+        </div>
+    
+        <div>
+          <div class="item-acquired-name">
+            ${escapeHtml(title)}
+          </div>
+          <div class="item-acquired-desc">
+            ${escapeHtml(description)}
+          </div>
+        </div>
+      `;
+    
+      itemAcquiredModal.classList.add("visible");
+      itemAcquiredModal.setAttribute("aria-hidden", "false");
+    
+      if(itemAcquiredTimer){
+        clearTimeout(itemAcquiredTimer);
+      }
+    
+      itemAcquiredTimer = setTimeout(function(){
+        itemAcquiredModal.classList.remove("visible");
+        itemAcquiredModal.setAttribute("aria-hidden", "true");
+        itemAcquiredItem.innerHTML = "";
+      }, 3000);
+    }
     
     function closeSeaResponseModal(){
       if(!seaResponseModal){
@@ -2877,12 +3086,13 @@
         
         openSeaResponseModal(responseText);
         
-        renderHarborFindNotice(payload);
-        
-        specialMessage.value = "";
-        updateSpecialCount();
-        
-        recordVoyageLogbookEntry(notices);
+       renderHarborFindNotice(payload);
+      showItemAcquiredModal(notices, payload);
+      
+      specialMessage.value = "";
+      updateSpecialCount();
+      
+      recordVoyageLogbookEntry(notices);
 
         if(notices.length){
           setStatus("航海記録を残しました。港に漂着の気配があります。");
