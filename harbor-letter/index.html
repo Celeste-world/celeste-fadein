@@ -21,6 +21,7 @@
       --accent:#a9b7ff;
       --danger:#ff9b9b;
       --ready:#b9f6ca;
+      --warn:#ffe3a3;
     }
 
     *{ box-sizing:border-box; }
@@ -85,6 +86,28 @@
 
     .logout-link:hover{
       color:var(--text);
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    .nav-letter-link.has-reply{
+      color:var(--text);
+    }
+
+    .nav-letter-link.has-reply::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
     }
 
     h1{
@@ -195,145 +218,6 @@
       white-space:pre-wrap;
     }
 
-    
-    .my-letters-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-      margin-bottom:18px;
-    }
-    
-    .my-letters-label{
-      font-size:12px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:6px;
-    }
-    
-    .my-letters-head h2{
-      margin:0;
-      font-size:20px;
-      font-weight:500;
-      line-height:1.7;
-    }
-    
-    .my-letters-list{
-      display:grid;
-      gap:14px;
-    }
-    
-    .my-letter-card{
-      border:1px solid rgba(70,84,132,.45);
-      background:
-        radial-gradient(circle at top left, rgba(169,183,255,.06), transparent 42%),
-        rgba(5,8,17,.42);
-      border-radius:18px;
-      padding:18px;
-    }
-    
-    .my-letter-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      margin-bottom:10px;
-    }
-    
-    .my-letter-type{
-      font-size:12px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:4px;
-    }
-    
-    .my-letter-date{
-      font-size:12px;
-      color:var(--dim);
-      line-height:1.8;
-    }
-    
-    .my-letter-status{
-      flex:0 0 auto;
-      border-radius:999px;
-      border:1px solid rgba(160,168,187,.28);
-      color:var(--muted);
-      font-size:12px;
-      padding:5px 10px;
-      background:rgba(255,255,255,.02);
-      white-space:nowrap;
-    }
-    
-    .my-letter-status.open{
-      color:#ffe3a3;
-      border-color:rgba(255,227,163,.36);
-      background:rgba(255,227,163,.06);
-    }
-    
-    .my-letter-status.reviewing{
-      color:var(--accent);
-      border-color:rgba(169,183,255,.36);
-      background:rgba(169,183,255,.06);
-    }
-    
-    .my-letter-status.closed{
-      color:var(--ready);
-      border-color:rgba(185,246,202,.36);
-      background:rgba(185,246,202,.06);
-    }
-    
-    .my-letter-message{
-      white-space:pre-wrap;
-      color:var(--text);
-      font-size:13px;
-      line-height:1.9;
-      margin-top:12px;
-    }
-    
-    .my-letter-reply{
-      margin-top:14px;
-      padding-top:14px;
-      border-top:1px solid rgba(160,168,187,.12);
-    }
-    
-    .my-letter-reply-label{
-      font-size:12px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--ready);
-      margin-bottom:8px;
-    }
-    
-    .my-letter-reply-text{
-      white-space:pre-wrap;
-      color:var(--text);
-      font-size:13px;
-      line-height:1.9;
-    }
-    
-    .my-letter-reply-date{
-      margin-top:8px;
-      color:var(--dim);
-      font-size:12px;
-      line-height:1.8;
-    }
-    
-    .my-letter-no-reply{
-      margin-top:14px;
-      padding-top:14px;
-      border-top:1px solid rgba(160,168,187,.12);
-      color:var(--dim);
-      font-size:12px;
-      line-height:1.8;
-    }
-    
-    .my-letters-empty{
-      color:var(--muted);
-      font-size:13px;
-      line-height:2;
-    }
     .status.success{
       color:var(--ready);
     }
@@ -347,6 +231,145 @@
       font-size:13px;
       line-height:1.8;
       margin-bottom:18px;
+    }
+
+    .my-letters-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .my-letters-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+
+    .my-letters-head h2{
+      margin:0;
+      font-size:20px;
+      font-weight:500;
+      line-height:1.7;
+    }
+
+    .my-letters-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .my-letter-card{
+      border:1px solid rgba(70,84,132,.45);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.06), transparent 42%),
+        rgba(5,8,17,.42);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .my-letter-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .my-letter-type{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:4px;
+    }
+
+    .my-letter-date{
+      font-size:12px;
+      color:var(--dim);
+      line-height:1.8;
+    }
+
+    .my-letter-status{
+      flex:0 0 auto;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      color:var(--muted);
+      font-size:12px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .my-letter-status.open{
+      color:var(--warn);
+      border-color:rgba(255,227,163,.36);
+      background:rgba(255,227,163,.06);
+    }
+
+    .my-letter-status.reviewing{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.36);
+      background:rgba(169,183,255,.06);
+    }
+
+    .my-letter-status.closed{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.36);
+      background:rgba(185,246,202,.06);
+    }
+
+    .my-letter-message{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:13px;
+      line-height:1.9;
+      margin-top:12px;
+    }
+
+    .my-letter-reply{
+      margin-top:14px;
+      padding-top:14px;
+      border-top:1px solid rgba(160,168,187,.12);
+    }
+
+    .my-letter-reply-label{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--ready);
+      margin-bottom:8px;
+    }
+
+    .my-letter-reply-text{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .my-letter-reply-date{
+      margin-top:8px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
+    }
+
+    .my-letter-no-reply{
+      margin-top:14px;
+      padding-top:14px;
+      border-top:1px solid rgba(160,168,187,.12);
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
+    }
+
+    .my-letters-empty{
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
     }
 
     footer{
@@ -401,16 +424,16 @@
         padding:20px;
       }
 
-      .my-letters-head,
-        .my-letter-top{
-          flex-direction:column;
-        }
-        
-        .my-letters-head button{
-          width:100%;
-        }
-
       .actions button{
+        width:100%;
+      }
+
+      .my-letters-head,
+      .my-letter-top{
+        flex-direction:column;
+      }
+
+      .my-letters-head button{
         width:100%;
       }
     }
@@ -432,7 +455,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/">Letter</a>
+        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -536,15 +559,43 @@
     const sendBtn = document.getElementById("sendBtn");
     const loginBtn = document.getElementById("loginBtn");
     const logoutLink = document.getElementById("logoutLink");
+
     const myLettersPanel = document.getElementById("myLettersPanel");
     const myLettersList = document.getElementById("myLettersList");
     const reloadLettersBtn = document.getElementById("reloadLettersBtn");
+    const letterNavLink = document.getElementById("letterNavLink");
 
     let currentUser = null;
 
     function setStatus(message, type = ""){
       statusEl.textContent = message || "";
       statusEl.className = type ? "status " + type : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      return date.toLocaleString("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
     function accountDisplayName(user){
@@ -561,32 +612,6 @@
       );
     }
 
-    function escapeHtml(str){
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-    
-    function formatDate(value){
-      if(!value){
-        return "";
-      }
-    
-      const date = new Date(value);
-    
-      return date.toLocaleString("ja-JP", {
-        timeZone: "Asia/Tokyo",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
-    
     function typeLabel(type){
       if(type === "bug") return "不具合報告";
       if(type === "feedback") return "表示や文言の違和感";
@@ -594,7 +619,7 @@
       if(type === "other") return "その他";
       return "便り";
     }
-    
+
     function statusLabel(status){
       if(status === "open") return "未確認";
       if(status === "reviewing") return "確認中";
@@ -606,94 +631,169 @@
       if(currentUser){
         userStatus.textContent =
           "ログイン中：" + accountDisplayName(currentUser);
-    
+
         loginBtn.style.display = "none";
         sendBtn.disabled = false;
-    
+
         if(myLettersPanel){
           myLettersPanel.style.display = "block";
         }
       }else{
         userStatus.textContent =
           "便りを送るにはログインが必要です。";
-    
+
         loginBtn.style.display = "inline-block";
         sendBtn.disabled = true;
-    
+
         if(myLettersPanel){
           myLettersPanel.style.display = "none";
         }
       }
     }
 
+    async function checkUnreadHarborLetterReplies(){
+      if(!letterNavLink || !currentUser){
+        return;
+      }
+
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+
+      if(data && data.length > 0){
+        letterNavLink.classList.add("has-reply");
+        letterNavLink.title = "港から返事が届いています";
+      }else{
+        letterNavLink.classList.remove("has-reply");
+        letterNavLink.removeAttribute("title");
+      }
+    }
+
+    async function markHarborLetterRepliesAsRead(){
+      if(!currentUser){
+        return;
+      }
+
+      const { error } = await client
+        .from("user_feedback")
+        .update({
+          user_read_at: new Date().toISOString()
+        })
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null);
+
+      if(error){
+        console.warn("mark harbor letter replies as read failed:", error);
+        return;
+      }
+
+      if(letterNavLink){
+        letterNavLink.classList.remove("has-reply");
+        letterNavLink.removeAttribute("title");
+      }
+    }
+
+    async function loadMyHarborLetters(){
+      if(!currentUser){
+        if(myLettersPanel){
+          myLettersPanel.style.display = "none";
+        }
+        return;
+      }
+
+      if(!myLettersPanel || !myLettersList){
+        return;
+      }
+
+      myLettersPanel.style.display = "block";
+      myLettersList.innerHTML =
+        '<div class="my-letters-empty">送った便りを読み込んでいます。</div>';
+
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id,type,message,status,admin_reply,replied_at,user_read_at,created_at")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      if(error){
+        console.error(error);
+        myLettersList.innerHTML =
+          '<div class="my-letters-empty">送った便りを読み込めませんでした。</div>';
+        return;
+      }
+
+      if(!data || data.length === 0){
+        myLettersList.innerHTML =
+          '<div class="my-letters-empty">まだ送った便りはありません。</div>';
+        return;
+      }
+
+      myLettersList.innerHTML = data.map((row) => {
+        const status = row.status || "open";
+
+        const replyHtml = row.admin_reply
+          ? `
+            <div class="my-letter-reply">
+              <div class="my-letter-reply-label">港からの返事</div>
+              <div class="my-letter-reply-text">${escapeHtml(row.admin_reply)}</div>
+              <div class="my-letter-reply-date">
+                ${escapeHtml(formatDate(row.replied_at))}
+              </div>
+            </div>
+          `
+          : `
+            <div class="my-letter-no-reply">
+              まだ返事は届いていません。
+            </div>
+          `;
+
+        return `
+          <article class="my-letter-card">
+            <div class="my-letter-top">
+              <div>
+                <div class="my-letter-type">${escapeHtml(typeLabel(row.type))}</div>
+                <div class="my-letter-date">${escapeHtml(formatDate(row.created_at))}</div>
+              </div>
+
+              <div class="my-letter-status ${escapeHtml(status)}">
+                ${escapeHtml(statusLabel(status))}
+              </div>
+            </div>
+
+            <div class="my-letter-message">${escapeHtml(row.message)}</div>
+
+            ${replyHtml}
+          </article>
+        `;
+      }).join("");
+
+      markHarborLetterRepliesAsRead();
+    }
+
     async function checkSession(){
       const { data } = await client.auth.getSession();
-    
+
       currentUser = data.session?.user || null;
-    
+
       updateAuthUI();
-    
+
       document.body.classList.remove("auth-locked");
-         
-      function statusLabel(status){
-        if(status === "open") return "未確認";
-        if(status === "reviewing") return "確認中";
-        if(status === "closed") return "対応済み";
-        return "未確認";
+
+      if(currentUser){
+        await checkUnreadHarborLetterReplies();
+        await loadMyHarborLetters();
       }
-  
-      function updateAuthUI(){
-        if(currentUser){
-          userStatus.textContent =
-            "ログイン中：" + accountDisplayName(currentUser);
-      
-          loginBtn.style.display = "none";
-          sendBtn.disabled = false;
-      
-          if(myLettersPanel){
-            myLettersPanel.style.display = "block";
-          }
-        }else{
-          userStatus.textContent =
-            "便りを送るにはログインが必要です。";
-      
-          loginBtn.style.display = "inline-block";
-          sendBtn.disabled = true;
-      
-          if(myLettersPanel){
-            myLettersPanel.style.display = "none";
-          }
-        }
-      }
-  
-      async function checkSession(){
-        const { data } = await client.auth.getSession();
-      
-        currentUser = data.session?.user || null;
-      
-        updateAuthUI();
-      
-        document.body.classList.remove("auth-locked");
-        async function markHarborLetterRepliesAsRead(){
-    if(!currentUser){
-      return;
-    }
-  
-    const { error } = await client
-      .from("user_feedback")
-      .update({
-        user_read_at: new Date().toISOString()
-      })
-      .eq("user_id", currentUser.id)
-      .not("admin_reply", "is", null)
-      .is("user_read_at", null);
-  
-    if(error){
-      console.warn("mark harbor letter replies as read failed:", error);
-    }
-  }
-    
-      await loadMyHarborLetters();
     }
 
     async function login(){
@@ -712,84 +812,7 @@
       await client.auth.signOut();
       currentUser = null;
       updateAuthUI();
-    }
-
-    async function loadMyHarborLetters(){
-      if(!currentUser){
-        if(myLettersPanel){
-          myLettersPanel.style.display = "none";
-        }
-        return;
-      }
-    
-      if(!myLettersPanel || !myLettersList){
-        return;
-      }
-    
-      myLettersPanel.style.display = "block";
-      myLettersList.innerHTML =
-        '<div class="my-letters-empty">送った便りを読み込んでいます。</div>';
-    
-      const { data, error } = await client
-        .from("user_feedback")
-        .select("id,type,message,status,admin_reply,replied_at,created_at")
-        .eq("user_id", currentUser.id)
-        .order("created_at", { ascending: false })
-        .limit(20);
-    
-      if(error){
-        console.error(error);
-        myLettersList.innerHTML =
-          '<div class="my-letters-empty">送った便りを読み込めませんでした。</div>';
-        return;
-      }
-    
-      if(!data || data.length === 0){
-        myLettersList.innerHTML =
-          '<div class="my-letters-empty">まだ送った便りはありません。</div>';
-        return;
-      }
-    
-      myLettersList.innerHTML = data.map((row) => {
-        const status = row.status || "open";
-    
-        const replyHtml = row.admin_reply
-          ? `
-            <div class="my-letter-reply">
-              <div class="my-letter-reply-label">港からの返事</div>
-              <div class="my-letter-reply-text">${escapeHtml(row.admin_reply)}</div>
-              <div class="my-letter-reply-date">
-                ${escapeHtml(formatDate(row.replied_at))}
-              </div>
-            </div>
-          `
-          : `
-            <div class="my-letter-no-reply">
-              まだ返事は届いていません。
-            </div>
-          `;
-    
-        return `
-          <article class="my-letter-card">
-            <div class="my-letter-top">
-              <div>
-                <div class="my-letter-type">${escapeHtml(typeLabel(row.type))}</div>
-                <div class="my-letter-date">${escapeHtml(formatDate(row.created_at))}</div>
-              </div>
-    
-              <div class="my-letter-status ${escapeHtml(status)}">
-                ${escapeHtml(statusLabel(status))}
-              </div>
-            </div>
-    
-            <div class="my-letter-message">${escapeHtml(row.message)}</div>
-    
-            ${replyHtml}
-          </article>
-        `;
-      }).join("");
-
-      await markHarborLetterRepliesAsRead();
+      window.location.href = "/";
     }
 
     async function sendHarborLetter(){
@@ -842,9 +865,9 @@
         "港への便りを受け取りました。\n届いた内容は、あとで静かに確認します。",
         "success"
       );
-      
+
       sendBtn.disabled = false;
-      
+
       await loadMyHarborLetters();
     }
 
