@@ -708,7 +708,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -967,7 +967,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
       </div>
 
@@ -978,93 +978,48 @@
 
   <script>
     async function checkUnreadHarborLetterReplies(){
-    const letterNavLink = document.getElementById("letterNavLink");
-  
-    if(!letterNavLink || !currentUser){
-      return;
-    }
-  
-    const { data, error } = await client
-      .from("user_feedback")
-      .select("id")
-      .eq("user_id", currentUser.id)
-      .not("admin_reply", "is", null)
-      .is("user_read_at", null)
-      .limit(1);
-  
-    if(error){
-      console.warn("unread harbor letter check failed:", error);
-      return;
-    }
-  
-    if(data && data.length > 0){
-      letterNavLink.classList.add("has-reply");
-      letterNavLink.title = "港から返事が届いています";
-    }else{
-      letterNavLink.classList.remove("has-reply");
-      letterNavLink.removeAttribute("title");
-    }
-  }
-    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
-    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
-
-    const client = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
-    );
-
-    const userStatus = document.getElementById("userStatus");
-    const statusEl = document.getElementById("status");
-    const logoutLink = document.getElementById("logoutLink");
-    const activeVoyageBanner = document.getElementById("activeVoyageBanner");
-
-    let currentUser = null;
-    let currentAccessToken = null;
-    let activeVoyageSession = null;
-    let activeVoyageTimer = null;
-
-    function setStatus(message, isError = false){
-      statusEl.textContent = message || "";
-      statusEl.className = isError ? "status error" : "status";
-    }
-
-    function accountDisplayName(user){
-      if(!user){
-        return "Guest";
+      document.body.classList.remove("has-unread-letter");
+    
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
+        return;
       }
-
-      return (
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.user_metadata?.display_name ||
-        user.email ||
-        "Account"
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+    
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+    
+      console.log("unread harbor replies:", data);
+    
+      if(data && data.length > 0){
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+      }
+    
+      console.log(
+        "body has-unread-letter:",
+        document.body.classList.contains("has-unread-letter")
       );
     }
-
-    function clearActiveVoyageTimer(){
-      if(activeVoyageTimer){
-        clearInterval(activeVoyageTimer);
-        activeVoyageTimer = null;
-      }
-    }
-
-    function formatRemainingTime(endsAtValue){
-      const endsAt = new Date(endsAtValue);
-      const now = new Date();
-      const remainingMs = Math.max(0, endsAt.getTime() - now.getTime());
-
-      const totalSeconds = Math.floor(remainingMs / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-
-      return (
-        String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0")
-      );
-    }
-
+    
     function activeVoyageLabel(session){
       const sessionType = String(session?.session_type || "");
       const durationMinutes = Number(session?.duration_minutes || 0);
@@ -1268,10 +1223,15 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
 
         setTimeout(function(){
+          checkUnreadHarborLetterReplies().catch(function(error){
+            console.error("auth state harbor letter check error:", error);
+          });
+        
           loadActiveSpecialVoyageBanner().catch(function(error){
             console.error("auth state active voyage banner error:", error);
           });
         }, 0);
+        
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
 
