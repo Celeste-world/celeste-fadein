@@ -1143,6 +1143,41 @@ Special Voyage Ticket 10分 を受け取れます。
 Celeste Harbor では、課金を「強くなるため」ではなく、
 より深く航海するための入口 として扱います。
 
+
+## 課金商品ID・付与内容一覧
+
+Celeste Harbor の課金商品は、単に機能を増やすためではなく、  
+ユーザーがどの深さで港と関わるかを選べるようにするためのものです。
+
+Stripe 等の決済サービスと接続する前に、商品IDと付与内容を以下のように整理します。
+
+この段階では、まだ実決済には接続しません。  
+各商品IDは、将来 Stripe の Price ID / Product ID と対応させるための内部識別名として扱います。
+
+---
+
+### 商品ID一覧
+
+```txt
+harbor_light_monthly
+  港の維持灯
+
+voyage_fuel_50
+  航海燃料
+
+special_ticket_10
+  Special Voyage Ticket 10分
+
+special_ticket_20
+  Special Voyage Ticket 20分
+
+deep_sea_ticket
+  Deep Sea Ticket
+
+tide_letter_monthly
+  潮の便り
+
+
 ## Voyage Log 月間回数制限
 
 Celeste Harbor では、Voyage Log の保存回数を月単位で管理します。
