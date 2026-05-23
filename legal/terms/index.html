@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>利用規約 – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:28px;
+    }
+
+    .legal-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .notice{
+      margin-top:22px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    .terms-section{
+      margin-bottom:28px;
+      padding-bottom:24px;
+      border-bottom:1px solid rgba(70,84,132,.38);
+    }
+
+    .terms-section:last-child{
+      margin-bottom:0;
+      padding-bottom:0;
+      border-bottom:0;
+    }
+
+    h2{
+      font-size:18px;
+      font-weight:500;
+      line-height:1.8;
+      margin:0 0 12px;
+      color:var(--text);
+    }
+
+    p{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    ul{
+      margin:0 0 12px;
+      padding-left:1.2em;
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    li{
+      margin-bottom:4px;
+    }
+
+    .small-note{
+      margin-top:18px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+    }
+
+    .back-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:24px;
+    }
+
+    .back-links a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:transparent;
+    }
+
+    .back-links a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.45);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .back-links a{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/account/">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <div class="legal-label">Terms of Service</div>
+
+        <h1>利用規約</h1>
+
+        <p class="lead">
+          この利用規約は、Celeste Harbor の利用条件を定めるものです。<br>
+          現在、有料販売機能は準備中です。
+        </p>
+
+        <div class="notice">
+          このページは、将来の有料機能に向けた仮利用規約です。<br>
+          実決済・有料チケット販売の開始前に、内容を最終確認します。
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="terms-section">
+          <h2>第1条（適用）</h2>
+          <p>
+            本規約は、Celeste Harbor（以下「本サービス」といいます）の利用条件を定めるものです。
+            ユーザーは、本サービスを利用することにより、本規約に同意したものとみなされます。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第2条（本サービスの内容）</h2>
+          <p>
+            本サービスは、ユーザーが航海記録、チケット、便り、その他の関連機能を利用できるWebサービスです。
+            本サービスの内容は、運営上の必要に応じて、追加、変更、停止または終了されることがあります。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第3条（アカウント）</h2>
+          <p>
+            ユーザーは、本サービスの一部機能を利用するために、外部認証サービス等を用いてログインする場合があります。
+            ユーザーは、自身のアカウント情報を適切に管理するものとします。
+          </p>
+          <p>
+            アカウントの管理不備、第三者による利用、その他ユーザーの責に帰すべき事由により生じた損害について、
+            運営者は責任を負いません。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第4条（禁止事項）</h2>
+          <p>
+            ユーザーは、本サービスの利用にあたり、以下の行為を行ってはなりません。
+          </p>
+          <ul>
+            <li>法令または公序良俗に反する行為</li>
+            <li>他者の権利、利益、名誉、信用を侵害する行為</li>
+            <li>本サービスの運営を妨害する行為</li>
+            <li>不正アクセス、過度な負荷をかける行為、脆弱性を悪用する行為</li>
+            <li>虚偽の情報を登録または送信する行為</li>
+            <li>本サービスを無断で商用利用、再販売、複製、改変する行為</li>
+            <li>その他、運営者が不適切と判断する行為</li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h2>第5条（投稿・記録内容）</h2>
+          <p>
+            ユーザーは、本サービス上に保存または送信する文章、記録、便り、その他の内容について、
+            自ら責任を負うものとします。
+          </p>
+          <p>
+            運営者は、法令違反、権利侵害、サービス運営上の支障、その他不適切と判断される内容について、
+            事前の通知なく削除、非表示、利用制限等の対応を行うことがあります。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第6条（チケット・有料機能）</h2>
+          <p>
+            本サービスでは、将来的にチケット、特別航海、その他の有料機能を提供する場合があります。
+            有料機能の内容、価格、利用条件、付与方法は、各販売ページまたは本サービス内で表示します。
+          </p>
+          <p>
+            現在、有料販売機能は準備中であり、実決済および購入後のチケット付与は開始していません。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第7条（支払い）</h2>
+          <p>
+            有料機能を提供する場合、ユーザーは、運営者が指定する決済方法により代金を支払うものとします。
+            決済方法、支払時期、その他の条件は、販売ページまたは特定商取引法に基づく表記に定めます。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第8条（返金・キャンセル）</h2>
+          <p>
+            デジタルコンテンツおよびサービスの性質上、有料機能の購入後の返金・キャンセルは、
+            原則としてお受けできません。
+          </p>
+          <p>
+            ただし、法令上必要な場合、または運営者に起因する重大な不具合がある場合には、個別に対応します。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第9条（サービスの停止・変更・終了）</h2>
+          <p>
+            運営者は、メンテナンス、障害対応、仕様変更、外部サービスの停止、その他運営上必要な場合に、
+            本サービスの全部または一部を停止、変更、終了することがあります。
+          </p>
+          <p>
+            これによりユーザーに損害が生じた場合でも、運営者は、故意または重過失がある場合を除き、
+            責任を負いません。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第10条（免責事項）</h2>
+          <p>
+            本サービスは、現状有姿で提供されます。運営者は、本サービスがユーザーの特定の目的に適合すること、
+            常に正確であること、継続して利用できること、不具合が発生しないことを保証しません。
+          </p>
+          <p>
+            ユーザーが本サービスを利用したこと、または利用できなかったことにより生じた損害について、
+            運営者は、法令上認められる範囲で責任を負わないものとします。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第11条（知的財産権）</h2>
+          <p>
+            本サービスに含まれる文章、画像、デザイン、プログラム、ロゴ、その他のコンテンツに関する権利は、
+            運営者または正当な権利者に帰属します。
+          </p>
+          <p>
+            ユーザーは、運営者の許可なく、これらを複製、転載、改変、配布、販売、公開することはできません。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第12条（個人情報の取扱い）</h2>
+          <p>
+            本サービスにおける個人情報の取扱いは、別途定めるプライバシーポリシーに従います。
+            プライバシーポリシーは、個人情報の取得、利用、管理、保護などに関する方針を示すものです。:contentReference[oaicite:1]{index=1}
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第13条（規約の変更）</h2>
+          <p>
+            運営者は、必要に応じて本規約を変更することがあります。
+            変更後の規約は、本サービス上に掲載した時点から効力を生じるものとします。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第14条（準拠法・管轄）</h2>
+          <p>
+            本規約の解釈には日本法を準拠法とします。
+            本サービスに関して紛争が生じた場合、運営者の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>第15条（お問い合わせ）</h2>
+          <p>
+            本規約に関するお問い合わせは、Celeste Harbor 内の Harbor Letter、または運営者が別途指定する連絡先よりお送りください。
+          </p>
+
+          <div class="back-links">
+            <a href="/harbor-letter/">Harbor Letter</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+
+        <p class="small-note">
+          制定日：2026年5月23日<br>
+          最終更新日：2026年5月23日
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/pricing/">Harbor Store</a>
+        <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+        <a href="/legal/terms/">利用規約</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+</body>
+</html>
