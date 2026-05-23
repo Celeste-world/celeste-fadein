@@ -1,45 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Harbor Store｜港の小さな売店</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Harbor Store – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
     :root{
-      --bg:#07111f;
-      --panel:#101d2f;
-      --panel-soft:#13243a;
-      --panel-deep:#0c1828;
-      --text:#f3ead7;
-      --muted:#b9ad98;
-      --line:rgba(243,234,215,.16);
-      --accent:#f3d38b;
-      --accent-soft:rgba(243,211,139,.14);
-      --danger:#e8a8a8;
-      --shadow:0 18px 55px rgba(0,0,0,.35);
-      --radius:22px;
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
     }
 
-    *{
-      box-sizing:border-box;
-    }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
       min-height:100vh;
       background:
-        radial-gradient(circle at top, rgba(243,211,139,.08), transparent 34%),
-        linear-gradient(180deg,#081424 0%,#07111f 52%,#050b14 100%);
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Hiragino Sans",
-        "Yu Gothic",
-        sans-serif;
-      line-height:1.8;
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
     }
 
     a{
@@ -47,469 +39,571 @@
       text-decoration:none;
     }
 
-    .page{
-      width:min(1080px, calc(100% - 32px));
-      margin:0 auto;
-      padding:32px 0 56px;
+    .nav-letter-link{
+      position:relative;
     }
 
-    header{
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:20px;
-      padding:14px 0 28px;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
     }
 
     .brand{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-
-    .brand-main{
-      font-size:18px;
-      letter-spacing:.08em;
-      font-weight:700;
-    }
-
-    .brand-sub{
-      font-size:12px;
-      color:var(--muted);
-      letter-spacing:.12em;
-    }
-
-    nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:10px 14px;
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    nav a{
-      padding:6px 2px;
-      border-bottom:1px solid transparent;
-    }
-
-    nav a:hover{
       color:var(--text);
-      border-bottom-color:var(--accent);
+      letter-spacing:.04em;
+      text-decoration:none;
     }
 
-    .hero{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:
-        linear-gradient(135deg, rgba(19,36,58,.96), rgba(8,18,32,.96)),
-        radial-gradient(circle at 85% 15%, rgba(243,211,139,.18), transparent 32%);
-      box-shadow:var(--shadow);
-      padding:42px 34px;
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      right:-80px;
-      bottom:-110px;
-      width:300px;
-      height:300px;
-      border-radius:999px;
-      background:rgba(243,211,139,.07);
-      filter:blur(2px);
-      pointer-events:none;
-    }
-
-    .eyebrow{
-      display:inline-flex;
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
       align-items:center;
-      gap:8px;
-      margin-bottom:12px;
-      padding:6px 12px;
-      border:1px solid rgba(243,211,139,.28);
-      border-radius:999px;
-      background:rgba(243,211,139,.08);
-      color:var(--accent);
-      font-size:13px;
-      letter-spacing:.08em;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:28px;
     }
 
     h1{
-      margin:0;
-      font-size:clamp(30px, 5vw, 48px);
-      line-height:1.25;
-      letter-spacing:.06em;
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
     }
 
     .lead{
-      max-width:720px;
-      margin:18px 0 0;
       color:var(--muted);
-      font-size:15px;
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    .store-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
     }
 
     .notice{
       margin-top:22px;
-      padding:14px 16px;
-      border:1px solid rgba(243,211,139,.22);
-      border-radius:18px;
-      background:rgba(243,211,139,.08);
-      color:#eadbb8;
-      font-size:14px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:14px;
+      margin:34px 0 16px;
+      color:var(--muted);
     }
 
     .section-title{
-      margin:42px 0 18px;
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:16px;
+      font-size:16px;
+      color:var(--text);
+      letter-spacing:.04em;
     }
 
-    .section-title h2{
-      margin:0;
-      font-size:22px;
-      letter-spacing:.08em;
-    }
-
-    .section-title p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .cards{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:16px;
-    }
-
-    .card{
-      display:flex;
-      flex-direction:column;
-      min-height:310px;
-      padding:22px;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:
-        linear-gradient(180deg, rgba(19,36,58,.94), rgba(12,24,40,.94));
-      box-shadow:0 12px 36px rgba(0,0,0,.22);
-    }
-
-    .card.featured{
-      border-color:rgba(243,211,139,.38);
-      background:
-        linear-gradient(180deg, rgba(32,48,70,.96), rgba(13,26,43,.96));
-      box-shadow:
-        0 14px 42px rgba(0,0,0,.28),
-        0 0 0 1px rgba(243,211,139,.08) inset;
-    }
-
-    .badge{
-      width:max-content;
-      margin-bottom:14px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:rgba(243,211,139,.1);
-      color:var(--accent);
+    .section-sub{
       font-size:12px;
-      letter-spacing:.06em;
+      color:var(--dim);
+      text-align:right;
     }
 
-    .card h3{
-      margin:0 0 8px;
+    .plans{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .plan{
+      background:rgba(10,14,28,.68);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+    }
+
+    .plan.featured{
+      border-color:rgba(169,183,255,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 44%),
+        rgba(10,14,28,.74);
+    }
+
+    .plan-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .plan-kicker{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:6px;
+    }
+
+    .plan h2{
       font-size:18px;
-      line-height:1.45;
+      font-weight:500;
+      line-height:1.7;
+      margin:0;
+    }
+
+    .plan-state{
+      flex:0 0 auto;
+      font-size:11px;
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .plan-state.ready{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.36);
+      background:rgba(185,246,202,.06);
     }
 
     .price{
-      margin:0 0 12px;
-      font-size:24px;
-      font-weight:700;
-      letter-spacing:.04em;
+      font-size:22px;
+      line-height:1.7;
+      margin:0 0 10px;
+      color:var(--text);
     }
 
-    .price small{
+    .price span{
       font-size:13px;
       color:var(--muted);
-      font-weight:400;
     }
 
     .desc{
-      margin:0 0 16px;
+      margin:0 0 14px;
       color:var(--muted);
-      font-size:14px;
+      font-size:13px;
+      line-height:1.9;
     }
 
-    .list{
+    .plan-list{
+      list-style:none;
+      padding:0;
+      margin:0 0 18px;
       display:grid;
       gap:8px;
-      margin:0 0 18px;
-      padding:0;
-      list-style:none;
-      color:#d8ccb5;
-      font-size:13px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
     }
 
-    .list li{
-      display:flex;
-      gap:8px;
-      align-items:flex-start;
+    .plan-list li{
+      position:relative;
+      padding-left:16px;
     }
 
-    .list li::before{
+    .plan-list li::before{
       content:"";
+      position:absolute;
+      left:0;
+      top:.78em;
       width:6px;
       height:6px;
-      flex:0 0 auto;
-      margin-top:11px;
       border-radius:999px;
       background:var(--accent);
-      box-shadow:0 0 10px rgba(243,211,139,.55);
+      opacity:.8;
     }
 
-    .card-footer{
-      margin-top:auto;
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
     button{
-      width:100%;
       border:0;
       border-radius:999px;
-      padding:12px 14px;
-      font:inherit;
-      font-weight:700;
-      letter-spacing:.04em;
+      padding:11px 18px;
+      font-family:inherit;
+      font-size:14px;
+      cursor:pointer;
+    }
+
+    .primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    button:hover{
+      opacity:.92;
     }
 
     button:disabled{
+      opacity:.55;
       cursor:not-allowed;
-      color:rgba(243,234,215,.58);
-      background:rgba(243,234,215,.1);
-      border:1px solid rgba(243,234,215,.12);
-    }
-
-    .free-button{
-      color:#1a2230;
-      background:linear-gradient(180deg,#f6dc9a,#d9b96f);
-      border:1px solid rgba(255,255,255,.18);
-    }
-
-    .free-button:disabled{
-      color:#1a2230;
-      background:linear-gradient(180deg,#f6dc9a,#d9b96f);
-      opacity:.9;
     }
 
     .note-grid{
       display:grid;
-      grid-template-columns:1.2fr .8fr;
+      grid-template-columns:1fr 1fr;
       gap:16px;
       margin-top:24px;
     }
 
     .note{
-      padding:22px;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:rgba(16,29,47,.72);
+      background:rgba(10,14,28,.68);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
     }
 
-    .note h3{
+    .note-title{
+      font-size:14px;
+      line-height:1.8;
+      color:var(--text);
       margin:0 0 8px;
-      font-size:17px;
-      letter-spacing:.06em;
     }
 
     .note p{
       margin:0;
       color:var(--muted);
-      font-size:14px;
+      font-size:13px;
+      line-height:1.9;
     }
 
     .back-links{
       display:flex;
+      gap:12px;
       flex-wrap:wrap;
-      gap:10px;
-      margin-top:28px;
+      align-items:center;
+      margin-top:24px;
     }
 
     .back-links a{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:42px;
-      padding:9px 16px;
-      border:1px solid var(--line);
       border-radius:999px;
-      background:rgba(243,234,215,.06);
-      color:#e8ddc8;
-      font-size:14px;
+      padding:10px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:transparent;
     }
 
     .back-links a:hover{
-      border-color:rgba(243,211,139,.38);
-      background:rgba(243,211,139,.1);
+      color:var(--text);
+      border-color:rgba(169,183,255,.45);
     }
 
     footer{
-      margin-top:44px;
-      padding-top:22px;
-      border-top:1px solid var(--line);
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
       color:var(--muted);
       font-size:12px;
-      text-align:center;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
     }
 
-    @media (max-width:920px){
-      .cards{
-        grid-template-columns:repeat(2, 1fr);
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .plans{
+        grid-template-columns:1fr;
+      }
+
+      .section-head{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .section-sub{
+        text-align:left;
       }
 
       .note-grid{
         grid-template-columns:1fr;
       }
-    }
 
-    @media (max-width:620px){
-      .page{
-        width:min(100% - 22px, 1080px);
-        padding-top:18px;
+      .actions button{
+        width:100%;
       }
 
-      header{
-        align-items:flex-start;
-        flex-direction:column;
-        padding-bottom:20px;
-      }
-
-      nav{
-        justify-content:flex-start;
-      }
-
-      .hero{
-        padding:30px 22px;
-        border-radius:24px;
-      }
-
-      .cards{
-        grid-template-columns:1fr;
-      }
-
-      .section-title{
-        align-items:flex-start;
-        flex-direction:column;
+      .back-links a{
+        width:100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <header>
-      <a class="brand" href="/log/">
-        <span class="brand-main">Celeste Harbor</span>
-        <span class="brand-sub">Moonlit Voyage</span>
-      </a>
+  <div class="wrap">
 
-      <nav aria-label="main navigation">
-        <a href="/log/">Log</a>
-        <a href="/special-voyage/">Special Voyage</a>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/account/">Account</a>
         <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/account/">Account</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="eyebrow">Harbor Store</div>
+      <div class="page-head">
+        <div class="store-label">Harbor Store</div>
+
         <h1>港の小さな売店</h1>
+
         <p class="lead">
-          Celeste Harbor の航海券や、これから追加される小さな支援の置き場です。
+          Celeste Harbor の航海券や、これから追加される小さな支援の置き場です。<br>
           現在は準備中のため、ここから購入や決済は行われません。
         </p>
 
         <div class="notice">
-          現在、このページは表示確認用です。実決済・Stripe連携・チケット付与はまだ接続していません。
+          このページは、将来の課金機能に向けた外枠です。<br>
+          実決済・Stripe連携・購入後のチケット付与は、まだ接続していません。
         </div>
-      </section>
+      </div>
 
-      <section aria-labelledby="plans-title">
-        <div class="section-title">
-          <h2 id="plans-title">航海券</h2>
-          <p>Prices and tickets are in preparation.</p>
+      <section>
+        <div class="section-head">
+          <div class="section-title">Voyage Tickets</div>
+          <div class="section-sub">Prices and tickets are in preparation.</div>
         </div>
 
-        <div class="cards">
-          <article class="card">
-            <div class="badge">Free</div>
-            <h3>Harbor Cat</h3>
-            <p class="price">無料</p>
+        <div class="plans">
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Free</div>
+                <h2>Harbor Cat</h2>
+              </div>
+              <div class="plan-state ready">Available</div>
+            </div>
+
+            <p class="price">
+              無料
+            </p>
+
             <p class="desc">
               Celeste Harbor の基本航海です。港、記録、便りを静かに使えます。
             </p>
-            <ul class="list">
+
+            <ul class="plan-list">
               <li>Voyage Log</li>
               <li>Harbor Letter</li>
               <li>Tide Letter</li>
             </ul>
-            <div class="card-footer">
-              <button class="free-button" type="button" disabled>利用中</button>
+
+            <div class="actions">
+              <button class="primary" type="button" disabled>
+                利用中
+              </button>
             </div>
           </article>
 
-          <article class="card featured">
-            <div class="badge">Preparing</div>
-            <h3>Special Voyage Ticket</h3>
-            <p class="price">10分 <small>準備中</small></p>
+          <article class="plan featured">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Special</div>
+                <h2>Special Voyage Ticket</h2>
+              </div>
+              <div class="plan-state">Preparing</div>
+            </div>
+
+            <p class="price">
+              10分 <span>準備中</span>
+            </p>
+
             <p class="desc">
               短い特別航海のためのチケットです。軽く深く潜りたい時の入口になります。
             </p>
-            <ul class="list">
+
+            <ul class="plan-list">
               <li>Special Voyage 10分</li>
               <li>短めの集中航海</li>
               <li>将来販売予定</li>
             </ul>
-            <div class="card-footer">
-              <button type="button" disabled>現在準備中</button>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                現在準備中
+              </button>
             </div>
           </article>
 
-          <article class="card">
-            <div class="badge">Preparing</div>
-            <h3>Special Voyage Ticket</h3>
-            <p class="price">20分 <small>準備中</small></p>
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Special</div>
+                <h2>Special Voyage Ticket</h2>
+              </div>
+              <div class="plan-state">Preparing</div>
+            </div>
+
+            <p class="price">
+              20分 <span>準備中</span>
+            </p>
+
             <p class="desc">
               少し長めの特別航海です。考えを整理したい時の航海券として準備しています。
             </p>
-            <ul class="list">
+
+            <ul class="plan-list">
               <li>Special Voyage 20分</li>
               <li>やや深めの航海</li>
               <li>将来販売予定</li>
             </ul>
-            <div class="card-footer">
-              <button type="button" disabled>準備中の航海券</button>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                準備中の航海券
+              </button>
             </div>
           </article>
 
-          <article class="card">
-            <div class="badge">Limited</div>
-            <h3>Deep Sea Ticket</h3>
-            <p class="price">限定 <small>準備中</small></p>
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Deep Sea</div>
+                <h2>Deep Sea Ticket</h2>
+              </div>
+              <div class="plan-state">Limited</div>
+            </div>
+
+            <p class="price">
+              限定 <span>準備中</span>
+            </p>
+
             <p class="desc">
               深い海へ向かうための特別な航海券です。慎重に設計してから開きます。
             </p>
-            <ul class="list">
+
+            <ul class="plan-list">
               <li>Deep Sea Voyage</li>
               <li>限定的な導線</li>
               <li>将来開放予定</li>
             </ul>
-            <div class="card-footer">
-              <button type="button" disabled>現在準備中</button>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                現在準備中
+              </button>
             </div>
           </article>
         </div>
@@ -517,17 +611,16 @@
 
       <section class="note-grid" aria-label="notes">
         <div class="note">
-          <h3>現在の扱い</h3>
+          <div class="note-title">現在の扱い</div>
           <p>
-            このページは、将来の課金機能に向けた外枠です。
-            ボタンはすべて無効化しているため、誤って購入処理が走ることはありません。
+            このページは表示確認用です。ボタンは無効化しているため、誤って購入処理が走ることはありません。
           </p>
         </div>
 
         <div class="note">
-          <h3>今後追加するもの</h3>
+          <div class="note-title">今後追加するもの</div>
           <p>
-            本格運用前に、決済導線、購入後のチケット付与、特定商取引法表示ページなどを順番に整えます。
+            本格運用前に、決済導線、購入後のチケット付与、特定商取引法表示ページを順番に整えます。
           </p>
         </div>
       </section>
@@ -535,13 +628,27 @@
       <div class="back-links">
         <a href="/tickets/">Tickets に戻る</a>
         <a href="/account/">Account に戻る</a>
-        <a href="/log/">Log に戻る</a>
+        <a href="/log/">Voyage Log に戻る</a>
       </div>
     </main>
 
     <footer>
-      Celeste Harbor｜Harbor Store is currently in preparation.
+      <div class="footer-links">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
     </footer>
+
   </div>
 </body>
 </html>
