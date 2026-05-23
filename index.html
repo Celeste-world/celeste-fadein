@@ -6,19 +6,19 @@
 
   <title>Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港空間です。Googleログインで港へ入り、航海記録を残していきます。" />
+  <meta name="description" content="Celeste Harbor は、日々の言葉を航海記録として残す、静かな日記の港です。Googleログインで港へ入り、気持ちや出来事を静かに書き残していきます。" />
   <link rel="canonical" href="https://celeste.world/" />
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Celeste Harbor">
-  <meta property="og:description" content="静かに航海を続けるための、小さなWebの港。">
+  <meta property="og:description" content="日々の言葉を“航海記録”として残す、静かな日記の港。">
   <meta property="og:url" content="https://celeste.world/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Celeste Harbor">
-  <meta name="twitter:description" content="静かに航海を続けるための、小さなWebの港。">
+  <meta name="twitter:description" content="日々の言葉を“航海記録”として残す、静かな日記の港。">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -36,7 +36,8 @@
       --gate-height:118px;
       --gate-bottom:18px;
       --art-top:18px;
-      --art-safe-bottom:158px;
+      --art-safe-bottom:230px;
+      --copy-bottom:154px;
     }
 
     *{
@@ -102,7 +103,7 @@
           to bottom,
           rgba(3,5,11,.03) 0%,
           rgba(3,5,11,.06) 48%,
-          rgba(3,5,11,.18) 100%
+          rgba(3,5,11,.20) 100%
         );
       pointer-events:none;
     }
@@ -137,6 +138,47 @@
           rgba(5,8,17,.16) 100%
         );
       pointer-events:none;
+    }
+
+    .intro-copy{
+      position:fixed;
+      left:50%;
+      bottom:calc(var(--gate-bottom) + var(--gate-height) + 18px);
+      transform:translateX(-50%);
+      z-index:4;
+      width:min(720px, calc(100% - 34px));
+      text-align:center;
+      padding:0 6px;
+      pointer-events:none;
+      text-shadow:
+        0 2px 18px rgba(0,0,0,.72),
+        0 0 28px rgba(5,8,17,.55);
+    }
+
+    .intro-kicker{
+      margin:0 0 8px;
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      opacity:.92;
+    }
+
+    .intro-copy h1{
+      margin:0;
+      color:var(--text);
+      font-size:clamp(21px, 4vw, 34px);
+      font-weight:500;
+      line-height:1.65;
+      letter-spacing:.035em;
+    }
+
+    .intro-lead{
+      margin:12px auto 0;
+      max-width:620px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
     }
 
     .gate{
@@ -236,7 +278,7 @@
         --gate-height:156px;
         --gate-bottom:12px;
         --art-top:12px;
-        --art-safe-bottom:190px;
+        --art-safe-bottom:270px;
       }
 
       .entrance::after{
@@ -245,7 +287,7 @@
             to bottom,
             rgba(3,5,11,.04) 0%,
             rgba(3,5,11,.08) 52%,
-            rgba(3,5,11,.22) 100%
+            rgba(3,5,11,.24) 100%
           );
       }
 
@@ -268,6 +310,27 @@
             rgba(5,8,17,.10) 52%,
             rgba(5,8,17,.18) 100%
           );
+      }
+
+      .intro-copy{
+        bottom:calc(var(--gate-bottom) + var(--gate-height) + 14px);
+        width:calc(100% - 24px);
+      }
+
+      .intro-kicker{
+        font-size:10px;
+        margin-bottom:6px;
+      }
+
+      .intro-copy h1{
+        font-size:clamp(19px, 6vw, 27px);
+        line-height:1.6;
+      }
+
+      .intro-lead{
+        margin-top:10px;
+        font-size:12px;
+        line-height:1.8;
       }
 
       .gate{
@@ -299,18 +362,37 @@
       }
     }
 
+    @media(max-height:700px){
+      .intro-lead{
+        display:none;
+      }
+    }
+
     @media(max-height:620px){
       :root{
         --gate-height:88px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:122px;
+        --art-safe-bottom:170px;
       }
 
       .gate{
         bottom:var(--gate-bottom);
         min-height:var(--gate-height);
         padding:10px 12px;
+      }
+
+      .intro-copy{
+        bottom:calc(var(--gate-bottom) + var(--gate-height) + 12px);
+      }
+
+      .intro-kicker{
+        display:none;
+      }
+
+      .intro-copy h1{
+        font-size:18px;
+        line-height:1.55;
       }
 
       .subline{
@@ -323,11 +405,19 @@
         --gate-height:148px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:180px;
+        --art-safe-bottom:250px;
       }
 
       .gate{
         bottom:var(--gate-bottom);
+      }
+
+      .intro-copy h1{
+        font-size:20px;
+      }
+
+      .intro-lead{
+        font-size:11px;
       }
 
       .brand{
@@ -343,7 +433,11 @@
 
     @media(max-width:380px){
       :root{
-        --art-safe-bottom:192px;
+        --art-safe-bottom:260px;
+      }
+
+      .intro-copy h1{
+        font-size:18px;
       }
     }
   </style>
@@ -352,6 +446,15 @@
 <body>
   <div class="entrance">
     <div class="entrance-art" aria-hidden="true"></div>
+
+    <section class="intro-copy" aria-label="Celeste Harbor description">
+      <p class="intro-kicker">A quiet harbor for your words</p>
+      <h1>日々の言葉を“航海記録”として残す、静かな日記の港。</h1>
+      <p class="intro-lead">
+        Celeste Harbor は、気持ちや出来事を静かに書き残し、
+        小さな発見や航海の記録として積み重ねていく場所です。
+      </p>
+    </section>
 
     <section class="gate" aria-label="Celeste Harbor entrance">
       <div class="brand">Celeste Harbor</div>
