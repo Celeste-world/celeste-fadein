@@ -243,7 +243,12 @@ Last Voyage / Memory Tide
 これらは、ユーザーを管理・評価するための機能ではありません。
 港に戻ってきた時、少しだけ「まだ灯りがある」と感じられるための表示です。
 
-
+Harbor Letter 仕様：
+・ユーザーは /harbor-letter/ から便りを送る
+・管理者は /admin/feedback/ で確認・返信する
+・返信あり + user_read_at null の場合、主要5ページで Letter が光る
+・ユーザーが /harbor-letter/ を開くと user_read_at が入る
+・補助ページには通知を展開しない
 ---
 
 ## 4. 「現在のページ構成」に `/harbor-status/` を追加
