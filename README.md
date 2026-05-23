@@ -1474,6 +1474,126 @@ Celeste Harbor では、課金を「強くなるため」ではなく、
 これで、価格表と内部実装の対応がかなり明確になります。  
 次に進むなら、この内容をもとに **`/pricing/` の文言と README の課金設計が一致しているか確認**するのがよいです。
 
+## 航海燃料の month_key 仕様
+
+航海燃料は、購入した月に限り Voyage Log の航海回数を +50回する単発購入です。
+
+この「購入月」は、`billing_purchases.month_key` に保存された値を基準に判定します。  
+`created_at` から都度月を推定しません。
+
+### 理由
+
+Stripe の決済完了時刻、Webhook の受信時刻、Supabase への記録時刻には差が出る可能性があります。
+
+特に月末・月初の決済では、`created_at` から月を推定すると、ユーザーが購入したつもりの月と、DB上で反映される月がずれる可能性があります。
+
+そのため、航海燃料では購入処理時に JST 基準の `month_key` を固定して保存します。
+
+```txt
+例：
+2026年5月の航海燃料として購入
+month_key = 2026-05
+反映条件
+
+航海燃料が月間回数に反映される条件は以下です。
+
+billing_purchases.product_key = voyage_fuel_50
+billing_purchases.status = granted
+billing_purchases.month_key = 対象月
+
+status = paid の段階では、まだ月間回数には反映しません。
+Supabase 側で付与処理が完了し、granted になったものだけを反映します。
+
+回数計算
+
+航海燃料は、1件ごとに Voyage Log の航海回数を +50回します。
+
+航海燃料 0件
+  fuel_bonus = 0
+
+航海燃料 1件
+  fuel_bonus = 50
+
+航海燃料 2件
+  fuel_bonus = 100
+
+航海燃料 3件
+  fuel_bonus = 150
+
+港の維持灯と併用した場合：
+
+無料分
+  10回
+
+港の維持灯
+  +30回
+
+航海燃料 1件
+  +50回
+
+合計
+  90回
+
+航海燃料を2件購入した場合：
+
+無料分
+  10回
+
+港の維持灯
+  +30回
+
+航海燃料 2件
+  +100回
+
+合計
+  140回
+ensure_monthly_log_allowance() での扱い
+
+ensure_monthly_log_allowance() は、航海燃料の回数を以下の条件で集計します。
+
+select coalesce(count(*)::integer * 50, 0)
+  into v_fuel_bonus
+from public.billing_purchases bp
+where bp.user_id = v_user_id
+  and bp.product_key = 'voyage_fuel_50'
+  and bp.status = 'granted'
+  and bp.month_key = v_month_key;
+
+このため、同じ月に航海燃料を複数回購入した場合も、購入件数分だけ正しく加算されます。
+
+購入保存ルール
+
+航海燃料の購入履歴を保存する場合は、必ず month_key を入れます。
+
+product_key = voyage_fuel_50
+amount = 580
+currency = jpy
+status = granted
+month_key = JST基準の購入月
+
+例：
+
+2026年5月分として購入
+month_key = 2026-05
+注意事項
+
+航海燃料は購入月のみ有効です。
+翌月への繰り越しはありません。
+
+created_at は記録時刻として保持しますが、航海燃料の対象月判定には使いません。
+対象月の判定には、必ず month_key を使用します。
+
+
+これで、今回確定した重要仕様が README 側にも残せます。
+
+特に大事なのはこの3点です。
+
+```text
+created_at から月を推定しない
+month_key を購入時に固定する
+status = granted のものだけ +50回に反映する
+
+
 ## 課金DB設計
 
 Celeste Harbor の課金機能は、Stripe 等の決済サービスと接続する前に、  
