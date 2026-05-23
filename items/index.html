@@ -977,38 +977,40 @@
 
   <script>
     async function checkUnreadHarborLetterReplies(){
-  const letterNavLink = document.getElementById("letterNavLink");
-
-  if(!letterNavLink){
-    return;
+   
+    const letterNavLink = document.getElementById("letterNavLink");
+  
+    if(!letterNavLink){
+      return;
+    }
+  
+    letterNavLink.classList.remove("has-reply");
+    letterNavLink.removeAttribute("title");
+  
+    if(!currentUser){
+      return;
+    }
+  
+    const { data, error } = await client
+      .from("user_feedback")
+      .select("id")
+      .eq("user_id", currentUser.id)
+      .not("admin_reply", "is", null)
+      .is("user_read_at", null)
+      .limit(1);
+  
+    if(error){
+      console.warn("unread harbor letter check failed:", error);
+      return;
+    }
+  
+    console.log("unread harbor replies:", data);
+  
+    if(data && data.length > 0){
+      letterNavLink.classList.add("has-reply");
+      letterNavLink.title = "港から返事が届いています";
+    }
   }
-
-  // まず必ず消す。判定後に必要なら光らせる。
-  letterNavLink.classList.remove("has-reply");
-  letterNavLink.removeAttribute("title");
-
-  if(!currentUser){
-    return;
-  }
-
-  const { data, error } = await client
-    .from("user_feedback")
-    .select("id")
-    .eq("user_id", currentUser.id)
-    .not("admin_reply", "is", null)
-    .is("user_read_at", null)
-    .limit(1);
-
-  if(error){
-    console.warn("unread harbor letter check failed:", error);
-    return;
-  }
-
-  if(data && data.length > 0){
-    letterNavLink.classList.add("has-reply");
-    letterNavLink.title = "港から返事が届いています";
-  }
-}
     
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
