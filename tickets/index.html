@@ -41,12 +41,12 @@
     .nav-letter-link{
       position:relative;
     }
-    
-    .nav-letter-link.has-reply{
+
+    body.has-unread-letter .nav-letter-link{
       color:var(--text);
     }
-    
-    .nav-letter-link.has-reply::after{
+
+    body.has-unread-letter .nav-letter-link::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -338,7 +338,7 @@
         radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 44%),
         rgba(255,255,255,.02);
     }
-    
+
     .ticket-entry-label{
       font-size:11px;
       letter-spacing:.14em;
@@ -346,19 +346,19 @@
       color:var(--accent);
       margin-bottom:8px;
     }
-    
+
     .ticket.drift .ticket-entry-label{
       color:var(--ready);
     }
-    
+
     .ticket.special .ticket-entry-label{
       color:var(--ticket);
     }
-    
+
     .ticket.deep .ticket-entry-label{
       color:var(--deep);
     }
-    
+
     .ticket-entry-text{
       font-size:13px;
       line-height:1.95;
@@ -440,7 +440,7 @@
         rgba(10,14,28,.72);
       box-shadow:0 18px 42px rgba(0,0,0,.30);
     }
-    
+
     .ticket-next-label{
       font-size:12px;
       letter-spacing:.16em;
@@ -448,7 +448,7 @@
       color:var(--accent);
       margin-bottom:10px;
     }
-    
+
     .ticket-next-title{
       font-size:20px;
       font-weight:500;
@@ -456,21 +456,14 @@
       color:var(--text);
       margin:0 0 10px;
     }
-    
+
     .ticket-next-text{
       font-size:14px;
       line-height:2;
       color:var(--muted);
       margin:0;
     }
-    
-    .ticket-next-note{
-      margin-top:12px;
-      font-size:12px;
-      line-height:1.8;
-      color:var(--dim);
-    }
-    
+
     .ticket-next-actions{
       margin-top:20px;
       display:flex;
@@ -478,21 +471,10 @@
       gap:12px;
       align-items:center;
     }
-    
+
     .ticket-next-actions .btn-primary,
     .ticket-next-actions .btn-ghost{
       min-width:180px;
-    }
-    
-    @media(max-width:700px){
-      .ticket-next{
-        padding:20px;
-      }
-    
-      .ticket-next-actions .btn-primary,
-      .ticket-next-actions .btn-ghost{
-        width:100%;
-      }
     }
 
     .flow{
@@ -645,6 +627,15 @@
         font-size:31px;
       }
 
+      .ticket-next{
+        padding:20px;
+      }
+
+      .ticket-next-actions .btn-primary,
+      .ticket-next-actions .btn-ghost{
+        width:100%;
+      }
+
       .ticket,
       .flow,
       .panel{
@@ -772,6 +763,7 @@
                 Harbor Cat は、記録が港に届いたことを静かに見届けます。
               </div>
             </div>
+
             <div class="meta">
               <span class="tag">無料</span>
               <span class="tag">1〜2行</span>
@@ -788,14 +780,17 @@
           <div>
             <div class="ticket-kicker">Drift / Free Ticket</div>
             <h2>Drift Ticket（漂着チケット）</h2>
+
             <p>
               港にたまたま流れ着く、無料の短い航海券です。<br>
               5分だけ、いつもの記録より少し深い海へ降りることができます。
             </p>
+
             <p>
               購入するものではなく、Voyage Log のあとに港へ届くことがあります。<br>
               「少しだけ試してみたい夜」のためのチケットです。
             </p>
+
             <div class="ticket-entry">
               <div class="ticket-entry-label">航海の入口</div>
               <div class="ticket-entry-text">
@@ -830,21 +825,24 @@
           <div>
             <div class="ticket-kicker">Paid / Special Voyage</div>
             <h2>Special Voyage Ticket（特別航海チケット）</h2>
+
             <p>
               自分で選んで入る、時間制の特別航海です。<br>
               考えや言葉を、通常の記録より少し深く整えるために使います。
             </p>
+
             <p>
               チケットは 10分 と 20分 の2種類です。<br>
               短い時間の中で、今の言葉を静かに整えるための航海です。
             </p>
+
             <div class="ticket-entry">
-            <div class="ticket-entry-label">航海の入口</div>
-            <div class="ticket-entry-text">
-              いつもの港より少し遠くへ出るための航海券です。<br>
-              使う時だけ、港の外に静かな航路が開きます。
+              <div class="ticket-entry-label">航海の入口</div>
+              <div class="ticket-entry-text">
+                いつもの港より少し遠くへ出るための航海券です。<br>
+                使う時だけ、港の外に静かな航路が開きます。
+              </div>
             </div>
-          </div>
 
             <div class="benefit-box">
               <div class="benefit-title">この航海券でできること</div>
@@ -872,15 +870,17 @@
           <div>
             <div class="ticket-kicker">Limited / Deep Sea</div>
             <h2>Deep Sea Ticket（深海チケット）</h2>
+
             <p>
               いつもの港よりも、さらに深い海へ降りるための航海券です。<br>
               静かな夜に、言葉をもう少し奥まで沈めたいときのためにあります。
             </p>
+
             <p>
               すべての夜に必要なものではありません。<br>
               必要だと感じる時だけ開く、深い海への入口です。
             </p>
-            
+
             <div class="ticket-entry">
               <div class="ticket-entry-label">深い航海の入口</div>
               <div class="ticket-entry-text">
@@ -910,29 +910,27 @@
       </section>
 
       <section class="ticket-next">
-      <div class="ticket-next-label">Next Voyage</div>
-    
-      <h2 class="ticket-next-title">
-        次の航海へ
-      </h2>
-    
-      <p class="ticket-next-text">
-        チケットの意味を確認したら、手元に残っている航海券を見ることができます。<br>
-        有効な航海券があれば、そこから桟橋へ向かえます。
-      </p>
-    
-      
-    
-      <div class="ticket-next-actions">
-        <a class="btn-primary" href="/account/">
-          手元の航海券を確認する
-        </a>
-    
-        <a class="btn-ghost" href="/special-voyage/">
-          桟橋へ向かう
-        </a>
-      </div>
-    </section>
+        <div class="ticket-next-label">Next Voyage</div>
+
+        <h2 class="ticket-next-title">
+          次の航海へ
+        </h2>
+
+        <p class="ticket-next-text">
+          チケットの意味を確認したら、手元に残っている航海券を見ることができます。<br>
+          有効な航海券があれば、そこから桟橋へ向かえます。
+        </p>
+
+        <div class="ticket-next-actions">
+          <a class="btn-primary" href="/account/">
+            手元の航海券を確認する
+          </a>
+
+          <a class="btn-ghost" href="/special-voyage/">
+            桟橋へ向かう
+          </a>
+        </div>
+      </section>
 
       <section class="flow">
         <h2>航海の深さ</h2>
@@ -952,7 +950,6 @@
           ただし、チケットは報酬を得るためだけのものではありません。<br>
           自分の言葉と向き合う深さを選ぶための、小さな航海券です。
         </p>
-
       </section>
 
     </main>
@@ -977,20 +974,80 @@
   </div>
 
   <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const userStatus = document.getElementById("userStatus");
+    const statusEl = document.getElementById("status");
+    const logoutLink = document.getElementById("logoutLink");
+    const activeVoyageBanner = document.getElementById("activeVoyageBanner");
+
+    let currentUser = null;
+    let currentAccessToken = null;
+    let activeVoyageSession = null;
+    let activeVoyageTimer = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function accountDisplayName(user){
+      if(!user){
+        return "Guest";
+      }
+
+      return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name ||
+        user.email ||
+        "Account"
+      );
+    }
+
+    function clearActiveVoyageTimer(){
+      if(activeVoyageTimer){
+        clearInterval(activeVoyageTimer);
+        activeVoyageTimer = null;
+      }
+    }
+
+    function formatRemainingTime(endsAtValue){
+      const endsAt = new Date(endsAtValue);
+      const now = new Date();
+      const remainingMs = Math.max(0, endsAt.getTime() - now.getTime());
+
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0")
+      );
+    }
+
     async function checkUnreadHarborLetterReplies(){
       document.body.classList.remove("has-unread-letter");
-    
+
       const letterNavLinks = document.querySelectorAll(".nav-letter-link");
-    
+
       letterNavLinks.forEach((link) => {
         link.classList.remove("has-reply");
         link.removeAttribute("title");
       });
-    
+
       if(!currentUser){
         return;
       }
-    
+
       const { data, error } = await client
         .from("user_feedback")
         .select("id")
@@ -998,28 +1055,28 @@
         .not("admin_reply", "is", null)
         .is("user_read_at", null)
         .limit(1);
-    
+
       if(error){
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-    
+
       console.log("unread harbor replies:", data);
-    
+
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
-    
+
         letterNavLinks.forEach((link) => {
           link.title = "港から返事が届いています";
         });
       }
-    
+
       console.log(
         "body has-unread-letter:",
         document.body.classList.contains("has-unread-letter")
       );
     }
-    
+
     function activeVoyageLabel(session){
       const sessionType = String(session?.session_type || "");
       const durationMinutes = Number(session?.duration_minutes || 0);
@@ -1155,12 +1212,12 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("航海券の案内を表示しています。");
 
+        await checkUnreadHarborLetterReplies();
         await loadActiveSpecialVoyageBanner();
       }else{
         window.location.replace("/");
         return;
       }
-      await checkUnreadHarborLetterReplies();
     }
 
     async function endSpecialVoyageOnLogout(){
@@ -1199,17 +1256,17 @@
 
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
-    
+
       const confirmed = window.confirm(
         "ログアウトしますか？\n\n" +
         "港を離れると、もう一度入るにはGoogleログインが必要です。\n" +
         "進行中の特別航海がある場合は、静かに閉じられます。"
       );
-    
+
       if(!confirmed){
         return;
       }
-    
+
       logout();
     });
 
@@ -1226,12 +1283,11 @@
           checkUnreadHarborLetterReplies().catch(function(error){
             console.error("auth state harbor letter check error:", error);
           });
-        
+
           loadActiveSpecialVoyageBanner().catch(function(error){
             console.error("auth state active voyage banner error:", error);
           });
         }, 0);
-        
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
 
