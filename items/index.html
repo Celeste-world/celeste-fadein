@@ -40,11 +40,11 @@
       position:relative;
     }
     
-    .nav-letter-link.has-reply{
+    body.has-unread-letter .nav-letter-link{
       color:var(--text);
     }
     
-    .nav-letter-link.has-reply::after{
+    body.has-unread-letter .nav-letter-link::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -977,13 +977,9 @@
 
   <script>
     async function checkUnreadHarborLetterReplies(){
-      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+      document.body.classList.remove("has-unread-letter");
     
-      if(!letterNavLinks || letterNavLinks.length === 0){
-        return;
-      }
-    
-      letterNavLinks.forEach((link) => {
+      document.querySelectorAll(".nav-letter-link").forEach((link) => {
         link.classList.remove("has-reply");
         link.removeAttribute("title");
       });
@@ -1005,9 +1001,12 @@
         return;
       }
     
+      console.log("unread harbor replies:", data);
+    
       if(data && data.length > 0){
+        document.body.classList.add("has-unread-letter");
+    
         letterNavLinks.forEach((link) => {
-          link.classList.add("has-reply");
           link.title = "港から返事が届いています";
         });
       }
