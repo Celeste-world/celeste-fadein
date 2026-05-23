@@ -42,11 +42,11 @@
       position:relative;
     }
     
-    .nav-letter-link.has-reply{
+    body.has-unread-letter .nav-letter-link{
       color:var(--text);
     }
     
-    .nav-letter-link.has-reply::after{
+    body.has-unread-letter .nav-letter-link::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -633,7 +633,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -699,7 +699,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
       </div>
 
@@ -710,9 +710,16 @@
 
   <script>
     async function checkUnreadHarborLetterReplies(){
-      const letterNavLink = document.getElementById("letterNavLink");
+      document.body.classList.remove("has-unread-letter");
     
-      if(!letterNavLink || !currentUser){
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
         return;
       }
     
@@ -729,14 +736,22 @@
         return;
       }
     
+      console.log("unread harbor replies:", data);
+    
       if(data && data.length > 0){
-        letterNavLink.classList.add("has-reply");
-        letterNavLink.title = "港から返事が届いています";
-      }else{
-        letterNavLink.classList.remove("has-reply");
-        letterNavLink.removeAttribute("title");
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
       }
+    
+      console.log(
+        "body has-unread-letter:",
+        document.body.classList.contains("has-unread-letter")
+      );
     }
+    
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
 
