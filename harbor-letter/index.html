@@ -682,27 +682,33 @@
       if(!currentUser){
         return;
       }
-
-      const { error } = await client
+    
+      const { data, error } = await client
         .from("user_feedback")
         .update({
           user_read_at: new Date().toISOString()
         })
         .eq("user_id", currentUser.id)
         .not("admin_reply", "is", null)
-        .is("user_read_at", null);
-
+        .is("user_read_at", null)
+        .select("id,user_read_at");
+    
       if(error){
-        console.warn("mark harbor letter replies as read failed:", error);
+        console.error("mark harbor letter replies as read failed:", error);
+        setStatus(
+          "返事の既読処理に失敗しました：" + error.message,
+          "error"
+        );
         return;
       }
-
+    
+      console.log("marked harbor letter replies as read:", data);
+    
       if(letterNavLink){
         letterNavLink.classList.remove("has-reply");
         letterNavLink.removeAttribute("title");
       }
     }
-
     async function loadMyHarborLetters(){
       if(!currentUser){
         if(myLettersPanel){
