@@ -1376,6 +1376,7 @@
         currentAccessToken = data.session.access_token;
 
         document.body.classList.remove("auth-locked");
+        await checkUnreadHarborLetterReplies();
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("漂着物を確認しています。");
