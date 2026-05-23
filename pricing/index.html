@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Harbor Store｜港の小さな売店</title>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#101d2f;
+      --panel-soft:#13243a;
+      --panel-deep:#0c1828;
+      --text:#f3ead7;
+      --muted:#b9ad98;
+      --line:rgba(243,234,215,.16);
+      --accent:#f3d38b;
+      --accent-soft:rgba(243,211,139,.14);
+      --danger:#e8a8a8;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top, rgba(243,211,139,.08), transparent 34%),
+        linear-gradient(180deg,#081424 0%,#07111f 52%,#050b14 100%);
+      color:var(--text);
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
+      line-height:1.8;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page{
+      width:min(1080px, calc(100% - 32px));
+      margin:0 auto;
+      padding:32px 0 56px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:14px 0 28px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .brand-main{
+      font-size:18px;
+      letter-spacing:.08em;
+      font-weight:700;
+    }
+
+    .brand-sub{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.12em;
+    }
+
+    nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:10px 14px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    nav a{
+      padding:6px 2px;
+      border-bottom:1px solid transparent;
+    }
+
+    nav a:hover{
+      color:var(--text);
+      border-bottom-color:var(--accent);
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:
+        linear-gradient(135deg, rgba(19,36,58,.96), rgba(8,18,32,.96)),
+        radial-gradient(circle at 85% 15%, rgba(243,211,139,.18), transparent 32%);
+      box-shadow:var(--shadow);
+      padding:42px 34px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-80px;
+      bottom:-110px;
+      width:300px;
+      height:300px;
+      border-radius:999px;
+      background:rgba(243,211,139,.07);
+      filter:blur(2px);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:12px;
+      padding:6px 12px;
+      border:1px solid rgba(243,211,139,.28);
+      border-radius:999px;
+      background:rgba(243,211,139,.08);
+      color:var(--accent);
+      font-size:13px;
+      letter-spacing:.08em;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(30px, 5vw, 48px);
+      line-height:1.25;
+      letter-spacing:.06em;
+    }
+
+    .lead{
+      max-width:720px;
+      margin:18px 0 0;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .notice{
+      margin-top:22px;
+      padding:14px 16px;
+      border:1px solid rgba(243,211,139,.22);
+      border-radius:18px;
+      background:rgba(243,211,139,.08);
+      color:#eadbb8;
+      font-size:14px;
+    }
+
+    .section-title{
+      margin:42px 0 18px;
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.08em;
+    }
+
+    .section-title p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+    }
+
+    .card{
+      display:flex;
+      flex-direction:column;
+      min-height:310px;
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:
+        linear-gradient(180deg, rgba(19,36,58,.94), rgba(12,24,40,.94));
+      box-shadow:0 12px 36px rgba(0,0,0,.22);
+    }
+
+    .card.featured{
+      border-color:rgba(243,211,139,.38);
+      background:
+        linear-gradient(180deg, rgba(32,48,70,.96), rgba(13,26,43,.96));
+      box-shadow:
+        0 14px 42px rgba(0,0,0,.28),
+        0 0 0 1px rgba(243,211,139,.08) inset;
+    }
+
+    .badge{
+      width:max-content;
+      margin-bottom:14px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(243,211,139,.1);
+      color:var(--accent);
+      font-size:12px;
+      letter-spacing:.06em;
+    }
+
+    .card h3{
+      margin:0 0 8px;
+      font-size:18px;
+      line-height:1.45;
+    }
+
+    .price{
+      margin:0 0 12px;
+      font-size:24px;
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+
+    .price small{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:400;
+    }
+
+    .desc{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .list{
+      display:grid;
+      gap:8px;
+      margin:0 0 18px;
+      padding:0;
+      list-style:none;
+      color:#d8ccb5;
+      font-size:13px;
+    }
+
+    .list li{
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+    }
+
+    .list li::before{
+      content:"";
+      width:6px;
+      height:6px;
+      flex:0 0 auto;
+      margin-top:11px;
+      border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 0 10px rgba(243,211,139,.55);
+    }
+
+    .card-footer{
+      margin-top:auto;
+    }
+
+    button{
+      width:100%;
+      border:0;
+      border-radius:999px;
+      padding:12px 14px;
+      font:inherit;
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+
+    button:disabled{
+      cursor:not-allowed;
+      color:rgba(243,234,215,.58);
+      background:rgba(243,234,215,.1);
+      border:1px solid rgba(243,234,215,.12);
+    }
+
+    .free-button{
+      color:#1a2230;
+      background:linear-gradient(180deg,#f6dc9a,#d9b96f);
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .free-button:disabled{
+      color:#1a2230;
+      background:linear-gradient(180deg,#f6dc9a,#d9b96f);
+      opacity:.9;
+    }
+
+    .note-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+      margin-top:24px;
+    }
+
+    .note{
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:rgba(16,29,47,.72);
+    }
+
+    .note h3{
+      margin:0 0 8px;
+      font-size:17px;
+      letter-spacing:.06em;
+    }
+
+    .note p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .back-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:28px;
+    }
+
+    .back-links a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:9px 16px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(243,234,215,.06);
+      color:#e8ddc8;
+      font-size:14px;
+    }
+
+    .back-links a:hover{
+      border-color:rgba(243,211,139,.38);
+      background:rgba(243,211,139,.1);
+    }
+
+    footer{
+      margin-top:44px;
+      padding-top:22px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    @media (max-width:920px){
+      .cards{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .note-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:620px){
+      .page{
+        width:min(100% - 22px, 1080px);
+        padding-top:18px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        padding-bottom:20px;
+      }
+
+      nav{
+        justify-content:flex-start;
+      }
+
+      .hero{
+        padding:30px 22px;
+        border-radius:24px;
+      }
+
+      .cards{
+        grid-template-columns:1fr;
+      }
+
+      .section-title{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" href="/log/">
+        <span class="brand-main">Celeste Harbor</span>
+        <span class="brand-sub">Moonlit Voyage</span>
+      </a>
+
+      <nav aria-label="main navigation">
+        <a href="/log/">Log</a>
+        <a href="/special-voyage/">Special Voyage</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/account/">Account</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Harbor Store</div>
+        <h1>港の小さな売店</h1>
+        <p class="lead">
+          Celeste Harbor の航海券や、これから追加される小さな支援の置き場です。
+          現在は準備中のため、ここから購入や決済は行われません。
+        </p>
+
+        <div class="notice">
+          現在、このページは表示確認用です。実決済・Stripe連携・チケット付与はまだ接続していません。
+        </div>
+      </section>
+
+      <section aria-labelledby="plans-title">
+        <div class="section-title">
+          <h2 id="plans-title">航海券</h2>
+          <p>Prices and tickets are in preparation.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="badge">Free</div>
+            <h3>Harbor Cat</h3>
+            <p class="price">無料</p>
+            <p class="desc">
+              Celeste Harbor の基本航海です。港、記録、便りを静かに使えます。
+            </p>
+            <ul class="list">
+              <li>Voyage Log</li>
+              <li>Harbor Letter</li>
+              <li>Tide Letter</li>
+            </ul>
+            <div class="card-footer">
+              <button class="free-button" type="button" disabled>利用中</button>
+            </div>
+          </article>
+
+          <article class="card featured">
+            <div class="badge">Preparing</div>
+            <h3>Special Voyage Ticket</h3>
+            <p class="price">10分 <small>準備中</small></p>
+            <p class="desc">
+              短い特別航海のためのチケットです。軽く深く潜りたい時の入口になります。
+            </p>
+            <ul class="list">
+              <li>Special Voyage 10分</li>
+              <li>短めの集中航海</li>
+              <li>将来販売予定</li>
+            </ul>
+            <div class="card-footer">
+              <button type="button" disabled>現在準備中</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge">Preparing</div>
+            <h3>Special Voyage Ticket</h3>
+            <p class="price">20分 <small>準備中</small></p>
+            <p class="desc">
+              少し長めの特別航海です。考えを整理したい時の航海券として準備しています。
+            </p>
+            <ul class="list">
+              <li>Special Voyage 20分</li>
+              <li>やや深めの航海</li>
+              <li>将来販売予定</li>
+            </ul>
+            <div class="card-footer">
+              <button type="button" disabled>準備中の航海券</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge">Limited</div>
+            <h3>Deep Sea Ticket</h3>
+            <p class="price">限定 <small>準備中</small></p>
+            <p class="desc">
+              深い海へ向かうための特別な航海券です。慎重に設計してから開きます。
+            </p>
+            <ul class="list">
+              <li>Deep Sea Voyage</li>
+              <li>限定的な導線</li>
+              <li>将来開放予定</li>
+            </ul>
+            <div class="card-footer">
+              <button type="button" disabled>現在準備中</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="note-grid" aria-label="notes">
+        <div class="note">
+          <h3>現在の扱い</h3>
+          <p>
+            このページは、将来の課金機能に向けた外枠です。
+            ボタンはすべて無効化しているため、誤って購入処理が走ることはありません。
+          </p>
+        </div>
+
+        <div class="note">
+          <h3>今後追加するもの</h3>
+          <p>
+            本格運用前に、決済導線、購入後のチケット付与、特定商取引法表示ページなどを順番に整えます。
+          </p>
+        </div>
+      </section>
+
+      <div class="back-links">
+        <a href="/tickets/">Tickets に戻る</a>
+        <a href="/account/">Account に戻る</a>
+        <a href="/log/">Log に戻る</a>
+      </div>
+    </main>
+
+    <footer>
+      Celeste Harbor｜Harbor Store is currently in preparation.
+    </footer>
+  </div>
+</body>
+</html>
