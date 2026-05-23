@@ -688,10 +688,10 @@
       currentUser = data.session?.user || null;
     
       if(!currentUser){
-        window.location.replace("/account/");
+        window.location.replace("/");
         return;
       }
-    
+      
       if(currentUser.id !== ADMIN_USER_ID){
         window.location.replace("/log/");
         return;
