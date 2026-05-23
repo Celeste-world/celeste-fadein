@@ -38,6 +38,28 @@
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
+    .nav-letter-link{
+      position:relative;
+    }
+    
+    .nav-letter-link.has-reply{
+      color:var(--text);
+    }
+    
+    .nav-letter-link.has-reply::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
     body.auth-locked .wrap{
       visibility:hidden;
     }
@@ -1074,7 +1096,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/">Letter</a>
+        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -1224,7 +1246,7 @@
         <a href="/vessels/">Vessels</a>
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/">Letter</a>
+        <a href="/harbor-letter/" id="letterNavLink" class="nav-letter-link">Letter</a>
         <a href="/account/">Account</a>
       </div>
 
@@ -1298,6 +1320,35 @@
   </div>
 
   <script>
+    async function checkUnreadHarborLetterReplies(){
+      const letterNavLink = document.getElementById("letterNavLink");
+    
+      if(!letterNavLink || !currentUser){
+        return;
+      }
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+    
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+    
+      if(data && data.length > 0){
+        letterNavLink.classList.add("has-reply");
+        letterNavLink.title = "港から返事が届いています";
+      }else{
+        letterNavLink.classList.remove("has-reply");
+        letterNavLink.removeAttribute("title");
+      }
+    }
+    
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
 
@@ -1978,6 +2029,7 @@
         window.location.replace("/");
         return;
       }
+      await checkUnreadHarborLetterReplies();
     }
 
     async function getCurrentActiveSession(){
