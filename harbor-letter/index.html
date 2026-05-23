@@ -634,6 +634,64 @@
       updateAuthUI();
     
       document.body.classList.remove("auth-locked");
+         
+      function statusLabel(status){
+        if(status === "open") return "未確認";
+        if(status === "reviewing") return "確認中";
+        if(status === "closed") return "対応済み";
+        return "未確認";
+      }
+  
+      function updateAuthUI(){
+        if(currentUser){
+          userStatus.textContent =
+            "ログイン中：" + accountDisplayName(currentUser);
+      
+          loginBtn.style.display = "none";
+          sendBtn.disabled = false;
+      
+          if(myLettersPanel){
+            myLettersPanel.style.display = "block";
+          }
+        }else{
+          userStatus.textContent =
+            "便りを送るにはログインが必要です。";
+      
+          loginBtn.style.display = "inline-block";
+          sendBtn.disabled = true;
+      
+          if(myLettersPanel){
+            myLettersPanel.style.display = "none";
+          }
+        }
+      }
+  
+      async function checkSession(){
+        const { data } = await client.auth.getSession();
+      
+        currentUser = data.session?.user || null;
+      
+        updateAuthUI();
+      
+        document.body.classList.remove("auth-locked");
+        async function markHarborLetterRepliesAsRead(){
+    if(!currentUser){
+      return;
+    }
+  
+    const { error } = await client
+      .from("user_feedback")
+      .update({
+        user_read_at: new Date().toISOString()
+      })
+      .eq("user_id", currentUser.id)
+      .not("admin_reply", "is", null)
+      .is("user_read_at", null);
+  
+    if(error){
+      console.warn("mark harbor letter replies as read failed:", error);
+    }
+  }
     
       await loadMyHarborLetters();
     }
@@ -730,6 +788,8 @@
           </article>
         `;
       }).join("");
+
+      await markHarborLetterRepliesAsRead();
     }
 
     async function sendHarborLetter(){
