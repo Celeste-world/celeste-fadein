@@ -979,7 +979,9 @@
     async function checkUnreadHarborLetterReplies(){
       document.body.classList.remove("has-unread-letter");
     
-      document.querySelectorAll(".nav-letter-link").forEach((link) => {
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+    
+      letterNavLinks.forEach((link) => {
         link.classList.remove("has-reply");
         link.removeAttribute("title");
       });
