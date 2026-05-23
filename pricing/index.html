@@ -116,15 +116,6 @@
       margin:0;
     }
 
-    .panel{
-      background:rgba(10,14,28,.82);
-      border:1px solid rgba(70,84,132,.55);
-      border-radius:18px;
-      padding:24px;
-      box-shadow:0 20px 48px rgba(0,0,0,.42);
-      margin-bottom:24px;
-    }
-
     .store-label{
       font-size:12px;
       letter-spacing:.16em;
@@ -279,6 +270,7 @@
       gap:12px;
       flex-wrap:wrap;
       align-items:center;
+      margin-top:18px;
     }
 
     button{
@@ -296,7 +288,7 @@
     }
 
     .ghost{
-      background:transparent;
+      background:rgba(255,255,255,.02);
       color:var(--muted);
       border:1px solid var(--line);
     }
@@ -411,10 +403,6 @@
         font-size:30px;
       }
 
-      .panel{
-        padding:20px;
-      }
-
       .plans{
         grid-template-columns:1fr;
       }
@@ -470,44 +458,47 @@
         <h1>港の小さな売店</h1>
 
         <p class="lead">
-          Celeste Harbor の航海券や、これから追加される小さな支援の置き場です。<br>
+          Celeste Harbor の航海券や、港を静かに続けるための支援を置く場所です。<br>
           現在は準備中のため、ここから購入や決済は行われません。
         </p>
 
         <div class="notice">
-          このページは、将来の課金機能に向けた外枠です。<br>
+          このページは、将来の課金機能に向けた価格表です。<br>
           実決済・Stripe連携・購入後のチケット付与は、まだ接続していません。
         </div>
       </div>
 
       <section>
         <div class="section-head">
-          <div class="section-title">Voyage Tickets</div>
-          <div class="section-sub">Prices and tickets are in preparation.</div>
+          <div class="section-title">Harbor Plans</div>
+          <div class="section-sub">記録を残す回数と、港への関わり方。</div>
         </div>
 
         <div class="plans">
-          <article class="plan">
+          <article class="plan featured">
             <div class="plan-top">
               <div>
                 <div class="plan-kicker">Free</div>
-                <h2>Harbor Cat</h2>
+                <h2>港の入口</h2>
               </div>
               <div class="plan-state ready">Available</div>
             </div>
 
             <p class="price">
-              無料
+              無料 <span>/ 月10回</span>
             </p>
 
             <p class="desc">
-              Celeste Harbor の基本航海です。港、記録、便りを静かに使えます。
+              Celeste Harbor の基本となる無料の入口です。
+              月10回まで Voyage Log を残せます。
             </p>
 
             <ul class="plan-list">
-              <li>Voyage Log</li>
-              <li>Harbor Letter</li>
-              <li>Tide Letter</li>
+              <li>Voyage Log：月10回まで</li>
+              <li>Harbor Cat の短い応答</li>
+              <li>Harbor Find が届く可能性</li>
+              <li>Drift Ticket が流れ着く可能性</li>
+              <li>Items / Vessels / Map / Cabin Log の基本機能</li>
             </ul>
 
             <div class="actions">
@@ -517,7 +508,117 @@
             </div>
           </article>
 
-          <article class="plan featured">
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Monthly Support</div>
+                <h2>港の維持灯</h2>
+              </div>
+              <div class="plan-state">Preparing</div>
+            </div>
+
+            <p class="price">
+              月額480円 <span>/ 航海回数 +30回</span>
+            </p>
+
+            <p class="desc">
+              この港を静かに続けるための月額支援です。
+              お礼として、毎月の Voyage Log 記録枠が30回増えます。
+            </p>
+
+            <ul class="plan-list">
+              <li>月額480円</li>
+              <li>Voyage Log の航海回数：毎月 +30回</li>
+              <li>無料分10回と合わせて、月40回まで記録可能</li>
+              <li>毎月安定して記録したい方向け</li>
+              <li>Special Voyage Ticket は含まれません</li>
+            </ul>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                現在準備中
+              </button>
+            </div>
+          </article>
+
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Extra Fuel</div>
+                <h2>航海燃料</h2>
+              </div>
+              <div class="plan-state">Preparing</div>
+            </div>
+
+            <p class="price">
+              580円 <span>/ 購入月のみ +50回</span>
+            </p>
+
+            <p class="desc">
+              航海を多く残したい月のための追加燃料です。
+              購入した月に限り、Voyage Log の記録枠が50回増えます。
+            </p>
+
+            <ul class="plan-list">
+              <li>価格：580円</li>
+              <li>Voyage Log の航海回数：購入月のみ +50回</li>
+              <li>無料分10回と合わせて、購入月は月60回まで記録可能</li>
+              <li>港の維持灯と併用した場合、購入月は月90回まで記録可能</li>
+              <li>翌月への繰り越しはありません</li>
+              <li>Special Voyage Ticket は含まれません</li>
+            </ul>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                現在準備中
+              </button>
+            </div>
+          </article>
+
+          <article class="plan">
+            <div class="plan-top">
+              <div>
+                <div class="plan-kicker">Monthly Letter</div>
+                <h2>潮の便り</h2>
+              </div>
+              <div class="plan-state">Preparing</div>
+            </div>
+
+            <p class="price">
+              月額680円 <span>/ 毎月、航海券1枚</span>
+            </p>
+
+            <p class="desc">
+              毎月、港から航海券と小さな便りが届く月額プランです。
+              Voyage Log の記録回数は増えません。
+            </p>
+
+            <ul class="plan-list">
+              <li>月額680円</li>
+              <li>毎月、航海券が1枚届く</li>
+              <li>Special Voyage Ticket 10分以上を保証</li>
+              <li>月の便り</li>
+              <li>今月の潮</li>
+              <li>Voyage Log の航海回数は増えません</li>
+            </ul>
+
+            <div class="actions">
+              <button class="ghost" type="button" disabled>
+                現在準備中
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <div class="section-title">Voyage Tickets</div>
+          <div class="section-sub">必要な夜だけ、少し深い航海へ。</div>
+        </div>
+
+        <div class="plans">
+          <article class="plan">
             <div class="plan-top">
               <div>
                 <div class="plan-kicker">Special</div>
@@ -527,17 +628,20 @@
             </div>
 
             <p class="price">
-              10分 <span>準備中</span>
+              180円 <span>/ 10分</span>
             </p>
 
             <p class="desc">
-              短い特別航海のためのチケットです。軽く深く潜りたい時の入口になります。
+              短い特別航海のための航海券です。
+              10分だけ、いつもの港より少し遠くへ出ることができます。
             </p>
 
             <ul class="plan-list">
               <li>Special Voyage 10分</li>
               <li>短めの集中航海</li>
-              <li>将来販売予定</li>
+              <li>購入日から15日間有効</li>
+              <li>同じ航海券は1枚まで</li>
+              <li>漂着物の取得は保証されません</li>
             </ul>
 
             <div class="actions">
@@ -557,22 +661,25 @@
             </div>
 
             <p class="price">
-              20分 <span>準備中</span>
+              320円 <span>/ 20分</span>
             </p>
 
             <p class="desc">
-              少し長めの特別航海です。考えを整理したい時の航海券として準備しています。
+              少し長めの特別航海のための航海券です。
+              言葉の奥にある揺れや余韻に、静かに触れる時間を開きます。
             </p>
 
             <ul class="plan-list">
               <li>Special Voyage 20分</li>
               <li>やや深めの航海</li>
-              <li>将来販売予定</li>
+              <li>購入日から15日間有効</li>
+              <li>同じ航海券は1枚まで</li>
+              <li>漂着物の取得は保証されません</li>
             </ul>
 
             <div class="actions">
               <button class="ghost" type="button" disabled>
-                準備中の航海券
+                現在準備中
               </button>
             </div>
           </article>
@@ -587,17 +694,20 @@
             </div>
 
             <p class="price">
-              限定 <span>準備中</span>
+              480円 <span>/ 深海航海</span>
             </p>
 
             <p class="desc">
-              深い海へ向かうための特別な航海券です。慎重に設計してから開きます。
+              いつもの港よりも、さらに深い海へ降りるための航海券です。
+              必要だと感じる時だけ開く、深い海への入口です。
             </p>
 
             <ul class="plan-list">
               <li>Deep Sea Voyage</li>
-              <li>限定的な導線</li>
-              <li>将来開放予定</li>
+              <li>深海系の漂着物が選ばれやすくなる</li>
+              <li>購入日から15日間有効</li>
+              <li>同じ航海券は1枚まで</li>
+              <li>漂着物の取得は保証されません</li>
             </ul>
 
             <div class="actions">
@@ -611,16 +721,19 @@
 
       <section class="note-grid" aria-label="notes">
         <div class="note">
-          <div class="note-title">現在の扱い</div>
+          <div class="note-title">航海回数について</div>
           <p>
-            このページは表示確認用です。ボタンは無効化しているため、誤って購入処理が走ることはありません。
+            港の維持灯は、毎月の Voyage Log 記録枠を +30回します。
+            航海燃料は、購入した月に限り Voyage Log 記録枠を +50回します。
+            航海燃料は翌月へ繰り越されません。
           </p>
         </div>
 
         <div class="note">
-          <div class="note-title">今後追加するもの</div>
+          <div class="note-title">現在の扱い</div>
           <p>
-            本格運用前に、決済導線、購入後のチケット付与、特定商取引法表示ページを順番に整えます。
+            このページは表示確認用です。
+            すべての購入ボタンは無効化しているため、誤って決済処理が走ることはありません。
           </p>
         </div>
       </section>
@@ -641,7 +754,7 @@
         <a href="/legal/terms/">利用規約</a>
         <a href="/legal/privacy/">プライバシーポリシー</a>
       </div>
-    
+
       <div>CELESTE HARBOR</div>
     </footer>
 
