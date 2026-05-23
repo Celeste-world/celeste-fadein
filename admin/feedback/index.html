@@ -349,10 +349,10 @@
 
       <div class="toolbar">
         <select id="statusFilter">
-          <option value="open">Open</option>
-          <option value="reviewing">Reviewing</option>
-          <option value="closed">Closed</option>
-          <option value="all">All</option>
+          <option value="open">未確認</option>
+          <option value="reviewing">確認中</option>
+          <option value="closed">対応済み</option>
+          <option value="all">すべて</option>
         </select>
 
         <button class="ghost" id="refreshBtn" type="button">
@@ -435,6 +435,13 @@
       return type || "feedback";
     }
 
+    function statusLabel(status){
+      if(status === "open") return "未確認";
+      if(status === "reviewing") return "確認中";
+      if(status === "closed") return "対応済み";
+      return status || "未確認";
+    }
+
     function renderFeedback(rows){
       feedbackList.innerHTML = "";
 
@@ -464,7 +471,7 @@
             </div>
 
             <span class="badge ${escapeHtml(status)}">
-              ${escapeHtml(status)}
+              ${escapeHtml(statusLabel(status))}
             </span>
           </div>
 
@@ -477,15 +484,15 @@
 
           <div class="feedback-actions">
             <button class="ghost" type="button" data-action="reviewing" data-id="${escapeHtml(row.id)}">
-              Reviewing にする
+              確認中にする
             </button>
-
+            
             <button class="ghost" type="button" data-action="closed" data-id="${escapeHtml(row.id)}">
-              Closed にする
+              対応済みにする
             </button>
-
+            
             <button class="ghost" type="button" data-action="open" data-id="${escapeHtml(row.id)}">
-              Open に戻す
+              未確認に戻す
             </button>
           </div>
         `;
