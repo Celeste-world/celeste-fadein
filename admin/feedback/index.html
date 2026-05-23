@@ -684,17 +684,21 @@
 
     async function checkSession(){
       const { data } = await client.auth.getSession();
-
+    
       currentUser = data.session?.user || null;
-
+    
       if(!currentUser){
-        setStatus("ログインが必要です。/account/ からログインしてください。", true);
-        document.body.classList.remove("auth-locked");
+        window.location.replace("/account/");
         return;
       }
-
+    
+      if(currentUser.id !== ADMIN_USER_ID){
+        window.location.replace("/log/");
+        return;
+      }
+    
       document.body.classList.remove("auth-locked");
-
+    
       await loadFeedback();
     }
 
