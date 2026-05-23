@@ -1144,38 +1144,335 @@ Celeste Harbor では、課金を「強くなるため」ではなく、
 より深く航海するための入口 として扱います。
 
 
-## 課金商品ID・付与内容一覧
+港の入口
+商品ID：なし
+価格：無料
+種別：無料プラン
+Voyage Log：月10回まで
 
-Celeste Harbor の課金商品は、単に機能を増やすためではなく、  
-ユーザーがどの深さで港と関わるかを選べるようにするためのものです。
+港の入口は、Celeste Harbor の基本となる無料プランです。
 
-Stripe 等の決済サービスと接続する前に、商品IDと付与内容を以下のように整理します。
+含まれるもの：
 
-この段階では、まだ実決済には接続しません。  
-各商品IDは、将来 Stripe の Price ID / Product ID と対応させるための内部識別名として扱います。
+Voyage Log 月10回
+Harbor Cat
+Harbor Find
+Drift Ticket が届く可能性
+Items / Vessels / Map / Cabin Log
+Harbor Letter
 
----
+無料でも、Celeste Harbor の基本体験は成立させます。
 
-### 商品ID一覧
+港の維持灯
+商品ID：harbor_light_monthly
+価格：月額480円
+種別：月額支援
+付与内容：Voyage Log 航海回数 +30回
 
-```txt
-harbor_light_monthly
-  港の維持灯
+港の維持灯は、港を静かに続けるための月額支援です。
 
-voyage_fuel_50
-  航海燃料
+単なる回数追加ではなく、
+「港を支えること」を主目的とし、
+お礼として毎月の Voyage Log 記録枠を +30回します。
 
-special_ticket_10
-  Special Voyage Ticket 10分
+回数の扱い：
 
-special_ticket_20
-  Special Voyage Ticket 20分
+無料分：月10回
+港の維持灯：+30回
+合計：月40回まで Voyage Log を保存可能
 
-deep_sea_ticket
-  Deep Sea Ticket
+付与処理の想定：
 
-tide_letter_monthly
-  潮の便り
+subscription が active
+↓
+monthly_log_allowances.support_bonus = 30
+↓
+total_limit = base_limit + support_bonus + fuel_bonus
+
+表示文言：
+
+この港を静かに続けるための月額支援です。
+お礼として、毎月の Voyage Log 記録枠が30回増えます。
+
+注意：
+
+Special Voyage Ticket は含まれません。
+潮の便りとは別の月額プランです。
+航海燃料
+商品ID：voyage_fuel_50
+価格：580円
+種別：単発購入
+付与内容：購入月のみ Voyage Log 航海回数 +50回
+
+航海燃料は、航海を多く残したい月のための追加燃料です。
+
+月額ではなく、必要な月だけ購入します。
+
+回数の扱い：
+
+無料分：月10回
+航海燃料：購入月のみ +50回
+合計：購入月は月60回まで Voyage Log を保存可能
+
+港の維持灯と併用した場合：
+
+無料分：月10回
+港の維持灯：+30回
+航海燃料：+50回
+合計：購入月は月90回まで Voyage Log を保存可能
+
+付与処理の想定：
+
+voyage_fuel_50 の購入完了
+↓
+対象月の fuel_bonus に +50
+↓
+total_limit = base_limit + support_bonus + fuel_bonus
+
+表示文言：
+
+航海を多く残したい月のための追加燃料です。
+購入した月に限り、Voyage Log の記録枠が50回増えます。
+
+注意：
+
+購入月のみ有効です。
+翌月への繰り越しはありません。
+Special Voyage Ticket は含まれません。
+Special Voyage Ticket 10分
+商品ID：special_ticket_10
+価格：180円
+種別：単品チケット
+付与内容：Special Voyage Ticket 10分を1枚付与
+有効期限：購入日から15日
+保持上限：同じ航海券は1枚まで
+
+Special Voyage Ticket 10分は、短い特別航海のための航海券です。
+
+付与処理の想定：
+
+special_ticket_10 の購入完了
+↓
+voyage_tickets に insert
+  ticket_type = special
+  duration_minutes = 10
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+表示文言：
+
+短い特別航海のための航海券です。
+10分だけ、いつもの港より少し遠くへ出ることができます。
+
+注意：
+
+漂着物の取得は保証されません。
+同じ航海券は1枚まで保持できます。
+Special Voyage Ticket 20分
+商品ID：special_ticket_20
+価格：320円
+種別：単品チケット
+付与内容：Special Voyage Ticket 20分を1枚付与
+有効期限：購入日から15日
+保持上限：同じ航海券は1枚まで
+
+Special Voyage Ticket 20分は、少し長めの特別航海のための航海券です。
+
+付与処理の想定：
+
+special_ticket_20 の購入完了
+↓
+voyage_tickets に insert
+  ticket_type = special
+  duration_minutes = 20
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+表示文言：
+
+少し長めの特別航海のための航海券です。
+20分のあいだ、言葉の奥にある揺れや余韻に、
+静かに触れるための時間を開きます。
+
+注意：
+
+漂着物の取得は保証されません。
+最大2個まで届く可能性がありますが、2個目は低確率です。
+同じ航海券は1枚まで保持できます。
+Deep Sea Ticket
+商品ID：deep_sea_ticket
+価格：480円
+種別：単品チケット
+付与内容：Deep Sea Ticket を1枚付与
+有効期限：購入日から15日
+保持上限：同じ航海券は1枚まで
+
+Deep Sea Ticket は、さらに深い海へ降りるための限定チケットです。
+
+付与処理の想定：
+
+deep_sea_ticket の購入完了
+↓
+voyage_tickets に insert
+  ticket_type = deep_sea
+  duration_minutes = 20
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+表示文言：
+
+いつもの港よりも、さらに深い海へ降りるための航海券です。
+必要だと感じる時だけ、深い海への入口として開きます。
+
+注意：
+
+漂着物の取得は保証されません。
+深海系の漂着物が選ばれやすくなります。
+同じ航海券は1枚まで保持できます。
+潮の便り
+商品ID：tide_letter_monthly
+価格：月額680円
+種別：月額プラン
+付与内容：毎月、航海券1枚 + 小さな便り
+Voyage Log 回数：増えない
+
+潮の便りは、毎月、港から航海券と小さな便りが届く月額プランです。
+
+Voyage Log の記録回数を増やすものではありません。
+毎月の航海体験を受け取るための別軸のプランとして扱います。
+
+配布内容：
+
+毎月、航海券が1枚届く
+Special Voyage Ticket 10分以上を保証
+Drift Ticket は配布対象に含めない
+月の便り
+今月の潮
+月ごとの余韻文
+
+抽選比率：
+
+Special Voyage Ticket 10分
+  70%
+
+Special Voyage Ticket 20分
+  25%
+
+Deep Sea Ticket
+  5%
+
+付与処理の想定：
+
+tide_letter_monthly subscription が active
+↓
+毎月1日に tide_letters を作成
+↓
+ticket_type / duration_minutes を抽選
+↓
+受け取り待ちとして保存
+↓
+ユーザーが受け取る
+↓
+同種チケットを持っていなければ voyage_tickets に付与
+↓
+同種チケットを持っている場合は、使ってから受け取れる
+
+契約月の初回処理：
+
+契約完了
+↓
+初回の潮の便りを即時作成
+↓
+受け取り期限は、契約日から最低15日間を保証
+
+通常配布：
+
+毎月1日に、その月の潮の便りを作成
+受け取り期限は、その月の月末まで
+
+表示文言：
+
+毎月、港から航海券と小さな便りが届く月額プランです。
+記録回数を増やすものではなく、
+月ごとの航海体験を静かに受け取るための便りです。
+
+注意：
+
+Voyage Log の航海回数は増えません。
+同じ航海券をすでに持っている場合は、
+その航海券を使ってから便りを受け取れます。
+価格一覧
+港の入口
+  無料
+  Voyage Log 月10回
+
+港の維持灯
+  月額480円
+  Voyage Log 航海回数 +30回
+
+航海燃料
+  580円
+  購入月のみ Voyage Log 航海回数 +50回
+
+Special Voyage Ticket 10分
+  180円
+
+Special Voyage Ticket 20分
+  320円
+
+Deep Sea Ticket
+  480円
+
+潮の便り
+  月額680円
+  毎月、航海券1枚 + 小さな便り
+実装時の注意
+
+購入処理は、必ず Stripe 等の決済完了後に実行します。
+
+フロント側のボタン押下だけで、以下を直接付与してはいけません。
+
+monthly_log_allowances.support_bonus
+monthly_log_allowances.fuel_bonus
+voyage_tickets
+tide_letters
+
+将来の基本処理：
+
+Stripe Checkout 完了
+↓
+Webhook 受信
+↓
+商品ID / price_id を確認
+↓
+対象ユーザーを特定
+↓
+Supabase に付与内容を反映
+↓
+必要に応じて Cabin Log / Timeline に記録
+
+重複付与を避けるため、Stripe の checkout_session_id または payment_intent_id を保存し、
+同じ決済イベントを二重処理しないようにします。
+
+表示方針
+
+課金機能では、以下を避けます。
+
+買わせる圧を強くする
+ランキングや優劣を作る
+継続しないことを失敗扱いする
+チケットをガチャのように煽る
+課金すれば強くなるように見せる
+
+Celeste Harbor では、課金を「強くなるため」ではなく、
+より深く航海するための入口として扱います。
+
+
+これで、価格表と内部実装の対応がかなり明確になります。  
+次に進むなら、この内容をもとに **`/pricing/` の文言と README の課金設計が一致しているか確認**するのがよいです。
 
 
 ## Voyage Log 月間回数制限
