@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>特定商取引法に基づく表記 – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:28px;
+    }
+
+    .legal-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    .notice{
+      margin-top:22px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .legal-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+      font-size:14px;
+      line-height:1.9;
+    }
+
+    .legal-table tr{
+      border-bottom:1px solid rgba(70,84,132,.45);
+    }
+
+    .legal-table tr:last-child{
+      border-bottom:0;
+    }
+
+    .legal-table th,
+    .legal-table td{
+      vertical-align:top;
+      text-align:left;
+      padding:16px 0;
+    }
+
+    .legal-table th{
+      width:34%;
+      color:var(--text);
+      font-weight:500;
+      padding-right:18px;
+    }
+
+    .legal-table td{
+      color:var(--muted);
+    }
+
+    .placeholder{
+      color:var(--dim);
+    }
+
+    .small-note{
+      margin-top:18px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+    }
+
+    .section-title{
+      font-size:16px;
+      color:var(--text);
+      letter-spacing:.04em;
+      margin:0 0 16px;
+    }
+
+    .back-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:24px;
+    }
+
+    .back-links a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:transparent;
+    }
+
+    .back-links a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.45);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .legal-table,
+      .legal-table tbody,
+      .legal-table tr,
+      .legal-table th,
+      .legal-table td{
+        display:block;
+        width:100%;
+      }
+
+      .legal-table th{
+        padding:15px 0 4px;
+      }
+
+      .legal-table td{
+        padding:0 0 15px;
+      }
+
+      .back-links a{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/account/">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <div class="legal-label">Legal Notice</div>
+
+        <h1>特定商取引法に基づく表記</h1>
+
+        <p class="lead">
+          Celeste Harbor における有料サービス提供に関する表示です。<br>
+          現在、有料販売機能は準備中です。
+        </p>
+
+        <div class="notice">
+          このページは、将来の有料販売に向けた準備ページです。<br>
+          現時点では、Celeste Harbor 上での実決済・チケット販売・自動付与は開始していません。
+        </div>
+      </div>
+
+      <section class="panel">
+        <h2 class="section-title">販売事業者情報</h2>
+
+        <table class="legal-table">
+          <tr>
+            <th>販売事業者</th>
+            <td>
+              <span class="placeholder">準備中</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>運営責任者</th>
+            <td>
+              <span class="placeholder">準備中</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>所在地</th>
+            <td>
+              <span class="placeholder">
+                請求があった場合、法令に基づき遅滞なく開示します。
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>電話番号</th>
+            <td>
+              <span class="placeholder">
+                請求があった場合、法令に基づき遅滞なく開示します。
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>メールアドレス</th>
+            <td>
+              <span class="placeholder">準備中</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>販売URL</th>
+            <td>
+              <span class="placeholder">準備中</span>
+            </td>
+          </tr>
+        </table>
+
+        <p class="small-note">
+          所在地および電話番号については、販売開始前に最終確認を行います。
+          表示方法は、事業形態および法令上の要件に従って調整します。
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">販売内容</h2>
+
+        <table class="legal-table">
+          <tr>
+            <th>販売価格</th>
+            <td>
+              各販売ページに表示します。現在は準備中です。
+            </td>
+          </tr>
+
+          <tr>
+            <th>商品代金以外の必要料金</th>
+            <td>
+              インターネット接続料金、通信料金等はお客様のご負担となります。
+              その他の手数料が発生する場合は、販売ページに表示します。
+            </td>
+          </tr>
+
+          <tr>
+            <th>支払方法</th>
+            <td>
+              クレジットカード決済等を予定しています。現在は準備中です。
+            </td>
+          </tr>
+
+          <tr>
+            <th>支払時期</th>
+            <td>
+              決済手続き完了時にお支払いが確定します。現在は準備中です。
+            </td>
+          </tr>
+
+          <tr>
+            <th>商品の引渡時期</th>
+            <td>
+              決済完了後、対象アカウントへチケットまたは利用権を付与する予定です。
+              現在は準備中です。
+            </td>
+          </tr>
+
+          <tr>
+            <th>返品・キャンセル</th>
+            <td>
+              デジタルコンテンツおよびサービスの性質上、購入後の返品・キャンセルは原則としてお受けできません。
+              ただし、法令上必要な場合または当方に起因する不具合がある場合は、個別に対応します。
+            </td>
+          </tr>
+
+          <tr>
+            <th>動作環境</th>
+            <td>
+              最新版の主要ブラウザでの利用を想定しています。
+              通信環境、端末環境、ブラウザ設定により、一部機能が正常に利用できない場合があります。
+            </td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">お問い合わせ</h2>
+
+        <p class="lead">
+          有料販売開始前のお問い合わせは、Celeste Harbor 内の Harbor Letter よりお送りください。
+        </p>
+
+        <div class="back-links">
+          <a href="/harbor-letter/">Harbor Letter</a>
+          <a href="/pricing/">Harbor Store</a>
+          <a href="/log/">Voyage Log</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/pricing/">Harbor Store</a>
+        <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+</body>
+</html>
