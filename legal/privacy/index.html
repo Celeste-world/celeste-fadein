@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>プライバシーポリシー – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    .page-head{
+      margin-bottom:28px;
+    }
+
+    .legal-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .notice{
+      margin-top:22px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.82);
+      border:1px solid rgba(70,84,132,.55);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.42);
+      margin-bottom:24px;
+    }
+
+    .privacy-section{
+      margin-bottom:28px;
+      padding-bottom:24px;
+      border-bottom:1px solid rgba(70,84,132,.38);
+    }
+
+    .privacy-section:last-child{
+      margin-bottom:0;
+      padding-bottom:0;
+      border-bottom:0;
+    }
+
+    h2{
+      font-size:18px;
+      font-weight:500;
+      line-height:1.8;
+      margin:0 0 12px;
+      color:var(--text);
+    }
+
+    p{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    ul{
+      margin:0 0 12px;
+      padding-left:1.2em;
+      color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    li{
+      margin-bottom:4px;
+    }
+
+    .small-note{
+      margin-top:18px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+    }
+
+    .back-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:24px;
+    }
+
+    .back-links a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:transparent;
+    }
+
+    .back-links a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.45);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .back-links a{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/account/">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <div class="legal-label">Privacy Policy</div>
+
+        <h1>プライバシーポリシー</h1>
+
+        <p class="lead">
+          Celeste Harbor における個人情報およびユーザーデータの取扱いについて定めます。<br>
+          現在、有料販売機能は準備中です。
+        </p>
+
+        <div class="notice">
+          このページは、将来の有料機能に向けた仮プライバシーポリシーです。<br>
+          Stripe等の決済機能を接続する前に、内容を最終確認します。
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="privacy-section">
+          <h2>第1条（基本方針）</h2>
+          <p>
+            Celeste Harbor（以下「本サービス」といいます）は、ユーザーの個人情報および本サービス内で保存されるデータを、
+            適切かつ安全に取り扱うよう努めます。
+          </p>
+          <p>
+            本サービスは、取得した情報を、あらかじめ定めた利用目的の範囲内で利用します。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第2条（取得する情報）</h2>
+          <p>
+            本サービスでは、以下の情報を取得する場合があります。
+          </p>
+          <ul>
+            <li>Googleログイン等により取得されるユーザーID、メールアドレス、表示名等</li>
+            <li>Voyage Log、Special Voyage、Harbor Letter 等にユーザーが入力した文章</li>
+            <li>チケット、航海記録、アイテム、エリア、船、Tide Letter 等の利用状況</li>
+            <li>お問い合わせ内容、管理者からの返信、既読状態</li>
+            <li>アクセス日時、ブラウザ情報、端末情報、ページパス等の技術情報</li>
+            <li>将来、有料機能を提供する場合に、決済処理に必要となる情報</li>
+          </ul>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第3条（利用目的）</h2>
+          <p>
+            本サービスは、取得した情報を以下の目的で利用します。
+          </p>
+          <ul>
+            <li>ユーザー認証およびアカウント管理のため</li>
+            <li>Voyage Log、チケット、Tide Letter、Harbor Letter 等の機能提供のため</li>
+            <li>ユーザーごとの記録、状態、進行状況を保存・表示するため</li>
+            <li>お問い合わせへの確認、返信、対応のため</li>
+            <li>不具合調査、セキュリティ確保、サービス改善のため</li>
+            <li>利用状況の分析および機能改善のため</li>
+            <li>将来の有料機能における決済、チケット付与、購入履歴管理のため</li>
+            <li>法令または利用規約に基づく対応のため</li>
+          </ul>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第4条（外部サービスの利用）</h2>
+          <p>
+            本サービスでは、認証、データ保存、運営管理、将来の決済機能等のため、外部サービスを利用する場合があります。
+          </p>
+          <ul>
+            <li>Supabase：ユーザー情報、航海記録、チケット、便り等の保存</li>
+            <li>Google認証：ログインおよび本人識別</li>
+            <li>Stripe等の決済サービス：将来の有料機能における決済処理</li>
+          </ul>
+          <p>
+            決済機能を導入する場合、クレジットカード番号等の決済情報は、原則として決済サービス提供事業者が管理し、
+            本サービス側では直接保持しない設計を予定しています。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第5条（第三者提供）</h2>
+          <p>
+            本サービスは、以下の場合を除き、ユーザーの個人情報を第三者に提供しません。
+          </p>
+          <ul>
+            <li>ユーザー本人の同意がある場合</li>
+            <li>法令に基づく場合</li>
+            <li>人の生命、身体または財産の保護のために必要な場合</li>
+            <li>サービス提供に必要な範囲で、外部サービスまたは委託先に取り扱いを委託する場合</li>
+          </ul>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第6条（安全管理）</h2>
+          <p>
+            本サービスは、個人情報およびユーザーデータの漏えい、滅失、毀損、不正アクセス等を防ぐため、
+            必要かつ適切な安全管理に努めます。
+          </p>
+          <p>
+            ただし、インターネット上の通信や外部サービスの性質上、完全な安全性を保証するものではありません。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第7条（保存期間）</h2>
+          <p>
+            本サービスは、利用目的の達成に必要な範囲で、ユーザー情報およびサービス内データを保存します。
+          </p>
+          <p>
+            アカウント削除、サービス終了、法令上の保存期間経過、その他運営上不要となった場合には、
+            必要に応じて削除または匿名化することがあります。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第8条（ユーザーによる確認・削除等）</h2>
+          <p>
+            ユーザーは、本サービス内で提供される機能を通じて、自身の航海記録等を確認、削除できる場合があります。
+          </p>
+          <p>
+            個人情報の開示、訂正、利用停止、削除等を希望する場合は、Harbor Letter または運営者が別途指定する連絡先よりお問い合わせください。
+            本人確認のうえ、法令に従って対応します。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第9条（Cookie等の利用）</h2>
+          <p>
+            本サービスでは、ログイン状態の維持、セキュリティ、利用状況の把握、サービス改善等のため、
+            Cookie、ローカルストレージ、セッションストレージ等を利用する場合があります。
+          </p>
+          <p>
+            ユーザーは、ブラウザ設定によりCookie等を制限できますが、その場合、本サービスの一部機能が正常に利用できないことがあります。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第10条（アクセス解析）</h2>
+          <p>
+            本サービスでは、将来的にアクセス解析ツールを導入する場合があります。
+            その場合、取得する情報、利用目的、無効化方法等について、本ポリシーまたは本サービス内で表示します。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第11条（未成年の利用）</h2>
+          <p>
+            未成年のユーザーが本サービスを利用する場合、必要に応じて親権者等の法定代理人の同意を得たうえで利用するものとします。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第12条（ポリシーの変更）</h2>
+          <p>
+            本サービスは、法令の変更、サービス内容の変更、外部サービスの追加等に応じて、本ポリシーを変更することがあります。
+          </p>
+          <p>
+            変更後のポリシーは、本サービス上に掲載した時点から効力を生じるものとします。
+          </p>
+        </div>
+
+        <div class="privacy-section">
+          <h2>第13条（お問い合わせ）</h2>
+          <p>
+            本ポリシーに関するお問い合わせは、Celeste Harbor 内の Harbor Letter、または運営者が別途指定する連絡先よりお送りください。
+          </p>
+
+          <div class="back-links">
+            <a href="/harbor-letter/">Harbor Letter</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+
+        <p class="small-note">
+          制定日：2026年5月23日<br>
+          最終更新日：2026年5月23日
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/pricing/">Harbor Store</a>
+        <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+        <a href="/legal/terms/">利用規約</a>
+        <a href="/legal/privacy/">プライバシーポリシー</a>
+        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+</body>
+</html>
