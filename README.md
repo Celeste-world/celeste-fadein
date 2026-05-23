@@ -1474,6 +1474,433 @@ Celeste Harbor では、課金を「強くなるため」ではなく、
 これで、価格表と内部実装の対応がかなり明確になります。  
 次に進むなら、この内容をもとに **`/pricing/` の文言と README の課金設計が一致しているか確認**するのがよいです。
 
+## 課金DB設計
+
+Celeste Harbor の課金機能は、Stripe 等の決済サービスと接続する前に、  
+Supabase 側で「誰が、何を、いつ購入し、何が付与されたか」を安全に記録できる形にしておきます。
+
+この設計では、購入ボタンを押しただけで付与処理を行いません。  
+必ず決済完了イベントを確認したあとで、Supabase 側へ反映します。
+
+---
+
+## 基本方針
+
+課金DBは、以下を目的とします。
+
+```txt
+Supabase user_id と Stripe customer_id を結びつける
+月額プランの契約状態を保存する
+単発購入の履歴を保存する
+Webhook イベントを記録して二重付与を防ぐ
+購入商品に応じて Voyage Log 回数やチケットを付与する
+
+まだ実決済には接続しません。
+この段階では、将来の Stripe 接続に備えた外枠として設計します。
+
+使用するテーブル
+billing_customers
+  Supabase user_id と Stripe customer_id を結びつける
+
+user_subscriptions
+  港の維持灯 / 潮の便り の月額契約状態を保存する
+
+billing_purchases
+  航海燃料 / 単品チケット の購入履歴を保存する
+
+billing_events
+  Stripe Webhook イベントを保存して二重処理を防ぐ
+billing_customers
+
+billing_customers は、Celeste Harbor のユーザーと Stripe Customer を紐づけるためのテーブルです。
+
+役割
+user_id と stripe_customer_id を対応させる
+同じユーザーに複数の Stripe Customer が作られないようにする
+将来の購入・契約・請求履歴を追えるようにする
+主なカラム
+id
+user_id
+stripe_customer_id
+email
+created_at
+updated_at
+設計方針
+user_id は auth.users.id と対応する
+stripe_customer_id は一意にする
+email は補助情報として保存する
+購入処理時は、まず billing_customers を確認する
+存在しなければ Stripe Customer を作成し、billing_customers に保存する
+user_subscriptions
+
+user_subscriptions は、月額プランの状態を管理するテーブルです。
+
+対象となる月額プラン：
+
+harbor_light_monthly
+  港の維持灯
+
+tide_letter_monthly
+  潮の便り
+役割
+現在どの月額プランが active かを保存する
+解約済み・期限切れ・支払い失敗などの状態を管理する
+monthly_log_allowances の support_bonus と連動する
+潮の便りの毎月配布と連動する
+主なカラム
+id
+user_id
+product_key
+status
+stripe_subscription_id
+stripe_customer_id
+current_period_start
+current_period_end
+cancel_at_period_end
+created_at
+updated_at
+product_key
+harbor_light_monthly
+tide_letter_monthly
+status
+active
+trialing
+past_due
+canceled
+incomplete
+expired
+設計方針
+港の維持灯が active の場合
+  monthly_log_allowances.support_bonus = 30
+
+潮の便りが active の場合
+  毎月 tide_letters を作成する対象になる
+
+解約しても current_period_end までは active として扱う場合がある
+cancel_at_period_end = true の場合、期間終了までは有効
+billing_purchases
+
+billing_purchases は、単発購入の履歴を保存するテーブルです。
+
+対象となる単発商品：
+
+voyage_fuel_50
+  航海燃料
+
+special_ticket_10
+  Special Voyage Ticket 10分
+
+special_ticket_20
+  Special Voyage Ticket 20分
+
+deep_sea_ticket
+  Deep Sea Ticket
+役割
+誰が何を購入したかを記録する
+購入日時・金額・通貨・決済IDを保存する
+付与済みかどうかを管理する
+重複付与を避ける
+主なカラム
+id
+user_id
+product_key
+amount
+currency
+status
+stripe_checkout_session_id
+stripe_payment_intent_id
+granted_at
+created_at
+updated_at
+product_key
+voyage_fuel_50
+special_ticket_10
+special_ticket_20
+deep_sea_ticket
+status
+pending
+paid
+granted
+failed
+refunded
+canceled
+設計方針
+決済完了前は pending
+Stripe 決済完了後に paid
+Supabase 側で付与処理が完了したら granted
+返金が発生した場合は refunded
+商品ごとの付与内容
+voyage_fuel_50
+  購入月のみ monthly_log_allowances.fuel_bonus += 50
+
+special_ticket_10
+  voyage_tickets に special / 10分 / source=purchase を追加
+
+special_ticket_20
+  voyage_tickets に special / 20分 / source=purchase を追加
+
+deep_sea_ticket
+  voyage_tickets に deep_sea / 20分 / source=purchase を追加
+billing_events
+
+billing_events は、Stripe Webhook イベントの処理履歴を保存するテーブルです。
+
+役割
+Stripe Webhook の二重処理を防ぐ
+同じ event_id を複数回処理しない
+処理成功・失敗を記録する
+後からトラブル調査できるようにする
+主なカラム
+id
+stripe_event_id
+event_type
+status
+payload
+processed_at
+created_at
+error_message
+status
+received
+processed
+failed
+ignored
+設計方針
+Webhook を受け取ったら、まず stripe_event_id を確認する
+すでに存在すれば処理しない
+存在しなければ billing_events に保存する
+付与処理が成功したら processed
+失敗したら failed と error_message を保存する
+商品IDとDB反映
+harbor_light_monthly
+商品ID：harbor_light_monthly
+価格：月額480円
+種別：月額支援
+付与：Voyage Log 航海回数 +30回
+
+DB反映：
+
+user_subscriptions に active として保存
+ensure_monthly_log_allowance() 実行時に support_bonus = 30
+
+注意：
+
+voyage_tickets は付与しない
+潮の便りは付与しない
+voyage_fuel_50
+商品ID：voyage_fuel_50
+価格：580円
+種別：単発購入
+付与：購入月のみ Voyage Log 航海回数 +50回
+
+DB反映：
+
+billing_purchases に購入履歴を保存
+対象月の monthly_log_allowances.fuel_bonus += 50
+
+注意：
+
+翌月へ繰り越さない
+購入月のみ有効
+voyage_tickets は付与しない
+special_ticket_10
+商品ID：special_ticket_10
+価格：180円
+種別：単品チケット
+付与：Special Voyage Ticket 10分
+
+DB反映：
+
+billing_purchases に購入履歴を保存
+
+voyage_tickets に insert
+  ticket_type = special
+  duration_minutes = 10
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+注意：
+
+同じ航海券は1枚まで
+既に同種チケットを持っている場合は購入前に制御する
+special_ticket_20
+商品ID：special_ticket_20
+価格：320円
+種別：単品チケット
+付与：Special Voyage Ticket 20分
+
+DB反映：
+
+billing_purchases に購入履歴を保存
+
+voyage_tickets に insert
+  ticket_type = special
+  duration_minutes = 20
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+注意：
+
+同じ航海券は1枚まで
+既に同種チケットを持っている場合は購入前に制御する
+deep_sea_ticket
+商品ID：deep_sea_ticket
+価格：480円
+種別：単品チケット
+付与：Deep Sea Ticket
+
+DB反映：
+
+billing_purchases に購入履歴を保存
+
+voyage_tickets に insert
+  ticket_type = deep_sea
+  duration_minutes = 20
+  source = purchase
+  status = available
+  expires_at = purchased_at + 15 days
+
+注意：
+
+同じ航海券は1枚まで
+既に同種チケットを持っている場合は購入前に制御する
+tide_letter_monthly
+商品ID：tide_letter_monthly
+価格：月額680円
+種別：月額プラン
+付与：毎月、航海券1枚 + 小さな便り
+
+DB反映：
+
+user_subscriptions に active として保存
+契約月は初回 tide_letter を即時作成
+以後、毎月1日に tide_letters を作成
+
+注意：
+
+Voyage Log の航海回数は増えない
+直接 voyage_tickets には付与しない
+まず tide_letters に受け取り待ちとして保存する
+同種チケットを持っていない場合に、ユーザーが受け取れる
+月間 Voyage Log 回数との連動
+
+monthly_log_allowances は、以下の合算で月間上限を決めます。
+
+base_limit
+  無料枠。基本は10回。
+
+support_bonus
+  港の維持灯による追加枠。+30回。
+
+fuel_bonus
+  航海燃料による追加枠。1回購入ごとに +50回。
+
+total_limit
+  base_limit + support_bonus + fuel_bonus
+
+例：
+
+無料のみ
+  10回
+
+港の維持灯
+  10 + 30 = 40回
+
+航海燃料1回
+  10 + 50 = 60回
+
+港の維持灯 + 航海燃料1回
+  10 + 30 + 50 = 90回
+
+港の維持灯 + 航海燃料2回
+  10 + 30 + 100 = 140回
+
+consumed_count は、その月に保存成功した Voyage Log の回数です。
+
+保存成功時に +1
+削除しても戻さない
+保存失敗時は増やさない
+Webhook 処理の基本流れ
+
+将来 Stripe と接続する場合、付与処理は必ず Webhook 側で行います。
+
+Stripe Checkout 完了
+↓
+Webhook 受信
+↓
+billing_events に stripe_event_id を保存
+↓
+同じ event_id が処理済みでないか確認
+↓
+product_key / price_id を確認
+↓
+user_id を特定
+↓
+billing_purchases または user_subscriptions を更新
+↓
+商品に応じた付与処理を実行
+↓
+billing_events を processed に更新
+
+フロント側では、決済完了画面へ戻ってきても、直接チケットや回数を付与しません。
+
+二重付与防止
+
+二重付与を防ぐために、以下を保存します。
+
+stripe_event_id
+stripe_checkout_session_id
+stripe_payment_intent_id
+stripe_subscription_id
+
+基本方針：
+
+同じ stripe_event_id は1回だけ処理する
+同じ checkout_session_id に対して複数回付与しない
+同じ payment_intent_id に対して複数回付与しない
+同じ subscription_id は user_subscriptions で更新扱いにする
+購入前の制御
+
+チケットは最大1枚まで保持できるため、購入前に確認します。
+
+special_ticket_10
+  special / 10分 の available があれば購入不可
+
+special_ticket_20
+  special / 20分 の available があれば購入不可
+
+deep_sea_ticket
+  deep_sea の available があれば購入不可
+
+表示文言：
+
+同じ航海券をすでに持っています。
+その航海券を使うと、また購入できるようになります。
+
+航海燃料は複数回購入可能です。
+
+voyage_fuel_50
+  同じ月に複数回購入可能
+  fuel_bonus は購入回数ごとに +50
+実装順
+
+課金機能は、以下の順番で進めます。
+
+1. DB設計メモを固める
+2. テーブルSQLを作成する
+3. RLS方針を決める
+4. 管理者だけが確認できる簡易 billing admin を作る
+5. Stripe 商品ID / Price ID を作る
+6. Checkout 作成 Edge Function を作る
+7. Webhook Edge Function を作る
+8. テストモードで付与確認
+9. 本番決済へ切り替え
+
+現時点では、1〜3までを先に進めます。
+決済接続はまだ行いません。
+
+
 
 ## Voyage Log 月間回数制限
 
