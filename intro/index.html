@@ -302,15 +302,17 @@
       object-fit:cover;
       display:block;
       filter:
-        brightness(.9)
-        saturate(.95)
-        contrast(.98);
+        brightness(.92)
+        saturate(.96)
+        contrast(.99);
     }
 
-    .step.ticket .step-visual img,
+    .step.record .step-visual img,
+    .step.log .step-visual img,
     .step.finds .step-visual img{
       object-fit:contain;
-      padding:14px;
+      padding:10px;
+      background:rgba(5,8,17,.18);
     }
 
     .step-visual::after{
@@ -572,9 +574,7 @@
         <div class="hero-copy">
           <p class="kicker">Guide to the Harbor</p>
 
-          <h1>
-            港の歩き方
-          </h1>
+          <h1>港の歩き方</h1>
 
           <p class="lead">
             Celeste Harbor は、日々の言葉を静かな航海記録として残す日記アプリです。<br>
@@ -583,12 +583,8 @@
           </p>
 
           <div class="hero-actions">
-            <a class="btn-primary" href="/">
-              港へ戻る
-            </a>
-            <a class="btn-ghost" href="/about/">
-              このサイトについて
-            </a>
+            <a class="btn-primary" href="/">港へ戻る</a>
+            <a class="btn-ghost" href="/about/">このサイトについて</a>
           </div>
         </div>
 
@@ -603,9 +599,7 @@
       <section aria-labelledby="steps-title">
         <div class="section-head">
           <p class="kicker">Five small steps</p>
-          <h2 id="steps-title">
-            今日の言葉が、航海になるまで。
-          </h2>
+          <h2 id="steps-title">今日の言葉が、航海になるまで。</h2>
           <p>
             使い方はとてもシンプルです。書く、残す、積み重なる。
             その途中で、ときどき小さな出会いが港へ流れ着きます。
@@ -629,7 +623,7 @@
 
           <article class="step">
             <div class="step-visual">
-              <img src="/images/sea-chart-z.png" alt="今日の言葉を一言残す">
+              <img src="/images/harbor-cat/cat-harbor-main.png" alt="今日の言葉を一言残す">
             </div>
             <div class="step-body">
               <div class="step-number">02</div>
@@ -641,9 +635,9 @@
             </div>
           </article>
 
-          <article class="step ticket">
+          <article class="step record">
             <div class="step-visual">
-              <img src="/images/tickets/special-voyage-ticket.png" alt="航海記録として保存される">
+              <img src="/images/intro/voyage-log-entry.png" alt="航海記録として保存される">
             </div>
             <div class="step-body">
               <div class="step-number">03</div>
@@ -655,9 +649,9 @@
             </div>
           </article>
 
-          <article class="step">
+          <article class="step log">
             <div class="step-visual">
-              <img src="/images/sea-chart-z.png" alt="Cabin Log に積み重なる">
+              <img src="/images/intro/cabin-log-search.png" alt="Cabin Log に積み重なる">
             </div>
             <div class="step-body">
               <div class="step-number">04</div>
@@ -671,7 +665,7 @@
 
           <article class="step finds">
             <div class="step-visual">
-              <img src="/images/tickets/drift-ticket.png" alt="漂着物や船と出会う">
+              <img src="/images/intro/harbor-item-beautiful.png" alt="漂着物や船と出会う">
             </div>
             <div class="step-body">
               <div class="step-number">05</div>
@@ -693,9 +687,7 @@
       <section aria-labelledby="tickets-title">
         <div class="section-head">
           <p class="kicker">Harbor encounters</p>
-          <h2 id="tickets-title">
-            港で出会うもの
-          </h2>
+          <h2 id="tickets-title">港で出会うもの</h2>
           <p>
             航海の途中では、静かなチケットや深い海への入口が現れることがあります。
             それらは機能でありながら、少しだけ物語の気配を持っています。
@@ -736,9 +728,7 @@
       </section>
 
       <section class="closing">
-        <h2>
-          今日の一言から、港は始まります。
-        </h2>
+        <h2>今日の一言から、港は始まります。</h2>
 
         <p>
           何かをきれいにまとめる必要はありません。  
@@ -747,12 +737,8 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn-primary" href="/">
-            入港する
-          </a>
-          <a class="btn-ghost" href="/about/">
-            もう少し読む
-          </a>
+          <a class="btn-primary" href="/">入港する</a>
+          <a class="btn-ghost" href="/about/">もう少し読む</a>
         </div>
       </section>
     </main>
