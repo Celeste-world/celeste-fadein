@@ -186,7 +186,7 @@
       bottom:var(--gate-bottom);
       transform:translateX(-50%);
       z-index:4;
-      width:min(520px, calc(100% - 28px));
+      width:min(680px, calc(100% - 28px));
       min-height:var(--gate-height);
       padding:14px;
       border-radius:22px;
@@ -219,7 +219,7 @@
 
     .actions{
       display:grid;
-      grid-template-columns:repeat(2, minmax(0, 1fr));
+      grid-template-columns:1.05fr 1fr 1.25fr;
       gap:10px;
       width:100%;
     }
@@ -274,10 +274,10 @@
 
     @media(max-width:760px){
       :root{
-        --gate-height:156px;
+        --gate-height:190px;
         --gate-bottom:12px;
         --art-top:12px;
-        --art-safe-bottom:262px;
+        --art-safe-bottom:296px;
       }
 
       .entrance::after{
@@ -369,10 +369,10 @@
 
     @media(max-height:620px){
       :root{
-        --gate-height:88px;
+        --gate-height:126px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:174px;
+        --art-safe-bottom:212px;
       }
 
       .gate{
@@ -397,14 +397,22 @@
       .subline{
         display:none;
       }
+
+      .actions{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .actions .guide-link{
+        grid-column:1 / -1;
+      }
     }
 
     @media(max-width:420px){
       :root{
-        --gate-height:148px;
+        --gate-height:182px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:246px;
+        --art-safe-bottom:280px;
       }
 
       .gate{
@@ -436,7 +444,7 @@
 
     @media(max-width:380px){
       :root{
-        --art-safe-bottom:254px;
+        --art-safe-bottom:286px;
       }
 
       .intro-copy h1{
@@ -467,8 +475,12 @@
           Googleでログイン
         </button>
 
-        <a class="btn-ghost" href="/about/">
-          このサイトについて
+        <a class="btn-ghost" href="/intro/">
+          港の歩き方
+        </a>
+
+        <a class="btn-ghost guide-link" href="/about/">
+          はじめての航海案内を見る
         </a>
       </div>
 
