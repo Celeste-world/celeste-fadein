@@ -3115,7 +3115,10 @@
         await applyHarborWeather();
         await loadLogs();
         await loadMonthlyLogLimit();
-  //      await checkFirstTutorialState();
+        
+        setTimeout(function(){
+          checkFirstTutorialState();
+        }, 1200);
         
       }else{
         window.location.replace("/");
@@ -4202,7 +4205,9 @@
         await loadLogs();
         await loadMonthlyLogLimit();
         
- //       await checkFirstTutorialState();
+        setTimeout(function(){
+          checkFirstTutorialState();
+        }, 1200);
         
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
