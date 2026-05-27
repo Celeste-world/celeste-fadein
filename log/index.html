@@ -10,6 +10,140 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  /* First Tutorial */
+
+.tutorial-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at center, rgba(169,183,255,.10), transparent 38%),
+    rgba(3,5,11,.68);
+  backdrop-filter:blur(6px);
+}
+
+.tutorial-overlay.visible{
+  display:flex;
+}
+
+.tutorial-modal{
+  width:min(520px, 100%);
+  border-radius:24px;
+  border:1px solid rgba(169,183,255,.34);
+  background:
+    radial-gradient(circle at top left, rgba(169,183,255,.14), transparent 42%),
+    linear-gradient(180deg, rgba(18,22,36,.98), rgba(8,12,24,.98));
+  box-shadow:0 28px 80px rgba(0,0,0,.58);
+  padding:24px;
+  color:var(--text);
+}
+
+.tutorial-label{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.tutorial-step{
+  font-size:12px;
+  color:var(--dim);
+  margin-bottom:10px;
+}
+
+.tutorial-title{
+  font-size:21px;
+  font-weight:500;
+  line-height:1.7;
+  margin:0 0 12px;
+}
+
+.tutorial-body{
+  white-space:pre-wrap;
+  color:var(--muted);
+  font-size:14px;
+  line-height:2;
+  margin:0;
+}
+
+.tutorial-hint{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(169,183,255,.18);
+  background:rgba(255,255,255,.025);
+  color:var(--dim);
+  font-size:12px;
+  line-height:1.8;
+  white-space:pre-wrap;
+}
+
+.tutorial-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:24px;
+}
+
+.tutorial-actions-right{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.tutorial-skip{
+  background:transparent;
+  color:var(--muted);
+  border:0;
+  padding:10px 0;
+}
+
+.tutorial-skip:hover{
+  color:var(--text);
+}
+
+@media(max-width:640px){
+  .tutorial-overlay{
+    align-items:flex-end;
+    padding:16px;
+  }
+
+  .tutorial-modal{
+    padding:20px;
+    border-radius:22px;
+  }
+
+  .tutorial-title{
+    font-size:18px;
+  }
+
+  .tutorial-body{
+    font-size:13px;
+    line-height:1.9;
+  }
+
+  .tutorial-actions{
+    align-items:stretch;
+    flex-direction:column-reverse;
+  }
+
+  .tutorial-actions-right{
+    width:100%;
+  }
+
+  .tutorial-actions-right button,
+  .tutorial-skip{
+    width:100%;
+  }
+}
+
   <style>
     :root{
       --bg:#050811;
@@ -1370,6 +1504,46 @@
         </div>
       </div>
     </div>
+
+    <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
+      <div
+        class="tutorial-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tutorialTitle"
+      >
+        <div class="tutorial-label">First Voyage Guide</div>
+    
+        <div class="tutorial-step" id="tutorialStepLabel">
+          1 / 6
+        </div>
+    
+        <h2 class="tutorial-title" id="tutorialTitle">
+          ようこそ、Celeste Harborへ
+        </h2>
+    
+        <p class="tutorial-body" id="tutorialBody"></p>
+    
+        <div class="tutorial-hint" id="tutorialHint" style="display:none;"></div>
+    
+        <div class="tutorial-actions">
+          <button class="tutorial-skip" id="tutorialSkipBtn" type="button">
+            あとで見る
+          </button>
+    
+          <div class="tutorial-actions-right">
+            <button class="ghost" id="tutorialPrevBtn" type="button">
+              戻る
+            </button>
+    
+            <button class="primary" id="tutorialNextBtn" type="button">
+              次へ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <footer>
       <div class="footer-links">
         <a href="/log/">Voyage Log</a>
@@ -1605,6 +1779,15 @@
     const downloadConfirmSummary = document.getElementById("downloadConfirmSummary");
     const downloadSummaryText = document.getElementById("downloadSummaryText");
 
+    const tutorialOverlay = document.getElementById("tutorialOverlay");
+    const tutorialStepLabel = document.getElementById("tutorialStepLabel");
+    const tutorialTitle = document.getElementById("tutorialTitle");
+    const tutorialBody = document.getElementById("tutorialBody");
+    const tutorialHint = document.getElementById("tutorialHint");
+    const tutorialSkipBtn = document.getElementById("tutorialSkipBtn");
+    const tutorialPrevBtn = document.getElementById("tutorialPrevBtn");
+    const tutorialNextBtn = document.getElementById("tutorialNextBtn");
+
     const maxContentLength = 800;
 
     const SPECIAL_RETURN_HARBOR_CAT_IMAGE =
@@ -1621,6 +1804,9 @@
     let pendingDownloadText = "";
     let pendingDownloadFileName = "";
     let monthlyLogRemainingCount = null;
+    
+    let tutorialCurrentStep = 0;
+    let tutorialSaving = false;
 
     const placeholders = [
       "今日の海は、どんな色でしたか。",
@@ -1739,6 +1925,178 @@
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
+    }
+
+    const firstTutorialSteps = [
+      {
+        title: "ようこそ、Celeste Harborへ",
+        body:
+          "Celeste Harbor は、日々の言葉を静かな航海記録として残す日記アプリです。\n長い文章でなくても大丈夫です。",
+        hint: ""
+      },
+      {
+        title: "今日の言葉を書く",
+        body:
+          "Voyage Log は、今日の日記を書く場所です。\nここでは、日記を書くことを「航海記録を残す」と呼んでいます。",
+        hint:
+          "Voyage Log = 今日の日記を書く画面\n航海記録を残す = 日記を保存する"
+      },
+      {
+        title: "気配（タグ）を選ぶ",
+        body:
+          "タグは、あとで記録を振り返りやすくするための目印です。\n迷ったら、いちばん近いものを1つ選べば大丈夫です。",
+        hint:
+          "Harbor = 日常・安心\nStorm = 不安・混乱\nFog = 迷い・曖昧さ\nLighthouse = 希望・目印"
+      },
+      {
+        title: "記録は Archive に残ります",
+        body:
+          "保存した言葉は、Voyage Archive に月ごとに残ります。\nあとから読み返したいときに使います。",
+        hint:
+          "Voyage Archive = 保存した日記を月ごとに見る場所"
+      },
+      {
+        title: "出来事は Cabin Log に積み重なります",
+        body:
+          "Cabin Log は、あなたの活動履歴です。\n日記、チケット、漂着物、船との出会いが時系列で残ります。",
+        hint:
+          "Cabin Log = 活動履歴\n漂着物 = ときどき手に入るアイテム\n船 = コレクション要素"
+      },
+      {
+        title: "ときどき、特別な出会いがあります",
+        body:
+          "航海燃料やチケットは、Celeste Harbor を少し深く使うためのものです。\n必要になったときだけ確認すれば大丈夫です。",
+        hint:
+          "航海燃料 = 書ける回数を追加するもの\nSpecial Voyage Ticket = 長めに書くためのチケット\nDeep Sea Ticket = 深い振り返り用のチケット"
+      }
+    ];
+    
+    function renderFirstTutorial(){
+      if(
+        !tutorialOverlay ||
+        !tutorialStepLabel ||
+        !tutorialTitle ||
+        !tutorialBody ||
+        !tutorialHint ||
+        !tutorialPrevBtn ||
+        !tutorialNextBtn
+      ){
+        return;
+      }
+    
+      const step = firstTutorialSteps[tutorialCurrentStep];
+    
+      tutorialStepLabel.textContent =
+        String(tutorialCurrentStep + 1) + " / " + String(firstTutorialSteps.length);
+    
+      tutorialTitle.textContent = step.title;
+      tutorialBody.textContent = step.body;
+    
+      if(step.hint){
+        tutorialHint.textContent = step.hint;
+        tutorialHint.style.display = "block";
+      }else{
+        tutorialHint.textContent = "";
+        tutorialHint.style.display = "none";
+      }
+    
+      tutorialPrevBtn.style.display =
+        tutorialCurrentStep > 0 ? "inline-block" : "none";
+    
+      tutorialNextBtn.textContent =
+        tutorialCurrentStep >= firstTutorialSteps.length - 1
+          ? "Voyage Log を開く"
+          : "次へ";
+    }
+    
+    function openFirstTutorial(){
+      if(!tutorialOverlay){
+        return;
+      }
+    
+      tutorialCurrentStep = 0;
+      renderFirstTutorial();
+    
+      tutorialOverlay.classList.add("visible");
+      tutorialOverlay.setAttribute("aria-hidden", "false");
+    }
+    
+    function closeFirstTutorial(){
+      if(!tutorialOverlay){
+        return;
+      }
+    
+      tutorialOverlay.classList.remove("visible");
+      tutorialOverlay.setAttribute("aria-hidden", "true");
+    }
+    
+    async function checkFirstTutorialState(){
+      if(!currentUser){
+        return;
+      }
+    
+      try{
+        const { data, error } = await client
+          .from("user_tutorial_states")
+          .select("tutorial_completed")
+          .eq("user_id", currentUser.id)
+          .maybeSingle();
+    
+        if(error){
+          console.warn("tutorial state check failed:", error);
+          return;
+        }
+    
+        if(!data || data.tutorial_completed === false){
+          openFirstTutorial();
+        }
+      }catch(error){
+        console.warn("tutorial state check catch:", error);
+      }
+    }
+    
+    async function saveFirstTutorialState(skipped){
+      if(!currentUser || tutorialSaving){
+        return;
+      }
+    
+      tutorialSaving = true;
+    
+      try{
+        const payload = {
+          user_id: currentUser.id,
+          tutorial_completed: true,
+          skipped: Boolean(skipped),
+          last_seen_step: skipped
+            ? tutorialCurrentStep
+            : firstTutorialSteps.length
+        };
+    
+        if(skipped){
+          payload.tutorial_completed_at = null;
+          payload.skipped_at = new Date().toISOString();
+        }else{
+          payload.tutorial_completed_at = new Date().toISOString();
+          payload.skipped_at = null;
+        }
+    
+        const { error } = await client
+          .from("user_tutorial_states")
+          .upsert(payload);
+    
+        if(error){
+          console.error("tutorial state save failed:", error);
+          setStatus("チュートリアル状態の保存に失敗しました。", true);
+          return;
+        }
+    
+        closeFirstTutorial();
+      }catch(error){
+        console.error("tutorial state save catch:", error);
+        setStatus("チュートリアル状態の保存に失敗しました。", true);
+      }finally{
+        tutorialSaving = false;
+      }
     }
 
     function afterglowMessage(reason){
@@ -3795,6 +4153,35 @@
 
     contentEl.addEventListener("input", updateCharCount);
 
+    if(tutorialPrevBtn){
+      tutorialPrevBtn.addEventListener("click", function(){
+        if(tutorialCurrentStep <= 0){
+          return;
+        }
+    
+        tutorialCurrentStep -= 1;
+        renderFirstTutorial();
+      });
+    }
+    
+    if(tutorialNextBtn){
+      tutorialNextBtn.addEventListener("click", async function(){
+        if(tutorialCurrentStep < firstTutorialSteps.length - 1){
+          tutorialCurrentStep += 1;
+          renderFirstTutorial();
+          return;
+        }
+    
+        await saveFirstTutorialState(false);
+      });
+    }
+    
+    if(tutorialSkipBtn){
+      tutorialSkipBtn.addEventListener("click", async function(){
+        await saveFirstTutorialState(true);
+      });
+    }
+
     client.auth.onAuthStateChange(async function(event, session){
       if(session && session.user){
         currentUser = session.user;
@@ -3812,6 +4199,8 @@
         await applyHarborWeather();
         await loadLogs();
         await loadMonthlyLogLimit();
+        
+        await checkFirstTutorialState();
         
       }else if(event === "SIGNED_OUT"){
         clearActiveVoyageTimer();
