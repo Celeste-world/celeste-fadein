@@ -545,6 +545,25 @@
         rgba(10,14,28,.66);
     }
 
+    /* Item rarity border */
+
+    .find-item.rarity-common{
+      border-color:rgba(70,84,132,.38);
+    }
+    
+    .find-item.rarity-rare{
+      border-color:rgba(255,227,163,.52);
+    }
+    
+    .find-item.rarity-special{
+      border-color:rgba(169,183,255,.58);
+    }
+    
+    .find-item.rarity-deep,
+    .find-item.rarity-deep-sea{
+      border-color:rgba(92,128,190,.58);
+    }
+
     .find-item:focus-visible{
       outline:2px solid rgba(169,183,255,.7);
       outline-offset:3px;
@@ -629,6 +648,33 @@
       color:var(--accent);
       border-color:rgba(169,183,255,.34);
       background:rgba(169,183,255,.06);
+    }
+
+    /* Item rarity tag */
+
+    .tag.rarity-common{
+      color:var(--muted);
+      border-color:rgba(160,168,187,.28);
+      background:rgba(255,255,255,.02);
+    }
+    
+    .tag.rarity-rare{
+      color:#ffe3a3;
+      border-color:rgba(255,227,163,.44);
+      background:rgba(255,227,163,.045);
+    }
+    
+    .tag.rarity-special{
+      color:var(--accent);
+      border-color:rgba(169,183,255,.44);
+      background:rgba(169,183,255,.055);
+    }
+    
+    .tag.rarity-deep,
+    .tag.rarity-deep-sea{
+      color:#9fb8ff;
+      border-color:rgba(92,128,190,.48);
+      background:rgba(92,128,190,.06);
     }
 
     .empty{
@@ -1058,6 +1104,32 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function rarityClassOf(rarity){
+      const value = String(rarity || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll("_", "-")
+        .replaceAll(" ", "-");
+    
+      if(!value || value === "common"){
+        return "rarity-common";
+      }
+    
+      if(value === "rare"){
+        return "rarity-rare";
+      }
+    
+      if(value === "special" || value === "special-voyage"){
+        return "rarity-special";
+      }
+    
+      if(value === "deep" || value === "deep-sea" || value === "deepsea"){
+        return "rarity-deep-sea";
+      }
+    
+      return "rarity-common";
     }
 
     function accountDisplayName(user){
@@ -1779,6 +1851,10 @@
       const kind = options.specialDetail ? "special" : "normal";
       const detailId = registerDetailFromItem(item, kind);
 
+      const rarityClass = kind === "special"
+        ? "rarity-special"
+        : rarityClassOf(item.rarity);
+
       const cardAttrs = `
         data-item-detail-id="${escapeHtml(detailId)}"
         role="button"
@@ -1787,7 +1863,7 @@
       `;
 
       return `
-        <div class="find-item${kind === "special" ? " special-detail-card" : ""}" ${cardAttrs}>
+        <div class="find-item ${rarityClass}${kind === "special" ? " special-detail-card" : ""}" ${cardAttrs}>
           ${imageBox(item.image_path, name)}
 
           <div>
@@ -1801,7 +1877,7 @@
               <span class="tag">数量：${escapeHtml(item.quantity)}</span>
               ${
                 item.rarity && !extraMetaHtml
-                  ? `<span class="tag">${escapeHtml(item.rarity)}</span>`
+                  ? `<span class="tag ${rarityClass}">${escapeHtml(item.rarity)}</span>`
                   : ""
               }
               ${
