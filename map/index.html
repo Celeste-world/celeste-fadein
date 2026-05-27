@@ -178,6 +178,18 @@
       margin-bottom:34px;
     }
 
+    .map-guide{
+      max-width:58rem;
+      margin:-14px 0 28px;
+      padding:13px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.18);
+      background:rgba(255,255,255,.018);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
     .panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
@@ -353,17 +365,17 @@
     .pos-outer{ left:72%; top:68%; }
 
     .sea-card.open{
-      border-color:rgba(185,246,202,.46);
+      border-color:rgba(185,246,202,.58);
       background:
-        radial-gradient(circle at top, rgba(185,246,202,.10), transparent 60%),
+        radial-gradient(circle at top, rgba(185,246,202,.085), transparent 60%),
         rgba(5,8,17,.62);
     }
-
+    
     .sea-card.locked{
-      border-color:rgba(160,168,187,.18);
-      background:rgba(5,8,17,.42);
-      opacity:.78;
-      filter:saturate(.72);
+      border-color:rgba(111,118,137,.26);
+      background:rgba(5,8,17,.38);
+      opacity:.70;
+      filter:saturate(.62);
     }
 
     .sea-card.open:hover{
@@ -519,14 +531,14 @@
 
     .tag.open{
       color:var(--ready);
-      border-color:rgba(185,246,202,.35);
-      background:rgba(185,246,202,.06);
+      border-color:rgba(185,246,202,.46);
+      background:rgba(185,246,202,.07);
     }
-
+    
     .tag.locked{
       color:#8b92a3;
-      border-color:rgba(139,146,163,.22);
-      background:rgba(255,255,255,.015);
+      border-color:rgba(111,118,137,.30);
+      background:rgba(255,255,255,.012);
     }
 
     .unlock-modal{
@@ -1676,6 +1688,11 @@
         すべての海が最初から見えているわけではありません。<br>
         航海記録と漂着物が、少しずつ次の海を開いていきます。
       </p>
+
+      <div class="map-guide">
+        開いている海域は淡い緑、未開放の海域は霧の色で表示されます。
+        海域を開くには、航海記録と漂着物、そして船の準備が関わります。
+      </div>
 
       <section class="panel">
         <div class="user" id="userStatus">
