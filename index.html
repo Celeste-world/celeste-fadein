@@ -219,7 +219,7 @@
 
     .actions{
       display:grid;
-      grid-template-columns:1.05fr 1fr 1.25fr;
+      grid-template-columns:1.05fr 1fr .8fr 1.25fr;
       gap:10px;
       width:100%;
     }
@@ -369,44 +369,43 @@
 
     @media(max-height:620px){
       :root{
-        --gate-height:126px;
+        --gate-height:154px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:212px;
+        --art-safe-bottom:240px;
       }
-
+    
       .gate{
         bottom:var(--gate-bottom);
         min-height:var(--gate-height);
         padding:10px 12px;
       }
-
+    
       .intro-copy{
         bottom:calc(var(--gate-bottom) + var(--gate-height) + 24px);
       }
-
+    
       .intro-kicker{
         display:none;
       }
-
+    
       .intro-copy h1{
         font-size:13px;
         line-height:1.65;
       }
-
+    
       .subline{
         display:none;
       }
-
+    
       .actions{
         grid-template-columns:1fr 1fr;
       }
-
+    
       .actions .guide-link{
         grid-column:1 / -1;
       }
     }
-
     @media(max-width:420px){
       :root{
         --gate-height:182px;
@@ -474,11 +473,15 @@
         <button class="btn-primary" id="loginBtn" type="button">
           Googleでログイン
         </button>
-
+      
         <a class="btn-ghost" href="/intro/">
           港の歩き方
         </a>
-
+      
+        <a class="btn-ghost" href="/help/">
+          Help
+        </a>
+      
         <a class="btn-ghost guide-link" href="/about/">
           はじめての航海案内を見る
         </a>
