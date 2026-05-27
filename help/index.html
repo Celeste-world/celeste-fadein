@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Help – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+    }
+
+    h1{
+      font-size:32px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 28px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.72);
+      border:1px solid rgba(70,84,132,.42);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+      margin-bottom:24px;
+    }
+
+    .section-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:14px;
+    }
+
+    .help-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .help-card{
+      display:block;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(70,84,132,.30);
+      background:rgba(255,255,255,.018);
+      color:var(--text);
+      text-decoration:none;
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        transform .2s ease;
+    }
+
+    .help-card:hover{
+      border-color:rgba(169,183,255,.42);
+      background:rgba(169,183,255,.045);
+      transform:translateY(-1px);
+    }
+
+    .help-title{
+      font-size:15px;
+      letter-spacing:.03em;
+      margin-bottom:6px;
+    }
+
+    .help-text{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      margin:0;
+    }
+
+    .note{
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.9;
+      margin:18px 0 0;
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+      margin-top:8px;
+    }
+
+    .back-link:hover{
+      color:var(--text);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:28px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/log/">Voyage Log</a>
+        <a href="/harbor-status/">Status</a>
+        <a href="/timeline/">Cabin Log</a>
+        <a href="/voyage-archive/">Archive</a>
+        <a href="/items/">Items</a>
+        <a href="/vessels/">Vessels</a>
+        <a href="/map/">Map</a>
+        <a href="/tickets/">Tickets</a>
+        <a href="/harbor-letter/">Letter</a>
+        <a href="/account/">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Help Center</h1>
+
+      <p class="lead">
+        Celeste Harbor の使い方を、静かに確認できる場所です。<br>
+        分からなくなったときだけ、必要なページを開いてください。
+      </p>
+
+      <section class="panel">
+        <div class="section-label">Guides</div>
+
+        <div class="help-list">
+          <a class="help-card" href="/help/navigation/">
+            <div class="help-title">Navigation Guide</div>
+            <p class="help-text">
+              Voyage Log、Archive、Cabin Log、Items、Vessels など、各ページの意味を確認できます。
+            </p>
+          </a>
+
+          <a class="help-card" href="/log/">
+            <div class="help-title">Voyage Log</div>
+            <p class="help-text">
+              まず今日の言葉を残したいときは、ここから航海記録へ戻れます。
+            </p>
+          </a>
+
+          <a class="help-card" href="/account/">
+            <div class="help-title">Account</div>
+            <p class="help-text">
+              ログイン状態やアカウントに関する情報を確認できます。
+            </p>
+          </a>
+        </div>
+
+        <p class="note">
+          Help Center は、必要なときだけ開く港の案内板です。すべてを覚える必要はありません。
+        </p>
+      </section>
+
+      <a class="back-link" href="#" id="backLink">
+        ← 前のページに戻る
+      </a>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/help/navigation/">Navigation Guide</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const backLink = document.getElementById("backLink");
+
+    if(backLink){
+      backLink.addEventListener("click", function(event){
+        event.preventDefault();
+
+        if(document.referrer && new URL(document.referrer).origin === location.origin){
+          history.back();
+          return;
+        }
+
+        location.href = "/log/";
+      });
+    }
+  </script>
+</body>
+</html>
