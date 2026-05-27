@@ -365,9 +365,10 @@
         </p>
       </section>
 
-      <a class="back-link" href="/log/">
-        ← Voyage Log に戻る
+      <a class="back-link" href="#" id="backLink">
+        ← 前のページに戻る
       </a>
+      
     </main>
 
     <footer>
@@ -381,5 +382,23 @@
     </footer>
 
   </div>
+  
+  <script>
+    const backLink = document.getElementById("backLink");
+  
+    if(backLink){
+      backLink.addEventListener("click", function(event){
+        event.preventDefault();
+  
+        if(document.referrer && new URL(document.referrer).origin === location.origin){
+          history.back();
+          return;
+        }
+  
+        location.href = "/log/";
+      });
+    }
+  </script>
+  
 </body>
 </html>
