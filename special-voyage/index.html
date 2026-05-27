@@ -1101,6 +1101,7 @@
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
         <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/help/">Help</a>
         <a href="/account/">Account</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
@@ -1234,8 +1235,8 @@
         <p class="note">
           深い航海ほど、港に何かが流れ着く気配も強くなります。<br>
           Drift Ticket は、港にたまたま漂着する短い航海券です。<br>
-          Special Voyage Ticket は、10分または20分の特別航海に使えます。<br>
-          Deep Sea Ticket は、さらに深い海へ降りたいときのための航海券です。
+          Special Voyage Ticket は、いつもより少し深く振り返りたいときに使うチケットです。<br>
+          Deep Sea Ticket は、さらに深い内省や整理をしたいときに使うチケットです。
         </p>
       </section>
     </main>
@@ -1251,6 +1252,7 @@
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
         <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/help/">Help</a>
         <a href="/account/">Account</a>
       </div>
 
@@ -1513,22 +1515,22 @@
     function ticketDescription(ticket){
       const normalized = normalizeTicketType(ticket.ticket_type);
       const minutes = ticket.duration_minutes || "";
-
+    
       if(normalized === "drift"){
-        return `港に流れ着いた、${minutes}分だけ深い海へ降りるための航海券です。`;
+        return `港に流れ着いた、${minutes}分だけ少し深く振り返るための航海券です。`;
       }
-
+    
       if(normalized === "special"){
-        return `${minutes}分の特別航海に使える航海券です。`;
+        return `Special Voyage Ticket は、${minutes}分だけ少し深く振り返り、言葉を整えるためのチケットです。`;
       }
-
+    
       if(normalized === "deep_sea"){
-        return `${minutes}分、さらに深い海へ降りるための航海券です。`;
+        return `Deep Sea Ticket は、${minutes}分、さらに深い内省や整理をしたいときに使うチケットです。`;
       }
-
+    
       return `${minutes}分の航海券です。`;
     }
-
+    
     function sourceLabel(source){
       if(source === "random_drift"){
         return "港に漂着";
@@ -1778,12 +1780,12 @@
         };
       }
     
-      if(sessionType === "special" && duration >= 20){
+     if(sessionType === "special" && duration >= 20){
         return {
-          title: "少し長い特別航海",
+          title: "深めの特別航海",
           text:
             "いつもの港より少し遠く、月明かりの海を進んでいます。\n" +
-            "言葉をもう少し奥まで運ぶための時間です。"
+            "言葉をもう少し静かに見つめ、整えるための時間です。"
         };
       }
     
@@ -1979,14 +1981,14 @@
       if(normalized === "deep_sea"){
         return {
           title: "深海航海が始まりました",
-          body: "船は、さらに深い海へ降りていきます。"
+          body: "船は、さらに深い内省と整理の海へ向かっています。"
         };
       }
 
       if(normalized === "special" && duration >= 20){
         return {
           title: "20分の特別航海が始まりました",
-          body: "船は、少し長い月明かりの海へ向かっています。"
+          body: "船は、言葉を静かに整える月明かりの海へ向かっています。"
         };
       }
 
