@@ -1242,6 +1242,54 @@
           width:100%;
         }
       }
+
+    /* Tag Guide */
+
+    .tag-guide{
+      margin:0 0 12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(169,183,255,.18);
+      background:rgba(255,255,255,.025);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+    }
+    
+    .tag-guide summary{
+      cursor:pointer;
+      color:var(--accent);
+      list-style:none;
+    }
+    
+    .tag-guide summary::-webkit-details-marker{
+      display:none;
+    }
+    
+    .tag-guide summary::after{
+      content:"＋";
+      float:right;
+      color:var(--dim);
+    }
+    
+    .tag-guide[open] summary::after{
+      content:"−";
+    }
+    
+    .tag-guide-list{
+      margin-top:10px;
+      display:grid;
+      gap:6px;
+    }
+    
+    .tag-guide-item{
+      color:var(--dim);
+    }
+    
+    .tag-guide-item strong{
+      color:var(--text);
+      font-weight:500;
+    }
     
   </style>
 </head>
@@ -1339,6 +1387,40 @@
           <div class="field-note">この記録に近い気配を選んでください。</div>
           <div class="char-count" id="charCount">0 / 800</div>
         </div>
+
+        <details class="tag-guide">
+          <summary>タグの選び方を見る</summary>
+        
+          <div class="tag-guide-list">
+            <div class="tag-guide-item">
+              <strong>Harbor</strong>：日常・安心
+            </div>
+            <div class="tag-guide-item">
+              <strong>Return</strong>：帰ってきた感覚・区切り
+            </div>
+            <div class="tag-guide-item">
+              <strong>Calm Tide</strong>：落ち着き・静かな流れ
+            </div>
+            <div class="tag-guide-item">
+              <strong>Lighthouse</strong>：希望・目印
+            </div>
+            <div class="tag-guide-item">
+              <strong>Fog</strong>：迷い・曖昧さ
+            </div>
+            <div class="tag-guide-item">
+              <strong>Drift</strong>：流されている感覚・保留
+            </div>
+            <div class="tag-guide-item">
+              <strong>Moonlit</strong>：静かな余韻・夜の気配
+            </div>
+            <div class="tag-guide-item">
+              <strong>Deep Current</strong>：深い思考・内側の動き
+            </div>
+            <div class="tag-guide-item">
+              <strong>Storm</strong>：不安・混乱
+            </div>
+          </div>
+        </details>
 
         <select id="tag">
           <option value="Harbor">Harbor（港）</option>
