@@ -102,17 +102,33 @@
 
     .guide-list{
       display:grid;
-      gap:14px;
+      gap:12px;
     }
 
     .guide-item{
-      padding:14px 0;
-      border-bottom:1px solid rgba(70,84,132,.26);
+      display:block;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid rgba(70,84,132,.22);
+      background:rgba(255,255,255,.012);
+      color:inherit;
+      text-decoration:none;
+      cursor:pointer;
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        transform .2s ease;
     }
 
-    .guide-item:last-child{
-      border-bottom:0;
-      padding-bottom:0;
+    .guide-item:hover{
+      border-color:rgba(169,183,255,.42);
+      background:rgba(169,183,255,.045);
+      transform:translateY(-1px);
+    }
+
+    .guide-item:focus-visible{
+      outline:2px solid rgba(169,183,255,.72);
+      outline-offset:3px;
     }
 
     .guide-title{
@@ -133,6 +149,11 @@
       color:var(--accent);
       font-size:12px;
       white-space:nowrap;
+    }
+
+    .guide-plain::after{
+      content:" →";
+      color:var(--dim);
     }
 
     .guide-text{
@@ -259,7 +280,7 @@
         <div class="section-label">Main Navigation</div>
 
         <div class="guide-list">
-          <div class="guide-item">
+          <a class="guide-item" href="/log/">
             <div class="guide-title">
               <div class="guide-name">Voyage Log</div>
               <div class="guide-plain">今日の日記を書く場所</div>
@@ -267,9 +288,9 @@
             <p class="guide-text">
               今日の言葉を残すページです。Celeste Harbor では、日記を書くことを「航海記録を残す」と呼んでいます。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/harbor-status/">
             <div class="guide-title">
               <div class="guide-name">Status</div>
               <div class="guide-plain">港の状態を見る場所</div>
@@ -277,9 +298,9 @@
             <p class="guide-text">
               現在の利用状況や、港に関係する状態を確認するページです。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/timeline/">
             <div class="guide-title">
               <div class="guide-name">Cabin Log</div>
               <div class="guide-plain">活動履歴</div>
@@ -287,9 +308,9 @@
             <p class="guide-text">
               日記、チケット、漂着物、船との出会いなど、あなたの活動が時系列で残る場所です。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/voyage-archive/">
             <div class="guide-title">
               <div class="guide-name">Archive</div>
               <div class="guide-plain">保存した日記を読む場所</div>
@@ -297,9 +318,9 @@
             <p class="guide-text">
               保存した航海記録を、月ごとに振り返るページです。あとから読み返したいときに使います。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/items/">
             <div class="guide-title">
               <div class="guide-name">Items</div>
               <div class="guide-plain">漂着物の一覧</div>
@@ -307,9 +328,9 @@
             <p class="guide-text">
               航海記録のあとに、ときどき流れ着くアイテムを確認する場所です。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/vessels/">
             <div class="guide-title">
               <div class="guide-name">Vessels</div>
               <div class="guide-plain">船のコレクション</div>
@@ -317,9 +338,9 @@
             <p class="guide-text">
               出会った船を確認するページです。船は、Celeste Harbor の中で少しずつ集まっていく要素です。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/map/">
             <div class="guide-title">
               <div class="guide-name">Map</div>
               <div class="guide-plain">海域と進行状況</div>
@@ -327,9 +348,9 @@
             <p class="guide-text">
               いま自分がどのあたりの海にいるのか、どんな海域が開いているのかを確認するページです。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/tickets/">
             <div class="guide-title">
               <div class="guide-name">Tickets</div>
               <div class="guide-plain">特別な航海に使う券</div>
@@ -337,9 +358,9 @@
             <p class="guide-text">
               Special Voyage Ticket や Deep Sea Ticket など、少し深く書くためのチケットを確認する場所です。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/harbor-letter/">
             <div class="guide-title">
               <div class="guide-name">Letter</div>
               <div class="guide-plain">問い合わせ・返信確認</div>
@@ -347,9 +368,9 @@
             <p class="guide-text">
               運営への連絡や、港から届いた返信を確認する場所です。
             </p>
-          </div>
+          </a>
 
-          <div class="guide-item">
+          <a class="guide-item" href="/account/">
             <div class="guide-title">
               <div class="guide-name">Account</div>
               <div class="guide-plain">アカウント確認</div>
@@ -357,7 +378,7 @@
             <p class="guide-text">
               ログイン状態やアカウントに関係する情報を確認するページです。
             </p>
-          </div>
+          </a>
         </div>
 
         <p class="note">
@@ -368,12 +389,11 @@
       <a class="back-link" href="#" id="backLink">
         ← 前のページに戻る
       </a>
-      
     </main>
 
     <footer>
       <div class="footer-links">
-        <a href="/help/navigation/">Navigation Guide</a>
+        <a href="/help/">Help Center</a>
         <a href="/log/">Voyage Log</a>
         <a href="/account/">Account</a>
       </div>
@@ -382,23 +402,22 @@
     </footer>
 
   </div>
-  
+
   <script>
     const backLink = document.getElementById("backLink");
-  
+
     if(backLink){
       backLink.addEventListener("click", function(event){
         event.preventDefault();
-  
+
         if(document.referrer && new URL(document.referrer).origin === location.origin){
           history.back();
           return;
         }
-  
+
         location.href = "/log/";
       });
     }
   </script>
-  
 </body>
 </html>
