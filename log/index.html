@@ -272,12 +272,16 @@
 }
 
     .weather-panel{
-      background:rgba(10,14,28,.70);
-      border:1px solid rgba(70,84,132,.45);
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(10,14,28,.52), rgba(7,10,20,.42));
+      border:1px solid rgba(70,84,132,.28);
       border-radius:18px;
       padding:20px;
-      box-shadow:0 18px 42px rgba(0,0,0,.30);
+      box-shadow:none;
       margin-bottom:24px;
+      cursor:default;
+      user-select:none;
     }
 
     .weather-label{
@@ -286,6 +290,13 @@
       text-transform:uppercase;
       color:var(--accent);
       margin-bottom:12px;
+    }
+
+    .weather-caption{
+      margin:-4px 0 12px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
     }
 
     .weather-main{
@@ -310,10 +321,11 @@
     }
 
     .weather-chip{
-      border:1px solid rgba(70,84,132,.45);
-      background:rgba(255,255,255,.025);
+      border:1px solid rgba(70,84,132,.30);
+      background:rgba(255,255,255,.015);
       border-radius:14px;
       padding:12px;
+      cursor:default;
     }
 
     .chip-label{
@@ -1334,8 +1346,12 @@
       </div>
 
       <section class="weather-panel" aria-label="Tonight's Harbor">
-        <div class="weather-label">Tonight's Harbor</div>
-
+       <div class="weather-label">Tonight's Harbor</div>
+        
+        <div class="weather-caption">
+          今夜の港の気配を表示しています。ここは操作する場所ではありません。
+        </div>
+        
         <p class="weather-main" id="weatherMain">
           今夜の港を確認しています。
         </p>
