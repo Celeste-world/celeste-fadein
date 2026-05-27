@@ -316,6 +316,10 @@
       padding:20px;
     }
 
+    .note.important{
+      grid-column:1 / -1;
+    }
+
     .note-title{
       font-size:14px;
       line-height:1.8;
@@ -420,6 +424,10 @@
         grid-template-columns:1fr;
       }
 
+      .note.important{
+        grid-column:auto;
+      }
+
       .actions button{
         width:100%;
       }
@@ -447,6 +455,7 @@
         <a href="/map/">Map</a>
         <a href="/tickets/">Tickets</a>
         <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
+        <a href="/help/">Help</a>
         <a href="/account/">Account</a>
       </nav>
     </header>
@@ -632,8 +641,8 @@
             </p>
 
             <p class="desc">
-              短い特別航海のための航海券です。
-              10分だけ、いつもの港より少し遠くへ出ることができます。
+              Special Voyage Ticket は、いつもより少し深く振り返りたいときに使うチケットです。
+              10分だけ、静かに考えるための時間を開きます。
             </p>
 
             <ul class="plan-list">
@@ -665,7 +674,7 @@
             </p>
 
             <p class="desc">
-              少し長めの特別航海のための航海券です。
+              Special Voyage Ticket は、いつもより少し深く振り返りたいときに使うチケットです。
               言葉の奥にある揺れや余韻に、静かに触れる時間を開きます。
             </p>
 
@@ -698,7 +707,7 @@
             </p>
 
             <p class="desc">
-              いつもの港よりも、さらに深い海へ降りるための航海券です。
+              Deep Sea Ticket は、さらに深い内省や整理をしたいときに使うチケットです。
               必要だと感じる時だけ開く、深い海への入口です。
             </p>
 
@@ -720,6 +729,14 @@
       </section>
 
       <section class="note-grid" aria-label="notes">
+        <div class="note important">
+          <div class="note-title">保存した記録について</div>
+          <p>
+            保存した航海記録は、プランに関係なくあなたの港に残ります。
+            プランを変更しても、過去の記録が自動で消えることはありません。
+          </p>
+        </div>
+
         <div class="note">
           <div class="note-title">航海回数について</div>
           <p>
@@ -750,6 +767,7 @@
         <a href="/log/">Voyage Log</a>
         <a href="/tickets/">Tickets</a>
         <a href="/account/">Account</a>
+        <a href="/help/">Help</a>
         <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
         <a href="/legal/terms/">利用規約</a>
         <a href="/legal/privacy/">プライバシーポリシー</a>
