@@ -188,6 +188,31 @@
       color:var(--text);
       border-color:rgba(169,183,255,.44);
     }
+
+    .archive-lantern-filter{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid rgba(255,227,163,.24);
+      background:rgba(255,227,163,.035);
+      color:var(--muted);
+      border-radius:999px;
+      padding:9px 13px;
+      font-size:12px;
+      line-height:1.6;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    
+    .archive-lantern-filter:hover{
+      color:var(--text);
+      border-color:rgba(255,227,163,.42);
+    }
+    
+    .archive-lantern-filter input{
+      accent-color:#ffe3a3;
+    }
     
     .archive-search-result{
       margin-top:10px;
@@ -702,6 +727,11 @@
       .lantern-mark-btn{
         width:100%;
       }
+
+      .archive-lantern-filter{
+        width:100%;
+        justify-content:center;
+      }
   
       .month-summary-grid{
         grid-template-columns:1fr;
@@ -872,6 +902,14 @@
             <option value="Deep Current">Deep Current</option>
             <option value="Storm">Storm</option>
           </select>
+
+          <label class="archive-lantern-filter">
+            <input
+              id="archiveLanternFilter"
+              type="checkbox"
+            >
+            Lantern Marks only
+          </label>
         
           <button
             class="archive-search-clear"
@@ -1071,6 +1109,7 @@
     const archiveSearchResult = document.getElementById("archiveSearchResult");
 
     const archiveTagFilter = document.getElementById("archiveTagFilter");
+    const archiveLanternFilter = document.getElementById("archiveLanternFilter");
     
     const monthLogs = document.getElementById("monthLogs");
 
@@ -1113,6 +1152,7 @@
     let selectedMonthKey = null;
     let archiveSearchQuery = "";
     let archiveTagQuery = "";
+    let archiveLanternOnly = false;
 
     let archiveSearchTimer = null;
     let archiveSearchRequestId = 0;
@@ -1769,7 +1809,8 @@
     function hasActiveArchiveFilter(){
       return (
         normalizeSearchText(archiveSearchQuery) ||
-        normalizeSearchText(archiveTagQuery)
+        normalizeSearchText(archiveTagQuery) ||
+        archiveLanternOnly
       );
     }
     
@@ -1782,6 +1823,10 @@
     
       if(normalizeSearchText(archiveTagQuery)){
         parts.push("#" + archiveTagQuery);
+      }
+    
+      if(archiveLanternOnly){
+        parts.push("Lantern Marks");
       }
     
       return parts.join(" / ");
@@ -1881,6 +1926,10 @@
     
         if(tagFilter){
           query = query.eq("tag", archiveTagQuery);
+        }
+
+        if(archiveLanternOnly){
+          query = query.eq("is_favorite", true);
         }
     
         keywords.forEach(function(keyword){
@@ -2329,11 +2378,19 @@
         scheduleArchiveSearch();
       });
     }
+
+    if(archiveLanternFilter){
+      archiveLanternFilter.addEventListener("change", function(){
+        archiveLanternOnly = archiveLanternFilter.checked;
+        scheduleArchiveSearch();
+      });
+    }
     
     if(archiveSearchClearBtn){
       archiveSearchClearBtn.addEventListener("click", function(){
         archiveSearchQuery = "";
         archiveTagQuery = "";
+        archiveLanternOnly = false;
     
         if(archiveSearchInput){
           archiveSearchInput.value = "";
@@ -2341,6 +2398,10 @@
     
         if(archiveTagFilter){
           archiveTagFilter.value = "";
+        }
+    
+        if(archiveLanternFilter){
+          archiveLanternFilter.checked = false;
         }
     
         archiveSearchClearBtn.style.display = "none";
