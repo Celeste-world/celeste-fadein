@@ -450,6 +450,24 @@
         font-size:13px;
       }
     }
+
+    .sp-only{
+      display:none;
+    }
+    
+    @media(max-width:640px){
+      .sp-only{
+        display:block;
+      }
+    
+      .intro-copy h1{
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+        word-break:keep-all;
+        line-height:1.8;
+      }
+    }
   </style>
 </head>
 
@@ -459,7 +477,10 @@
 
     <section class="intro-copy" aria-label="Celeste Harbor description">
       <p class="intro-kicker">A quiet diary harbor</p>
-      <h1>日々の言葉を、静かな航海記録として残す日記アプリ。</h1>
+      <h1>
+        日々の言葉を、<br class="sp-only">
+        静かな航海記録として残す日記アプリ。
+      </h1>
       <p class="intro-lead">
         気持ちや出来事を、ゆっくり書き残していくための小さなWebの港です。
       </p>
