@@ -40,10 +40,6 @@
       position:relative;
     }
     
-    .nav-letter-link{
-      position:relative;
-    }
-    
     body.has-unread-letter .nav-letter-link{
       color:var(--text);
     }
@@ -204,72 +200,72 @@
     }
 
     .afterglow-overlay{
-  position:fixed;
-  inset:0;
-  z-index:120;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:
-    radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
-    rgba(3,5,11,.46);
-  backdrop-filter:blur(3px);
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .7s ease;
-}
-
-.afterglow-overlay.visible{
-  display:flex;
-  opacity:1;
-}
-
-.afterglow-overlay.fading{
-  opacity:0;
-}
-
-.afterglow-banner{
-  width:min(460px, 100%);
-  border-radius:24px;
-  border:1px solid rgba(169,183,255,.34);
-  background:
-    radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
-    rgba(10,14,28,.96);
-  box-shadow:
-    0 28px 80px rgba(0,0,0,.58),
-    inset 0 0 0 1px rgba(255,255,255,.025);
-  padding:24px;
-  text-align:center;
-  color:var(--text);
-  transform:translateY(8px);
-  transition:transform .7s ease;
-}
-
-.afterglow-overlay.visible .afterglow-banner{
-  transform:translateY(0);
-}
-
-.afterglow-label{
-  font-size:11px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:10px;
-}
-
-.afterglow-title{
-  font-size:20px;
-  line-height:1.7;
-  color:var(--text);
-  margin-bottom:8px;
-}
-
-.afterglow-text{
-  font-size:13px;
-  line-height:2;
-  color:var(--muted);
-}
+      position:fixed;
+      inset:0;
+      z-index:120;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 34%),
+        rgba(3,5,11,.46);
+      backdrop-filter:blur(3px);
+      pointer-events:none;
+      opacity:0;
+      transition:opacity .7s ease;
+    }
+    
+    .afterglow-overlay.visible{
+      display:flex;
+      opacity:1;
+    }
+    
+    .afterglow-overlay.fading{
+      opacity:0;
+    }
+    
+    .afterglow-banner{
+      width:min(460px, 100%);
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.34);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 40%),
+        rgba(10,14,28,.96);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      padding:24px;
+      text-align:center;
+      color:var(--text);
+      transform:translateY(8px);
+      transition:transform .7s ease;
+    }
+    
+    .afterglow-overlay.visible .afterglow-banner{
+      transform:translateY(0);
+    }
+    
+    .afterglow-label{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .afterglow-title{
+      font-size:20px;
+      line-height:1.7;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+    
+    .afterglow-text{
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+    }
 
     .weather-panel{
       position:relative;
