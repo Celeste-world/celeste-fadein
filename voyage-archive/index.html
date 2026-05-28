@@ -1904,7 +1904,7 @@
       const tagFilter = normalizeSearchText(archiveTagQuery);
       const requestId = ++archiveSearchRequestId;
     
-      if(keywords.length === 0 && !tagFilter){
+      if(keywords.length === 0 && !tagFilter && !archiveLanternOnly){
         isArchiveSearching = false;
         renderArchiveFromLogs(allLogs);
         updateArchiveSearchResult(allLogs, allLogs.length);
