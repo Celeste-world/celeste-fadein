@@ -380,6 +380,24 @@
       margin-bottom:24px;
     }
 
+    .quick-log-guide{
+      margin:0 0 12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(169,183,255,.18);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.055), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+    }
+    
+    .quick-log-guide strong{
+      color:var(--text);
+      font-weight:500;
+    }
+
     textarea,
     input,
     select{
@@ -1388,12 +1406,17 @@
           </div>
         </div>
 
+        <div class="quick-log-guide">
+          <strong>一言だけでも大丈夫です。</strong><br>
+          今日の気配を少し置くだけでも、航海記録になります。
+        </div>
+        
         <textarea
           id="content"
           maxlength="800"
-          placeholder="今日の航海を記録する..."
+          placeholder="一言だけでも大丈夫です。今日の気配を少し置いてください..."
         ></textarea>
-
+        
         <div class="field-row">
           <div class="field-note">この記録に近い気配を選んでください。</div>
           <div class="char-count" id="charCount">0 / 800</div>
