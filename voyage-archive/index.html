@@ -382,6 +382,28 @@
       line-height:1.95;
     }
 
+    .read-more-wrap{
+      display:flex;
+      justify-content:center;
+      margin:16px 0 6px;
+    }
+    
+    .read-more{
+      border:1px solid rgba(169,183,255,.32);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+      border-radius:999px;
+      padding:10px 18px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+    }
+    
+    .read-more:hover{
+      border-color:rgba(169,183,255,.48);
+      color:var(--text);
+    }
+
     .archive-note{
       margin-top:24px;
       color:var(--dim);
@@ -640,9 +662,15 @@
       <div class="archive-layout">
         <section class="month-list" id="monthListPanel">
           <div class="section-label">Months</div>
-          <div id="monthList"></div>
-
-          <div class="archive-note">
+            <div id="monthList"></div>
+            
+            <div class="read-more-wrap" id="monthReadMoreWrap" style="display:none;">
+              <button class="read-more" id="monthReadMoreBtn" type="button">
+                Read more
+              </button>
+            </div>
+            
+            <div class="archive-note">
             Voyage Log の記録を月ごとにまとめています。<br>
             詳細は月を選ぶと表示されます。
           </div>
@@ -688,6 +716,12 @@
             <div class="empty">
               まだ月が選ばれていません。
             </div>
+          </div>
+          
+          <div class="read-more-wrap" id="logReadMoreWrap" style="display:none;">
+            <button class="read-more" id="logReadMoreBtn" type="button">
+              Read more
+            </button>
           </div>
         </section>
       </div>
@@ -780,6 +814,12 @@
 
     const monthList = document.getElementById("monthList");
     const monthLogs = document.getElementById("monthLogs");
+
+    const monthReadMoreWrap = document.getElementById("monthReadMoreWrap");
+    const monthReadMoreBtn = document.getElementById("monthReadMoreBtn");
+    const logReadMoreWrap = document.getElementById("logReadMoreWrap");
+    const logReadMoreBtn = document.getElementById("logReadMoreBtn");
+        
     const monthAfterglow = document.getElementById("monthAfterglow");
     const monthAfterglowText = document.getElementById("monthAfterglowText");
     const monthTags = document.getElementById("monthTags");
@@ -806,6 +846,12 @@
     let allLogs = [];
     let monthGroups = [];
     let selectedMonthKey = null;
+
+    let showAllMonths = false;
+    let showAllMonthLogs = false;
+    
+    const initialMonthLimit = 2;
+    const initialLogLimit = 5;
 
     let isDownloadingMonthlyArchive = false;
     let pendingMonthlyDownloadText = "";
@@ -1380,12 +1426,21 @@
             Voyage Log に記録が残ると、ここに月ごとの記録が現れます。
           </div>
         `;
+    
+        if(monthReadMoreWrap){
+          monthReadMoreWrap.style.display = "none";
+        }
+    
         return;
       }
-
-      monthList.innerHTML = monthGroups.map(function(group){
+    
+      const visibleGroups = showAllMonths
+        ? monthGroups
+        : monthGroups.slice(0, initialMonthLimit);
+    
+      monthList.innerHTML = visibleGroups.map(function(group){
         const active = group.key === selectedMonthKey ? " active" : "";
-
+    
         return `
           <button class="month-card${active}" type="button" data-month="${escapeHtml(group.key)}">
             <div class="month-title">${escapeHtml(group.label)}</div>
@@ -1395,12 +1450,21 @@
           </button>
         `;
       }).join("");
-
+    
       monthList.querySelectorAll(".month-card").forEach(function(button){
         button.addEventListener("click", function(){
           selectMonth(button.dataset.month);
         });
       });
+    
+      if(monthReadMoreWrap && monthReadMoreBtn){
+        if(monthGroups.length > initialMonthLimit){
+          monthReadMoreWrap.style.display = "flex";
+          monthReadMoreBtn.textContent = showAllMonths ? "Show less" : "Read more";
+        }else{
+          monthReadMoreWrap.style.display = "none";
+        }
+      }
     }
 
     function renderMonthDetail(group){
@@ -1427,6 +1491,11 @@
             まだ月が選ばれていません。
           </div>
         `;
+
+        if(logReadMoreWrap){
+          logReadMoreWrap.style.display = "none";
+        }
+        
         return;
       }
 
@@ -1445,23 +1514,37 @@
 
         renderMonthTags(group);
 
-      monthLogs.innerHTML = group.logs.map(function(log){
+      const visibleLogs = showAllMonthLogs
+        ? group.logs
+        : group.logs.slice(0, initialLogLimit);
+      
+      monthLogs.innerHTML = visibleLogs.map(function(log){
         return `
           <article class="log">
             <div class="log-top">
               <div class="date">${escapeHtml(formatShortDate(log.created_at))}　${escapeHtml(formatDateTime(log.created_at))}</div>
               <div class="tag">#${escapeHtml(log.tag || "Harbor")}</div>
             </div>
-
+      
             <div class="content">${escapeHtml(log.content || "")}</div>
           </article>
         `;
       }).join("");
+      
+      if(logReadMoreWrap && logReadMoreBtn){
+        if(group.logs.length > initialLogLimit){
+          logReadMoreWrap.style.display = "flex";
+          logReadMoreBtn.textContent = showAllMonthLogs ? "Show less" : "Read more";
+        }else{
+          logReadMoreWrap.style.display = "none";
+        }
+      }
     }
 
     function selectMonth(key){
       selectedMonthKey = key;
-
+      showAllMonthLogs = false;
+    
       const group = monthGroups.find(function(item){
         return item.key === key;
       });
@@ -1566,6 +1649,22 @@
 
     if(downloadMonthBtn){
       downloadMonthBtn.addEventListener("click", openMonthDownloadModal);
+    }
+
+    if(monthReadMoreBtn){
+      monthReadMoreBtn.addEventListener("click", function(){
+        showAllMonths = !showAllMonths;
+        renderMonthList();
+      });
+    }
+    
+    if(logReadMoreBtn){
+      logReadMoreBtn.addEventListener("click", function(){
+        showAllMonthLogs = !showAllMonthLogs;
+    
+        const group = selectedMonthGroup();
+        renderMonthDetail(group);
+      });
     }
     
     if(monthDownloadCancelBtn){
