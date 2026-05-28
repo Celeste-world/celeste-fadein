@@ -406,12 +406,19 @@
         grid-column:1 / -1;
       }
     }
+    
     @media(max-width:420px){
       :root{
         --gate-height:182px;
         --gate-bottom:10px;
-        --art-top:10px;
-        --art-safe-bottom:300px;
+        --art-top:-14px;
+        --art-safe-bottom:326px;
+      }
+    
+      .entrance-art{
+        top:var(--art-top);
+        height:calc(100svh - var(--art-safe-bottom));
+        background-position:center top;
       }
     
       .gate{
@@ -419,7 +426,7 @@
       }
     
       .intro-copy{
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 86px);
+        bottom:calc(var(--gate-bottom) + var(--gate-height) + 42px);
         width:calc(100% - 36px);
       }
     
@@ -447,7 +454,6 @@
         padding:8px 9px;
       }
     }
-
     @media(max-width:380px){
       :root{
         --art-safe-bottom:286px;
