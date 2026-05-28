@@ -760,8 +760,6 @@
       </div>
       
       <div class="archive-layout">
-
-      <div class="archive-layout">
         <section class="month-list" id="monthListPanel">
           <div class="section-label">Months</div>
             <div id="monthList"></div>
@@ -1609,7 +1607,7 @@
     function renderMonthList(){
       if(monthGroups.length === 0){
         const hasSearch = normalizeSearchText(archiveSearchQuery);
-      
+    
         monthList.innerHTML = `
           <div class="empty">
             ${
@@ -1619,13 +1617,7 @@
             }
           </div>
         `;
-      
-        if(monthReadMoreWrap){
-          monthReadMoreWrap.style.display = "none";
-        }
-      
-        return;
-      }    
+    
         if(monthReadMoreWrap){
           monthReadMoreWrap.style.display = "none";
         }
@@ -1665,7 +1657,7 @@
         }
       }
     }
-
+    
     function renderMonthDetail(group){
       if(!group){
         detailTitle.textContent = "月を選んでください";
@@ -1781,7 +1773,8 @@
 
       refreshArchiveView();
       
-      setStatus("");    }
+      setStatus("");
+      }
 
     async function logout(){
       await client.auth.signOut();
