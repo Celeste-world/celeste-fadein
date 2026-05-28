@@ -1106,6 +1106,104 @@
         .replaceAll("'", "&#039;");
     }
 
+    function formatFoundRecordDate(value){
+      if(!value){
+        return "";
+      }
+    
+      const date = new Date(value);
+    
+      if(Number.isNaN(date.getTime())){
+        return "";
+      }
+    
+      return date.toLocaleString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+    
+    function itemAreaDisplayName(item){
+      const areaKey = String(
+        item.area_key ||
+        item.sea_area_key ||
+        item.found_area_key ||
+        item.origin_area_key ||
+        ""
+      );
+    
+      const areaName =
+        item.area_name_ja ||
+        item.sea_area_name_ja ||
+        item.area_name ||
+        item.sea_area_name ||
+        "";
+    
+      if(areaName){
+        return areaName;
+      }
+    
+      const names = {
+        harbor: "港",
+        silent_water: "静かな水域",
+        lighthouse_coast: "灯台海岸",
+        fog_sea: "霧の海",
+        moonlit_sea: "月光の海",
+        deep_current: "深潮",
+        unnamed_waters: "名前のない海域"
+      };
+    
+      return names[areaKey] || "";
+    }
+    
+    function itemFoundDateValue(item){
+      return (
+        item.found_at ||
+        item.acquired_at ||
+        item.obtained_at ||
+        item.created_at ||
+        item.inserted_at ||
+        ""
+      );
+    }
+    
+    function buildItemFoundRecordHtml(item){
+      if(!item){
+        return "";
+      }
+    
+      const foundDate = formatFoundRecordDate(itemFoundDateValue(item));
+      const areaName = itemAreaDisplayName(item);
+    
+      const lines = [];
+    
+      if(foundDate){
+        lines.push("流れ着いた時：" + foundDate);
+      }
+    
+      if(areaName){
+        lines.push("海域の気配：" + areaName);
+      }
+    
+      if(lines.length === 0){
+        return "";
+      }
+    
+      return `
+        <div style="color:var(--accent); font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px;">
+          Found Record
+        </div>
+        <div>
+          ${lines.map(function(line){
+            return escapeHtml(line);
+          }).join("<br>")}
+        </div>
+      `;
+    }
+
     function rarityClassOf(rarity){
       const value = String(rarity || "")
         .trim()
@@ -1244,6 +1342,10 @@
         ? `<p class="item-detail-origin">${escapeHtml(detail.origin_text)}</p>`
         : "";
 
+      const foundRecordHtml = detail.found_record_html
+        ? `<div class="item-detail-origin">${detail.found_record_html}</div>`
+        : "";
+
       itemDetailModalContent.innerHTML = `
         <div class="item-detail-layout">
           <div class="item-detail-image">
@@ -1259,13 +1361,15 @@
               ${escapeHtml(detail.title)}
             </div>
 
-            <p class="item-detail-desc">
-              ${escapeHtml(descriptionText)}
-            </p>
-
-            ${originHtml}
-
-            <div class="item-detail-meta">
+          <p class="item-detail-desc">
+            ${escapeHtml(descriptionText)}
+          </p>
+          
+          ${originHtml}
+          
+          ${foundRecordHtml}
+          
+          <div class="item-detail-meta">
               ${detail.kind === "special" ? specialMetaHtml : normalMetaHtml}
             </div>
           </div>
@@ -1825,7 +1929,7 @@
 
     function registerDetailFromItem(item, kind){
       const name = itemNameOf(item);
-
+    
       return registerItemDetail({
         kind,
         title: name,
@@ -1842,7 +1946,8 @@
         origin_text:
           kind === "special"
             ? ""
-            : (item.origin_text || "")
+            : (item.origin_text || ""),
+        found_record_html: buildItemFoundRecordHtml(item)
       });
     }
 
