@@ -593,6 +593,54 @@
         z-index:5 !important;
       }
     }
+
+    /* Final mobile override: entrance copy spacing */
+    @media(max-width:760px){
+      .entrance-art{
+        position:absolute !important;
+        top:8svh !important;
+        left:50% !important;
+        width:100% !important;
+        height:34svh !important;
+        transform:translateX(-50%) !important;
+        background-position:center top !important;
+        background-size:contain !important;
+      }
+    
+      .intro-copy{
+        position:fixed !important;
+        left:50% !important;
+        top:calc(8svh + 34svh + 24px) !important;
+        bottom:auto !important;
+        transform:translateX(-50%) !important;
+        width:calc(100% - 36px) !important;
+        z-index:20 !important;
+      }
+    
+      .intro-kicker{
+        margin-bottom:4px !important;
+        font-size:8px !important;
+      }
+    
+      .intro-copy h1{
+        font-size:13px !important;
+        line-height:1.6 !important;
+        white-space:normal !important;
+        overflow:visible !important;
+        text-overflow:clip !important;
+      }
+    
+      .gate{
+        position:fixed !important;
+        left:50% !important;
+        bottom:calc(env(safe-area-inset-bottom, 0px) + 10px) !important;
+        transform:translateX(-50%) !important;
+        width:calc(100% - 20px) !important;
+        min-height:182px !important;
+        z-index:10 !important;
+      }
+    }
+    
   </style>
 </head>
 
