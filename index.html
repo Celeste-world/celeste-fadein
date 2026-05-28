@@ -522,6 +522,77 @@
         z-index:5;
       }
     }
+
+        /* Mobile top layout: prevent intro text from being hidden behind gate */
+    @media(max-width:420px){
+      body{
+        overflow:auto !important;
+      }
+    
+      .entrance{
+        min-height:100svh !important;
+        overflow:visible !important;
+        display:flex !important;
+        flex-direction:column !important;
+        justify-content:flex-start !important;
+        padding-top:0 !important;
+        padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 14px) !important;
+      }
+    
+      .entrance-art{
+        position:relative !important;
+        left:auto !important;
+        top:auto !important;
+        transform:none !important;
+        width:100vw !important;
+        height:52vw !important;
+        min-height:0 !important;
+        max-height:250px !important;
+        background-position:center center !important;
+        background-size:contain !important;
+        flex:0 0 auto !important;
+      }
+    
+      .intro-copy{
+        position:relative !important;
+        left:auto !important;
+        top:auto !important;
+        bottom:auto !important;
+        transform:none !important;
+        width:calc(100% - 36px) !important;
+        margin:26px auto 10px !important;
+        padding:0 4px !important;
+        z-index:6 !important;
+      }
+    
+      .intro-kicker{
+        margin-bottom:4px !important;
+        font-size:8px !important;
+      }
+    
+      .intro-copy h1{
+        font-size:13px !important;
+        line-height:1.65 !important;
+        white-space:normal !important;
+        overflow:visible !important;
+        text-overflow:clip !important;
+      }
+    
+      .intro-lead{
+        display:none !important;
+      }
+    
+      .gate{
+        position:relative !important;
+        left:auto !important;
+        bottom:auto !important;
+        transform:none !important;
+        width:calc(100% - 20px) !important;
+        min-height:182px !important;
+        margin:0 auto !important;
+        z-index:5 !important;
+      }
+    }
   </style>
 </head>
 
