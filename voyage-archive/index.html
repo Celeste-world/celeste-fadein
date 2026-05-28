@@ -922,7 +922,7 @@
         </div>
       
         <div class="archive-search-result" id="archiveSearchResult">
-          キーワードを入力すると、保存した航海記録を検索できます。
+          言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。
         </div>
       </div>
       
@@ -1858,7 +1858,7 @@
     
       if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
-          "キーワードやタグを選ぶと、保存した航海記録を検索できます。";
+          "言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。";
         return;
       }
     
@@ -2026,7 +2026,7 @@
           <div class="empty">
             ${
               hasSearch
-                ? "検索に一致する航海記録はありません。<br>別の言葉で探してみてください。"
+                ? "条件に一致する航海記録はありません。<br>言葉やタグを少し変えて探してみてください。"
                 : "まだ航海記録がありません。<br>Voyage Log に記録が残ると、ここに月ごとの記録が現れます。"
             }
           </div>
@@ -2065,7 +2065,7 @@
       if(monthReadMoreWrap && monthReadMoreBtn){
         if(monthGroups.length > initialMonthLimit){
           monthReadMoreWrap.style.display = "flex";
-          monthReadMoreBtn.textContent = showAllMonths ? "Show less" : "Read more";
+          monthReadMoreBtn.textContent = showAllMonths ? "月を少なく表示" : "月をさらに表示";
         }else{
           monthReadMoreWrap.style.display = "none";
         }
@@ -2239,7 +2239,7 @@
       if(logReadMoreWrap && logReadMoreBtn){
         if(group.logs.length > initialLogLimit){
           logReadMoreWrap.style.display = "flex";
-          logReadMoreBtn.textContent = showAllMonthLogs ? "Show less" : "Read more";
+          logReadMoreBtn.textContent = showAllMonthLogs ? "記録を少なく表示" : "記録をさらに表示";
         }else{
           logReadMoreWrap.style.display = "none";
         }
