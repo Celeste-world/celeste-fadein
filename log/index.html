@@ -1490,7 +1490,7 @@
           </p>
 
           <p class="drift-ticket-sub" id="driftTicketSub">
-            それは、少しだけ深い海へ降りるための合図です。
+            それは、少しだけ深く振り返るための静かな合図です。
           </p>
         </div>
 
@@ -2066,7 +2066,9 @@
         body:
           "航海燃料やチケットは、Celeste Harbor を少し深く使うためのものです。\n必要になったときだけ確認すれば大丈夫です。",
         hint:
-          "航海燃料 = 書ける回数を追加するもの\nSpecial Voyage Ticket = 長めに書くためのチケット\nDeep Sea Ticket = 深い振り返り用のチケット"
+          "航海燃料 = 書ける回数を追加するもの\n" +
+          "Special Voyage Ticket = 少し深く振り返り、言葉を整えるためのチケット\n" +
+          "Deep Sea Ticket = さらに深い内省や整理をしたいときのチケット"
       }
     ];
     
@@ -2433,7 +2435,7 @@
       }
 
       if(sessionType === "special" && durationMinutes >= 20){
-        return "少し長い特別航海が続いています";
+        return "深めの特別航海が続いています";
       }
 
       return "特別航海が続いています";
