@@ -1127,6 +1127,12 @@
     }
     
     function itemAreaDisplayName(item){
+      const areaHint = item.area_hint || "";
+    
+      if(areaHint){
+        return areaHint;
+      }
+    
       const areaKey = String(
         item.area_key ||
         item.sea_area_key ||
@@ -1161,6 +1167,7 @@
     
     function itemFoundDateValue(item){
       return (
+        item.first_found_at ||
         item.found_at ||
         item.acquired_at ||
         item.obtained_at ||
