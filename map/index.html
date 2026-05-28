@@ -1672,7 +1672,8 @@
 
       <div class="map-guide">
         開いている海域は淡い緑、未開放の海域は霧の色で表示されます。
-        海域を開くには、航海記録と漂着物、そして船の準備が関わります。
+        海域を開くには、航海記録と漂着物、そして船の準備が関わります。<br>
+        Drift Signs は、その海域に漂う気配です。確定した入手条件ではありません。
       </div>
 
       <section class="panel">
@@ -1908,13 +1909,26 @@
     ];
 
     const areaAtmospheres = {
-      harbor: "木片、古い道具、浅瀬に残る小さな漂着物の気配。",
-      silent_water: "低い波、静かな水面、港の外へ出るための軽い素材の気配。",
-      lighthouse_coast: "遠い光、古い金具、方角を思い出させるものの気配。",
-      fog_sea: "白い霧、湿った布、見えない流れと羅針盤の影。",
-      moonlit_sea: "月光、銀色の水面、静かに進むための印。",
-      deep_current: "重い素材、深い潮、沈まないためのものの気配。",
-      unnamed_waters: "海図の外側、まだ名のない漂着物、遠い光の気配。"
+      harbor:
+        "港の近くには、日常の小さな記録や、木片のような穏やかな漂着物の気配があります。",
+    
+      silent_water:
+        "静かな水域には、落ち着いた夜や、薄い布、淡い貝殻のような気配があります。",
+    
+      lighthouse_coast:
+        "灯台海岸には、遠くを見るための光や、古いランタンの気配があります。",
+    
+      fog_sea:
+        "霧の海には、まだ形にならない記録や、輪郭の曖昧な漂着物の気配があります。",
+    
+      moonlit_sea:
+        "月明かりの海には、夜の余韻や、静かに光るものの気配があります。",
+    
+      deep_current:
+        "深い潮には、内側へ沈む言葉や、重く静かな漂着物の気配があります。",
+    
+      unnamed_waters:
+        "名前のない海には、まだ知らない船や、遠くから流れ着くものの気配があります。"
     };
 
     const areaImagePaths = {
@@ -2901,7 +2915,7 @@
             </div>
     
             <div class="sea-atmosphere">
-              <div class="sea-atmosphere-label">気配</div>
+              <div class="sea-atmosphere-label">Drift Signs</div>
               <div class="sea-atmosphere-text">
                 ${escapeHtml(atmosphereText)}
               </div>
@@ -2940,7 +2954,7 @@
             </p>
     
             <div class="sea-atmosphere">
-              <div class="sea-atmosphere-label">気配</div>
+              <div class="sea-atmosphere-label">Drift Signs</div>
               <div class="sea-atmosphere-text">
                 まだ霧の向こうにあります。
               </div>
