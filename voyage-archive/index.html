@@ -280,6 +280,58 @@
       padding:12px 0;
     }
 
+    .month-summary{
+      margin:0 0 18px;
+      padding:16px 18px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.085), transparent 44%),
+        rgba(5,8,17,.40);
+    }
+    
+    .month-summary-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .month-summary-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+      margin-bottom:12px;
+    }
+    
+    .month-summary-chip{
+      padding:10px 11px;
+      border-radius:14px;
+      border:1px solid rgba(160,168,187,.18);
+      background:rgba(255,255,255,.018);
+    }
+    
+    .month-summary-chip-label{
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:5px;
+    }
+    
+    .month-summary-chip-value{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.6;
+    }
+    
+    .month-summary-text{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
     .month-afterglow{
       margin:0 0 18px;
       padding:16px 18px;
@@ -611,6 +663,10 @@
       .download-modal{
         padding:20px;
       }
+  
+      .month-summary-grid{
+        grid-template-columns:1fr;
+      }
     
       .download-modal-actions button{
         width:100%;
@@ -836,6 +892,29 @@
             </div>
           </div>
 
+          <div class="month-summary" id="monthSummary" style="display:none;">
+            <div class="month-summary-label">Monthly Summary</div>
+          
+            <div class="month-summary-grid">
+              <div class="month-summary-chip">
+                <div class="month-summary-chip-label">Logs</div>
+                <div class="month-summary-chip-value" id="monthSummaryCount">0件</div>
+              </div>
+          
+              <div class="month-summary-chip">
+                <div class="month-summary-chip-label">Days</div>
+                <div class="month-summary-chip-value" id="monthSummaryDays">0日</div>
+              </div>
+          
+              <div class="month-summary-chip">
+                <div class="month-summary-chip-label">Main Tag</div>
+                <div class="month-summary-chip-value" id="monthSummaryTag">Harbor</div>
+              </div>
+            </div>
+          
+            <div class="month-summary-text" id="monthSummaryText"></div>
+          </div>
+
           <div class="month-afterglow" id="monthAfterglow" style="display:none;">
             <div class="month-afterglow-label">Monthly Afterglow</div>
             <div class="month-afterglow-text" id="monthAfterglowText"></div>
@@ -960,7 +1039,13 @@
     const monthReadMoreBtn = document.getElementById("monthReadMoreBtn");
     const logReadMoreWrap = document.getElementById("logReadMoreWrap");
     const logReadMoreBtn = document.getElementById("logReadMoreBtn");
-        
+
+    const monthSummary = document.getElementById("monthSummary");
+    const monthSummaryCount = document.getElementById("monthSummaryCount");
+    const monthSummaryDays = document.getElementById("monthSummaryDays");
+    const monthSummaryTag = document.getElementById("monthSummaryTag");
+    const monthSummaryText = document.getElementById("monthSummaryText");
+    
     const monthAfterglow = document.getElementById("monthAfterglow");
     const monthAfterglowText = document.getElementById("monthAfterglowText");
     const monthTags = document.getElementById("monthTags");
@@ -1118,6 +1203,107 @@
       });
 
       return bestTag;
+    }
+
+    function uniqueLogDays(logs){
+      const days = new Set();
+    
+      (logs || []).forEach(function(log){
+        if(!log.created_at){
+          return;
+        }
+    
+        const date = new Date(log.created_at);
+    
+        if(Number.isNaN(date.getTime())){
+          return;
+        }
+    
+        const key =
+          date.getFullYear() +
+          "-" +
+          String(date.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(date.getDate()).padStart(2, "0");
+    
+        days.add(key);
+      });
+    
+      return days.size;
+    }
+    
+    function monthlySummaryText(group){
+      if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
+        return "";
+      }
+    
+      const count = group.count || group.logs.length;
+      const days = uniqueLogDays(group.logs);
+      const tag = String(group.topTag || "Harbor");
+    
+      if(tag === "Fog"){
+        return "霧の中でも、言葉は静かに港へ戻っています。";
+      }
+    
+      if(tag === "Storm"){
+        return "波の強い日があっても、記録はこの月を越えて残っています。";
+      }
+    
+      if(tag === "Lighthouse"){
+        return "この月には、進む方角を思い出すための光が残っています。";
+      }
+    
+      if(tag === "Moonlit"){
+        return "月明かりのように、静かな余韻を含んだ記録が並んでいます。";
+      }
+    
+      if(tag === "Deep Current"){
+        return "見えない深い流れに触れながら、言葉を残していた月です。";
+      }
+    
+      if(tag === "Calm Tide"){
+        return "静かな潮のように、穏やかな記録が積み重なっています。";
+      }
+    
+      if(tag === "Drift"){
+        return "流れに身を預けながらも、言葉は少しずつ残されています。";
+      }
+    
+      if(tag === "Return"){
+        return "港へ戻る感覚が、この月の記録に静かに残っています。";
+      }
+    
+      return "この月は " + count + "件、" + days + "日分の航海記録が残っています。";
+    }
+    
+    function renderMonthSummary(group){
+      if(
+        !monthSummary ||
+        !monthSummaryCount ||
+        !monthSummaryDays ||
+        !monthSummaryTag ||
+        !monthSummaryText
+      ){
+        return;
+      }
+    
+      if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
+        monthSummary.style.display = "none";
+        monthSummaryCount.textContent = "0件";
+        monthSummaryDays.textContent = "0日";
+        monthSummaryTag.textContent = "Harbor";
+        monthSummaryText.textContent = "";
+        return;
+      }
+    
+      const days = uniqueLogDays(group.logs);
+    
+      monthSummaryCount.textContent = String(group.count || group.logs.length) + "件";
+      monthSummaryDays.textContent = String(days) + "日";
+      monthSummaryTag.textContent = group.topTag || "Harbor";
+      monthSummaryText.textContent = monthlySummaryText(group);
+    
+      monthSummary.style.display = "block";
     }
 
     function monthlyAfterglowText(group){
@@ -1810,6 +1996,8 @@
         if(monthAfterglow){
           monthAfterglow.style.display = "none";
         }
+
+        renderMonthSummary(null);
       
         if(monthAfterglowText){
           monthAfterglowText.textContent = "";
@@ -1837,13 +2025,15 @@
       if(downloadMonthBtn){
         downloadMonthBtn.disabled = !group.logs || group.logs.length === 0;
       }
-      
-        if(monthAfterglow && monthAfterglowText){
-          monthAfterglowText.textContent = monthlyAfterglowText(group);
-          monthAfterglow.style.display = "block";
-        }
 
-        renderMonthTags(group);
+      renderMonthSummary(group);
+      
+      if(monthAfterglow && monthAfterglowText){
+        monthAfterglowText.textContent = monthlyAfterglowText(group);
+        monthAfterglow.style.display = "block";
+      }
+
+      renderMonthTags(group);
 
       const visibleLogs = showAllMonthLogs
         ? group.logs
