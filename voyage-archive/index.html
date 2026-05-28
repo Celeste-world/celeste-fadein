@@ -116,6 +116,70 @@
       color:var(--danger);
     }
 
+    .archive-search-panel{
+      margin:0 0 22px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.42);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.07), transparent 44%),
+        rgba(10,14,28,.58);
+    }
+    
+    .archive-search-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:10px;
+    }
+    
+    .archive-search-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    
+    .archive-search-input{
+      width:100%;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.72);
+      color:var(--text);
+      font-family:inherit;
+      font-size:14px;
+      padding:11px 15px;
+      outline:none;
+    }
+    
+    .archive-search-input:focus{
+      border-color:rgba(169,183,255,.58);
+    }
+    
+    .archive-search-clear{
+      flex:0 0 auto;
+      border:1px solid rgba(160,168,187,.26);
+      background:transparent;
+      color:var(--muted);
+      border-radius:999px;
+      padding:10px 14px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+    }
+    
+    .archive-search-clear:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.44);
+    }
+    
+    .archive-search-result{
+      margin-top:10px;
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
+    }
+
     .archive-layout{
       display:grid;
       grid-template-columns:280px 1fr;
@@ -544,6 +608,15 @@
       .download-month-btn{
         width:100%;
       }
+
+            .archive-search-row{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      
+      .archive-search-clear{
+        width:100%;
+      }
     }
 
     footer{
@@ -658,6 +731,35 @@
       </div>
 
       <div class="status" id="status"></div>
+
+      <div class="archive-search-panel">
+        <div class="archive-search-label">Search Archive</div>
+      
+        <div class="archive-search-row">
+          <input
+            class="archive-search-input"
+            id="archiveSearchInput"
+            type="search"
+            placeholder="言葉、タグ、月で検索する..."
+            autocomplete="off"
+          >
+      
+          <button
+            class="archive-search-clear"
+            id="archiveSearchClearBtn"
+            type="button"
+            style="display:none;"
+          >
+            解除
+          </button>
+        </div>
+      
+        <div class="archive-search-result" id="archiveSearchResult">
+          キーワードを入力すると、保存した航海記録を検索できます。
+        </div>
+      </div>
+      
+      <div class="archive-layout">
 
       <div class="archive-layout">
         <section class="month-list" id="monthListPanel">
@@ -813,6 +915,10 @@
     const logoutLink = document.getElementById("logoutLink");
 
     const monthList = document.getElementById("monthList");
+
+    const archiveSearchInput = document.getElementById("archiveSearchInput");
+    const archiveSearchClearBtn = document.getElementById("archiveSearchClearBtn");
+    const archiveSearchResult = document.getElementById("archiveSearchResult");
     const monthLogs = document.getElementById("monthLogs");
 
     const monthReadMoreWrap = document.getElementById("monthReadMoreWrap");
@@ -846,6 +952,7 @@
     let allLogs = [];
     let monthGroups = [];
     let selectedMonthKey = null;
+    let archiveSearchQuery = "";
 
     let showAllMonths = false;
     let showAllMonthLogs = false;
@@ -1374,6 +1481,87 @@
       }
     }
 
+    function normalizeSearchText(value){
+      return String(value || "")
+        .trim()
+        .toLowerCase();
+    }
+    
+    function logMatchesSearch(log, query){
+      const normalizedQuery = normalizeSearchText(query);
+    
+      if(!normalizedQuery){
+        return true;
+      }
+    
+      const monthKey = monthKeyFromDate(log.created_at);
+      const monthLabel = monthLabelFromKey(monthKey);
+    
+      const target = [
+        log.content || "",
+        log.tag || "",
+        formatDateTime(log.created_at),
+        formatShortDate(log.created_at),
+        monthKey,
+        monthLabel
+      ].join(" ").toLowerCase();
+    
+      return target.includes(normalizedQuery);
+    }
+    
+    function filteredArchiveLogs(){
+      const query = normalizeSearchText(archiveSearchQuery);
+    
+      if(!query){
+        return allLogs.slice();
+      }
+    
+      return allLogs.filter(function(log){
+        return logMatchesSearch(log, query);
+      });
+    }
+    
+    function updateArchiveSearchResult(filteredLogs){
+      if(!archiveSearchResult){
+        return;
+      }
+    
+      const query = normalizeSearchText(archiveSearchQuery);
+    
+      if(!query){
+        archiveSearchResult.textContent =
+          "キーワードを入力すると、保存した航海記録を検索できます。";
+        return;
+      }
+    
+      archiveSearchResult.textContent =
+        "「" + archiveSearchQuery + "」に一致する航海記録：" +
+        filteredLogs.length + "件";
+    }
+    
+    function refreshArchiveView(){
+      const logs = filteredArchiveLogs();
+    
+      monthGroups = buildMonthGroups(logs);
+      selectedMonthKey = monthGroups[0]?.key || null;
+      showAllMonths = false;
+      showAllMonthLogs = false;
+    
+      renderMonthList();
+    
+      if(selectedMonthKey){
+        const firstGroup = monthGroups.find(function(group){
+          return group.key === selectedMonthKey;
+        });
+    
+        renderMonthDetail(firstGroup);
+      }else{
+        renderMonthDetail(null);
+      }
+    
+      updateArchiveSearchResult(logs);
+    }
+
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -1420,13 +1608,24 @@
 
     function renderMonthList(){
       if(monthGroups.length === 0){
+        const hasSearch = normalizeSearchText(archiveSearchQuery);
+      
         monthList.innerHTML = `
           <div class="empty">
-            まだ航海記録がありません。<br>
-            Voyage Log に記録が残ると、ここに月ごとの記録が現れます。
+            ${
+              hasSearch
+                ? "検索に一致する航海記録はありません。<br>別の言葉で探してみてください。"
+                : "まだ航海記録がありません。<br>Voyage Log に記録が残ると、ここに月ごとの記録が現れます。"
+            }
           </div>
         `;
-    
+      
+        if(monthReadMoreWrap){
+          monthReadMoreWrap.style.display = "none";
+        }
+      
+        return;
+      }    
         if(monthReadMoreWrap){
           monthReadMoreWrap.style.display = "none";
         }
@@ -1579,24 +1778,10 @@
       }
 
       allLogs = Array.isArray(data) ? data : [];
-      monthGroups = buildMonthGroups(allLogs);
 
-      selectedMonthKey = monthGroups[0]?.key || null;
-
-      renderMonthList();
-
-      if(selectedMonthKey){
-        const firstGroup = monthGroups.find(function(group){
-          return group.key === selectedMonthKey;
-        });
-
-        renderMonthDetail(firstGroup);
-      }else{
-        renderMonthDetail(null);
-      }
-
-      setStatus("");
-    }
+      refreshArchiveView();
+      
+      setStatus("");    }
 
     async function logout(){
       await client.auth.signOut();
@@ -1655,6 +1840,43 @@
       monthReadMoreBtn.addEventListener("click", function(){
         showAllMonths = !showAllMonths;
         renderMonthList();
+      });
+    }
+
+    if(archiveSearchInput){
+      archiveSearchInput.addEventListener("input", function(){
+        archiveSearchQuery = archiveSearchInput.value || "";
+    
+        if(archiveSearchClearBtn){
+          archiveSearchClearBtn.style.display =
+            normalizeSearchText(archiveSearchQuery) ? "inline-flex" : "none";
+        }
+    
+        refreshArchiveView();
+    
+        if(window.matchMedia("(max-width:760px)").matches){
+          monthListPanel.classList.remove("mobile-hidden");
+          monthDetailPanel.classList.add("mobile-hidden");
+        }
+      });
+    }
+    
+    if(archiveSearchClearBtn){
+      archiveSearchClearBtn.addEventListener("click", function(){
+        archiveSearchQuery = "";
+    
+        if(archiveSearchInput){
+          archiveSearchInput.value = "";
+        }
+    
+        archiveSearchClearBtn.style.display = "none";
+    
+        refreshArchiveView();
+    
+        if(window.matchMedia("(max-width:760px)").matches){
+          monthListPanel.classList.remove("mobile-hidden");
+          monthDetailPanel.classList.add("mobile-hidden");
+        }
       });
     }
     
