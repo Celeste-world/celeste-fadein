@@ -679,53 +679,35 @@
         align-items:flex-start;
         padding:18px;
         overflow:auto;
-          .area-journal-item{
-            grid-template-columns:42px 1fr;
-            gap:10px;
-            padding:8px 10px;
-          }
-        
-          .area-journal-item-img{
-            width:42px;
-            height:42px;
-            min-width:42px;
-            border-radius:10px;
-          }
-        
-          .area-journal-item-img img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-          }
-        
-          .area-journal-item-name{
-            font-size:12px;
-            line-height:1.6;
-          }
-        
-          .area-journal-item-desc{
-            font-size:11px;
-            line-height:1.6;
-          }
       }
     
-      .unlock-modal-card{
-        margin:36px 0;
-        padding:20px;
+      .area-journal-item{
+        grid-template-columns:42px 1fr;
+        gap:10px;
+        padding:8px 10px;
       }
     
-      .unlock-modal-title{
-        font-size:21px;
+      .area-journal-item-img{
+        width:42px;
+        height:42px;
+        min-width:42px;
+        border-radius:10px;
       }
     
-      .unlock-modal-image-wrap,
-      .unlock-modal-image{
-        max-height:220px;
-      }
-    
-      .unlock-modal-actions a,
-      .unlock-modal-actions button{
+      .area-journal-item-img img{
         width:100%;
+        height:100%;
+        object-fit:cover;
+      }
+    
+      .area-journal-item-name{
+        font-size:12px;
+        line-height:1.6;
+      }
+    
+      .area-journal-item-desc{
+        font-size:11px;
+        line-height:1.6;
       }
     }
 
@@ -1549,7 +1531,6 @@
       }
     }
       
-    }
 
     @media(max-width:420px){
       .sea-grid{
@@ -2055,7 +2036,7 @@
       }
 
       if(sessionType === "special" && durationMinutes >= 20){
-        return "少し長い特別航海が続いています";
+        return "深めの特別航海が続いています";
       }
 
       return "特別航海が続いています";
