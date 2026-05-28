@@ -490,6 +490,37 @@
       margin-bottom:12px;
     }
 
+    .log-actions{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:8px;
+      margin-top:14px;
+    }
+    
+    .lantern-mark-btn{
+      border:1px solid rgba(255,227,163,.28);
+      background:rgba(255,227,163,.035);
+      color:var(--muted);
+      border-radius:999px;
+      padding:7px 12px;
+      font-family:inherit;
+      font-size:12px;
+      cursor:pointer;
+    }
+    
+    .lantern-mark-btn:hover{
+      color:var(--text);
+      border-color:rgba(255,227,163,.46);
+    }
+    
+    .lantern-mark-btn.marked{
+      color:#ffe3a3;
+      border-color:rgba(255,227,163,.52);
+      background:rgba(255,227,163,.08);
+      box-shadow:0 0 14px rgba(255,227,163,.10);
+    }
+
     .date{
       color:var(--muted);
       font-size:12px;
@@ -662,6 +693,14 @@
     @media(max-width:760px){
       .download-modal{
         padding:20px;
+      }
+
+      .log-actions{
+        justify-content:flex-start;
+      }
+      
+      .lantern-mark-btn{
+        width:100%;
       }
   
       .month-summary-grid{
@@ -1837,7 +1876,7 @@
     
         let query = client
           .from("voyage_logs")
-          .select("id,content,tag,created_at", { count:"exact" })
+          .select("id,content,tag,created_at,is_favorite,favorite_marked_at", { count:"exact" })
           .eq("user_id", currentUser.id);
     
         if(tagFilter){
@@ -1983,6 +2022,82 @@
         }
       }
     }
+
+    async function toggleLanternMark(logId){
+      if(!currentUser || !logId){
+        return;
+      }
+    
+      const targetLog = allLogs.find(function(log){
+        return String(log.id) === String(logId);
+      });
+    
+      const groupLog = monthGroups
+        .flatMap(function(group){
+          return group.logs || [];
+        })
+        .find(function(log){
+          return String(log.id) === String(logId);
+        });
+    
+      const currentValue = Boolean(
+        (targetLog && targetLog.is_favorite) ||
+        (groupLog && groupLog.is_favorite)
+      );
+    
+      const nextValue = !currentValue;
+      const markedAt = nextValue ? new Date().toISOString() : null;
+    
+      const { error } = await client
+        .from("voyage_logs")
+        .update({
+          is_favorite: nextValue,
+          favorite_marked_at: markedAt
+        })
+        .eq("id", logId)
+        .eq("user_id", currentUser.id);
+    
+      if(error){
+        console.error("lantern mark update error:", error);
+        setStatus("しるしの更新に失敗しました。", true);
+        return;
+      }
+    
+      allLogs = allLogs.map(function(log){
+        if(String(log.id) !== String(logId)){
+          return log;
+        }
+    
+        return {
+          ...log,
+          is_favorite: nextValue,
+          favorite_marked_at: markedAt
+        };
+      });
+    
+      monthGroups.forEach(function(group){
+        group.logs = (group.logs || []).map(function(log){
+          if(String(log.id) !== String(logId)){
+            return log;
+          }
+    
+          return {
+            ...log,
+            is_favorite: nextValue,
+            favorite_marked_at: markedAt
+          };
+        });
+      });
+    
+      const group = selectedMonthGroup();
+      renderMonthDetail(group);
+    
+      setStatus(
+        nextValue
+          ? "この航海記録に、あとで読み返すしるしを残しました。"
+          : "この航海記録のしるしを外しました。"
+      );
+    }
     
     function renderMonthDetail(group){
       if(!group){
@@ -2040,6 +2155,10 @@
         : group.logs.slice(0, initialLogLimit);
       
       monthLogs.innerHTML = visibleLogs.map(function(log){
+        const marked = Boolean(log.is_favorite);
+        const markLabel = marked ? "Lantern Mark を外す" : "Lantern Mark を残す";
+        const markClass = marked ? " marked" : "";
+      
         return `
           <article class="log">
             <div class="log-top">
@@ -2048,9 +2167,25 @@
             </div>
       
             <div class="content">${escapeHtml(log.content || "")}</div>
+      
+            <div class="log-actions">
+              <button
+                class="lantern-mark-btn${markClass}"
+                type="button"
+                data-log-id="${escapeHtml(log.id)}"
+              >
+                ${escapeHtml(markLabel)}
+              </button>
+            </div>
           </article>
         `;
       }).join("");
+      
+      monthLogs.querySelectorAll(".lantern-mark-btn").forEach(function(button){
+        button.addEventListener("click", function(){
+          toggleLanternMark(button.dataset.logId);
+        });
+      });
       
       if(logReadMoreWrap && logReadMoreBtn){
         if(group.logs.length > initialLogLimit){
@@ -2088,7 +2223,7 @@
 
       const { data, error } = await client
         .from("voyage_logs")
-        .select("id,content,tag,created_at")
+        .select("id,content,tag,created_at,is_favorite,favorite_marked_at")
         .eq("user_id", currentUser.id)
         .order("created_at", { ascending:false })
         .limit(1000);
