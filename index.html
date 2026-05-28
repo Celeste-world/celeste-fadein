@@ -411,30 +411,36 @@
         --gate-height:182px;
         --gate-bottom:10px;
         --art-top:10px;
-        --art-safe-bottom:280px;
+        --art-safe-bottom:300px;
       }
-
+    
       .gate{
         bottom:var(--gate-bottom);
       }
-
+    
       .intro-copy{
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 62px);
+        bottom:calc(var(--gate-bottom) + var(--gate-height) + 86px);
+        width:calc(100% - 36px);
+      }
+    
+      .intro-kicker{
+        margin-bottom:2px;
+        font-size:8px;
       }
     
       .intro-copy h1{
-        font-size:14px;
-        line-height:1.75;
+        font-size:13px;
+        line-height:1.65;
       }
-
+    
       .intro-lead{
         display:none;
       }
-
+    
       .brand{
         font-size:10px;
       }
-
+    
       .btn-primary,
       .btn-ghost{
         font-size:11px;
