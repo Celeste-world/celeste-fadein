@@ -952,6 +952,12 @@
     let selectedMonthKey = null;
     let archiveSearchQuery = "";
 
+    let archiveSearchTimer = null;
+    let archiveSearchRequestId = 0;
+    let isArchiveSearching = false;
+    
+    const archiveSearchLimit = 200;
+
     let showAllMonths = false;
     let showAllMonthLogs = false;
     
@@ -1485,68 +1491,20 @@
         .toLowerCase();
     }
     
-    function logMatchesSearch(log, query){
-      const normalizedQuery = normalizeSearchText(query);
-    
-      if(!normalizedQuery){
-        return true;
-      }
-    
-      const keywords = normalizedQuery
+    function searchKeywordsFromQuery(value){
+      return normalizeSearchText(value)
         .split(/\s+/)
-        .filter(Boolean);
-    
-      const monthKey = monthKeyFromDate(log.created_at);
-      const monthLabel = monthLabelFromKey(monthKey);
-    
-      const target = [
-        log.content || "",
-        log.tag || "",
-        formatDateTime(log.created_at),
-        formatShortDate(log.created_at),
-        monthKey,
-        monthLabel
-      ].join(" ").toLowerCase();
-    
-      return keywords.every(function(keyword){
-        return target.includes(keyword);
-      });
+        .map(function(keyword){
+          return keyword
+            .replace(/[,%()]/g, "")
+            .trim();
+        })
+        .filter(Boolean)
+        .slice(0, 5);
     }
     
-    function filteredArchiveLogs(){
-      const query = normalizeSearchText(archiveSearchQuery);
-    
-      if(!query){
-        return allLogs.slice();
-      }
-    
-      return allLogs.filter(function(log){
-        return logMatchesSearch(log, query);
-      });
-    }
-    
-    function updateArchiveSearchResult(filteredLogs){
-      if(!archiveSearchResult){
-        return;
-      }
-    
-      const query = normalizeSearchText(archiveSearchQuery);
-    
-      if(!query){
-        archiveSearchResult.textContent =
-          "キーワードを入力すると、保存した航海記録を検索できます。";
-        return;
-      }
-    
-        archiveSearchResult.textContent =
-          "「" + archiveSearchQuery + "」を含む航海記録：" +
-          filteredLogs.length + "件";
-    }
-    
-    function refreshArchiveView(){
-      const logs = filteredArchiveLogs();
-    
-      monthGroups = buildMonthGroups(logs);
+    function renderArchiveFromLogs(logs){
+      monthGroups = buildMonthGroups(Array.isArray(logs) ? logs : []);
       selectedMonthKey = monthGroups[0]?.key || null;
       showAllMonths = false;
       showAllMonthLogs = false;
@@ -1562,8 +1520,118 @@
       }else{
         renderMonthDetail(null);
       }
+    }
     
-      updateArchiveSearchResult(logs);
+    function updateArchiveSearchResult(logs, totalCount){
+      if(!archiveSearchResult){
+        return;
+      }
+    
+      const query = normalizeSearchText(archiveSearchQuery);
+    
+      if(!query){
+        archiveSearchResult.textContent =
+          "キーワードを入力すると、保存した航海記録を検索できます。";
+        return;
+      }
+    
+      if(isArchiveSearching){
+        archiveSearchResult.textContent =
+          "「" + archiveSearchQuery + "」を検索しています。";
+        return;
+      }
+    
+      const shownCount = Array.isArray(logs) ? logs.length : 0;
+      const count =
+        typeof totalCount === "number"
+          ? totalCount
+          : shownCount;
+    
+      if(count > shownCount){
+        archiveSearchResult.textContent =
+          "「" + archiveSearchQuery + "」を含む航海記録：" +
+          count +
+          "件（最新" +
+          shownCount +
+          "件を表示）";
+        return;
+      }
+    
+      archiveSearchResult.textContent =
+        "「" + archiveSearchQuery + "」を含む航海記録：" +
+        shownCount +
+        "件";
+    }
+    
+    function refreshArchiveView(){
+      renderArchiveFromLogs(allLogs);
+      updateArchiveSearchResult(allLogs, allLogs.length);
+    }
+    
+    async function searchArchiveFromSupabase(){
+      const keywords = searchKeywordsFromQuery(archiveSearchQuery);
+      const requestId = ++archiveSearchRequestId;
+    
+      if(keywords.length === 0){
+        isArchiveSearching = false;
+        renderArchiveFromLogs(allLogs);
+        updateArchiveSearchResult(allLogs, allLogs.length);
+        return;
+      }
+    
+      if(!currentUser){
+        return;
+      }
+    
+      try{
+        isArchiveSearching = true;
+        updateArchiveSearchResult([], 0);
+    
+        let query = client
+          .from("voyage_logs")
+          .select("id,content,tag,created_at", { count:"exact" })
+          .eq("user_id", currentUser.id);
+    
+        keywords.forEach(function(keyword){
+          query = query.or(
+            "content.ilike.%" + keyword + "%,tag.ilike.%" + keyword + "%"
+          );
+        });
+    
+        query = query
+          .order("created_at", { ascending:false })
+          .limit(archiveSearchLimit);
+    
+        const { data, error, count } = await query;
+    
+        if(requestId !== archiveSearchRequestId){
+          return;
+        }
+    
+        if(error){
+          console.error("archive search error:", error);
+          setStatus("検索に失敗しました。", true);
+          isArchiveSearching = false;
+          updateArchiveSearchResult([], 0);
+          return;
+        }
+    
+        const logs = Array.isArray(data) ? data : [];
+    
+        isArchiveSearching = false;
+        renderArchiveFromLogs(logs);
+        updateArchiveSearchResult(logs, count);
+    
+        if(window.matchMedia("(max-width:760px)").matches){
+          monthListPanel.classList.remove("mobile-hidden");
+          monthDetailPanel.classList.add("mobile-hidden");
+        }
+      }catch(error){
+        console.error("archive search catch:", error);
+        setStatus("検索に失敗しました。", true);
+        isArchiveSearching = false;
+        updateArchiveSearchResult([], 0);
+      }
     }
 
     function buildMonthGroups(logs){
@@ -1851,12 +1919,13 @@
             normalizeSearchText(archiveSearchQuery) ? "inline-flex" : "none";
         }
     
-        refreshArchiveView();
-    
-        if(window.matchMedia("(max-width:760px)").matches){
-          monthListPanel.classList.remove("mobile-hidden");
-          monthDetailPanel.classList.add("mobile-hidden");
+        if(archiveSearchTimer){
+          clearTimeout(archiveSearchTimer);
         }
+    
+        archiveSearchTimer = setTimeout(function(){
+          searchArchiveFromSupabase();
+        }, 450);
       });
     }
     
@@ -1869,6 +1938,13 @@
         }
     
         archiveSearchClearBtn.style.display = "none";
+    
+        if(archiveSearchTimer){
+          clearTimeout(archiveSearchTimer);
+          archiveSearchTimer = null;
+        }
+    
+        archiveSearchRequestId++;
     
         refreshArchiveView();
     
