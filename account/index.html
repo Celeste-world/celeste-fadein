@@ -684,7 +684,7 @@
         </div>
       
         <p class="note">
-          航海券は、必要な夜に少し深い海へ降りるためのものです。<br>
+          航海券は、必要な夜に少し深く振り返り、言葉を整えるためのものです。<br>
           有効な航海券がある場合は、ここから特別航海へ進めます。
         </p>
       
@@ -938,20 +938,20 @@
     function ticketDescription(ticket){
       const normalized = normalizeTicketType(ticket.ticket_type);
       const minutes = ticket.duration_minutes || "";
-
+    
       if(normalized === "drift"){
-        return `${minutes}分だけ、少し深い海へ降りられる漂着チケットです。`;
+        return `${minutes}分だけ、少し深く振り返るための漂着チケットです。`;
       }
-
+    
       if(normalized === "special"){
-        return `${minutes}分の特別航海に使える航海券です。`;
+        return `Special Voyage Ticket は、${minutes}分だけ少し深く振り返り、言葉を整えるためのチケットです。`;
       }
-
+    
       if(normalized === "deep_sea"){
-        return `${minutes}分、さらに深い海へ降りるための限定航海券です。`;
+        return `Deep Sea Ticket は、${minutes}分、さらに深い内省や整理をしたいときに使うチケットです。`;
       }
-
-      return `${minutes}分の特別航海に使える航海券です。`;
+    
+      return `${minutes}分の航海券です。`;
     }
 
     function ticketReadinessText(ticket){
@@ -959,15 +959,15 @@
       const minutes = ticket.duration_minutes || "";
     
       if(normalized === "drift"){
-        return "港の外れに、" + minutes + "分だけ開く小さな航路があります。\n少しだけ深い海へ降りるための、軽い合図です。";
+        return "港の外れに、" + minutes + "分だけ開く小さな航路があります。\n少しだけ深く振り返るための、軽い合図です。";
       }
     
       if(normalized === "special"){
-        return minutes + "分のあいだ、いつもの港より少し遠くへ出るための航海券です。\n使う時だけ、港の外に静かな航路が開きます。";
+        return minutes + "分のあいだ、いつもより少し深く振り返り、言葉を整えるための航海券です。\n使う時だけ、港の外に静かな航路が開きます。";
       }
     
       if(normalized === "deep_sea"){
-        return minutes + "分、水面の下へもう少し深く降りるための航海券です。\nすべての夜に必要なものではありません。必要だと感じる時だけ、深い海への入口になります。";
+        return minutes + "分、さらに深い内省や整理をしたいときに使う航海券です。\nすべての夜に必要なものではありません。必要だと感じる時だけ、深い海への入口になります。";
       }
     
       return "この航海券は、少しだけ違う海へ出るための入口です。";
@@ -1072,7 +1072,7 @@
       }
 
       if(sessionType === "special" && durationMinutes >= 20){
-        return "少し長い特別航海が続いています";
+        return "深めの特別航海が続いています";
       }
 
       return "特別航海が続いています";
@@ -1546,11 +1546,11 @@
       
 
       if(validTickets.length === 0){
-        ticketsEl.innerHTML = `
+         ticketsEl.innerHTML = `
           <div class="empty">
             現在、有効な航海券はありません。<br>
             小さな航海券が流れ着く夜があります。<br>
-            それは、少しだけ深い海へ降りるための合図です。
+            それは、少しだけ深く振り返るための合図です。
           </div>
         `;
         return;
