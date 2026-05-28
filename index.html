@@ -481,6 +481,47 @@
         line-height:1.8;
       }
     }
+
+    /* Mobile entrance layout fix */
+    @media(max-width:420px){
+      .entrance-art{
+        top:10svh !important;
+        height:38svh !important;
+        background-position:center top !important;
+        background-size:contain !important;
+        transform:translateX(-50%) translateY(-18px) !important;
+      }
+    
+      .intro-copy{
+        top:calc(10svh + 38svh + 20px) !important;
+        bottom:auto !important;
+        width:calc(100% - 36px) !important;
+        z-index:6;
+      }
+    
+      .intro-kicker{
+        margin-bottom:3px;
+        font-size:8px;
+      }
+    
+      .intro-copy h1{
+        font-size:13px !important;
+        line-height:1.55 !important;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+      }
+    
+      .intro-lead{
+        display:none;
+      }
+    
+      .gate{
+        bottom:calc(env(safe-area-inset-bottom, 0px) + 10px) !important;
+        min-height:176px !important;
+        z-index:5;
+      }
+    }
   </style>
 </head>
 
