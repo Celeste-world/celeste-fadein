@@ -1492,6 +1492,10 @@
         return true;
       }
     
+      const keywords = normalizedQuery
+        .split(/\s+/)
+        .filter(Boolean);
+    
       const monthKey = monthKeyFromDate(log.created_at);
       const monthLabel = monthLabelFromKey(monthKey);
     
@@ -1504,7 +1508,9 @@
         monthLabel
       ].join(" ").toLowerCase();
     
-      return target.includes(normalizedQuery);
+      return keywords.every(function(keyword){
+        return target.includes(keyword);
+      });
     }
     
     function filteredArchiveLogs(){
@@ -1532,9 +1538,9 @@
         return;
       }
     
-      archiveSearchResult.textContent =
-        "「" + archiveSearchQuery + "」に一致する航海記録：" +
-        filteredLogs.length + "件";
+        archiveSearchResult.textContent =
+          "「" + archiveSearchQuery + "」を含む航海記録：" +
+          filteredLogs.length + "件";
     }
     
     function refreshArchiveView(){
