@@ -151,6 +151,22 @@
       padding:11px 15px;
       outline:none;
     }
+
+    .archive-search-select{
+      flex:0 0 170px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.72);
+      color:var(--text);
+      font-family:inherit;
+      font-size:13px;
+      padding:11px 14px;
+      outline:none;
+    }
+    
+    .archive-search-select:focus{
+      border-color:rgba(169,183,255,.58);
+    }
     
     .archive-search-input:focus{
       border-color:rgba(169,183,255,.58);
@@ -609,13 +625,18 @@
         width:100%;
       }
 
-            .archive-search-row{
+      .archive-search-row{
         flex-direction:column;
         align-items:stretch;
       }
       
       .archive-search-clear{
         width:100%;
+      }
+
+      .archive-search-select{
+        width:100%;
+        flex:auto;
       }
     }
 
@@ -740,10 +761,23 @@
             class="archive-search-input"
             id="archiveSearchInput"
             type="search"
-            placeholder="言葉、タグ、月で検索する..."
+            placeholder="言葉で検索する..."
             autocomplete="off"
           >
-      
+        
+          <select class="archive-search-select" id="archiveTagFilter">
+            <option value="">All Tags</option>
+            <option value="Harbor">Harbor</option>
+            <option value="Return">Return</option>
+            <option value="Calm Tide">Calm Tide</option>
+            <option value="Lighthouse">Lighthouse</option>
+            <option value="Fog">Fog</option>
+            <option value="Drift">Drift</option>
+            <option value="Moonlit">Moonlit</option>
+            <option value="Deep Current">Deep Current</option>
+            <option value="Storm">Storm</option>
+          </select>
+        
           <button
             class="archive-search-clear"
             id="archiveSearchClearBtn"
@@ -917,6 +951,9 @@
     const archiveSearchInput = document.getElementById("archiveSearchInput");
     const archiveSearchClearBtn = document.getElementById("archiveSearchClearBtn");
     const archiveSearchResult = document.getElementById("archiveSearchResult");
+
+    const archiveTagFilter = document.getElementById("archiveTagFilter");
+    
     const monthLogs = document.getElementById("monthLogs");
 
     const monthReadMoreWrap = document.getElementById("monthReadMoreWrap");
@@ -951,6 +988,7 @@
     let monthGroups = [];
     let selectedMonthKey = null;
     let archiveSearchQuery = "";
+    let archiveTagQuery = "";
 
     let archiveSearchTimer = null;
     let archiveSearchRequestId = 0;
@@ -1502,6 +1540,27 @@
         .filter(Boolean)
         .slice(0, 5);
     }
+
+    function hasActiveArchiveFilter(){
+      return (
+        normalizeSearchText(archiveSearchQuery) ||
+        normalizeSearchText(archiveTagQuery)
+      );
+    }
+    
+    function archiveFilterLabel(){
+      const parts = [];
+    
+      if(normalizeSearchText(archiveSearchQuery)){
+        parts.push("「" + archiveSearchQuery + "」");
+      }
+    
+      if(normalizeSearchText(archiveTagQuery)){
+        parts.push("#" + archiveTagQuery);
+      }
+    
+      return parts.join(" / ");
+    }
     
     function renderArchiveFromLogs(logs){
       monthGroups = buildMonthGroups(Array.isArray(logs) ? logs : []);
@@ -1527,17 +1586,17 @@
         return;
       }
     
-      const query = normalizeSearchText(archiveSearchQuery);
-    
-      if(!query){
+      if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
-          "キーワードを入力すると、保存した航海記録を検索できます。";
+          "キーワードやタグを選ぶと、保存した航海記録を検索できます。";
         return;
       }
     
+      const label = archiveFilterLabel();
+    
       if(isArchiveSearching){
         archiveSearchResult.textContent =
-          "「" + archiveSearchQuery + "」を検索しています。";
+          label + " を検索しています。";
         return;
       }
     
@@ -1549,7 +1608,8 @@
     
       if(count > shownCount){
         archiveSearchResult.textContent =
-          "「" + archiveSearchQuery + "」を含む航海記録：" +
+          label +
+          " に一致する航海記録：" +
           count +
           "件（最新" +
           shownCount +
@@ -1558,7 +1618,8 @@
       }
     
       archiveSearchResult.textContent =
-        "「" + archiveSearchQuery + "」を含む航海記録：" +
+        label +
+        " に一致する航海記録：" +
         shownCount +
         "件";
     }
@@ -1570,9 +1631,10 @@
     
     async function searchArchiveFromSupabase(){
       const keywords = searchKeywordsFromQuery(archiveSearchQuery);
+      const tagFilter = normalizeSearchText(archiveTagQuery);
       const requestId = ++archiveSearchRequestId;
     
-      if(keywords.length === 0){
+      if(keywords.length === 0 && !tagFilter){
         isArchiveSearching = false;
         renderArchiveFromLogs(allLogs);
         updateArchiveSearchResult(allLogs, allLogs.length);
@@ -1591,6 +1653,10 @@
           .from("voyage_logs")
           .select("id,content,tag,created_at", { count:"exact" })
           .eq("user_id", currentUser.id);
+    
+        if(tagFilter){
+          query = query.eq("tag", archiveTagQuery);
+        }
     
         keywords.forEach(function(keyword){
           query = query.or(
@@ -1680,7 +1746,7 @@
 
     function renderMonthList(){
       if(monthGroups.length === 0){
-        const hasSearch = normalizeSearchText(archiveSearchQuery);
+        const hasSearch = hasActiveArchiveFilter();
     
         monthList.innerHTML = `
           <div class="empty">
@@ -1910,31 +1976,46 @@
       });
     }
 
+    function scheduleArchiveSearch(){
+      if(archiveSearchClearBtn){
+        archiveSearchClearBtn.style.display =
+          hasActiveArchiveFilter() ? "inline-flex" : "none";
+      }
+    
+      if(archiveSearchTimer){
+        clearTimeout(archiveSearchTimer);
+      }
+    
+      archiveSearchTimer = setTimeout(function(){
+        searchArchiveFromSupabase();
+      }, 450);
+    }
+
     if(archiveSearchInput){
       archiveSearchInput.addEventListener("input", function(){
         archiveSearchQuery = archiveSearchInput.value || "";
-    
-        if(archiveSearchClearBtn){
-          archiveSearchClearBtn.style.display =
-            normalizeSearchText(archiveSearchQuery) ? "inline-flex" : "none";
-        }
-    
-        if(archiveSearchTimer){
-          clearTimeout(archiveSearchTimer);
-        }
-    
-        archiveSearchTimer = setTimeout(function(){
-          searchArchiveFromSupabase();
-        }, 450);
+        scheduleArchiveSearch();
+      });
+    }
+
+    if(archiveTagFilter){
+      archiveTagFilter.addEventListener("change", function(){
+        archiveTagQuery = archiveTagFilter.value || "";
+        scheduleArchiveSearch();
       });
     }
     
     if(archiveSearchClearBtn){
       archiveSearchClearBtn.addEventListener("click", function(){
         archiveSearchQuery = "";
+        archiveTagQuery = "";
     
         if(archiveSearchInput){
           archiveSearchInput.value = "";
+        }
+    
+        if(archiveTagFilter){
+          archiveTagFilter.value = "";
         }
     
         archiveSearchClearBtn.style.display = "none";
