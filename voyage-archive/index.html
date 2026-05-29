@@ -325,7 +325,7 @@
     
     .month-summary-grid{
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      grid-template-columns:repeat(4, 1fr);
       gap:10px;
       margin-bottom:12px;
     }
@@ -983,15 +983,20 @@
                 <div class="month-summary-chip-label">Logs</div>
                 <div class="month-summary-chip-value" id="monthSummaryCount">0件</div>
               </div>
-          
+            
               <div class="month-summary-chip">
                 <div class="month-summary-chip-label">Days</div>
                 <div class="month-summary-chip-value" id="monthSummaryDays">0日</div>
               </div>
-          
+            
               <div class="month-summary-chip">
                 <div class="month-summary-chip-label">Main Tag</div>
                 <div class="month-summary-chip-value" id="monthSummaryTag">Harbor</div>
+              </div>
+            
+              <div class="month-summary-chip">
+                <div class="month-summary-chip-label">Lantern Marks</div>
+                <div class="month-summary-chip-value" id="monthSummaryLanterns">0件</div>
               </div>
             </div>
           
@@ -1130,6 +1135,7 @@
     const monthSummaryCount = document.getElementById("monthSummaryCount");
     const monthSummaryDays = document.getElementById("monthSummaryDays");
     const monthSummaryTag = document.getElementById("monthSummaryTag");
+    const monthSummaryLanterns = document.getElementById("monthSummaryLanterns");
     const monthSummaryText = document.getElementById("monthSummaryText");
     
     const monthAfterglow = document.getElementById("monthAfterglow");
@@ -1323,6 +1329,12 @@
     
       return days.size;
     }
+
+    function lanternMarkCount(logs){
+      return (logs || []).filter(function(log){
+        return Boolean(log.is_favorite);
+      }).length;
+    }
     
     function monthlySummaryText(group){
       if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
@@ -1332,6 +1344,11 @@
       const count = group.count || group.logs.length;
       const days = uniqueLogDays(group.logs);
       const tag = String(group.topTag || "Harbor");
+      const lanterns = lanternMarkCount(group.logs);
+
+      if(lanterns > 0){
+        return "この月には、あとで読み返すための灯りが " + lanterns + "件残されています。";
+      }
     
       if(tag === "Fog"){
         return "霧の中でも、言葉は静かに港へ戻っています。";
@@ -1369,30 +1386,34 @@
     }
     
     function renderMonthSummary(group){
-      if(
-        !monthSummary ||
-        !monthSummaryCount ||
-        !monthSummaryDays ||
-        !monthSummaryTag ||
-        !monthSummaryText
-      ){
-        return;
-      }
+     if(
+      !monthSummary ||
+      !monthSummaryCount ||
+      !monthSummaryDays ||
+      !monthSummaryTag ||
+      !monthSummaryLanterns ||
+      !monthSummaryText
+    ){
+      return;
+    }
     
       if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
         monthSummary.style.display = "none";
         monthSummaryCount.textContent = "0件";
         monthSummaryDays.textContent = "0日";
         monthSummaryTag.textContent = "Harbor";
+        monthSummaryLanterns.textContent = "0件";
         monthSummaryText.textContent = "";
         return;
       }
     
       const days = uniqueLogDays(group.logs);
-    
+      const lanterns = lanternMarkCount(group.logs);
+      
       monthSummaryCount.textContent = String(group.count || group.logs.length) + "件";
       monthSummaryDays.textContent = String(days) + "日";
       monthSummaryTag.textContent = group.topTag || "Harbor";
+      monthSummaryLanterns.textContent = String(lanterns) + "件";
       monthSummaryText.textContent = monthlySummaryText(group);
     
       monthSummary.style.display = "block";
