@@ -1574,6 +1574,28 @@ billing_events
   Stripe Webhook イベントを保存して二重処理を防ぐ
 ```
 
+## provider 対応
+
+将来の Android / Google Play Billing 対応を見据え、課金DBに provider 系カラムを追加済み。
+
+billing_purchases:
+
+- provider
+- provider_purchase_id
+- provider_product_id
+
+user_subscriptions:
+
+- provider
+- provider_subscription_id
+- provider_product_id
+
+Web版では `provider = stripe` を使用する。  
+将来の Android / Google Play 版では `provider = google_play` を使用する。
+
+`/admin/billing/` では Purchases / Subscriptions に provider を表示し、決済入口の違いを確認できるようにする。
+
+
 ## 連携する既存テーブル
 
 ```txt
