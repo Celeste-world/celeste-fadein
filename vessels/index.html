@@ -483,6 +483,25 @@
       border:1px solid rgba(70,84,132,.4);
     }
 
+    .requirement-main{
+      display:grid;
+      grid-template-columns:64px 1fr;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+    
+    .requirement-main .image-box.small{
+      width:64px;
+      min-width:64px;
+      height:64px;
+      border-radius:14px;
+    }
+    
+    .requirement-text{
+      min-width:0;
+    }
+
     .requirement-name{
       font-size:14px;
       line-height:1.7;
@@ -845,6 +864,16 @@
       .unlock-modal-actions a,
       .unlock-modal-actions button{
         width:100%;
+      }
+
+      .requirement-main{
+  grid-template-columns:56px 1fr;
+}
+
+      .requirement-main .image-box.small{
+        width:56px;
+        min-width:56px;
+        height:56px;
       }
     }
 
@@ -2133,25 +2162,41 @@
         const nextCardAttrs = detailCardAttributes(nextDetail);
 
         const itemsHtml = requirements.map(item => {
-          const readyClass = item.is_ready ? " ready" : "";
-          const itemDescription = item.item_description || item.origin_text || "";
-
-          return `
-            <div class="requirement">
-              <div>
-                <div class="requirement-name">${escapeHtml(item.item_name_ja)}</div>
+        const readyClass = item.is_ready ? " ready" : "";
+        const itemDescription = item.item_description || item.origin_text || "";
+      
+        const itemImagePath =
+          item.image_path ||
+          item.item_image_path ||
+          item.harbor_item_image_path ||
+          item.item_image ||
+          "";
+      
+        const itemName =
+          item.item_name_ja ||
+          item.name_ja ||
+          item.item_key ||
+          "漂着物";
+      
+        return `
+          <div class="requirement">
+            <div class="requirement-main">
+              ${imageBox(itemImagePath, itemName, true)}
+      
+              <div class="requirement-text">
+                <div class="requirement-name">${escapeHtml(itemName)}</div>
                 <div class="requirement-desc">
                   ${escapeHtml(itemDescription)}
                 </div>
               </div>
-
-              <div class="requirement-count${readyClass}">
-                ${escapeHtml(item.owned_count)} / ${escapeHtml(item.required_count)}
-              </div>
             </div>
-          `;
-        }).join("");
-
+      
+            <div class="requirement-count${readyClass}">
+              ${escapeHtml(item.owned_count)} / ${escapeHtml(item.required_count)}
+            </div>
+          </div>
+        `;
+      }).join("");
         nextHtml = `
           <div class="next-box">
             <div class="next-head detail-card" ${nextCardAttrs}>
