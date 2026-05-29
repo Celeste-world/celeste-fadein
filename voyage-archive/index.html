@@ -1580,7 +1580,8 @@
         });
     
       const tagCounts = tagCountsForLogs(logs);
-    
+      const lanterns = lanternMarkCount(logs);
+      
       const lines = [];
     
       lines.push("Celeste Harbor");
@@ -1590,6 +1591,7 @@
       lines.push("対象月：" + (group?.label || "日付不明"));
       lines.push("記録数：" + logs.length + "件");
       lines.push("多かった気配：" + (group?.topTag || "Harbor"));
+      lines.push("Lantern Marks：" + lanterns + "件");
       lines.push("");
     
       lines.push("========================");
@@ -1609,6 +1611,30 @@
       }else{
         tagCounts.forEach(function(item){
           lines.push("#" + item.tag + "：" + item.count + "件");
+        });
+      }
+
+      lines.push("");
+      lines.push("========================");
+      lines.push("Lantern Marks");
+      lines.push("========================");
+      lines.push("");
+      
+      const markedLogs = logs.filter(function(log){
+        return Boolean(log.is_favorite);
+      });
+      
+      if(markedLogs.length === 0){
+        lines.push("Lantern Mark が残された記録はありません。");
+      }else{
+        markedLogs.forEach(function(log){
+          lines.push("日時：" + formatDateTime(log.created_at));
+          lines.push("タグ：#" + (log.tag || "Harbor"));
+          lines.push("");
+          lines.push(cleanExportText(log.content));
+          lines.push("");
+          lines.push("------------------------");
+          lines.push("");
         });
       }
     
@@ -1799,7 +1825,8 @@
             "・対象月：" + group.label + "\n" +
             "・記録数：" + group.count + "件\n" +
             "・期間：" + monthRangeText(group) + "\n" +
-            "・多かった気配：" + group.topTag + "\n\n" +
+            "・多かった気配：" + group.topTag + "\n" +
+            "・Lantern Marks：" + lanternMarkCount(group.logs) + "件\n\n" +
             "形式：.txt\n" +
             "ファイル名：" + fileName + "\n\n" +
             "保存先は、ご利用のブラウザまたは端末の設定に従います。";
