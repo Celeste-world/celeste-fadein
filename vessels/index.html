@@ -1502,6 +1502,24 @@
         minute:"2-digit"
       });
     }
+
+    function vesselStatusLabel(status){
+      const value = String(status || "");
+    
+      if(value === "owned"){
+        return "港に加わっています";
+      }
+    
+      if(value === "current"){
+        return "現在の船です";
+      }
+    
+      if(value === "locked"){
+        return "まだ霧の向こうにあります";
+      }
+    
+      return value;
+    }
     
     function buildVesselAcquiredRecordHtml(vessel){
       if(!vessel){
@@ -1516,11 +1534,11 @@
       }
     
       if(vessel.is_current || vessel.is_current_vessel){
-        lines.push("現在の船：はい");
+        lines.push("いま航海をともにしている船です。");
       }
     
       if(vessel.status){
-        lines.push("状態：" + vessel.status);
+        lines.push("状態：" + vesselStatusLabel(vessel.status));
       }
     
       if(lines.length === 0){
@@ -1529,7 +1547,7 @@
     
       return `
         <div class="detail-section">
-          <div class="detail-section-label">Acquired Record</div>
+          <div class="detail-section-label">船の記録</div>
           <div class="detail-section-text">
             ${lines.map(function(line){
               return escapeHtml(line);
@@ -1937,7 +1955,7 @@
         lighthouse_coast: "第三章　灯台海岸",
         fog_sea: "第四章　霧の海",
         moonlit_sea: "第五章　月明かりの海",
-        deep_current: "第六章　深い潮",
+        deep_current: "第六章　深潮",
         unnamed_waters: "第七章　名もなき海"
       };
     
@@ -1959,7 +1977,7 @@
           "月明かりの海が、水面に細い道を描きました。\nどこへ続くか分からなくても、その道は確かにあります。",
     
         deep_current:
-          "深い潮が、海の下でゆっくりと動き始めました。\n大きく舵を切らず、ただ保つことが必要な海です。",
+          "深潮が、海の下でゆっくりと動き始めました。\n大きく舵を切らず、ただ保つことが必要な海です。",
     
         unnamed_waters:
           "海図の外側に、名もなき海が開きました。\nこれは終点ではなく、まだ見ぬ航海への入口です。"
