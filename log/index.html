@@ -4079,7 +4079,7 @@
       logsEl.innerHTML = "";
 
       logsCount.textContent = allLogs.length
-        ? allLogs.length + " logs"
+        ? allLogs.length + " 件"
         : "";
 
       if(!allLogs || allLogs.length === 0){
@@ -4120,8 +4120,8 @@
       if(allLogs.length > 3){
         readMoreWrap.style.display = "flex";
         readMoreBtn.textContent = showAllLogs
-          ? "Show less"
-          : "Read more";
+          ? "記録を少なく表示"
+          : "記録をさらに表示";
       }else{
         readMoreWrap.style.display = "none";
       }
