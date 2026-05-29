@@ -1857,6 +1857,39 @@ voyage_tickets.billing_purchase_id
 
 重複していた `_auth_user_id_fkey` 側の外部キーは削除済みです。
 
+## Billing Admin
+
+`/admin/billing/` を閲覧専用の管理ページとして実装済み。
+
+表示対象：
+
+- billing_customers
+- billing_purchases
+- user_subscriptions
+- voyage_tickets
+- monthly_log_allowances
+- billing_events
+
+初期実装では、手動編集・手動付与・Webhook再実行は行わない。
+
+確認できる内容：
+
+- 単発購入の状態
+- 月額契約の状態
+- 航海券付与状態
+- 月間 Voyage Log 記録枠
+- Webhook イベント状態
+- pending / granted / active / failed の概要
+
+実装時に追加した補助カラム：
+
+- billing_purchases.stripe_price_id
+- user_subscriptions.stripe_price_id
+- user_subscriptions.canceled_at
+
+Billing Admin は `/admin/feedback/` と同じ `ADMIN_USER_ID` 判定方式で保護する。
+
+
 ---
 
 # 24. Webhook 処理の基本流れ
