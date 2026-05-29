@@ -682,10 +682,7 @@
             label:"product_key",
             render:function(row){ return escapeHtml(row.product_key); }
           },
-          {
-            label:"provider",
-            render:function(row){ return escapeHtml(row.provider || ""); }
-          },
+         
           {
             label:"status",
             render:function(row){ return badge(row.status); }
@@ -714,18 +711,7 @@
               return '<span class="mono">' + escapeHtml(shortId(row.stripe_checkout_session_id)) + '</span>';
             }
           }
-          {
-            label:"provider_purchase_id",
-            render:function(row){
-              return '<span class="mono">' + escapeHtml(shortId(row.provider_purchase_id)) + '</span>';
-            }
-          },
-          {
-            label:"provider_product_id",
-            render:function(row){
-              return '<span class="mono">' + escapeHtml(shortId(row.provider_product_id)) + '</span>';
-            }
-          }
+          
         ],
         rows
       );
@@ -748,10 +734,7 @@
             label:"product_key",
             render:function(row){ return escapeHtml(row.product_key); }
           },
-          {
-            label:"provider",
-            render:function(row){ return escapeHtml(row.provider || ""); }
-          },
+          
           {
             label:"status",
             render:function(row){ return badge(row.status); }
@@ -770,18 +753,7 @@
               return '<span class="mono">' + escapeHtml(shortId(row.stripe_subscription_id)) + '</span>';
             }
           }
-          {
-            label:"provider_subscription_id",
-            render:function(row){
-              return '<span class="mono">' + escapeHtml(shortId(row.provider_subscription_id)) + '</span>';
-            }
-          },
-          {
-            label:"provider_product_id",
-            render:function(row){
-              return '<span class="mono">' + escapeHtml(shortId(row.provider_product_id)) + '</span>';
-            }
-          }
+          
         ],
         rows
       );
@@ -990,7 +962,7 @@
           "billing_purchases",
           client
             .from("billing_purchases")
-            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id,provider,provider_purchase_id,provider_product_id")
+            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id")
             .order("created_at", { ascending:false })
             .limit(100)
         );
@@ -999,11 +971,11 @@
           "user_subscriptions",
           client
             .from("user_subscriptions")
-            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id,provider,provider_subscription_id,provider_product_id")
+            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id")
             .order("created_at", { ascending:false })
             .limit(100)
         );
-
+        
         const tickets = await fetchTable(
           "voyage_tickets",
           client
