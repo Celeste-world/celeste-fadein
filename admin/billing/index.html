@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Billing Admin – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --warn:#ffe3a3;
+      --soft:#d4dcff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a,
+    .logout-link{
+      color:var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .nav a:hover,
+    .logout-link:hover{
+      color:var(--text);
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 28px;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    .primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    button:hover{
+      opacity:.92;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .status{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      margin-bottom:18px;
+      min-height:1.9em;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+
+    .summary-card{
+      padding:17px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.09), transparent 44%),
+        rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+    }
+
+    .summary-label{
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .summary-value{
+      color:var(--text);
+      font-size:24px;
+      line-height:1.5;
+    }
+
+    .summary-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      margin-top:4px;
+    }
+
+    .section{
+      margin-top:26px;
+      padding:20px;
+      border-radius:20px;
+      border:1px solid rgba(70,84,132,.55);
+      background:rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.30);
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:15px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(160,168,187,.13);
+    }
+
+    .section-title{
+      font-size:18px;
+      line-height:1.7;
+      margin:0;
+      font-weight:500;
+    }
+
+    .section-sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin:2px 0 0;
+    }
+
+    .count-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.24);
+      color:var(--muted);
+      font-size:12px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:880px;
+    }
+
+    th,
+    td{
+      border-bottom:1px solid rgba(160,168,187,.10);
+      padding:10px 9px;
+      vertical-align:top;
+      text-align:left;
+      font-size:12px;
+      line-height:1.7;
+    }
+
+    th{
+      color:var(--accent);
+      font-weight:500;
+      white-space:nowrap;
+    }
+
+    td{
+      color:var(--muted);
+    }
+
+    .mono{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:11px;
+      word-break:break-all;
+    }
+
+    .badge{
+      display:inline-block;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      color:var(--muted);
+      font-size:11px;
+      padding:4px 9px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .badge.active,
+    .badge.granted,
+    .badge.processed,
+    .badge.available{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.36);
+      background:rgba(185,246,202,.06);
+    }
+
+    .badge.pending,
+    .badge.paid,
+    .badge.received,
+    .badge.incomplete{
+      color:var(--warn);
+      border-color:rgba(255,227,163,.36);
+      background:rgba(255,227,163,.06);
+    }
+
+    .badge.failed,
+    .badge.canceled,
+    .badge.refunded,
+    .badge.expired{
+      color:var(--danger);
+      border-color:rgba(255,155,155,.36);
+      background:rgba(255,155,155,.06);
+    }
+
+    .empty{
+      padding:18px;
+      border:1px solid rgba(70,84,132,.35);
+      border-radius:16px;
+      color:var(--muted);
+      line-height:2;
+      background:rgba(5,8,17,.34);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:760px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .summary-grid{
+        grid-template-columns:1fr;
+      }
+
+      .section-head{
+        flex-direction:column;
+      }
+
+      .toolbar button{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-locked">
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/admin/feedback/">Letter Admin</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/account/">Account</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Billing Admin</h1>
+
+      <p class="lead">
+        課金DBの状態を確認するための管理ページです。<br>
+        ここでは購入履歴、契約状態、航海券、月間記録枠、Webhookイベントを読み取り専用で確認します。
+      </p>
+
+      <div class="toolbar">
+        <button class="ghost" id="refreshBtn" type="button">
+          更新
+        </button>
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <section class="summary-grid" id="summaryGrid">
+        <div class="summary-card">
+          <div class="summary-label">Pending / Paid</div>
+          <div class="summary-value" id="summaryPendingPurchases">0</div>
+          <div class="summary-note">未付与の可能性がある購入</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Granted Purchases</div>
+          <div class="summary-value" id="summaryGrantedPurchases">0</div>
+          <div class="summary-note">付与済みの単発購入</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Active Subscriptions</div>
+          <div class="summary-value" id="summaryActiveSubscriptions">0</div>
+          <div class="summary-note">有効な月額契約</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Failed Events</div>
+          <div class="summary-value" id="summaryFailedEvents">0</div>
+          <div class="summary-note">失敗したWebhookイベント</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Customers</h2>
+            <p class="section-sub">Supabase user_id と Stripe customer_id の対応を確認します。</p>
+          </div>
+          <span class="count-badge" id="customersCount">0件</span>
+        </div>
+        <div id="customersBox"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Purchases</h2>
+            <p class="section-sub">単発購入の状態を確認します。pending / paid / granted の流れを追います。</p>
+          </div>
+          <span class="count-badge" id="purchasesCount">0件</span>
+        </div>
+        <div id="purchasesBox"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Subscriptions</h2>
+            <p class="section-sub">港の維持灯、潮の便りなどの月額契約状態を確認します。</p>
+          </div>
+          <span class="count-badge" id="subscriptionsCount">0件</span>
+        </div>
+        <div id="subscriptionsBox"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Tickets</h2>
+            <p class="section-sub">voyage_tickets に付与された航海券を確認します。</p>
+          </div>
+          <span class="count-badge" id="ticketsCount">0件</span>
+        </div>
+        <div id="ticketsBox"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Monthly Allowances</h2>
+            <p class="section-sub">月ごとの Voyage Log 記録枠を確認します。</p>
+          </div>
+          <span class="count-badge" id="allowancesCount">0件</span>
+        </div>
+        <div id="allowancesBox"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Webhook Events</h2>
+            <p class="section-sub">Stripe Webhook の受信・処理状態を確認します。</p>
+          </div>
+          <span class="count-badge" id="eventsCount">0件</span>
+        </div>
+        <div id="eventsBox"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/admin/feedback/">Letter Admin</a>
+        <a href="/log/">Voyage Log</a>
+        <a href="/account/">Account</a>
+      </div>
+
+      <div>CELESTE HARBOR BILLING ADMIN</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const ADMIN_USER_ID = "72667f4c-ae4e-46fa-ab6f-468cb198e6ad";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const statusEl = document.getElementById("status");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logoutLink = document.getElementById("logoutLink");
+
+    const summaryPendingPurchases = document.getElementById("summaryPendingPurchases");
+    const summaryGrantedPurchases = document.getElementById("summaryGrantedPurchases");
+    const summaryActiveSubscriptions = document.getElementById("summaryActiveSubscriptions");
+    const summaryFailedEvents = document.getElementById("summaryFailedEvents");
+
+    const customersBox = document.getElementById("customersBox");
+    const purchasesBox = document.getElementById("purchasesBox");
+    const subscriptionsBox = document.getElementById("subscriptionsBox");
+    const ticketsBox = document.getElementById("ticketsBox");
+    const allowancesBox = document.getElementById("allowancesBox");
+    const eventsBox = document.getElementById("eventsBox");
+
+    const customersCount = document.getElementById("customersCount");
+    const purchasesCount = document.getElementById("purchasesCount");
+    const subscriptionsCount = document.getElementById("subscriptionsCount");
+    const ticketsCount = document.getElementById("ticketsCount");
+    const allowancesCount = document.getElementById("allowancesCount");
+    const eventsCount = document.getElementById("eventsCount");
+
+    let currentUser = null;
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+
+      return date.toLocaleString("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function shortId(value){
+      const text = String(value || "");
+
+      if(text.length <= 12){
+        return text;
+      }
+
+      return text.slice(0, 8) + "..." + text.slice(-4);
+    }
+
+    function badge(value){
+      const status = String(value || "unknown");
+      return '<span class="badge ' + escapeHtml(status) + '">' + escapeHtml(status) + '</span>';
+    }
+
+    function emptyBox(message){
+      return `
+        <div class="empty">
+          ${escapeHtml(message || "表示できるデータはありません。")}
+        </div>
+      `;
+    }
+
+    function tableHtml(headers, rows){
+      if(!rows || rows.length === 0){
+        return emptyBox("表示できるデータはありません。");
+      }
+
+      const headHtml = headers.map(function(header){
+        return "<th>" + escapeHtml(header.label) + "</th>";
+      }).join("");
+
+      const bodyHtml = rows.map(function(row){
+        const cells = headers.map(function(header){
+          const value = header.render
+            ? header.render(row)
+            : row[header.key];
+
+          return "<td>" + value + "</td>";
+        }).join("");
+
+        return "<tr>" + cells + "</tr>";
+      }).join("");
+
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>${headHtml}</tr>
+            </thead>
+            <tbody>
+              ${bodyHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderCustomers(rows){
+      customersCount.textContent = String(rows.length) + "件";
+
+      customersBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
+          },
+          {
+            label:"user_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(row.user_id) + '</span>'; }
+          },
+          {
+            label:"stripe_customer_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(row.stripe_customer_id) + '</span>'; }
+          },
+          {
+            label:"email",
+            render:function(row){ return escapeHtml(row.email || ""); }
+          }
+        ],
+        rows
+      );
+    }
+
+    function renderPurchases(rows){
+      purchasesCount.textContent = String(rows.length) + "件";
+
+      purchasesBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
+          },
+          {
+            label:"user_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+          },
+          {
+            label:"product_key",
+            render:function(row){ return escapeHtml(row.product_key); }
+          },
+          {
+            label:"status",
+            render:function(row){ return badge(row.status); }
+          },
+          {
+            label:"amount",
+            render:function(row){
+              if(row.amount === null || row.amount === undefined){
+                return "";
+              }
+
+              return escapeHtml(String(row.amount) + " " + (row.currency || ""));
+            }
+          },
+          {
+            label:"month_key",
+            render:function(row){ return escapeHtml(row.month_key || ""); }
+          },
+          {
+            label:"granted_at",
+            render:function(row){ return escapeHtml(formatDate(row.granted_at)); }
+          },
+          {
+            label:"checkout_session",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.stripe_checkout_session_id)) + '</span>';
+            }
+          }
+        ],
+        rows
+      );
+    }
+
+    function renderSubscriptions(rows){
+      subscriptionsCount.textContent = String(rows.length) + "件";
+
+      subscriptionsBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
+          },
+          {
+            label:"user_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+          },
+          {
+            label:"product_key",
+            render:function(row){ return escapeHtml(row.product_key); }
+          },
+          {
+            label:"status",
+            render:function(row){ return badge(row.status); }
+          },
+          {
+            label:"period_end",
+            render:function(row){ return escapeHtml(formatDate(row.current_period_end)); }
+          },
+          {
+            label:"cancel_at_period_end",
+            render:function(row){ return escapeHtml(row.cancel_at_period_end ? "true" : "false"); }
+          },
+          {
+            label:"subscription_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.stripe_subscription_id)) + '</span>';
+            }
+          }
+        ],
+        rows
+      );
+    }
+
+    function renderTickets(rows){
+      ticketsCount.textContent = String(rows.length) + "件";
+
+      ticketsBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
+          },
+          {
+            label:"user_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+          },
+          {
+            label:"ticket_type",
+            render:function(row){ return escapeHtml(row.ticket_type); }
+          },
+          {
+            label:"duration",
+            render:function(row){ return escapeHtml(String(row.duration_minutes || "")); }
+          },
+          {
+            label:"status",
+            render:function(row){ return badge(row.status); }
+          },
+          {
+            label:"source",
+            render:function(row){ return escapeHtml(row.source || ""); }
+          },
+          {
+            label:"expires_at",
+            render:function(row){ return escapeHtml(formatDate(row.expires_at)); }
+          },
+          {
+            label:"used_at",
+            render:function(row){ return escapeHtml(formatDate(row.used_at)); }
+          },
+          {
+            label:"billing_purchase_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.billing_purchase_id)) + '</span>';
+            }
+          }
+        ],
+        rows
+      );
+    }
+
+    function renderAllowances(rows){
+      allowancesCount.textContent = String(rows.length) + "件";
+
+      allowancesBox.innerHTML = tableHtml(
+        [
+          {
+            label:"updated_at",
+            render:function(row){ return escapeHtml(formatDate(row.updated_at)); }
+          },
+          {
+            label:"user_id",
+            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+          },
+          {
+            label:"month_key",
+            render:function(row){ return escapeHtml(row.month_key); }
+          },
+          {
+            label:"base",
+            render:function(row){ return escapeHtml(String(row.base_limit)); }
+          },
+          {
+            label:"support",
+            render:function(row){ return escapeHtml(String(row.support_bonus)); }
+          },
+          {
+            label:"fuel",
+            render:function(row){ return escapeHtml(String(row.fuel_bonus)); }
+          },
+          {
+            label:"total",
+            render:function(row){ return escapeHtml(String(row.total_limit)); }
+          },
+          {
+            label:"consumed",
+            render:function(row){ return escapeHtml(String(row.consumed_count)); }
+          }
+        ],
+        rows
+      );
+    }
+
+    function renderEvents(rows){
+      eventsCount.textContent = String(rows.length) + "件";
+
+      eventsBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
+          },
+          {
+            label:"event_type",
+            render:function(row){ return escapeHtml(row.event_type); }
+          },
+          {
+            label:"status",
+            render:function(row){ return badge(row.status); }
+          },
+          {
+            label:"stripe_event_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.stripe_event_id)) + '</span>';
+            }
+          },
+          {
+            label:"checkout_session",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.stripe_checkout_session_id)) + '</span>';
+            }
+          },
+          {
+            label:"subscription",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.stripe_subscription_id)) + '</span>';
+            }
+          },
+          {
+            label:"processed_at",
+            render:function(row){ return escapeHtml(formatDate(row.processed_at)); }
+          },
+          {
+            label:"error",
+            render:function(row){ return escapeHtml(row.error_message || ""); }
+          }
+        ],
+        rows
+      );
+    }
+
+    function updateSummary(data){
+      const purchases = data.purchases || [];
+      const subscriptions = data.subscriptions || [];
+      const events = data.events || [];
+
+      const pendingPurchases = purchases.filter(function(row){
+        return row.status === "pending" || row.status === "paid";
+      }).length;
+
+      const grantedPurchases = purchases.filter(function(row){
+        return row.status === "granted";
+      }).length;
+
+      const activeSubscriptions = subscriptions.filter(function(row){
+        return row.status === "active" || row.status === "trialing";
+      }).length;
+
+      const failedEvents = events.filter(function(row){
+        return row.status === "failed";
+      }).length;
+
+      summaryPendingPurchases.textContent = String(pendingPurchases);
+      summaryGrantedPurchases.textContent = String(grantedPurchases);
+      summaryActiveSubscriptions.textContent = String(activeSubscriptions);
+      summaryFailedEvents.textContent = String(failedEvents);
+    }
+
+    async function fetchTable(label, builder){
+      const { data, error } = await builder;
+
+      if(error){
+        console.error(label + " load error:", error);
+        throw new Error(label + " を読み込めませんでした。RLSまたはGRANTを確認してください。");
+      }
+
+      return Array.isArray(data) ? data : [];
+    }
+
+    async function loadBilling(){
+      if(!currentUser){
+        return;
+      }
+
+      if(currentUser.id !== ADMIN_USER_ID){
+        setStatus("このページを表示する権限がありません。", true);
+        return;
+      }
+
+      setStatus("課金DBを読み込んでいます。");
+      refreshBtn.disabled = true;
+
+      try{
+        const customers = await fetchTable(
+          "billing_customers",
+          client
+            .from("billing_customers")
+            .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+            .order("created_at", { ascending:false })
+            .limit(100)
+        );
+
+        const purchases = await fetchTable(
+          "billing_purchases",
+          client
+            .from("billing_purchases")
+            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id")
+            .order("created_at", { ascending:false })
+            .limit(100)
+        );
+
+        const subscriptions = await fetchTable(
+          "user_subscriptions",
+          client
+            .from("user_subscriptions")
+            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id")
+            .order("created_at", { ascending:false })
+            .limit(100)
+        );
+
+        const tickets = await fetchTable(
+          "voyage_tickets",
+          client
+            .from("voyage_tickets")
+            .select("id,user_id,ticket_type,source,duration_minutes,status,expires_at,used_at,billing_purchase_id,created_at,updated_at")
+            .order("created_at", { ascending:false })
+            .limit(100)
+        );
+
+        const allowances = await fetchTable(
+          "monthly_log_allowances",
+          client
+            .from("monthly_log_allowances")
+            .select("id,user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,created_at,updated_at")
+            .order("updated_at", { ascending:false })
+            .limit(100)
+        );
+
+        const events = await fetchTable(
+          "billing_events",
+          client
+            .from("billing_events")
+            .select("id,stripe_event_id,event_type,status,error_message,processed_at,created_at,stripe_customer_id,stripe_checkout_session_id,stripe_payment_intent_id,stripe_subscription_id")
+            .order("created_at", { ascending:false })
+            .limit(100)
+        );
+
+        renderCustomers(customers);
+        renderPurchases(purchases);
+        renderSubscriptions(subscriptions);
+        renderTickets(tickets);
+        renderAllowances(allowances);
+        renderEvents(events);
+
+        updateSummary({
+          purchases,
+          subscriptions,
+          events
+        });
+
+        setStatus("課金DBを読み込みました。");
+
+      }catch(error){
+        console.error(error);
+        setStatus(error.message || "課金DBを読み込めませんでした。", true);
+      }finally{
+        refreshBtn.disabled = false;
+      }
+    }
+
+    async function checkSession(){
+      const { data } = await client.auth.getSession();
+
+      currentUser = data.session?.user || null;
+
+      if(!currentUser){
+        window.location.replace("/");
+        return;
+      }
+
+      if(currentUser.id !== ADMIN_USER_ID){
+        window.location.replace("/log/");
+        return;
+      }
+
+      document.body.classList.remove("auth-locked");
+
+      await loadBilling();
+    }
+
+    async function logout(){
+      await client.auth.signOut();
+      window.location.href = "/account/";
+    }
+
+    refreshBtn.addEventListener("click", loadBilling);
+
+    logoutLink.addEventListener("click", async function(event){
+      event.preventDefault();
+      await logout();
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
