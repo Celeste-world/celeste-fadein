@@ -924,6 +924,12 @@
         <div class="archive-search-result" id="archiveSearchResult">
           言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。
         </div>
+
+        <div class="read-more-wrap" id="archiveSearchMoreWrap" style="display:none;">
+          <button class="read-more" id="archiveSearchMoreBtn" type="button">
+            検索結果をさらに読み込む
+          </button>
+        </div>
       </div>
       
       <div class="archive-layout">
@@ -1107,6 +1113,8 @@
     const archiveSearchInput = document.getElementById("archiveSearchInput");
     const archiveSearchClearBtn = document.getElementById("archiveSearchClearBtn");
     const archiveSearchResult = document.getElementById("archiveSearchResult");
+    const archiveSearchMoreWrap = document.getElementById("archiveSearchMoreWrap");
+    const archiveSearchMoreBtn = document.getElementById("archiveSearchMoreBtn");
 
     const archiveTagFilter = document.getElementById("archiveTagFilter");
     const archiveLanternFilter = document.getElementById("archiveLanternFilter");
@@ -1157,6 +1165,11 @@
     let archiveSearchTimer = null;
     let archiveSearchRequestId = 0;
     let isArchiveSearching = false;
+    
+    let archiveSearchOffset = 0;
+    let archiveSearchTotalCount = 0;
+    let archiveSearchHasMore = false;
+    let archiveSearchLogs = [];
     
     const archiveSearchLimit = 200;
 
@@ -1892,6 +1905,25 @@
         " に一致する航海記録：" +
         shownCount +
         "件";
+
+      updateArchiveSearchMoreButton();
+    }
+
+    function updateArchiveSearchMoreButton(){
+      if(!archiveSearchMoreWrap || !archiveSearchMoreBtn){
+        return;
+      }
+    
+      if(!hasActiveArchiveFilter() || !archiveSearchHasMore){
+        archiveSearchMoreWrap.style.display = "none";
+        return;
+      }
+    
+      archiveSearchMoreWrap.style.display = "flex";
+      archiveSearchMoreBtn.disabled = isArchiveSearching;
+      archiveSearchMoreBtn.textContent = isArchiveSearching
+        ? "読み込んでいます..."
+        : "検索結果をさらに読み込む";
     }
     
     function refreshArchiveView(){
@@ -1899,15 +1931,22 @@
       updateArchiveSearchResult(allLogs, allLogs.length);
     }
     
-    async function searchArchiveFromSupabase(){
+    async function searchArchiveFromSupabase(options = {}){
+      const append = Boolean(options.append);
       const keywords = searchKeywordsFromQuery(archiveSearchQuery);
       const tagFilter = normalizeSearchText(archiveTagQuery);
       const requestId = ++archiveSearchRequestId;
     
       if(keywords.length === 0 && !tagFilter && !archiveLanternOnly){
         isArchiveSearching = false;
+        archiveSearchOffset = 0;
+        archiveSearchTotalCount = 0;
+        archiveSearchHasMore = false;
+        archiveSearchLogs = [];
+    
         renderArchiveFromLogs(allLogs);
         updateArchiveSearchResult(allLogs, allLogs.length);
+        updateArchiveSearchMoreButton();
         return;
       }
     
@@ -1917,7 +1956,13 @@
     
       try{
         isArchiveSearching = true;
-        updateArchiveSearchResult([], 0);
+        updateArchiveSearchMoreButton();
+    
+        if(!append){
+          archiveSearchOffset = 0;
+          archiveSearchLogs = [];
+          updateArchiveSearchResult([], 0);
+        }
     
         let query = client
           .from("voyage_logs")
@@ -1927,7 +1972,7 @@
         if(tagFilter){
           query = query.eq("tag", archiveTagQuery);
         }
-
+    
         if(archiveLanternOnly){
           query = query.eq("is_favorite", true);
         }
@@ -1940,7 +1985,10 @@
     
         query = query
           .order("created_at", { ascending:false })
-          .limit(archiveSearchLimit);
+          .range(
+            archiveSearchOffset,
+            archiveSearchOffset + archiveSearchLimit - 1
+          );
     
         const { data, error, count } = await query;
     
@@ -1952,15 +2000,30 @@
           console.error("archive search error:", error);
           setStatus("検索に失敗しました。", true);
           isArchiveSearching = false;
-          updateArchiveSearchResult([], 0);
+          updateArchiveSearchMoreButton();
+          updateArchiveSearchResult(archiveSearchLogs, archiveSearchTotalCount);
           return;
         }
     
         const logs = Array.isArray(data) ? data : [];
     
+        archiveSearchTotalCount =
+          typeof count === "number"
+            ? count
+            : archiveSearchLogs.length + logs.length;
+    
+        archiveSearchLogs = append
+          ? archiveSearchLogs.concat(logs)
+          : logs;
+    
+        archiveSearchOffset = archiveSearchLogs.length;
+        archiveSearchHasMore = archiveSearchLogs.length < archiveSearchTotalCount;
+    
         isArchiveSearching = false;
-        renderArchiveFromLogs(logs);
-        updateArchiveSearchResult(logs, count);
+    
+        renderArchiveFromLogs(archiveSearchLogs);
+        updateArchiveSearchResult(archiveSearchLogs, archiveSearchTotalCount);
+        updateArchiveSearchMoreButton();
     
         if(window.matchMedia("(max-width:760px)").matches){
           monthListPanel.classList.remove("mobile-hidden");
@@ -1970,10 +2033,10 @@
         console.error("archive search catch:", error);
         setStatus("検索に失敗しました。", true);
         isArchiveSearching = false;
-        updateArchiveSearchResult([], 0);
+        updateArchiveSearchMoreButton();
+        updateArchiveSearchResult(archiveSearchLogs, archiveSearchTotalCount);
       }
     }
-
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -2356,12 +2419,19 @@
           hasActiveArchiveFilter() ? "inline-flex" : "none";
       }
     
+      archiveSearchOffset = 0;
+      archiveSearchTotalCount = 0;
+      archiveSearchHasMore = false;
+      archiveSearchLogs = [];
+    
+      updateArchiveSearchMoreButton();
+    
       if(archiveSearchTimer){
         clearTimeout(archiveSearchTimer);
       }
     
       archiveSearchTimer = setTimeout(function(){
-        searchArchiveFromSupabase();
+        searchArchiveFromSupabase({ append:false });
       }, 450);
     }
 
@@ -2410,6 +2480,14 @@
           clearTimeout(archiveSearchTimer);
           archiveSearchTimer = null;
         }
+
+        archiveSearchOffset = 0;
+        archiveSearchTotalCount = 0;
+        archiveSearchHasMore = false;
+        archiveSearchLogs = [];
+        isArchiveSearching = false;
+        
+        updateArchiveSearchMoreButton();
     
         archiveSearchRequestId++;
     
@@ -2419,6 +2497,16 @@
           monthListPanel.classList.remove("mobile-hidden");
           monthDetailPanel.classList.add("mobile-hidden");
         }
+      });
+    }
+
+    if(archiveSearchMoreBtn){
+      archiveSearchMoreBtn.addEventListener("click", function(){
+        if(isArchiveSearching || !archiveSearchHasMore){
+          return;
+        }
+    
+        searchArchiveFromSupabase({ append:true });
       });
     }
     
