@@ -401,6 +401,72 @@ Monthly Summary 軽強化
 検索結果は現在最大200件。
 長期利用に備え、将来的に Search more を追加する可能性があります。
 
+### Voyage Archive の追加読み込み
+
+`/voyage-archive/` の検索結果は、Supabase から 200件ずつ取得します。
+
+検索条件がある場合、最初に最新200件を表示します。  
+検索結果が200件を超える場合は、`検索結果をさらに読み込む` ボタンを表示し、押すたびに次の200件を追加取得します。
+
+対象：
+
+- キーワード検索
+- タグ検索
+- Lantern Mark のみ
+- 上記の組み合わせ
+
+検索解除時には、以下をリセットします。
+
+- `archiveSearchOffset`
+- `archiveSearchTotalCount`
+- `archiveSearchHasMore`
+- `archiveSearchLogs`
+- `isArchiveSearching`
+
+この機能は、長期利用で航海記録が増えた場合でも、Archive を重くしすぎず、必要な分だけ過去の記録を広げて見返すためのものです。
+2. Monthly Summary / Export の更新
+
+追記する内容：
+
+### Monthly Summary の Lantern Marks
+
+`/voyage-archive/` の Monthly Summary には、以下の4項目を表示します。
+
+- Logs
+- Days
+- Main Tag
+- Lantern Marks
+
+`Lantern Marks` は、その月にあとで読み返すしるしが残された記録数です。
+
+これは達成率や評価ではなく、ユーザー自身があとで戻りたいと思った言葉の灯りとして扱います。
+
+### Monthly Export の Lantern Marks
+
+月別 `.txt` ダウンロードには、Lantern Mark 情報も含めます。
+
+ヘッダーに以下を出力します。
+
+```txt
+Lantern Marks：○件
+
+また、Monthly Tags の後に Lantern Marks セクションを追加し、しるしが残された記録だけを先に一覧表示します。
+
+Lantern Mark がない場合は、以下を出力します。
+
+Lantern Mark が残された記録はありません。
+
+その後、通常通り Voyage Logs セクションで、その月の全記録を出力します。
+
+Lantern Mark 付きの記録は Lantern Marks セクションと Voyage Logs セクションの両方に出る場合があります。
+これは重複ではなく、先に読み返したい記録をまとめて見せるための仕様です。
+
+
+---
+
+次にやるなら、**開発メモ原文の `/voyage-archive/` セクションだけ貼ってください。**  
+そこを最新版に差し替えられる形で、必要部分だけ整えます。
+
 10. /timeline/
 
 Cabin Log。
