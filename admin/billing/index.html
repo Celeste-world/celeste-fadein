@@ -236,7 +236,7 @@
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:880px;
+      min-width:980px;
     }
 
     th,
@@ -394,7 +394,7 @@
 
       <p class="lead">
         課金DBの状態を確認するための管理ページです。<br>
-        ここでは購入履歴、契約状態、航海券、月間記録枠、Webhookイベントを読み取り専用で確認します。
+        購入履歴、契約状態、航海券、月間記録枠、Webhookイベントを読み取り専用で確認します。
       </p>
 
       <div class="toolbar">
@@ -446,7 +446,7 @@
         <div class="section-head">
           <div>
             <h2 class="section-title">Purchases</h2>
-            <p class="section-sub">単発購入の状態を確認します。pending / paid / granted の流れを追います。</p>
+            <p class="section-sub">単発購入の状態を確認します。Stripe / Google Play の provider もここで見ます。</p>
           </div>
           <span class="count-badge" id="purchasesCount">0件</span>
         </div>
@@ -617,7 +617,7 @@
         const cells = headers.map(function(header){
           const value = header.render
             ? header.render(row)
-            : row[header.key];
+            : escapeHtml(row[header.key] || "");
 
           return "<td>" + value + "</td>";
         }).join("");
@@ -680,9 +680,12 @@
           },
           {
             label:"product_key",
-            render:function(row){ return escapeHtml(row.product_key); }
+            render:function(row){ return escapeHtml(row.product_key || ""); }
           },
-         
+          {
+            label:"provider",
+            render:function(row){ return badge(row.provider || "stripe"); }
+          },
           {
             label:"status",
             render:function(row){ return badge(row.status); }
@@ -710,8 +713,19 @@
             render:function(row){
               return '<span class="mono">' + escapeHtml(shortId(row.stripe_checkout_session_id)) + '</span>';
             }
+          },
+          {
+            label:"provider_purchase_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.provider_purchase_id)) + '</span>';
+            }
+          },
+          {
+            label:"provider_product_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.provider_product_id)) + '</span>';
+            }
           }
-          
         ],
         rows
       );
@@ -732,9 +746,12 @@
           },
           {
             label:"product_key",
-            render:function(row){ return escapeHtml(row.product_key); }
+            render:function(row){ return escapeHtml(row.product_key || ""); }
           },
-          
+          {
+            label:"provider",
+            render:function(row){ return badge(row.provider || "stripe"); }
+          },
           {
             label:"status",
             render:function(row){ return badge(row.status); }
@@ -752,8 +769,19 @@
             render:function(row){
               return '<span class="mono">' + escapeHtml(shortId(row.stripe_subscription_id)) + '</span>';
             }
+          },
+          {
+            label:"provider_subscription_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.provider_subscription_id)) + '</span>';
+            }
+          },
+          {
+            label:"provider_product_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.provider_product_id)) + '</span>';
+            }
           }
-          
         ],
         rows
       );
@@ -774,7 +802,7 @@
           },
           {
             label:"ticket_type",
-            render:function(row){ return escapeHtml(row.ticket_type); }
+            render:function(row){ return escapeHtml(row.ticket_type || ""); }
           },
           {
             label:"duration",
@@ -822,7 +850,7 @@
           },
           {
             label:"month_key",
-            render:function(row){ return escapeHtml(row.month_key); }
+            render:function(row){ return escapeHtml(row.month_key || ""); }
           },
           {
             label:"base",
@@ -860,7 +888,7 @@
           },
           {
             label:"event_type",
-            render:function(row){ return escapeHtml(row.event_type); }
+            render:function(row){ return escapeHtml(row.event_type || ""); }
           },
           {
             label:"status",
@@ -929,7 +957,17 @@
 
       if(error){
         console.error(label + " load error:", error);
-        throw new Error(label + " を読み込めませんでした。RLSまたはGRANTを確認してください。");
+
+        const detail = [
+          error.message || "",
+          error.details || "",
+          error.hint || "",
+          error.code || ""
+        ].filter(Boolean).join(" / ");
+
+        throw new Error(
+          label + " を読み込めませんでした。 " + detail
+        );
       }
 
       return Array.isArray(data) ? data : [];
@@ -962,7 +1000,7 @@
           "billing_purchases",
           client
             .from("billing_purchases")
-            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id")
+            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id,provider,provider_purchase_id,provider_product_id")
             .order("created_at", { ascending:false })
             .limit(100)
         );
@@ -971,11 +1009,11 @@
           "user_subscriptions",
           client
             .from("user_subscriptions")
-            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id")
+            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id,provider,provider_subscription_id,provider_product_id")
             .order("created_at", { ascending:false })
             .limit(100)
         );
-        
+
         const tickets = await fetchTable(
           "voyage_tickets",
           client
