@@ -1422,7 +1422,7 @@
       }
     
       if(tag === "Deep Current"){
-        return "この月の言葉は、深い潮の奥に静かに沈んでいます。";
+        return "この月の言葉は、深潮の奥に静かに沈んでいます。";
       }
     
       if(tag === "Calm Tide"){
@@ -1866,12 +1866,14 @@
     
     function updateArchiveSearchResult(logs, totalCount){
       if(!archiveSearchResult){
+        updateArchiveSearchMoreButton();
         return;
       }
     
       if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
           "言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。";
+        updateArchiveSearchMoreButton();
         return;
       }
     
@@ -1880,6 +1882,7 @@
       if(isArchiveSearching){
         archiveSearchResult.textContent =
           label + " を検索しています。";
+        updateArchiveSearchMoreButton();
         return;
       }
     
@@ -1897,6 +1900,7 @@
           "件（最新" +
           shownCount +
           "件を表示）";
+        updateArchiveSearchMoreButton();
         return;
       }
     
@@ -1905,7 +1909,7 @@
         " に一致する航海記録：" +
         shownCount +
         "件";
-
+    
       updateArchiveSearchMoreButton();
     }
 
