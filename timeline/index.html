@@ -842,11 +842,9 @@
       </h1>
 
       <p class="lead">
-        Cabin Log は、港に残った出来事を時系列で確認する場所です。<br>
-        航海の記録、漂着物、航海券、船の変化、Special Voyage の気配が、
-        静かにここへ積もっていきます。
+        ここでは、港で起きた出来事を時系列で確認できます。<br>
+        漂着物、チケット、船、海域の開放、特別航海の記録が、静かに積もっていきます。
       </p>
-
       <section class="panel">
         <div class="user" id="userStatus">
           ログイン状態を確認しています。
@@ -864,7 +862,7 @@
 
         <div class="read-more-wrap" id="readMoreWrap" style="display:none;">
           <button class="read-more" id="readMoreBtn" type="button">
-            Read more
+            記録をさらに表示
           </button>
         </div>
 
@@ -1427,8 +1425,13 @@
       }
     
       if(timelineDetailMeta){
+        const eventKey = event.event_key
+          ? `<span class="timeline-detail-chip">${escapeHtml(event.event_key)}</span>`
+          : "";
+      
         timelineDetailMeta.innerHTML = `
           <span class="timeline-detail-chip">${escapeHtml(label)}</span>
+          ${eventKey}
         `;
       }
     
@@ -1785,7 +1788,7 @@
       if(readMoreWrap && readMoreBtn){
         if(events.length > initialTimelineLimit){
           readMoreWrap.style.display = "flex";
-          readMoreBtn.textContent = showAllTimeline ? "Show less" : "Read more";
+          readMoreBtn.textContent = showAllTimeline ? "記録を少なく表示" : "記録をさらに表示";
         }else{
           readMoreWrap.style.display = "none";
         }
