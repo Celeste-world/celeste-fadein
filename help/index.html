@@ -87,10 +87,22 @@
         transform .2s ease;
     }
 
-    .help-card:hover{
+    a.help-card:hover{
       border-color:rgba(169,183,255,.42);
       background:rgba(169,183,255,.045);
       transform:translateY(-1px);
+    }
+
+    section.help-card{
+      cursor:default;
+    }
+
+    section.help-card:target{
+      border-color:rgba(169,183,255,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(255,255,255,.025);
+      box-shadow:0 0 0 1px rgba(169,183,255,.10);
     }
 
     .help-title{
@@ -179,27 +191,29 @@
             </p>
           </a>
 
-          <a class="help-card" href="/help/#faq" id="faq">
+          <section class="help-card" id="faq">
             <div class="help-title">よくある質問</div>
             <p class="help-text">
-              よくある質問は現在整理中です。まずは、案内板とはじめての航海案内をご確認ください。
+              よくある質問は現在整理中です。<br>
+              まずは「案内板」と「はじめての航海案内」をご確認ください。
             </p>
-          </a>
+          </section>
 
-          <a class="help-card" href="/help/#login" id="login">
+          <section class="help-card" id="login">
             <div class="help-title">ログインできないとき</div>
             <p class="help-text">
-              Googleログインがうまく進まない場合は、Safari または Chrome などの通常ブラウザで開き直してください。
+              Googleログインがうまく進まない場合は、LINE・Instagram・X などのアプリ内ブラウザではなく、
+              Safari または Chrome などの通常ブラウザで Celeste Harbor を開き直してください。
             </p>
-          </a>
+          </section>
 
-          <a class="help-card" href="/help/#in-app-browser" id="in-app-browser">
+          <section class="help-card" id="in-app-browser">
             <div class="help-title">アプリ内ブラウザについて</div>
             <p class="help-text">
-              LINE・Instagram・X などのアプリ内ブラウザでは、Googleログインが利用できない場合があります。
-              その場合は、Safari または Chrome で開いてからログインしてください。
+              LINE・Instagram・X などのアプリ内ブラウザでは、Googleログインが利用できない場合があります。<br>
+              その場合は、画面の共有メニューやブラウザメニューから Safari または Chrome で開いてからログインしてください。
             </p>
-          </a>
+          </section>
 
           <a class="help-card" href="/log/">
             <div class="help-title">日々の記録へ戻る</div>
