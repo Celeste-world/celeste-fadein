@@ -64,11 +64,14 @@
       margin-bottom:64px;
       color:var(--muted);
       font-size:13px;
+      position:relative;
+      flex-wrap:wrap;
     }
 
     .brand{
       color:var(--text);
       letter-spacing:.04em;
+      text-decoration:none;
     }
 
     .nav{
@@ -76,23 +79,112 @@
       gap:18px;
       flex-wrap:wrap;
       align-items:center;
+      position:relative;
     }
 
-    .nav a{
+    .nav-parent{
+      appearance:none;
+      border:0;
+      background:transparent;
       color:var(--muted);
+      font:inherit;
+      padding:0;
+      cursor:pointer;
     }
 
-    .nav a:hover{
+    .nav-parent:hover,
+    .nav-parent.is-active{
       color:var(--text);
+    }
+
+    .nav-parent.is-active{
+      text-decoration:underline;
+      text-underline-offset:.25em;
     }
 
     .logout-link{
       color:var(--muted);
       cursor:pointer;
+      text-decoration:none;
     }
 
     .logout-link:hover{
       color:var(--text);
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .subnav{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      z-index:200;
+      width:max-content;
+      max-width:min(520px, calc(100vw - 40px));
+    }
+
+    .subnav-panel{
+      display:none;
+      position:relative;
+      flex-direction:column;
+      gap:2px;
+      min-width:180px;
+      padding:12px;
+      border:1px solid rgba(169,183,255,.28);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
+        rgba(10,14,28,.98);
+      box-shadow:0 18px 48px rgba(0,0,0,.46);
+      backdrop-filter:blur(8px);
+    }
+
+    .subnav-panel::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.28);
+      border-top:1px solid rgba(169,183,255,.28);
+      background:rgba(10,14,28,.98);
+    }
+
+    .subnav-panel a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+      line-height:1.7;
+      padding:7px 10px;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+
+    .subnav-panel a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.045);
     }
 
     #activeVoyageBanner{
@@ -260,6 +352,8 @@
       background:rgba(10,14,28,.62);
       border:1px solid rgba(70,84,132,.38);
       overflow:hidden;
+      cursor:pointer;
+      transition:.18s ease;
     }
 
     .timeline-item::before{
@@ -275,6 +369,16 @@
         rgba(169,183,255,.08)
       );
       border-radius:999px;
+    }
+
+    .timeline-item:hover{
+      border-color:rgba(169,183,255,.52);
+      transform:translateY(-1px);
+    }
+
+    .timeline-item:focus-visible{
+      outline:2px solid rgba(169,183,255,.7);
+      outline-offset:3px;
     }
 
     .timeline-item.harbor-find{
@@ -438,21 +542,6 @@
       background:rgba(169,183,255,.07);
     }
 
-    .timeline-item{
-      cursor:pointer;
-      transition:.18s ease;
-    }
-    
-    .timeline-item:hover{
-      border-color:rgba(169,183,255,.52);
-      transform:translateY(-1px);
-    }
-    
-    .timeline-item:focus-visible{
-      outline:2px solid rgba(169,183,255,.7);
-      outline-offset:3px;
-    }
-    
     .timeline-detail-modal{
       position:fixed;
       inset:0;
@@ -466,11 +555,11 @@
         rgba(3,5,11,.72);
       backdrop-filter:blur(5px);
     }
-    
+
     .timeline-detail-modal.visible{
       display:flex;
     }
-    
+
     .timeline-detail-inner{
       position:relative;
       width:min(620px, 100%);
@@ -487,7 +576,7 @@
       padding:24px;
       color:var(--text);
     }
-    
+
     .timeline-detail-close{
       position:absolute;
       top:12px;
@@ -503,12 +592,12 @@
       cursor:pointer;
       padding:0;
     }
-    
+
     .timeline-detail-close:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.48);
     }
-    
+
     .timeline-detail-label{
       font-size:11px;
       letter-spacing:.18em;
@@ -516,20 +605,21 @@
       color:var(--accent);
       margin-bottom:10px;
     }
-    
+
     .timeline-detail-title{
       font-size:22px;
       line-height:1.7;
       color:var(--text);
       margin:0 34px 8px 0;
     }
-    
+
     .timeline-detail-date{
       color:var(--dim);
       font-size:12px;
       line-height:1.8;
       margin-bottom:16px;
     }
+
     .timeline-detail-image-wrap{
       width:100%;
       max-height:210px;
@@ -544,7 +634,7 @@
       align-items:center;
       justify-content:center;
     }
-    
+
     .timeline-detail-image{
       max-width:100%;
       max-height:210px;
@@ -552,21 +642,21 @@
       display:block;
       padding:10px;
     }
-    
+
     .timeline-detail-body{
       white-space:pre-wrap;
       color:var(--muted);
       font-size:13px;
       line-height:1.85;
     }
-    
+
     .timeline-detail-meta{
       display:flex;
       flex-wrap:wrap;
       gap:8px;
       margin-top:14px;
     }
-    
+
     .timeline-detail-chip{
       display:inline-flex;
       border:1px solid rgba(160,168,187,.26);
@@ -577,7 +667,7 @@
       font-size:12px;
       line-height:1.6;
     }
-    
+
     .timeline-detail-actions{
       display:flex;
       justify-content:flex-end;
@@ -587,7 +677,7 @@
       padding-top:14px;
       border-top:1px solid rgba(160,168,187,.16);
     }
-    
+
     .timeline-detail-actions a,
     .timeline-detail-actions button{
       border-radius:999px;
@@ -597,59 +687,23 @@
       cursor:pointer;
       text-decoration:none;
     }
-    
+
     .timeline-detail-primary{
       border:1px solid transparent;
       background:linear-gradient(135deg,#a9b7ff,#d4dcff);
       color:#050811;
     }
-    
+
     .timeline-detail-ghost{
       border:1px solid rgba(160,168,187,.28);
       background:transparent;
       color:var(--muted);
     }
-    
+
     .timeline-detail-ghost:hover{
       color:var(--text);
       border-color:rgba(169,183,255,.48);
     }
-    
-    
-    @media(max-width:700px){
-      .timeline-detail-modal{
-        align-items:flex-start;
-        padding:14px;
-        overflow:auto;
-      }
-    
-      .timeline-detail-inner{
-        margin:24px 0;
-        padding:20px;
-        max-height:none;
-      }
-    
-      .timeline-detail-title{
-        font-size:20px;
-      }
-    
-        .timeline-detail-actions{
-          justify-content:stretch;
-        }
-      
-        .timeline-detail-actions a,
-        .timeline-detail-actions button{
-          width:100%;
-          min-height:44px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          text-align:center;
-          margin:0;
-        }
-    }
-
-    
 
     .read-more-wrap{
       display:flex;
@@ -692,29 +746,10 @@
       margin-bottom:34px;
     }
 
-    footer{
-      margin-top:64px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    footer a:hover{ color:var(--text); }
-
     @media(max-width:700px){
-      .wrap{ padding:36px 16px 32px; }
+      .wrap{
+        padding:36px 16px 32px;
+      }
 
       .site-header{
         align-items:flex-start;
@@ -723,8 +758,26 @@
       }
 
       .nav{
+        width:100%;
         gap:12px;
         font-size:12px;
+      }
+
+      .subnav{
+        top:calc(100% + 10px);
+        left:0;
+        right:auto;
+        max-width:calc(100vw - 32px);
+      }
+
+      .subnav-panel{
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+      }
+
+      .subnav-panel a{
+        font-size:13px;
+        white-space:normal;
       }
 
       #activeVoyageBanner{
@@ -744,7 +797,9 @@
         padding-left:0;
       }
 
-      h1{ font-size:31px; }
+      h1{
+        font-size:31px;
+      }
 
       .panel,
       .timeline-card{
@@ -775,6 +830,37 @@
 
       .timeline-symbol-label{
         font-size:9px;
+      }
+
+      .timeline-detail-modal{
+        align-items:flex-start;
+        padding:14px;
+        overflow:auto;
+      }
+
+      .timeline-detail-inner{
+        margin:24px 0;
+        padding:20px;
+        max-height:none;
+      }
+
+      .timeline-detail-title{
+        font-size:20px;
+      }
+
+      .timeline-detail-actions{
+        justify-content:stretch;
+      }
+
+      .timeline-detail-actions a,
+      .timeline-detail-actions button{
+        width:100%;
+        min-height:44px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        margin:0;
       }
     }
 
@@ -815,20 +901,54 @@
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
-     <nav class="nav">
-        <a href="/log/">Voyage Log</a>
-        <a href="/harbor-status/">Status</a>
-        <a href="/timeline/">Cabin Log</a>
-        <a href="/voyage-archive/">Archive</a>
-        <a href="/items/">Items</a>
-        <a href="/vessels/">Vessels</a>
-        <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
-        <a href="/help/">Help</a>
-        <a href="/account/">Account</a>
-        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      <nav class="nav" aria-label="メインナビゲーション">
+        <button class="nav-parent" type="button" data-menu="log">航海記録</button>
+        <button class="nav-parent" type="button" data-menu="items">漂着物</button>
+        <button class="nav-parent" type="button" data-menu="map">海図</button>
+        <button class="nav-parent" type="button" data-menu="letter">便り</button>
+        <button class="nav-parent" type="button" data-menu="help">港の歩き方</button>
+        <button class="nav-parent" type="button" data-menu="account">アカウント</button>
       </nav>
+
+      <div class="subnav" id="subnav" hidden>
+        <div class="subnav-panel" data-panel="log">
+          <a href="/log/">日々の記録</a>
+          <a href="/timeline/">船室記録</a>
+          <a href="/voyage-archive/">保管庫</a>
+          <a href="/harbor-status/">現在地</a>
+        </div>
+
+        <div class="subnav-panel" data-panel="items">
+          <a href="/items/">漂着物</a>
+          <a href="/vessels/">船</a>
+          <a href="/tickets/">切符</a>
+        </div>
+
+        <div class="subnav-panel" data-panel="map">
+          <a href="/map/">海図</a>
+        </div>
+
+        <div class="subnav-panel" data-panel="letter">
+          <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          <a href="/contact/">お問い合わせ</a>
+        </div>
+
+        <div class="subnav-panel" data-panel="help">
+          <a href="/help/">港の歩き方</a>
+          <a href="/help/first-voyage/">はじめての航海案内</a>
+          <a href="/help/faq/">よくある質問</a>
+          <a href="/help/#login">ログインできないとき</a>
+          <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+        </div>
+
+        <div class="subnav-panel" data-panel="account">
+          <a href="/account/">アカウント</a>
+          <a href="/billing/">お支払い</a>
+          <a href="/settings/">設定</a>
+          <a href="/legal/">法務情報</a>
+          <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+        </div>
+      </div>
     </header>
 
     <div id="activeVoyageBanner"></div>
@@ -845,6 +965,7 @@
         ここでは、港で起きた出来事を時系列で確認できます。<br>
         漂着物、チケット、船、海域の開放、特別航海の記録が、静かに積もっていきます。
       </p>
+
       <section class="panel">
         <div class="user" id="userStatus">
           ログイン状態を確認しています。
@@ -873,26 +994,7 @@
       </section>
     </main>
 
-    <footer>
-     <nav class="nav">
-      <a href="/log/">Voyage Log</a>
-      <a href="/harbor-status/">Status</a>
-      <a href="/timeline/">Cabin Log</a>
-      <a href="/voyage-archive/">Archive</a>
-      <a href="/items/">Items</a>
-      <a href="/vessels/">Vessels</a>
-      <a href="/map/">Map</a>
-      <a href="/tickets/">Tickets</a>
-      <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
-      <a href="/help/">Help</a>
-      <a href="/account/">Account</a>
-      <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
-    </nav>
-
-      <div>CELESTE CABIN LOG</div>
-    </footer>
-
- </div>
+  </div>
 
   <div class="timeline-detail-modal" id="timelineDetailModal" aria-hidden="true">
     <div class="timeline-detail-inner" role="dialog" aria-modal="true" aria-labelledby="timelineDetailTitle">
@@ -904,23 +1006,23 @@
       >
         ×
       </button>
-  
+
       <div class="timeline-detail-label" id="timelineDetailLabel">Cabin Log</div>
-  
+
       <h2 class="timeline-detail-title" id="timelineDetailTitle">
         Cabin Log
       </h2>
-  
+
       <div class="timeline-detail-date" id="timelineDetailDate"></div>
-  
+
       <div class="timeline-detail-image-wrap" id="timelineDetailImageWrap" style="display:none;">
         <img class="timeline-detail-image" id="timelineDetailImage" src="" alt="">
       </div>
-  
+
       <div class="timeline-detail-body" id="timelineDetailBody"></div>
-  
+
       <div class="timeline-detail-meta" id="timelineDetailMeta"></div>
-  
+
       <div class="timeline-detail-actions" id="timelineDetailActions">
         <button class="timeline-detail-ghost" id="timelineDetailCloseBtn" type="button">
           閉じる
@@ -928,7 +1030,7 @@
       </div>
     </div>
   </div>
-  
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -968,7 +1070,7 @@
 
     const initialTimelineLimit = 8;
     const seaChartImagePath = "/images/sea-chart-z.png";
-    
+
     const areaImagePaths = {
       harbor: "/images/areas/harbor.png",
       silent_water: "/images/areas/silent-water.png",
@@ -978,7 +1080,107 @@
       deep_current: "/images/areas/deep-current.png",
       unnamed_waters: "/images/areas/unnamed-waters.png"
     };
-    
+
+    function setupHarborNavigation(){
+      const header = document.querySelector(".site-header");
+      const subnav = document.getElementById("subnav");
+      const parents = document.querySelectorAll(".nav-parent");
+      const panels = document.querySelectorAll(".subnav-panel");
+
+      if(!header || !subnav || parents.length === 0){
+        return;
+      }
+
+      let openMenu = null;
+
+      function closeSubnav(){
+        openMenu = null;
+        subnav.hidden = true;
+        subnav.style.left = "";
+
+        panels.forEach((panel) => {
+          panel.style.display = "none";
+        });
+
+        parents.forEach((button) => {
+          button.classList.remove("is-active");
+          button.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      function positionSubnav(button){
+        const headerRect = header.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+
+        let left = buttonRect.left - headerRect.left;
+
+        const viewportPadding = 20;
+        const maxLeft = window.innerWidth - viewportPadding - 220;
+
+        if(left > maxLeft){
+          left = Math.max(viewportPadding, maxLeft);
+        }
+
+        subnav.style.left = left + "px";
+      }
+
+      function openSubnav(menuName, button){
+        openMenu = menuName;
+        subnav.hidden = false;
+
+        panels.forEach((panel) => {
+          panel.style.display =
+            panel.dataset.panel === menuName ? "flex" : "none";
+        });
+
+        parents.forEach((parentButton) => {
+          const isActive = parentButton.dataset.menu === menuName;
+          parentButton.classList.toggle("is-active", isActive);
+          parentButton.setAttribute("aria-expanded", String(isActive));
+        });
+
+        positionSubnav(button);
+      }
+
+      parents.forEach((button) => {
+        button.setAttribute("aria-expanded", "false");
+
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+
+          const menuName = button.dataset.menu;
+
+          if(openMenu === menuName){
+            closeSubnav();
+          }else{
+            openSubnav(menuName, button);
+          }
+        });
+      });
+
+      subnav.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", () => {
+        closeSubnav();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if(event.key === "Escape"){
+          closeSubnav();
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        closeSubnav();
+      });
+
+      closeSubnav();
+    }
+
+    setupHarborNavigation();
+
     function areaImagePath(areaKey){
       return areaImagePaths[areaKey] || seaChartImagePath;
     }
@@ -1034,7 +1236,7 @@
 
     function isSpecialVoyageEvent(type){
       const normalized = normalizeEventType(type);
-    
+
       return normalized === "special_voyage_find" ||
         normalized === "special_voyage_started" ||
         normalized === "special_voyage_ended" ||
@@ -1054,34 +1256,34 @@
         deep_current: "第六章　深潮",
         unnamed_waters: "第七章　名もなき海"
       };
-    
+
       return titles[areaKey] || fallbackName || "開かれた海域";
     }
-    
+
     function areaChapterAfterglow(areaKey){
       const messages = {
         harbor:
           "ここから、すべての航海が始まります。\n\n港はまだ岸辺に近く、波も低いままです。\nけれど、ここに記録を残すことから、静かな第一章は始まっています。",
-    
+
         silent_water:
           "港の外へ出た船が、はじめて低い波に触れる章です。\n\n岸の灯りはまだ遠くありません。\nそれでも、船はもう港の内側だけには留まっていません。",
-    
+
         lighthouse_coast:
           "遠くの灯台が、進む方角を思い出させる章です。\n\nその光は、近づくためだけにあるのではありません。\n見失わないために、海の向こうで静かに灯っています。",
-    
+
         fog_sea:
           "霧が、海と空の境目を静かに隠す章です。\n\n見えないからといって、道が消えたわけではありません。\nこの章では、確信よりも継続が頼りになります。",
-    
+
         moonlit_sea:
           "月明かりが、水面に細い道を描く章です。\n\nどこへ続くかは、まだ分かりません。\nけれど、その光は確かに海の上へ落ちています。",
-    
+
         deep_current:
           "見えている波よりも、深潮の流れを感じる章です。\n\n大きく舵を切るよりも、ただ保つことが必要になる海です。\n静けさの下で、船はゆっくりと運ばれていきます。",
-    
+
         unnamed_waters:
           "海図の外側へ向かう章です。\n\nここは終点ではありません。\nまだ名前のない海が、次の航海の入口として静かに開いています。"
       };
-    
+
       return messages[areaKey] || "この出来事は、航海の中で静かに開かれた節目です。\n\n港の記録に、またひとつ新しい章が加わりました。";
     }
 
@@ -1107,15 +1309,15 @@
       if(normalized === "special_voyage_started"){
         return "特別航海 開始";
       }
-      
+
       if(normalized === "special_voyage_ended" || normalized === "special_voyage_expired"){
         return "特別航海 終了";
       }
-      
+
       if(normalized === "special_voyage_find"){
         return "特別航海の漂着物";
       }
-      
+
       if(isSpecialVoyageEvent(normalized)){
         return "特別航海";
       }
@@ -1251,52 +1453,52 @@
       timelineEventStore.set(id, event);
       return id;
     }
-    
+
     function timelineDetailAction(event){
       const normalized = normalizeEventType(event.event_type);
-    
+
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         return {
           href: "/map/",
           label: "この海の記憶を見る"
         };
       }
-    
+
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return {
           href: "/vessels/",
           label: "この船の記録を見る"
         };
       }
-    
+
       if(normalized === "harbor_find" || normalized === "item_found" || normalized === "special_voyage_find"){
         return {
           href: "/items/",
           label: "この漂着物を見る"
         };
       }
-    
+
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return {
           href: "/tickets/",
           label: "航海券を見る"
         };
       }
-    
+
       if(isSpecialVoyageEvent(normalized)){
         return {
           href: "/log/",
           label: "Voyage Log へ"
         };
       }
-    
+
       return null;
     }
-    
+
     function timelineDetailTitleForEvent(event){
       const normalized = normalizeEventType(event.event_type);
       const metadata = event.metadata || {};
-    
+
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
         const fallbackName =
@@ -1304,39 +1506,39 @@
           metadata.sea_area_name_ja ||
           event.title ||
           "開かれた海域";
-    
+
         return areaChapterTitle(areaKey, fallbackName);
       }
-    
+
       return event.title || eventTypeLabel(event.event_type);
     }
-    
+
     function timelineDetailBodyForEvent(event){
       const normalized = normalizeEventType(event.event_type);
       const metadata = event.metadata || {};
-    
-     if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-      const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
-    
-      return areaChapterAfterglow(areaKey);
-    }
-    
+
+      if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
+        const areaKey = metadata.area_key || metadata.sea_area_key || event.event_key || "";
+
+        return areaChapterAfterglow(areaKey);
+      }
+
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return event.body || "新しい船が、港に姿を現しました。";
       }
-    
+
       if(normalized === "harbor_find" || normalized === "item_found"){
         return event.body || "港に、何かが静かに流れ着きました。";
       }
-    
+
       if(normalized === "special_voyage_find"){
         return event.body || "特別航海の途中で、漂着物が見つかりました。";
       }
-    
+
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return event.body || "小さな航海券が、港に流れ着きました。";
       }
-    
+
       return event.body || "この出来事は、Cabin Log に静かに残されています。";
     }
 
@@ -1372,8 +1574,7 @@
       if(!event || !timelineDetailModal){
         return;
       }
-    
-      const typeClass = eventClassName(event.event_type);
+
       const label = eventTypeLabel(event.event_type);
       const title = timelineDetailTitleForEvent(event);
       const body = timelineDetailBodyForEvent(event);
@@ -1384,30 +1585,30 @@
         metadata.sea_area_key ||
         event.event_key ||
         "";
-      
+
       const imagePath =
         normalized === "sea_area_opened" || normalized === "sea_area_unlocked"
           ? areaImagePath(areaKey)
           : timelineImagePath(event);
       const imageAlt = timelineImageAlt(event);
       const action = timelineDetailAction(event);
-    
+
       if(timelineDetailLabel){
         timelineDetailLabel.textContent = label;
       }
-    
+
       if(timelineDetailTitle){
         timelineDetailTitle.textContent = title;
       }
-    
+
       if(timelineDetailDate){
         timelineDetailDate.textContent = formatTimelineDate(event.created_at);
       }
-    
+
       if(timelineDetailBody){
         timelineDetailBody.textContent = body;
       }
-    
+
       if(timelineDetailImageWrap && timelineDetailImage){
         if(imagePath){
           timelineDetailImage.src = imagePath;
@@ -1423,18 +1624,18 @@
           timelineDetailImageWrap.style.display = "none";
         }
       }
-    
+
       if(timelineDetailMeta){
         const eventKey = event.event_key
           ? `<span class="timeline-detail-chip">${escapeHtml(event.event_key)}</span>`
           : "";
-      
+
         timelineDetailMeta.innerHTML = `
           <span class="timeline-detail-chip">${escapeHtml(label)}</span>
           ${eventKey}
         `;
       }
-    
+
       if(timelineDetailActions){
         timelineDetailActions.innerHTML = `
           <button class="timeline-detail-ghost" id="timelineDetailCloseBtnDynamic" type="button">
@@ -1450,32 +1651,32 @@
               : ""
           }
         `;
-    
+
         const closeBtn = document.getElementById("timelineDetailCloseBtnDynamic");
-    
+
         if(closeBtn){
           closeBtn.addEventListener("click", closeTimelineDetailModal);
         }
       }
-    
+
       timelineDetailModal.classList.add("visible");
       timelineDetailModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
-    
+
     function closeTimelineDetailModal(){
       if(!timelineDetailModal){
         return;
       }
-    
+
       timelineDetailModal.classList.remove("visible");
       timelineDetailModal.setAttribute("aria-hidden", "true");
-    
+
       if(timelineDetailImage){
         timelineDetailImage.src = "";
         timelineDetailImage.alt = "";
       }
-    
+
       document.body.style.overflow = "";
     }
 
@@ -1742,8 +1943,8 @@
         : events.slice(0, initialTimelineLimit);
 
       const itemsHtml = visibleEvents.map(event => {
-      const typeClass = eventClassName(event.event_type);
-      const eventId = registerTimelineEvent(event);
+        const typeClass = eventClassName(event.event_type);
+        const eventId = registerTimelineEvent(event);
 
         return `
           <div
@@ -1817,64 +2018,66 @@
       window.location.replace("/");
     }
 
-    logoutLink.addEventListener("click", function(event){
-      event.preventDefault();
-    
-      const confirmed = window.confirm(
-        "ログアウトしますか？\n\n" +
-        "港を離れると、もう一度入るにはGoogleログインが必要です。\n" +
-        "進行中の特別航海がある場合は、静かに閉じられます。"
-      );
-    
-      if(!confirmed){
-        return;
-      }
-    
-      logout();
-    });
-    
+    if(logoutLink){
+      logoutLink.addEventListener("click", function(event){
+        event.preventDefault();
+
+        const confirmed = window.confirm(
+          "ログアウトしますか？\n\n" +
+          "港を離れると、もう一度入るにはGoogleログインが必要です。\n" +
+          "進行中の特別航海がある場合は、静かに閉じられます。"
+        );
+
+        if(!confirmed){
+          return;
+        }
+
+        logout();
+      });
+    }
+
     timelineEl.addEventListener("click", function(event){
       const item = event.target.closest("[data-timeline-event-id]");
-    
+
       if(!item){
         return;
       }
-    
+
       const storedEvent = timelineEventStore.get(item.dataset.timelineEventId);
-    
+
       if(storedEvent){
         openTimelineDetailModal(storedEvent);
       }
     });
-    
+
     timelineEl.addEventListener("keydown", function(event){
       if(event.key !== "Enter" && event.key !== " "){
         return;
       }
-    
+
       const item = event.target.closest("[data-timeline-event-id]");
-    
+
       if(!item){
         return;
       }
-    
+
       event.preventDefault();
-    
+
       const storedEvent = timelineEventStore.get(item.dataset.timelineEventId);
-    
+
       if(storedEvent){
         openTimelineDetailModal(storedEvent);
       }
     });
-    
+
     if(timelineDetailClose){
       timelineDetailClose.addEventListener("click", closeTimelineDetailModal);
     }
-    
+
     if(timelineDetailCloseBtn){
       timelineDetailCloseBtn.addEventListener("click", closeTimelineDetailModal);
     }
-    
+
     if(timelineDetailModal){
       timelineDetailModal.addEventListener("click", function(event){
         if(event.target === timelineDetailModal){
@@ -1919,7 +2122,7 @@
       }
     });
 
-        document.addEventListener("keydown", function(event){
+    document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
         closeTimelineDetailModal();
       }
