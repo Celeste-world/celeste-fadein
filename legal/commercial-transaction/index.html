@@ -80,6 +80,7 @@
       color:var(--text);
       letter-spacing:.04em;
       text-decoration:none;
+      white-space:nowrap;
     }
 
     .nav{
@@ -96,6 +97,98 @@
 
     .nav a:hover{
       color:var(--text);
+    }
+
+    .global-nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .nav-group{
+      position:relative;
+    }
+
+    .global-nav .nav-top{
+      appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      color:var(--muted);
+      font:inherit;
+      line-height:1.7;
+      cursor:pointer;
+    }
+
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
+      color:var(--text);
+      background:transparent;
+      outline:none;
+    }
+
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
     }
 
     .page-head{
@@ -224,34 +317,6 @@
       border-color:rgba(169,183,255,.45);
     }
 
-    footer{
-      margin-top:40px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-      color:var(--muted);
-      font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    footer a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    footer a:hover{
-      color:var(--text);
-    }
-
     @media(max-width:640px){
       body{
         padding:28px 16px;
@@ -263,9 +328,17 @@
         margin-bottom:34px;
       }
 
-      .nav{
-        gap:12px;
+      .global-nav{
+        width:100%;
+        justify-content:flex-start;
+        gap:10px 14px;
         font-size:12px;
+      }
+
+      .nav-menu{
+        left:0;
+        transform:none;
+        min-width:190px;
       }
 
       h1{
@@ -306,17 +379,62 @@
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
-      <nav class="nav">
-        <a href="/log/">Voyage Log</a>
-        <a href="/harbor-status/">Status</a>
-        <a href="/timeline/">Cabin Log</a>
-        <a href="/voyage-archive/">Archive</a>
-        <a href="/items/">Items</a>
-        <a href="/vessels/">Vessels</a>
-        <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
-        <a href="/account/">Account</a>
+      <nav class="global-nav" aria-label="Celeste Harbor navigation">
+        <div class="nav-group">
+          <button class="nav-top" type="button">航海記録</button>
+          <div class="nav-menu">
+            <a href="/log/">日々の記録</a>
+            <a href="/timeline/">船室記録</a>
+            <a href="/voyage-archive/">保管庫</a>
+            <a href="/harbor-status/">現在地</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">漂着物</button>
+          <div class="nav-menu">
+            <a href="/items/">漂着物</a>
+            <a href="/vessels/">船</a>
+            <a href="/tickets/">切符</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">海図</button>
+          <div class="nav-menu">
+            <a href="/map/">海図</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">便り</button>
+          <div class="nav-menu">
+            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">港の歩き方</button>
+          <div class="nav-menu">
+            <a href="/help/">港の歩き方</a>
+            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/faq/">よくある質問</a>
+            <a href="/help/#login">ログインできないとき</a>
+            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">アカウント</button>
+          <div class="nav-menu">
+            <a href="/account/">アカウント</a>
+            <a href="/billing/">お支払い</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
       </nav>
     </header>
 
@@ -463,27 +581,49 @@
         <div class="back-links">
           <a href="/harbor-letter/">Harbor Letter</a>
           <a href="/pricing/">Harbor Store</a>
-          <a href="/log/">Voyage Log</a>
+          <a href="/billing/">お支払い</a>
+          <a href="/legal/terms/">利用規約</a>
+          <a href="/legal/privacy/">プライバシーポリシー</a>
         </div>
       </section>
     </main>
 
-    <footer>
-      <footer>
-  <div class="footer-links">
-    <a href="/pricing/">Harbor Store</a>
-    <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
-    <a href="/legal/terms/">利用規約</a>
-    <a href="/legal/privacy/">プライバシーポリシー</a>
-    <a href="/harbor-letter/" class="nav-letter-link">Letter</a>
   </div>
 
-  <div>CELESTE HARBOR</div>
-</footer>
+  <script>
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
+      });
+    }
 
-      <div>CELESTE HARBOR</div>
-    </footer>
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
 
-  </div>
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+
+        closeNavMenus();
+
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
+  </script>
 </body>
 </html>
