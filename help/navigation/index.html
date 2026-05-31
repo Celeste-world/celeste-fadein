@@ -37,38 +37,6 @@
       margin:0 auto;
     }
 
-    .site-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      margin-bottom:44px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .brand{
-      color:var(--text);
-      letter-spacing:.04em;
-      text-decoration:none;
-    }
-
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
     h1{
       font-size:32px;
       font-weight:500;
@@ -191,48 +159,9 @@
       color:var(--text);
     }
 
-    footer{
-      margin-top:40px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-      color:var(--muted);
-      font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    footer a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    footer a:hover{
-      color:var(--text);
-    }
-
     @media(max-width:640px){
       body{
         padding:28px 16px;
-      }
-
-      .site-header{
-        align-items:flex-start;
-        flex-direction:column;
-        margin-bottom:34px;
-      }
-
-      .nav{
-        gap:12px;
-        font-size:12px;
       }
 
       h1{
@@ -253,27 +182,15 @@
       }
     }
   </style>
+
+  <link rel="stylesheet" href="/assets/css/common-nav.css">
+  <script src="/assets/js/common-nav.js" defer></script>
 </head>
 
 <body>
   <div class="wrap">
 
-    <header class="site-header">
-      <a class="brand" href="/">Celeste Harbor</a>
-
-      <nav class="nav">
-        <a href="/log/">Voyage Log</a>
-        <a href="/harbor-status/">Status</a>
-        <a href="/timeline/">Cabin Log</a>
-        <a href="/voyage-archive/">Archive</a>
-        <a href="/items/">Items</a>
-        <a href="/vessels/">Vessels</a>
-        <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/harbor-letter/">Letter</a>
-        <a href="/account/">Account</a>
-      </nav>
-    </header>
+    <div id="siteHeader"></div>
 
     <main>
       <h1>Navigation Guide</h1>
@@ -285,12 +202,12 @@
 
       <section class="panel">
         <div class="section-label">First Voyage Guide</div>
-      
+
         <div class="guide-list">
           <a class="guide-item" href="/help/first-voyage/">
             <div class="guide-title">
-              <div class="guide-name">First Voyage Guide</div>
-              <div class="guide-plain">はじめての航海案内</div>
+              <div class="guide-name">はじめての航海案内</div>
+              <div class="guide-plain">最初に読む案内</div>
             </div>
             <p class="guide-text">
               Celeste Harbor の基本的な使い方を、初回チュートリアルと同じ流れで確認できます。
@@ -299,7 +216,6 @@
           </a>
         </div>
       </section>
-      
 
       <section class="panel">
         <div class="section-label">Main Navigation</div>
@@ -307,7 +223,7 @@
         <div class="guide-list">
           <a class="guide-item" href="/log/">
             <div class="guide-title">
-              <div class="guide-name">Voyage Log</div>
+              <div class="guide-name">日々の記録</div>
               <div class="guide-plain">今日の言葉を残す場所</div>
             </div>
             <p class="guide-text">
@@ -318,7 +234,7 @@
 
           <a class="guide-item" href="/harbor-status/">
             <div class="guide-title">
-              <div class="guide-name">Status</div>
+              <div class="guide-name">現在地</div>
               <div class="guide-plain">港の状態を見る場所</div>
             </div>
             <p class="guide-text">
@@ -329,7 +245,7 @@
 
           <a class="guide-item" href="/timeline/">
             <div class="guide-title">
-              <div class="guide-name">Cabin Log</div>
+              <div class="guide-name">船室記録</div>
               <div class="guide-plain">港で起きた出来事の履歴</div>
             </div>
             <p class="guide-text">
@@ -340,7 +256,7 @@
 
           <a class="guide-item" href="/voyage-archive/">
             <div class="guide-title">
-              <div class="guide-name">Archive</div>
+              <div class="guide-name">保管庫</div>
               <div class="guide-plain">航海記録を探す・振り返る場所</div>
             </div>
             <p class="guide-text">
@@ -351,8 +267,8 @@
 
           <a class="guide-item" href="/items/">
             <div class="guide-title">
-              <div class="guide-name">Items</div>
-              <div class="guide-plain">漂着物を確認する場所</div>
+              <div class="guide-name">漂着物</div>
+              <div class="guide-plain">見つかったものを確認する場所</div>
             </div>
             <p class="guide-text">
               航海記録のあとに、ときどき港へ流れ着く漂着物を確認する場所です。
@@ -362,8 +278,8 @@
 
           <a class="guide-item" href="/vessels/">
             <div class="guide-title">
-              <div class="guide-name">Vessels</div>
-              <div class="guide-plain">航海をともにする船</div>
+              <div class="guide-name">船</div>
+              <div class="guide-plain">航海をともにする存在</div>
             </div>
             <p class="guide-text">
               出会った船を確認するページです。船は、航海の中で少しずつ港へ加わっていきます。
@@ -373,7 +289,7 @@
 
           <a class="guide-item" href="/map/">
             <div class="guide-title">
-              <div class="guide-name">Map</div>
+              <div class="guide-name">海図</div>
               <div class="guide-plain">海域と気配を見る場所</div>
             </div>
             <p class="guide-text">
@@ -385,7 +301,7 @@
 
           <a class="guide-item" href="/tickets/">
             <div class="guide-title">
-              <div class="guide-name">Tickets</div>
+              <div class="guide-name">切符</div>
               <div class="guide-plain">深く振り返るための券</div>
             </div>
             <p class="guide-text">
@@ -396,7 +312,7 @@
 
           <a class="guide-item" href="/harbor-letter/">
             <div class="guide-title">
-              <div class="guide-name">Letter</div>
+              <div class="guide-name">便り</div>
               <div class="guide-plain">問い合わせと返信</div>
             </div>
             <p class="guide-text">
@@ -407,11 +323,46 @@
 
           <a class="guide-item" href="/account/">
             <div class="guide-title">
-              <div class="guide-name">Account</div>
-              <div class="guide-plain">アカウント確認</div>
+              <div class="guide-name">アカウント</div>
+              <div class="guide-plain">登録情報の確認</div>
             </div>
             <p class="guide-text">
               ログイン状態や、アカウントに関係する情報を確認するページです。
+            </p>
+            <div class="login-note">ログイン後に開けます。</div>
+          </a>
+
+          <a class="guide-item" href="/billing/">
+            <div class="guide-title">
+              <div class="guide-name">お支払い</div>
+              <div class="guide-plain">契約と支払いの確認</div>
+            </div>
+            <p class="guide-text">
+              有料機能の契約状況や、お支払いに関する情報を確認するページです。
+              現在は準備中の機能を含みます。
+            </p>
+            <div class="login-note">ログイン後に開けます。</div>
+          </a>
+
+          <a class="guide-item" href="/settings/">
+            <div class="guide-title">
+              <div class="guide-name">設定</div>
+              <div class="guide-plain">表示や利用設定</div>
+            </div>
+            <p class="guide-text">
+              今後、表示や通知などの設定を変更するためのページとして使用します。
+              現在は準備中の機能を含みます。
+            </p>
+            <div class="login-note">ログイン後に開けます。</div>
+          </a>
+
+          <a class="guide-item" href="/legal/">
+            <div class="guide-title">
+              <div class="guide-name">法務情報</div>
+              <div class="guide-plain">規約・方針の確認</div>
+            </div>
+            <p class="guide-text">
+              利用規約、プライバシーポリシー、特定商取引法に基づく表記、返金・キャンセル方針などを確認する場所です。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -427,16 +378,6 @@
         ← 前のページに戻る
       </a>
     </main>
-
-    <footer>
-      <div class="footer-links">
-        <a href="/help/">Help Center</a>
-        <a href="/log/">Voyage Log</a>
-        <a href="/account/">Account</a>
-      </div>
-
-      <div>CELESTE HARBOR</div>
-    </footer>
 
   </div>
 
