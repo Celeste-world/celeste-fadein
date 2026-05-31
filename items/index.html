@@ -118,14 +118,17 @@
         position:relative;
       }
   
-      .nav-top{
+      ..nav-top{
         display:inline-flex;
         align-items:center;
         color:var(--muted);
         padding:8px 0;
-        cursor:default;
+        cursor:pointer;
+        background:none;
+        border:0;
+        font:inherit;
       }
-  
+      
       .nav-top:hover{
         color:var(--text);
       }
@@ -147,8 +150,7 @@
         z-index:80;
       }
   
-      .nav-group:hover .nav-menu,
-      .nav-group:focus-within .nav-menu{
+      .nav-group.open .nav-menu{
         display:block;
       }
   
@@ -988,7 +990,7 @@
     
       <nav class="global-nav" aria-label="Celeste Harbor navigation">
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">航海記録</span>
+          <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
             <a href="/timeline/">船室記録</a>
@@ -998,7 +1000,7 @@
         </div>
     
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">漂着物</span>
+          <button class="nav-top" type="button">漂着物</button>
           <div class="nav-menu">
             <a href="/items/">漂着物</a>
             <a href="/vessels/">船</a>
@@ -1007,14 +1009,14 @@
         </div>
     
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">海図</span>
+          <button class="nav-top" type="button">海図</button>
           <div class="nav-menu">
             <a href="/map/">海図</a>
           </div>
         </div>
     
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">便り</span>
+          <button class="nav-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
             <a href="/contact/">お問い合わせ</a>
@@ -1022,7 +1024,7 @@
         </div>
     
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">港の歩き方</span>
+          <button class="nav-top" type="button">港の歩き方</button>
           <div class="nav-menu">
             <a href="/help/">港の歩き方</a>
             <a href="/help/first-voyage/">はじめての航海案内</a>
@@ -1033,7 +1035,7 @@
         </div>
     
         <div class="nav-group">
-          <span class="nav-top" tabindex="0">アカウント</span>
+          <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
             <a href="/billing/">お支払い</a>
@@ -2347,6 +2349,40 @@
 
       window.location.replace("/");
     }
+
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
+      });
+    }
+    
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+    
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+    
+        closeNavMenus();
+    
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+    
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+    
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
 
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
