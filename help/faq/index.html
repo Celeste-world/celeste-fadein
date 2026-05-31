@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>よくある質問 – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --warm:#ffe3a3;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    h1{
+      font-size:32px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 28px;
+    }
+
+    .panel{
+      background:rgba(10,14,28,.72);
+      border:1px solid rgba(70,84,132,.42);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+      margin-bottom:24px;
+    }
+
+    .section-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:14px;
+    }
+
+    .faq-list{
+      display:grid;
+      gap:16px;
+    }
+
+    .faq-item{
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(70,84,132,.30);
+      background:rgba(255,255,255,.018);
+    }
+
+    .faq-question{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.8;
+      margin:0 0 8px;
+      letter-spacing:.02em;
+    }
+
+    .faq-answer{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      margin:0;
+    }
+
+    .faq-answer a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+
+    .faq-answer a:hover{
+      color:var(--text);
+      text-decoration:underline;
+      text-underline-offset:.25em;
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+      margin-top:8px;
+    }
+
+    .back-link:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      h1{
+        font-size:28px;
+      }
+
+      .panel{
+        padding:20px;
+      }
+
+      .faq-item{
+        padding:14px;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="/assets/css/common-nav.css">
+  <script src="/assets/js/common-nav.js" defer></script>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div id="siteHeader"></div>
+
+    <main>
+      <h1>よくある質問</h1>
+
+      <p class="lead">
+        Celeste Harbor を使う中で、迷いやすいことをまとめています。<br>
+        必要なところだけ、静かに確認してください。
+      </p>
+
+      <section class="panel">
+        <div class="section-label">FAQ</div>
+
+        <div class="faq-list">
+          <article class="faq-item">
+            <h2 class="faq-question">Q. Celeste Harbor は何をする場所ですか？</h2>
+            <p class="faq-answer">
+              日々の言葉を、静かな航海記録として残す場所です。
+              長い文章でなくても、一言だけでも記録できます。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 何を書けばいいですか？</h2>
+            <p class="faq-answer">
+              今日あったこと、感じたこと、まだ言葉になっていない気配などを自由に書けます。
+              うまく整えようとしなくても大丈夫です。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 日々の記録はどこに残りますか？</h2>
+            <p class="faq-answer">
+              保存した記録は「保管庫」に残ります。
+              月ごとに振り返ったり、あとから読み返したりできます。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 船室記録とは何ですか？</h2>
+            <p class="faq-answer">
+              船室記録は、Celeste Harbor 内で起きた出来事の履歴です。
+              記録、漂着物、船、切符などの動きが時系列で積み重なります。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 漂着物とは何ですか？</h2>
+            <p class="faq-answer">
+              航海記録を残したあと、ときどき港へ流れ着く小さなものです。
+              いつも見つかるわけではなく、静かな偶然として扱われます。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 船や切符は何に使いますか？</h2>
+            <p class="faq-answer">
+              船は航海をともにする存在、切符は少し深く振り返るためのきっかけです。
+              必要になったときだけ確認すれば大丈夫です。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. Googleログインができません。</h2>
+            <p class="faq-answer">
+              LINE・Instagram・X などのアプリ内ブラウザでは、Googleログインが進めない場合があります。
+              Safari または Chrome などの通常ブラウザで開き直してください。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. アプリ内ブラウザとは何ですか？</h2>
+            <p class="faq-answer">
+              LINEなどのアプリ内でURLを開いたときに表示される簡易ブラウザのことです。
+              Googleログインでは制限されることがあるため、通常ブラウザで開くことをおすすめします。
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h2 class="faq-question">Q. 問い合わせはどこからできますか？</h2>
+            <p class="faq-answer">
+              ヘッダーの「便り」から「お問い合わせ」へ進んでください。
+              必要な内容を確認したうえで、運営へ連絡できます。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <a class="back-link" href="/help/">
+        ← 港の歩き方に戻る
+      </a>
+    </main>
+
+  </div>
+</body>
+</html>
