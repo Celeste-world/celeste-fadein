@@ -163,19 +163,23 @@
 
   async function setupCommonLogout(){
     const logoutLink = document.getElementById("logoutLink");
-
+  
     if(!logoutLink){
       return;
     }
-
+  
+    if(window.disableCommonLogout === true){
+      return;
+    }
+  
     logoutLink.addEventListener("click", async (event) => {
       event.preventDefault();
-
+  
       try{
         if(window.client && window.client.auth){
           await window.client.auth.signOut();
         }
-
+  
         location.href = "/";
       }catch(error){
         console.error("logout failed:", error);
