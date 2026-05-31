@@ -118,19 +118,36 @@
         position:relative;
       }
   
-      ..nav-top{
+      .global-nav .nav-top{
+        appearance:none;
+        -webkit-appearance:none;
         display:inline-flex;
         align-items:center;
-        color:var(--muted);
+        justify-content:flex-start;
+        width:auto;
+        min-width:0;
         padding:8px 0;
-        cursor:pointer;
-        background:none;
+        margin:0;
         border:0;
+        border-radius:0;
+        background:transparent;
+        box-shadow:none;
+        color:var(--muted);
         font:inherit;
+        line-height:1.7;
+        cursor:pointer;
       }
-      
-      .nav-top:hover{
+
+      .global-nav .nav-top:hover,
+      .global-nav .nav-top:focus{
         color:var(--text);
+        background:transparent;
+        outline:none;
+      }
+
+      .global-nav .nav-top:focus-visible{
+        outline:1px solid rgba(169,183,255,.45);
+        outline-offset:4px;
       }
   
       .nav-menu{
