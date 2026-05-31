@@ -1289,21 +1289,177 @@
       font-weight:500;
     }
 
-        
+         /* Common Header / Dropdown Navigation */
+    
+    .site-header{
+      position:relative;
+      flex-wrap:wrap;
+    }
+    
+    .nav{
+      position:relative;
+    }
+    
+    .nav-parent{
+      appearance:none;
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      font:inherit;
+      padding:0;
+      cursor:pointer;
+    }
+    
+    .nav-parent:hover,
+    .nav-parent.is-active{
+      color:var(--text);
+    }
+    
+    .nav-parent.is-active{
+      text-decoration:underline;
+      text-underline-offset:.25em;
+    }
+    
+    .subnav{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      z-index:200;
+      width:max-content;
+      max-width:min(520px, calc(100vw - 40px));
+    }
+    
+    .subnav-panel{
+      display:none;
+      position:relative;
+      flex-direction:column;
+      gap:2px;
+      min-width:180px;
+      padding:12px;
+      border:1px solid rgba(169,183,255,.28);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
+        rgba(10,14,28,.98);
+      box-shadow:0 18px 48px rgba(0,0,0,.46);
+      backdrop-filter:blur(8px);
+    }
+    
+    .subnav-panel::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.28);
+      border-top:1px solid rgba(169,183,255,.28);
+      background:rgba(10,14,28,.98);
+    }
+    
+    .subnav-panel a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+      line-height:1.7;
+      padding:7px 10px;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+    
+    .subnav-panel a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.045);
+    }
+    
+    @media(max-width:640px){
+      .site-header{
+        position:relative;
+      }
+    
+      .nav{
+        width:100%;
+      }
+    
+      .subnav{
+        top:calc(100% + 10px);
+        left:0;
+        right:auto;
+        max-width:calc(100vw - 32px);
+      }
+    
+      .subnav-panel{
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+      }
+    
+      .subnav-panel a{
+        font-size:13px;
+        white-space:normal;
+      }
+    }   
     
   </style>
-
-  <link rel="stylesheet" href="/assets/css/common-nav.css">
-  <script src="/assets/js/common-nav.js" defer></script>
-  
     
 </head>
 
 <body class="auth-locked">
   <div class="wrap">
 
-    <div id="siteHeader"></div>
-
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+    
+      <nav class="nav" aria-label="メインナビゲーション">
+        <button class="nav-parent" type="button" data-menu="log">航海記録</button>
+        <button class="nav-parent" type="button" data-menu="items">漂着物</button>
+        <button class="nav-parent" type="button" data-menu="map">海図</button>
+        <button class="nav-parent" type="button" data-menu="letter">便り</button>
+        <button class="nav-parent" type="button" data-menu="help">港の歩き方</button>
+        <button class="nav-parent" type="button" data-menu="account">アカウント</button>
+      </nav>
+    
+      <div class="subnav" id="subnav" hidden>
+        <div class="subnav-panel" data-panel="log">
+          <a href="/log/">日々の記録</a>
+          <a href="/timeline/">船室記録</a>
+          <a href="/voyage-archive/">保管庫</a>
+          <a href="/harbor-status/">現在地</a>
+        </div>
+    
+        <div class="subnav-panel" data-panel="items">
+          <a href="/items/">漂着物</a>
+          <a href="/vessels/">船</a>
+          <a href="/tickets/">切符</a>
+        </div>
+    
+        <div class="subnav-panel" data-panel="map">
+          <a href="/map/">海図</a>
+        </div>
+    
+        <div class="subnav-panel" data-panel="letter">
+          <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          <a href="/contact/">お問い合わせ</a>
+        </div>
+    
+        <div class="subnav-panel" data-panel="help">
+          <a href="/help/">港の歩き方</a>
+          <a href="/help/first-voyage/">はじめての航海案内</a>
+          <a href="/help/faq/">よくある質問</a>
+          <a href="/help/#login">ログインできないとき</a>
+          <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+        </div>
+    
+        <div class="subnav-panel" data-panel="account">
+          <a href="/account/">アカウント</a>
+          <a href="/billing/">お支払い</a>
+          <a href="/settings/">設定</a>
+          <a href="/legal/">法務情報</a>
+          <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+        </div>
+      </div>
+    </header>
+    
     <div id="activeVoyageBanner"></div>
 
     <main>
@@ -1629,9 +1785,7 @@
 
   </div>
 
-  <script>
-    window.disableCommonLogout = true;
-    
+  <script>    
     async function checkUnreadHarborLetterReplies(){
       document.body.classList.remove("has-unread-letter");
     
@@ -1805,8 +1959,109 @@
 
     const saveBtn = document.getElementById("saveBtn");
     const loginBtn = document.getElementById("loginBtn");
+
+    function setupHarborNavigation(){
+      const header = document.querySelector(".site-header");
+      const subnav = document.getElementById("subnav");
+      const parents = document.querySelectorAll(".nav-parent");
+      const panels = document.querySelectorAll(".subnav-panel");
+    
+      if(!header || !subnav || parents.length === 0){
+        return;
+      }
+    
+      let openMenu = null;
+    
+      function closeSubnav(){
+        openMenu = null;
+        subnav.hidden = true;
+        subnav.style.left = "";
+    
+        panels.forEach((panel) => {
+          panel.style.display = "none";
+        });
+    
+        parents.forEach((button) => {
+          button.classList.remove("is-active");
+          button.setAttribute("aria-expanded", "false");
+        });
+      }
+    
+      function positionSubnav(button){
+        const headerRect = header.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+    
+        let left = buttonRect.left - headerRect.left;
+    
+        const viewportPadding = 20;
+        const maxLeft = window.innerWidth - viewportPadding - 220;
+    
+        if(left > maxLeft){
+          left = Math.max(viewportPadding, maxLeft);
+        }
+    
+        subnav.style.left = left + "px";
+      }
+    
+      function openSubnav(menuName, button){
+        openMenu = menuName;
+        subnav.hidden = false;
+    
+        panels.forEach((panel) => {
+          panel.style.display =
+            panel.dataset.panel === menuName ? "flex" : "none";
+        });
+    
+        parents.forEach((parentButton) => {
+          const isActive = parentButton.dataset.menu === menuName;
+          parentButton.classList.toggle("is-active", isActive);
+          parentButton.setAttribute("aria-expanded", String(isActive));
+        });
+    
+        positionSubnav(button);
+      }
+    
+      parents.forEach((button) => {
+        button.setAttribute("aria-expanded", "false");
+    
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+    
+          const menuName = button.dataset.menu;
+    
+          if(openMenu === menuName){
+            closeSubnav();
+          }else{
+            openSubnav(menuName, button);
+          }
+        });
+      });
+    
+      subnav.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+    
+      document.addEventListener("click", () => {
+        closeSubnav();
+      });
+    
+      document.addEventListener("keydown", (event) => {
+        if(event.key === "Escape"){
+          closeSubnav();
+        }
+      });
+    
+      window.addEventListener("resize", () => {
+        closeSubnav();
+      });
+    
+      closeSubnav();
+    }
+    
+    setupHarborNavigation();
         
     const logoutLink = document.getElementById("logoutLink");
+    
     const deleteAllBtn = document.getElementById("deleteAllBtn");
     const logsEl = document.getElementById("logs");
     const logsCount = document.getElementById("logsCount");
