@@ -43,7 +43,8 @@
           </div>
 
           <div class="subnav-panel" data-panel="help">
-            <a href="/help/">はじめての航海案内</a>
+            <a href="/help/">港の歩き方</a>
+            <a href="/help/first-voyage/">はじめての航海案内</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
