@@ -77,6 +77,121 @@
       color:var(--text);
     }
 
+    
+    .nav-letter-link{
+      position:relative;
+    }
+    
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+    
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+    
+    .global-nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    
+    .nav-group{
+      position:relative;
+    }
+    
+    .global-nav .nav-top{
+      appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      color:var(--muted);
+      font:inherit;
+      line-height:1.7;
+      cursor:pointer;
+    }
+    
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
+      color:var(--text);
+      background:transparent;
+      outline:none;
+    }
+    
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+    
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+    
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+    
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+    
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+    
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+    }
+
     .logout-link{
       color:var(--muted);
       cursor:pointer;
@@ -245,9 +360,17 @@
         margin-bottom:52px;
       }
 
-      .nav{
-        gap:12px;
+      .global-nav{
+        width:100%;
+        justify-content:flex-start;
+        gap:10px 14px;
         font-size:12px;
+      }
+      
+      .nav-menu{
+        left:0;
+        transform:none;
+        min-width:190px;
       }
 
       .panel{
@@ -285,13 +408,13 @@
       </a>
 
       <nav class="nav">
-        <a href="/log/">Voyage Log</a>
-        <a href="/timeline/">Cabin Log</a>
-        <a href="/items/">Items</a>
-        <a href="/vessels/">Vessels</a>
-        <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/account/">Account</a>
+        <a href="/account/">アカウント</a>
+        <a href="/billing/">お支払い</a>
+        <a href="/pricing/">Harbor Store</a>
+        <a href="/legal/">法務情報</a>
+        <a href="/legal/terms/">利用規約</a>
+        <a href="/legal/privacy/">プライバシーポリシー</a>
+        <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -304,9 +427,9 @@
         </div>
 
         <div class="actions">
-          <a class="btn-ghost" href="/fragments/">Fragmentsへ</a>
-          <a class="btn-ghost" href="/timeline/">Cabin Logへ</a>
-          <a class="btn-ghost" href="/log/">Voyage Logへ</a>
+          <a class="btn-ghost" href="/fragments/">断片へ</a>
+          <a class="btn-ghost" href="/timeline/">船室記録へ</a>
+          <a class="btn-ghost" href="/log/">日々の記録へ</a>
         </div>
 
         <div class="status" id="status"></div>
@@ -395,29 +518,12 @@
       </article>
 
       <a class="back" href="/fragments/">
-        ← Fragmentsへ戻る
+        ← 断片へ戻る
       </a>
 
     </main>
 
-    <footer>
-
-      <div class="footer-links">
-        <a href="/log/">Voyage Log</a>
-        <a href="/timeline/">Cabin Log</a>
-        <a href="/items/">Items</a>
-        <a href="/vessels/">Vessels</a>
-        <a href="/map/">Map</a>
-        <a href="/tickets/">Tickets</a>
-        <a href="/account/">Account</a>
-      </div>
-
-      <div>
-        CELESTE HARBOR
-      </div>
-
-    </footer>
-
+    
   </div>
 
   <script>
@@ -496,6 +602,40 @@
 
       window.location.replace("/");
     }
+
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
+      });
+    }
+    
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+    
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+    
+        closeNavMenus();
+    
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+    
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+    
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
 
     logoutLink.addEventListener("click", function(event){
       event.preventDefault();
