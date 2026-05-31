@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Items – Celeste Harbor</title>
+  <title>漂着物 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1049,7 +1049,6 @@
           <button class="nav-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-            <a href="/contact/">お問い合わせ</a>
           </div>
         </div>
     
@@ -1069,8 +1068,11 @@
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
             <a href="/billing/">お支払い</a>
-            <a href="/settings/">設定</a>
+            <a href="/pricing/">Harbor Store</a>
             <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
             <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
           </div>
         </div>
@@ -1080,7 +1082,7 @@
     <div id="activeVoyageBanner"></div>
 
     <main>
-      <div class="label">Items</div>
+      <div class="label">漂着物</div>
 
       <h1>
         海域ごとに残る、<br>
@@ -1468,7 +1470,7 @@
 
           <div>
             <div class="item-detail-kicker">
-              ${detail.kind === "special" ? "Special Voyage Find" : "Harbor Find"}
+              ${detail.kind === "special" ? "特別航海の漂着物" : "港の漂着物"}
             </div>
 
             <div class="item-detail-title">
@@ -2131,7 +2133,7 @@
         <section class="area-section special-voyage-finds">
           <div class="area-head">
             <div>
-              <div class="area-kicker">Special Voyage Finds</div>
+              <div class="area-kicker">特別航海の漂着物</div>
               <div class="area-title">特別航海で届いた漂着物</div>
                 <p class="area-desc">
                   本来の海域がまだ霧の向こうにあるため、ここに静かに預けられています。<br>
@@ -2257,7 +2259,7 @@
           <section class="area-section">
             <div class="area-head">
               <div>
-                <div class="area-kicker">Open Sea Area</div>
+                <div class="area-kicker">開かれた海域</div>
                 <div class="area-title">${escapeHtml(areaChapterTitle(areaKey, area.name_ja || area.name || areaKey))}</div>
                 <p class="area-desc">
                   ${escapeHtml(area.description || area.description_ja || "")}
@@ -2299,7 +2301,7 @@
           <section class="area-section locked">
             <div class="area-head">
               <div>
-                <div class="area-kicker">Beyond the Fog</div>
+                <div class="area-kicker">霧の向こう</div>
                 <div class="area-title">霧の向こう</div>
                 <p class="area-desc">
                   まだ開かれていない海域です。漂着物の記録も、今は霧の中にあります。
