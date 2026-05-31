@@ -1289,6 +1289,17 @@
       font-weight:500;
     }
 
+        /* Common Header / Dropdown Navigation */
+    
+    .site-header{
+      position:relative;
+      flex-wrap:wrap;
+    }
+    
+    .nav{
+      position:relative;
+    }
+    
     .nav-parent{
       appearance:none;
       border:0;
@@ -1310,42 +1321,82 @@
     }
     
     .subnav{
-      width:100%;
-      flex-basis:100%;
-      margin-top:14px;
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      z-index:200;
+      width:max-content;
+      max-width:min(520px, calc(100vw - 40px));
     }
     
     .subnav-panel{
       display:none;
-      flex-wrap:wrap;
-      gap:14px;
-      align-items:center;
-      padding-top:12px;
-      border-top:1px solid rgba(37,43,58,.72);
+      position:relative;
+      flex-direction:column;
+      gap:2px;
+      min-width:180px;
+      padding:12px;
+      border:1px solid rgba(169,183,255,.28);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
+        rgba(10,14,28,.98);
+      box-shadow:0 18px 48px rgba(0,0,0,.46);
+      backdrop-filter:blur(8px);
+    }
+    
+    .subnav-panel::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.28);
+      border-top:1px solid rgba(169,183,255,.28);
+      background:rgba(10,14,28,.98);
     }
     
     .subnav-panel a{
       color:var(--muted);
       text-decoration:none;
       font-size:13px;
+      line-height:1.7;
+      padding:7px 10px;
+      border-radius:10px;
+      white-space:nowrap;
     }
     
     .subnav-panel a:hover{
       color:var(--text);
+      background:rgba(255,255,255,.045);
     }
     
     @media(max-width:640px){
+      .site-header{
+        position:relative;
+      }
+    
+      .nav{
+        width:100%;
+      }
+    
       .subnav{
-        margin-top:10px;
+        top:calc(100% + 10px);
+        left:0;
+        right:auto;
+        max-width:calc(100vw - 32px);
       }
     
       .subnav-panel{
-        gap:12px;
-        font-size:12px;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
       }
     
       .subnav-panel a{
-        font-size:12px;
+        font-size:13px;
+        white-space:normal;
       }
     }
     
@@ -1907,11 +1958,12 @@
     const loginBtn = document.getElementById("loginBtn");
 
     function setupHarborNavigation(){
+      const header = document.querySelector(".site-header");
       const subnav = document.getElementById("subnav");
       const parents = document.querySelectorAll(".nav-parent");
       const panels = document.querySelectorAll(".subnav-panel");
     
-      if(!subnav || parents.length === 0){
+      if(!header || !subnav || parents.length === 0){
         return;
       }
     
@@ -1920,6 +1972,7 @@
       function closeSubnav(){
         openMenu = null;
         subnav.hidden = true;
+        subnav.style.left = "";
     
         panels.forEach((panel) => {
           panel.style.display = "none";
@@ -1931,7 +1984,23 @@
         });
       }
     
-      function openSubnav(menuName){
+      function positionSubnav(button){
+        const headerRect = header.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+    
+        let left = buttonRect.left - headerRect.left;
+    
+        const viewportPadding = 20;
+        const maxLeft = window.innerWidth - viewportPadding - 220;
+    
+        if(left > maxLeft){
+          left = Math.max(viewportPadding, maxLeft);
+        }
+    
+        subnav.style.left = left + "px";
+      }
+    
+      function openSubnav(menuName, button){
         openMenu = menuName;
         subnav.hidden = false;
     
@@ -1940,11 +2009,13 @@
             panel.dataset.panel === menuName ? "flex" : "none";
         });
     
-        parents.forEach((button) => {
-          const isActive = button.dataset.menu === menuName;
-          button.classList.toggle("is-active", isActive);
-          button.setAttribute("aria-expanded", String(isActive));
+        parents.forEach((parentButton) => {
+          const isActive = parentButton.dataset.menu === menuName;
+          parentButton.classList.toggle("is-active", isActive);
+          parentButton.setAttribute("aria-expanded", String(isActive));
         });
+    
+        positionSubnav(button);
       }
     
       parents.forEach((button) => {
@@ -1958,7 +2029,7 @@
           if(openMenu === menuName){
             closeSubnav();
           }else{
-            openSubnav(menuName);
+            openSubnav(menuName, button);
           }
         });
       });
@@ -1975,6 +2046,10 @@
         if(event.key === "Escape"){
           closeSubnav();
         }
+      });
+    
+      window.addEventListener("resize", () => {
+        closeSubnav();
       });
     
       closeSubnav();
