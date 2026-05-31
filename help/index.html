@@ -37,38 +37,6 @@
       margin:0 auto;
     }
 
-    .site-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      margin-bottom:44px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .brand{
-      color:var(--text);
-      letter-spacing:.04em;
-      text-decoration:none;
-    }
-
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
     h1{
       font-size:32px;
       font-weight:500;
@@ -159,48 +127,9 @@
       color:var(--text);
     }
 
-    footer{
-      margin-top:40px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-      color:var(--muted);
-      font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
-    footer a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    footer a:hover{
-      color:var(--text);
-    }
-
     @media(max-width:640px){
       body{
         padding:28px 16px;
-      }
-
-      .site-header{
-        align-items:flex-start;
-        flex-direction:column;
-        margin-bottom:34px;
-      }
-
-      .nav{
-        gap:12px;
-        font-size:12px;
       }
 
       h1{
@@ -215,20 +144,19 @@
 
   <link rel="stylesheet" href="/assets/css/common-nav.css">
   <script src="/assets/js/common-nav.js" defer></script>
-  
 </head>
 
 <body>
   <div class="wrap">
 
-  <div id="siteHeader"></div>
+    <div id="siteHeader"></div>
 
     <main>
-      <h1>Help Center</h1>
+      <h1>港の歩き方</h1>
 
       <p class="lead">
         Celeste Harbor の使い方を、静かに確認できる場所です。<br>
-        分からなくなったときだけ、必要なページを開いてください。
+        分からなくなったときだけ、必要な案内を開いてください。
       </p>
 
       <section class="panel">
@@ -236,36 +164,60 @@
 
         <div class="help-list">
           <a class="help-card" href="/help/navigation/">
-            <div class="help-title">Navigation Guide</div>
+            <div class="help-title">案内板</div>
             <p class="help-text">
-              Voyage Log、Archive、Cabin Log、Items、Vessels など、各ページの意味を確認できます。
+              日々の記録、保管庫、船室記録、漂着物、船、海図など、
+              Celeste Harbor の各ページの役割を確認できます。
             </p>
           </a>
 
           <a class="help-card" href="/help/first-voyage/">
-            <div class="help-title">First Voyage Guide</div>
+            <div class="help-title">はじめての航海案内</div>
             <p class="help-text">
-              はじめての航海案内をもう一度読むページです。Celeste Harbor の基本的な使い方を、初回チュートリアルと同じ流れで確認できます。
+              Celeste Harbor の基本的な使い方を、初回チュートリアルと同じ流れで確認できます。
+              はじめての方や、使い方をもう一度見直したいときに開いてください。
+            </p>
+          </a>
+
+          <a class="help-card" href="/help/#faq" id="faq">
+            <div class="help-title">よくある質問</div>
+            <p class="help-text">
+              よくある質問は現在整理中です。まずは、案内板とはじめての航海案内をご確認ください。
+            </p>
+          </a>
+
+          <a class="help-card" href="/help/#login" id="login">
+            <div class="help-title">ログインできないとき</div>
+            <p class="help-text">
+              Googleログインがうまく進まない場合は、Safari または Chrome などの通常ブラウザで開き直してください。
+            </p>
+          </a>
+
+          <a class="help-card" href="/help/#in-app-browser" id="in-app-browser">
+            <div class="help-title">アプリ内ブラウザについて</div>
+            <p class="help-text">
+              LINE・Instagram・X などのアプリ内ブラウザでは、Googleログインが利用できない場合があります。
+              その場合は、Safari または Chrome で開いてからログインしてください。
             </p>
           </a>
 
           <a class="help-card" href="/log/">
-            <div class="help-title">Voyage Log</div>
+            <div class="help-title">日々の記録へ戻る</div>
             <p class="help-text">
-              まず今日の言葉を残したいときは、ここから航海記録へ戻れます。
+              今日の言葉を残したいときは、ここから日々の記録へ戻れます。
             </p>
           </a>
 
           <a class="help-card" href="/account/">
-            <div class="help-title">Account</div>
+            <div class="help-title">アカウント</div>
             <p class="help-text">
-              ログイン状態やアカウントに関する情報を確認できます。
+              ログイン状態や、アカウントに関する情報を確認できます。
             </p>
           </a>
         </div>
 
         <p class="note">
-          Help Center は、必要なときだけ開く港の案内板です。すべてを覚える必要はありません。
+          港の歩き方は、必要なときだけ開く案内板です。すべてを最初から覚える必要はありません。
         </p>
       </section>
 
