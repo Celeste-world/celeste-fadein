@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>法務情報 – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --ready:#b9f6ca;
+      --warn:#ffe3a3;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .global-nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .nav-group{
+      position:relative;
+    }
+
+    .global-nav .nav-top{
+      appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      color:var(--muted);
+      font:inherit;
+      line-height:1.7;
+      cursor:pointer;
+    }
+
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
+      color:var(--text);
+      background:transparent;
+      outline:none;
+    }
+
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+    }
+
+    .page-head{
+      margin-bottom:30px;
+    }
+
+    .legal-label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0;
+    }
+
+    .notice{
+      margin-top:22px;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(169,183,255,.22);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .legal-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:28px;
+    }
+
+    .legal-card{
+      display:block;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(10,14,28,.78);
+      border:1px solid rgba(70,84,132,.52);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 18px 42px rgba(0,0,0,.30);
+    }
+
+    .legal-card:hover{
+      border-color:rgba(169,183,255,.45);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.11), transparent 44%),
+        rgba(12,17,34,.82);
+    }
+
+    .card-kicker{
+      font-size:12px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    .card-title{
+      font-size:19px;
+      line-height:1.7;
+      font-weight:500;
+      color:var(--text);
+      margin:0 0 8px;
+    }
+
+    .card-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .support-panel{
+      margin-top:26px;
+      padding:22px;
+      border-radius:18px;
+      border:1px solid rgba(255,227,163,.22);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.06), transparent 44%),
+        rgba(10,14,28,.68);
+    }
+
+    .support-title{
+      font-size:17px;
+      line-height:1.8;
+      font-weight:500;
+      margin:0 0 8px;
+      color:var(--text);
+    }
+
+    .support-text{
+      font-size:13px;
+      line-height:1.9;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .back-links{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:22px;
+    }
+
+    .back-links a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background:transparent;
+    }
+
+    .back-links a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.45);
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .global-nav{
+        width:100%;
+        justify-content:flex-start;
+        gap:10px 14px;
+        font-size:12px;
+      }
+
+      .nav-menu{
+        left:0;
+        transform:none;
+        min-width:190px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .legal-card,
+      .support-panel{
+        padding:20px;
+      }
+
+      .back-links a{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="global-nav" aria-label="Celeste Harbor navigation">
+        <div class="nav-group">
+          <button class="nav-top" type="button">航海記録</button>
+          <div class="nav-menu">
+            <a href="/log/">日々の記録</a>
+            <a href="/timeline/">船室記録</a>
+            <a href="/voyage-archive/">保管庫</a>
+            <a href="/harbor-status/">現在地</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">漂着物</button>
+          <div class="nav-menu">
+            <a href="/items/">漂着物</a>
+            <a href="/vessels/">船</a>
+            <a href="/tickets/">切符</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">海図</button>
+          <div class="nav-menu">
+            <a href="/map/">海図</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">便り</button>
+          <div class="nav-menu">
+            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">港の歩き方</button>
+          <div class="nav-menu">
+            <a href="/help/">港の歩き方</a>
+            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/faq/">よくある質問</a>
+            <a href="/help/#login">ログインできないとき</a>
+            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">アカウント</button>
+          <div class="nav-menu">
+            <a href="/account/">アカウント</a>
+            <a href="/billing/">お支払い</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-head">
+        <div class="legal-label">Legal Information</div>
+
+        <h1>法務情報</h1>
+
+        <p class="lead">
+          Celeste Harbor の利用条件、個人情報の取扱い、有料サービス提供に関する表示をまとめたページです。
+        </p>
+
+        <div class="notice">
+          現在、有料販売機能は準備中です。<br>
+          実決済・Stripe連携・購入後のチケット付与を開始する前に、各ページの内容を最終確認します。
+        </div>
+      </div>
+
+      <section class="legal-grid" aria-label="法務情報一覧">
+        <a class="legal-card" href="/legal/terms/">
+          <div class="card-kicker">Terms of Service</div>
+          <h2 class="card-title">利用規約</h2>
+          <p class="card-text">
+            Celeste Harbor の利用条件、アカウント、チケット、有料機能、免責事項などを定めています。
+          </p>
+        </a>
+
+        <a class="legal-card" href="/legal/privacy/">
+          <div class="card-kicker">Privacy Policy</div>
+          <h2 class="card-title">プライバシーポリシー</h2>
+          <p class="card-text">
+            個人情報、航海記録、便り、利用状況などの取得・利用・管理について定めています。
+          </p>
+        </a>
+
+        <a class="legal-card" href="/legal/commercial-transaction/">
+          <div class="card-kicker">Legal Notice</div>
+          <h2 class="card-title">特定商取引法に基づく表記</h2>
+          <p class="card-text">
+            将来の有料販売に向けた販売事業者情報、販売内容、支払方法、返品・キャンセル等の表示です。
+          </p>
+        </a>
+      </section>
+
+      <section class="support-panel">
+        <h2 class="support-title">関連ページ</h2>
+
+        <p class="support-text">
+          価格やプランの案内は Harbor Store に、将来のお支払い管理は Billing にまとめる予定です。  
+          不明点や連絡事項がある場合は、Harbor Letter よりお送りください。
+        </p>
+
+        <div class="back-links">
+          <a href="/pricing/">Harbor Store</a>
+          <a href="/billing/">お支払い</a>
+          <a href="/account/">アカウント</a>
+          <a href="/harbor-letter/">Harbor Letter</a>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script>
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
+      });
+    }
+
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+
+        closeNavMenus();
+
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
+  </script>
+</body>
+</html>
