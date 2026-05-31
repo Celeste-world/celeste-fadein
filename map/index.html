@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Sea Chart – Celeste Harbor</title>
+  <title>海図 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1398,25 +1398,7 @@
       margin-bottom:34px;
     }
 
-    footer{
-      margin-top:64px;
-      padding-top:18px;
-      border-top:1px solid rgba(37,43,58,.9);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .footer-links{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-
+    
     footer a:hover{
       color:var(--text);
     }
@@ -1768,7 +1750,6 @@
           <button class="nav-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-            <a href="/contact/">お問い合わせ</a>
           </div>
         </div>
     
@@ -1788,8 +1769,11 @@
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
             <a href="/billing/">お支払い</a>
-            <a href="/settings/">設定</a>
+            <a href="/pricing/">Harbor Store</a>
             <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
             <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
           </div>
         </div>
@@ -1799,7 +1783,7 @@
     <div id="activeVoyageBanner"></div>
 
     <main>
-      <div class="label">Sea Chart</div>
+      <div class="label">海図</div>
 
       <h1>
         Celeste Harbor の、<br>
@@ -1815,7 +1799,7 @@
       <div class="map-guide">
         開いている海域は淡い緑、未開放の海域は霧の色で表示されます。
         海域を開くには、航海記録と漂着物、そして船の準備が関わります。<br>
-        Drift Signs は、その海域に漂う気配です。必ず何かが流れ着く合図ではありません。
+        漂着の気配は、その海域に静かに漂う予兆です。必ず何かが流れ着く合図ではありません。
       </div>
 
       <section class="panel">
@@ -1860,7 +1844,7 @@
         ×
       </button>
   
-      <div class="unlock-modal-label">New Sea Area</div>
+      <div class="unlock-modal-label">新しい海域</div>
   
       <div class="unlock-modal-title" id="seaUnlockTitle">
         新しい海が開きました
@@ -1897,7 +1881,7 @@
         ×
       </button>
   
-      <div class="item-detail-label">Harbor Find</div>
+      <div class="item-detail-label">漂着物</div>
   
       <h2 class="item-detail-title" id="itemDetailTitle">
         漂着物
