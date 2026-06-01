@@ -761,45 +761,44 @@
         padding:36px 16px 32px;
       }
 
-      .site-header{
-      align-items:center;
-      flex-direction:row;
-      flex-wrap:nowrap;
-      gap:14px;
-      margin-bottom:44px;
-      overflow-x:auto;
-      overflow-y:visible;
-      -webkit-overflow-scrolling:touch;
-    }
-    
-    .brand{
-      flex:0 0 auto;
-      white-space:nowrap;
-    }
-    
-    .global-nav{
-      width:auto;
-      flex:0 0 auto;
-      justify-content:flex-start;
-      gap:14px;
-      font-size:12px;
-      flex-wrap:nowrap;
-    }
-    
-    .nav-top{
-      white-space:nowrap;
-    }
-    
-    .nav-menu{
-      left:0;
-      transform:none;
-      min-width:190px;
-    }
-
+    .site-header{
+        align-items:center;
+        flex-direction:row;
+        flex-wrap:nowrap;
+        gap:14px;
+        margin-bottom:44px;
+        overflow:visible;
+      }
+      
+      .brand{
+        flex:0 0 auto;
+        white-space:nowrap;
+      }
+      
+      .global-nav{
+        width:auto;
+        flex:1 1 auto;
+        min-width:0;
+        justify-content:flex-start;
+        gap:14px;
+        font-size:12px;
+        flex-wrap:wrap;
+        overflow:visible;
+      }
+      
       .global-nav .nav-top{
         width:auto;
         min-width:0;
         white-space:nowrap;
+      }
+      
+      .nav-menu{
+        position:absolute;
+        left:0;
+        transform:none;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
       }
       
       #activeVoyageBanner{
