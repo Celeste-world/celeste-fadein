@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Voyage Tickets – Celeste Harbor</title>
+  <title>切符 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -665,16 +665,38 @@
       }
 
       .site-header{
-        align-items:flex-start;
-        flex-direction:column;
+        align-items:center;
+        flex-direction:row;
+        flex-wrap:nowrap;
+        gap:14px;
         margin-bottom:48px;
+        overflow-x:auto;
+        overflow-y:visible;
+        -webkit-overflow-scrolling:touch;
       }
-
+      
+      .brand{
+        flex:0 0 auto;
+        white-space:nowrap;
+      }
+      
       .global-nav{
-        width:100%;
+        width:auto;
+        flex:0 0 auto;
         justify-content:flex-start;
-        gap:10px 14px;
+        gap:14px;
         font-size:12px;
+        flex-wrap:nowrap;
+      }
+      
+      .nav-top{
+        white-space:nowrap;
+      }
+      
+      .nav-menu{
+        left:0;
+        transform:none;
+        min-width:190px;
       }
 
       .nav-menu{
@@ -798,7 +820,6 @@
           <button class="nav-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-            <a href="/contact/">お問い合わせ</a>
           </div>
         </div>
 
@@ -818,8 +839,11 @@
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
             <a href="/billing/">お支払い</a>
-            <a href="/settings/">設定</a>
+            <a href="/pricing/">Harbor Store</a>
             <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
             <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
           </div>
         </div>
@@ -831,7 +855,7 @@
     <main>
 
       <section class="hero">
-        <div class="label">Voyage Tickets</div>
+        <div class="label">切符</div>
 
         <h1>
           少し深く振り返るための、<br>
@@ -908,7 +932,7 @@
             </p>
 
             <p>
-              購入するものではなく、Voyage Log のあとに港へ届くことがあります。<br>
+              購入するものではなく、日々の記録 のあとに港へ届くことがあります。<br>
               「少しだけ試してみたい夜」のためのチケットです。
             </p>
 
@@ -931,7 +955,7 @@
 
             <div class="meta">
               <span class="tag ready">無料配布</span>
-              <span class="tag">Voyage Log 後</span>
+              <span class="tag">日々の記録 後</span>
               <span class="tag">5分</span>
               <span class="tag">同じ航海券は1枚まで</span>
             </div>
@@ -1031,7 +1055,7 @@
       </section>
 
       <section class="ticket-next">
-        <div class="ticket-next-label">Next Voyage</div>
+        <div class="ticket-next-label">次の航海</div>
 
         <h2 class="ticket-next-title">
           次の航海へ
@@ -1061,7 +1085,7 @@
         <h2>航海の深さ</h2>
 
         <p class="flow-line">
-          Voyage Log<br>
+          日々の記録<br>
           ↓<br>
           Drift Ticket（少しだけ深く振り返る）<br>
           ↓<br>
