@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Voyage Archive – Celeste Harbor</title>
+  <title>保管庫 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
@@ -62,32 +62,96 @@
       text-decoration:none;
     }
     
-    .nav{
+    .global-nav{
       display:flex;
-      gap:18px;
+      gap:16px;
       flex-wrap:wrap;
       align-items:center;
+      justify-content:flex-end;
+    }
+    
+    .nav-group{
       position:relative;
     }
     
-    .nav-parent{
+    .global-nav .nav-top{
       appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
       border:0;
+      border-radius:0;
       background:transparent;
+      box-shadow:none;
       color:var(--muted);
       font:inherit;
-      padding:0;
+      line-height:1.7;
       cursor:pointer;
     }
     
-    .nav-parent:hover,
-    .nav-parent.is-active{
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
       color:var(--text);
+      background:transparent;
+      outline:none;
     }
     
-    .nav-parent.is-active{
-      text-decoration:underline;
-      text-underline-offset:.25em;
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+    
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+    
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+    
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+    
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+    
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
     }
     
     .logout-link{
@@ -104,58 +168,7 @@
       position:relative;
     }
     
-    .subnav{
-      position:absolute;
-      top:calc(100% + 10px);
-      left:0;
-      z-index:200;
-      width:max-content;
-      max-width:min(520px, calc(100vw - 40px));
-    }
     
-    .subnav-panel{
-      display:none;
-      position:relative;
-      flex-direction:column;
-      gap:2px;
-      min-width:180px;
-      padding:12px;
-      border:1px solid rgba(169,183,255,.28);
-      border-radius:16px;
-      background:
-        radial-gradient(circle at top left, rgba(169,183,255,.12), transparent 42%),
-        rgba(10,14,28,.98);
-      box-shadow:0 18px 48px rgba(0,0,0,.46);
-      backdrop-filter:blur(8px);
-    }
-    
-    .subnav-panel::before{
-      content:"";
-      position:absolute;
-      top:-7px;
-      left:22px;
-      width:12px;
-      height:12px;
-      transform:rotate(45deg);
-      border-left:1px solid rgba(169,183,255,.28);
-      border-top:1px solid rgba(169,183,255,.28);
-      background:rgba(10,14,28,.98);
-    }
-    
-    .subnav-panel a{
-      color:var(--muted);
-      text-decoration:none;
-      font-size:13px;
-      line-height:1.7;
-      padding:7px 10px;
-      border-radius:10px;
-      white-space:nowrap;
-    }
-    
-    .subnav-panel a:hover{
-      color:var(--text);
-      background:rgba(255,255,255,.045);
-    }
     .page-head{
       margin-bottom:30px;
     }
@@ -850,33 +863,55 @@
       }
 
       .site-header{
-        align-items:flex-start;
+        display:flex;
         flex-direction:column;
-        margin-bottom:34px;
-      }
-
-      .nav{
+        align-items:flex-start;
+        justify-content:flex-start;
         gap:12px;
-        font-size:12px;
+        margin-bottom:34px;
+        overflow:visible;
       }
-
-      .subnav{
-          top:calc(100% + 10px);
-          left:0;
-          right:auto;
-          max-width:calc(100vw - 32px);
-        }
       
-        .subnav-panel{
-          min-width:190px;
-          max-width:calc(100vw - 32px);
-        }
+      .brand{
+        display:block;
+        flex:0 0 auto;
+        width:100%;
+        white-space:nowrap;
+      }
       
-        .subnav-panel a{
-          font-size:13px;
-          white-space:normal;
-        }
-
+      .global-nav{
+        display:flex;
+        width:100%;
+        flex:0 0 auto;
+        justify-content:flex-start;
+        align-items:center;
+        gap:10px 18px;
+        font-size:12px;
+        flex-wrap:wrap;
+        overflow:visible;
+      }
+      
+      .nav-group{
+        position:relative;
+        flex:0 0 auto;
+      }
+      
+      .global-nav .nav-top{
+        width:auto;
+        min-width:0;
+        padding:6px 0;
+        white-space:nowrap;
+      }
+      
+      .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;
+        transform:none;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
       h1{
         font-size:30px;
       }
@@ -914,59 +949,70 @@
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
     
-      <nav class="nav" aria-label="メインナビゲーション">
-        <button class="nav-parent" type="button" data-menu="log">航海記録</button>
-        <button class="nav-parent" type="button" data-menu="items">漂着物</button>
-        <button class="nav-parent" type="button" data-menu="map">海図</button>
-        <button class="nav-parent" type="button" data-menu="letter">便り</button>
-        <button class="nav-parent" type="button" data-menu="help">港の歩き方</button>
-        <button class="nav-parent" type="button" data-menu="account">アカウント</button>
+      <nav class="global-nav" aria-label="Celeste Harbor navigation">
+        <div class="nav-group">
+          <button class="nav-top" type="button">航海記録</button>
+          <div class="nav-menu">
+            <a href="/log/">日々の記録</a>
+            <a href="/timeline/">船室記録</a>
+            <a href="/voyage-archive/">保管庫</a>
+            <a href="/harbor-status/">現在地</a>
+          </div>
+        </div>
+    
+        <div class="nav-group">
+          <button class="nav-top" type="button">漂着物</button>
+          <div class="nav-menu">
+            <a href="/items/">漂着物</a>
+            <a href="/vessels/">船</a>
+            <a href="/tickets/">切符</a>
+          </div>
+        </div>
+    
+        <div class="nav-group">
+          <button class="nav-top" type="button">海図</button>
+          <div class="nav-menu">
+            <a href="/map/">海図</a>
+          </div>
+        </div>
+    
+        <div class="nav-group">
+          <button class="nav-top" type="button">便り</button>
+          <div class="nav-menu">
+            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          </div>
+        </div>
+    
+        <div class="nav-group">
+          <button class="nav-top" type="button">港の歩き方</button>
+          <div class="nav-menu">
+            <a href="/help/">港の歩き方</a>
+            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/faq/">よくある質問</a>
+            <a href="/help/#login">ログインできないとき</a>
+            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+          </div>
+        </div>
+    
+        <div class="nav-group">
+          <button class="nav-top" type="button">アカウント</button>
+          <div class="nav-menu">
+            <a href="/account/">アカウント</a>
+            <a href="/billing/">お支払い</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+            <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+          </div>
+        </div>
       </nav>
-    
-      <div class="subnav" id="subnav" hidden>
-        <div class="subnav-panel" data-panel="log">
-          <a href="/log/">日々の記録</a>
-          <a href="/timeline/">船室記録</a>
-          <a href="/voyage-archive/">保管庫</a>
-          <a href="/harbor-status/">現在地</a>
-        </div>
-    
-        <div class="subnav-panel" data-panel="items">
-          <a href="/items/">漂着物</a>
-          <a href="/vessels/">船</a>
-          <a href="/tickets/">切符</a>
-        </div>
-    
-        <div class="subnav-panel" data-panel="map">
-          <a href="/map/">海図</a>
-        </div>
-    
-        <div class="subnav-panel" data-panel="letter">
-          <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-          <a href="/contact/">お問い合わせ</a>
-        </div>
-    
-        <div class="subnav-panel" data-panel="help">
-          <a href="/help/">港の歩き方</a>
-          <a href="/help/first-voyage/">はじめての航海案内</a>
-          <a href="/help/faq/">よくある質問</a>
-          <a href="/help/#login">ログインできないとき</a>
-          <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
-        </div>
-    
-        <div class="subnav-panel" data-panel="account">
-          <a href="/account/">アカウント</a>
-          <a href="/billing/">お支払い</a>
-          <a href="/settings/">設定</a>
-          <a href="/legal/">法務情報</a>
-          <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
-        </div>
-      </div>
     </header>
 
     <main>
       <div class="page-head">
-        <h1>Voyage Archive</h1>
+        <h1>保管庫</h1>
 
         <p class="lead">
           月ごとに、これまでの航海記録を静かに見返す場所です。<br>
@@ -981,7 +1027,7 @@
       <div class="status" id="status"></div>
 
       <div class="archive-search-panel">
-        <div class="archive-search-label">Search Archive</div>
+        <div class="archive-search-label">記録を探す</div>
       
         <div class="archive-search-row">
           <input
@@ -993,7 +1039,7 @@
           >
         
           <select class="archive-search-select" id="archiveTagFilter">
-            <option value="">All Tags</option>
+            <option value="">すべての気配</option>>
             <option value="Harbor">Harbor</option>
             <option value="Return">Return</option>
             <option value="Calm Tide">Calm Tide</option>
@@ -1024,7 +1070,7 @@
         </div>
       
         <div class="archive-search-result" id="archiveSearchResult">
-          言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。
+          言葉、気配、Lantern Mark を使って、保存した航海記録を探せます。
         </div>
 
         <div class="read-more-wrap" id="archiveSearchMoreWrap" style="display:none;">
@@ -1036,7 +1082,7 @@
       
       <div class="archive-layout">
         <section class="month-list" id="monthListPanel">
-          <div class="section-label">Months</div>
+          <div class="section-label">月ごとの記録</div>
             <div id="monthList"></div>
             
             <div class="read-more-wrap" id="monthReadMoreWrap" style="display:none;">
@@ -1054,7 +1100,7 @@
         <section class="month-detail mobile-hidden" id="monthDetailPanel">
           <div class="detail-head">
             <div>
-              <div class="section-label">Archive Detail</div>
+              <div class="section-label">記録の詳細</div>
               <h2 class="detail-title" id="detailTitle">月を選んでください</h2>
               <p class="detail-sub" id="detailSub">
                 左の一覧から、見返したい月を選びます。
@@ -1078,21 +1124,21 @@
           </div>
 
           <div class="month-summary" id="monthSummary" style="display:none;">
-            <div class="month-summary-label">Monthly Summary</div>
+            <div class="month-summary-label">月のまとめ</div>
           
             <div class="month-summary-grid">
               <div class="month-summary-chip">
-                <div class="month-summary-chip-label">Logs</div>
+                <div class="month-summary-chip-label">記録</div>
                 <div class="month-summary-chip-value" id="monthSummaryCount">0件</div>
               </div>
             
               <div class="month-summary-chip">
-                <div class="month-summary-chip-label">Days</div>
+                <div class="month-summary-chip-label">日数</div>
                 <div class="month-summary-chip-value" id="monthSummaryDays">0日</div>
               </div>
             
               <div class="month-summary-chip">
-                <div class="month-summary-chip-label">Main Tag</div>
+                <div class="month-summary-chip-label">主な気配</div>
                 <div class="month-summary-chip-value" id="monthSummaryTag">Harbor</div>
               </div>
             
@@ -1106,12 +1152,12 @@
           </div>
 
           <div class="month-afterglow" id="monthAfterglow" style="display:none;">
-            <div class="month-afterglow-label">Monthly Afterglow</div>
+            <div class="month-afterglow-label">月の余韻</div>
             <div class="month-afterglow-text" id="monthAfterglowText"></div>
           </div>
 
           <div class="month-tags" id="monthTags" style="display:none;">
-            <div class="month-tags-label">Monthly Tags</div>
+            <div class="month-tags-label">月の気配</div>
             <div class="month-tags-list" id="monthTagsList"></div>
           </div>
 
@@ -1132,7 +1178,7 @@
 
     <div class="download-modal-overlay" id="monthDownloadModal" aria-hidden="true">
       <div class="download-modal" role="dialog" aria-modal="true" aria-labelledby="monthDownloadModalTitle">
-        <div class="download-modal-label">Monthly Export</div>
+        <div class="download-modal-label">月次書き出し</div>
     
         <h2 id="monthDownloadModalTitle">
           この月の航海記録をダウンロードします
@@ -1161,7 +1207,7 @@
     
         <div id="monthDownloadConfirmSummary" style="display:none;">
           <div class="download-modal-label" style="margin-top:18px;">
-            Ready to download
+            ダウンロード準備完了
           </div>
     
           <p id="monthDownloadSummaryText" style="white-space:pre-wrap;"></p>
@@ -1198,105 +1244,39 @@
     const statusEl = document.getElementById("status");
     const logoutLink = document.getElementById("logoutLink");
 
-    function setupHarborNavigation(){
-      const header = document.querySelector(".site-header");
-      const subnav = document.getElementById("subnav");
-      const parents = document.querySelectorAll(".nav-parent");
-      const panels = document.querySelectorAll(".subnav-panel");
-    
-      if(!header || !subnav || parents.length === 0){
-        return;
-      }
-    
-      let openMenu = null;
-    
-      function closeSubnav(){
-        openMenu = null;
-        subnav.hidden = true;
-        subnav.style.left = "";
-    
-        panels.forEach((panel) => {
-          panel.style.display = "none";
-        });
-    
-        parents.forEach((button) => {
-          button.classList.remove("is-active");
-          button.setAttribute("aria-expanded", "false");
-        });
-      }
-    
-      function positionSubnav(button){
-        const headerRect = header.getBoundingClientRect();
-        const buttonRect = button.getBoundingClientRect();
-    
-        let left = buttonRect.left - headerRect.left;
-    
-        const viewportPadding = 20;
-        const maxLeft = window.innerWidth - viewportPadding - 220;
-    
-        if(left > maxLeft){
-          left = Math.max(viewportPadding, maxLeft);
-        }
-    
-        subnav.style.left = left + "px";
-      }
-    
-      function openSubnav(menuName, button){
-        openMenu = menuName;
-        subnav.hidden = false;
-    
-        panels.forEach((panel) => {
-          panel.style.display =
-            panel.dataset.panel === menuName ? "flex" : "none";
-        });
-    
-        parents.forEach((parentButton) => {
-          const isActive = parentButton.dataset.menu === menuName;
-          parentButton.classList.toggle("is-active", isActive);
-          parentButton.setAttribute("aria-expanded", String(isActive));
-        });
-    
-        positionSubnav(button);
-      }
-    
-      parents.forEach((button) => {
-        button.setAttribute("aria-expanded", "false");
-    
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-    
-          const menuName = button.dataset.menu;
-    
-          if(openMenu === menuName){
-            closeSubnav();
-          }else{
-            openSubnav(menuName, button);
-          }
-        });
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
       });
-    
-      subnav.addEventListener("click", (event) => {
-        event.stopPropagation();
-      });
-    
-      document.addEventListener("click", () => {
-        closeSubnav();
-      });
-    
-      document.addEventListener("keydown", (event) => {
-        if(event.key === "Escape"){
-          closeSubnav();
-        }
-      });
-    
-      window.addEventListener("resize", () => {
-        closeSubnav();
-      });
-    
-      closeSubnav();
     }
     
-    setupHarborNavigation();
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+    
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+    
+        closeNavMenus();
+    
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+    
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+    
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
 
     const monthList = document.getElementById("monthList");
 
@@ -1770,7 +1750,7 @@
       const lines = [];
     
       lines.push("Celeste Harbor");
-      lines.push("Voyage Archive Monthly Export");
+      lines.push("保管庫 月次書き出し");
       lines.push("");
       lines.push("出力日時：" + formatDateTime(new Date().toISOString()));
       lines.push("対象月：" + (group?.label || "日付不明"));
@@ -1780,14 +1760,14 @@
       lines.push("");
     
       lines.push("========================");
-      lines.push("Monthly Afterglow");
+      lines.push("月の余韻");
       lines.push("========================");
       lines.push("");
       lines.push(monthlyAfterglowText(group));
       lines.push("");
     
       lines.push("========================");
-      lines.push("Monthly Tags");
+      lines.push("月の気配");
       lines.push("========================");
       lines.push("");
     
@@ -1825,7 +1805,7 @@
     
       lines.push("");
       lines.push("========================");
-      lines.push("Voyage Logs");
+      lines.push("航海記録");
       lines.push("========================");
       lines.push("");
     
@@ -2327,7 +2307,7 @@
             ${
               hasSearch
                 ? "条件に一致する航海記録はありません。<br>言葉やタグを少し変えて探してみてください。"
-                : "まだ航海記録がありません。<br>Voyage Log に記録が残ると、ここに月ごとの記録が現れます。"
+                : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの記録が現れます。"
             }
           </div>
         `;
