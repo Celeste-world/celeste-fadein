@@ -135,6 +135,34 @@
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
     }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+    
+    /* 右端のアカウントメニューが画面外にはみ出すのを防ぐ */
+    .nav-group:last-child .nav-menu{
+      left:auto;
+      right:0;
+    }
+    
+    .nav-group:last-child .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+    
+    .nav-group.open .nav-menu{
+      display:block;
+    }
     
     .nav-group.open .nav-menu{
       display:block;
@@ -1039,7 +1067,7 @@
           >
         
           <select class="archive-search-select" id="archiveTagFilter">
-            <option value="">すべての気配</option>>
+            <option value="">すべての気配</option>
             <option value="Harbor">Harbor</option>
             <option value="Return">Return</option>
             <option value="Calm Tide">Calm Tide</option>
@@ -2548,7 +2576,7 @@
         return;
       }
 
-      setStatus("Voyage Archive を読み込んでいます。");
+      setStatus("保管庫を読み込んでいます。");
 
       const { data, error } = await client
         .from("voyage_logs")
