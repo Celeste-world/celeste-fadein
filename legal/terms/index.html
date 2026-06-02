@@ -82,22 +82,7 @@
       text-decoration:none;
     }
 
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
+    
     .global-nav{
       display:flex;
       gap:16px;
@@ -170,6 +155,17 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    /* アカウントメニュー右寄せ仕様 */
+    .nav-group:last-child .nav-menu{
+      left:auto;
+      right:0;
+    }
+    
+    .nav-group:last-child .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -581,7 +577,7 @@
         <div class="terms-section">
           <h2>第15条（お問い合わせ）</h2>
           <p>
-            本規約に関するお問い合わせは、Celeste Harbor 内の Harbor Letter、または運営者が別途指定する連絡先よりお送りください。
+            本規約に関するお問い合わせは、Celeste Harbor 内の「港への便り」、または運営者が別途指定する連絡先よりお送りください。
           </p>
 
           <div class="back-links">
