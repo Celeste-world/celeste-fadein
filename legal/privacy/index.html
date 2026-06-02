@@ -83,22 +83,7 @@
       white-space:nowrap;
     }
 
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
+    
     .global-nav{
       display:flex;
       gap:16px;
@@ -171,6 +156,34 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+    
+    /* アカウントメニュー右寄せ仕様 */
+    .nav-group:last-child .nav-menu{
+      left:auto;
+      right:0;
+    }
+    
+    .nav-group:last-child .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+    
+    .nav-group.open .nav-menu{
+      display:block;
     }
 
     .nav-group.open .nav-menu{
@@ -533,7 +546,7 @@
             ユーザーは、本サービス内で提供される機能を通じて、自身の航海記録等を確認、削除できる場合があります。
           </p>
           <p>
-            個人情報の開示、訂正、利用停止、削除等を希望する場合は、Harbor Letter または運営者が別途指定する連絡先よりお問い合わせください。
+            個人情報の開示、訂正、利用停止、削除等を希望する場合は、港への便り、または運営者が別途指定する連絡先よりお問い合わせください。
             本人確認のうえ、法令に従って対応します。
           </p>
         </div>
@@ -577,7 +590,7 @@
         <div class="privacy-section">
           <h2>第13条（お問い合わせ）</h2>
           <p>
-            本ポリシーに関するお問い合わせは、Celeste Harbor 内の Harbor Letter、または運営者が別途指定する連絡先よりお送りください。
+            本ポリシーに関するお問い合わせは、Celeste Harbor 内の「港への便り」、または運営者が別途指定する連絡先よりお送りください。
           </p>
 
           <div class="back-links">
