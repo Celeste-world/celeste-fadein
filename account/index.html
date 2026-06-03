@@ -181,6 +181,17 @@
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
     }
+
+    /* アカウントメニュー右寄せ仕様 */
+    .nav-group:last-child .nav-menu{
+      left:auto;
+      right:0;
+    }
+    
+    .nav-group:last-child .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
     
     .nav-group.open .nav-menu{
       display:block;
@@ -657,6 +668,16 @@
         left:0;
         transform:none;
         min-width:190px;
+      }
+
+      .nav-group:last-child .nav-menu{
+        left:0;
+        right:auto;
+      }
+      
+      .nav-group:last-child .nav-menu::before{
+        left:22px;
+        right:auto;
       }
 
       .nav-group.account-nav .nav-menu{
