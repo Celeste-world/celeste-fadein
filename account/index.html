@@ -182,15 +182,20 @@
       background:rgba(10,14,28,.96);
     }
 
-    /* アカウントメニュー右寄せ仕様 */
+   /* アカウントメニュー右寄せ仕様 */
     .nav-group:last-child .nav-menu{
       left:auto;
       right:0;
+      text-align:right;
     }
     
     .nav-group:last-child .nav-menu::before{
       left:auto;
       right:22px;
+    }
+    
+    .nav-group:last-child .nav-menu a{
+      text-align:right;
     }
     
     .nav-group.open .nav-menu{
@@ -664,9 +669,6 @@
         font-size:12px;
       }
 
-      .nav-group:last-child{
-        margin-left:auto;
-      }
       
       .nav-group:last-child .nav-menu{
         left:auto;
