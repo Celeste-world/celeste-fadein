@@ -199,6 +199,16 @@
       background:rgba(255,255,255,.04);
     }
 
+    .nav-group.account-nav .nav-menu{
+      left:auto;
+      right:0;
+    }
+    
+    .nav-group.account-nav .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+
     .logout-link{
       color:var(--muted);
       cursor:pointer;
@@ -648,6 +658,17 @@
         transform:none;
         min-width:190px;
       }
+
+      .nav-group.account-nav .nav-menu{
+        left:0;
+        right:auto;
+      }
+      
+      .nav-group.account-nav .nav-menu::before{
+        left:22px;
+        right:auto;
+      }
+      
       #activeVoyageBanner{
         top:10px;
         margin:-22px 0 24px;
@@ -767,7 +788,7 @@
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group account-nav">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -939,15 +960,15 @@
 
     function accountDisplayName(user){
       if(!user){
-        return "Guest";
+        return "ゲスト";
       }
-
+    
       return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.user_metadata?.display_name ||
         user.email ||
-        "Account"
+        "アカウント"
       );
     }
 
@@ -973,7 +994,7 @@
         return "Deep Sea Ticket（深海チケット）";
       }
 
-      return type || "Voyage Ticket";
+      return type || "航海券";
     }
 
     function ticketClass(type){
@@ -1038,7 +1059,7 @@
 
       return {
         symbol:"•",
-        label:"Ticket"
+        label:"航海券"
       };
     }
 
