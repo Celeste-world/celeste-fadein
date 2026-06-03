@@ -663,6 +663,20 @@
         gap:10px 14px;
         font-size:12px;
       }
+
+      .nav-group:last-child{
+        margin-left:auto;
+      }
+      
+      .nav-group:last-child .nav-menu{
+        left:auto;
+        right:0;
+      }
+      
+      .nav-group:last-child .nav-menu::before{
+        left:auto;
+        right:22px;
+      }
       
       .nav-menu{
         left:0;
@@ -670,15 +684,7 @@
         min-width:190px;
       }
 
-      .nav-group:last-child .nav-menu{
-        left:0;
-        right:auto;
-      }
       
-      .nav-group:last-child .nav-menu::before{
-        left:22px;
-        right:auto;
-      }
 
       .nav-group.account-nav .nav-menu{
         left:0;
