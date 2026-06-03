@@ -182,20 +182,15 @@
       background:rgba(10,14,28,.96);
     }
 
-   /* アカウントメニュー右寄せ仕様 */
+    /* アカウントメニュー右寄せ仕様 */
     .nav-group:last-child .nav-menu{
       left:auto;
       right:0;
-      text-align:right;
     }
     
     .nav-group:last-child .nav-menu::before{
       left:auto;
       right:22px;
-    }
-    
-    .nav-group:last-child .nav-menu a{
-      text-align:right;
     }
     
     .nav-group.open .nav-menu{
@@ -213,16 +208,6 @@
     .nav-menu a:hover{
       color:var(--text);
       background:rgba(255,255,255,.04);
-    }
-
-    .nav-group.account-nav .nav-menu{
-      left:auto;
-      right:0;
-    }
-    
-    .nav-group.account-nav .nav-menu::before{
-      left:auto;
-      right:22px;
     }
 
     .logout-link{
@@ -670,6 +655,21 @@
       }
 
       
+      .nav-menu{
+        transform:none;
+        min-width:190px;
+      }
+      
+      .nav-group:not(:last-child) .nav-menu{
+        left:0;
+        right:auto;
+      }
+      
+      .nav-group:not(:last-child) .nav-menu::before{
+        left:22px;
+        right:auto;
+      }
+      
       .nav-group:last-child .nav-menu{
         left:auto;
         right:0;
@@ -678,24 +678,6 @@
       .nav-group:last-child .nav-menu::before{
         left:auto;
         right:22px;
-      }
-      
-      .nav-menu{
-        left:0;
-        transform:none;
-        min-width:190px;
-      }
-
-      
-
-      .nav-group.account-nav .nav-menu{
-        left:0;
-        right:auto;
-      }
-      
-      .nav-group.account-nav .nav-menu::before{
-        left:22px;
-        right:auto;
       }
       
       #activeVoyageBanner{
@@ -817,7 +799,7 @@
           </div>
         </div>
     
-        <div class="nav-group account-nav">
+        <div class="nav-group">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
