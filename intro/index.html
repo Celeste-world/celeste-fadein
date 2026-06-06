@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>港の歩き方 – Celeste Harbor</title>
+  <title>はじめての方へ – Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor の使い方。Googleで入港し、今日の言葉を残し、航海記録として積み重ねていく静かな日記アプリの案内ページです。" />
+  <meta name="description" content="Celeste Harbor は、日々の言葉を航海記録として残し、未来の自分が振り返る人生の航海史を育てていくサービスです。" />
   <link rel="canonical" href="https://celeste.world/intro/" />
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="港の歩き方 – Celeste Harbor">
-  <meta property="og:description" content="Googleで入港し、今日の言葉を航海記録として残していく、Celeste Harbor の使い方。">
+  <meta property="og:title" content="はじめての方へ – Celeste Harbor">
+  <meta property="og:description" content="人生を航海として残す、Celeste Harbor のはじめての方向け案内ページ。">
   <meta property="og:url" content="https://celeste.world/intro/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="港の歩き方 – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste Harbor の使い方を、5つのステップで静かに案内します。">
+  <meta name="twitter:title" content="はじめての方へ – Celeste Harbor">
+  <meta name="twitter:description" content="言葉を残し、記録が積み重なり、人生の航海史になるまでを案内します。">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -36,9 +36,7 @@
       --gold:#ffe3a3;
     }
 
-    *{
-      box-sizing:border-box;
-    }
+    *{ box-sizing:border-box; }
 
     html,
     body{
@@ -164,9 +162,7 @@
       box-shadow:0 14px 32px rgba(0,0,0,.28);
     }
 
-    .btn-primary:hover{
-      opacity:.92;
-    }
+    .btn-primary:hover{ opacity:.92; }
 
     .btn-ghost{
       color:var(--muted);
@@ -337,9 +333,7 @@
       pointer-events:none;
     }
 
-    .step-body{
-      min-width:0;
-    }
+    .step-body{ min-width:0; }
 
     .step-number{
       display:inline-flex;
@@ -367,6 +361,36 @@
     .step p{
       margin:8px 0 0;
       color:var(--muted);
+      font-size:14px;
+      line-height:2;
+    }
+
+    .meaning-box{
+      margin:0 auto 54px;
+      max-width:860px;
+      padding:24px 24px;
+      border-radius:26px;
+      border:1px solid rgba(169,183,255,.20);
+      background:
+        radial-gradient(circle at top, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.70);
+      color:var(--muted);
+      text-align:center;
+      box-shadow:0 18px 48px rgba(0,0,0,.26);
+    }
+
+    .meaning-box h2{
+      margin:0;
+      color:var(--text);
+      font-size:22px;
+      font-weight:500;
+      line-height:1.7;
+      letter-spacing:.04em;
+    }
+
+    .meaning-box p{
+      margin:14px auto 0;
+      max-width:42rem;
       font-size:14px;
       line-height:2;
     }
@@ -553,6 +577,10 @@
         font-size:13px;
       }
 
+      .meaning-box{
+        padding:22px 18px;
+      }
+
       .closing{
         padding:28px 18px;
       }
@@ -581,14 +609,17 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-         <p class="kicker">港の歩き方</p>
+          <p class="kicker">A Harbor for Your Voyage</p>
 
-          <h1>港の歩き方</h1>
+          <h1>はじめての方へ</h1>
 
           <p class="lead">
-            Celeste Harbor は、日々の言葉を静かな航海記録として残す日記アプリです。<br>
-            むずかしい準備はいりません。港へ入り、今日の言葉をひとつ置くだけで、
-            あなたの航海は少しずつ続いていきます。
+            Celeste Harbor は、人生を航海として残すサービスです。<br>
+            日々の言葉を航海記録として残しながら、
+            未来の自分が振り返ることのできる人生の航海史を育てていきます。<br><br>
+            書いた言葉は少しずつ積み重なり、
+            海や船、漂着物との出会いを通して、
+            あなただけの航海が形になっていきます。
           </p>
 
           <div class="hero-actions">
@@ -596,7 +627,7 @@
               港へ戻る
             </a>
             <a class="btn-ghost" href="/about/">
-              このサイトについて
+              港について読む
             </a>
           </div>
         </div>
@@ -611,85 +642,95 @@
 
       <section aria-labelledby="steps-title">
         <div class="section-head">
-          <p class="kicker">Five small steps</p>
-          <h2 id="steps-title">今日の言葉が、航海になるまで。</h2>
+          <p class="kicker">How Your Voyage Grows</p>
+          <h2 id="steps-title">今日の言葉が、航海史になるまで。</h2>
           <p>
-            使い方はとてもシンプルです。書く、残す、積み重なる。
-            その途中で、ときどき小さな出会いが港へ流れ着きます。
+            使い方はとてもシンプルです。言葉を残す。記録が積み重なる。
+            そして、未来の自分が振り返れる航海史になっていきます。
           </p>
         </div>
 
         <div class="steps">
-          <article class="step">
+          <article class="step screenshot">
             <div class="step-visual">
-              <img src="/images/harbor-entrance.png" alt="Googleで入港する">
+              <img src="/images/intro/voyage-log-write.png" alt="今日の言葉を残す">
             </div>
             <div class="step-body">
               <div class="step-number">01</div>
-              <h3>Googleで入港する</h3>
+              <h3>今日の言葉を残す</h3>
               <p>
-                Googleアカウントでログインすると、あなた専用の港が開きます。
-                入港後は、日々の記録からすぐに今日の言葉を残せます。
+                長い日記である必要はありません。
+                その日の出来事や気持ちを、短い言葉で記録します。
               </p>
             </div>
           </article>
 
           <article class="step screenshot">
             <div class="step-visual">
-              <img src="/images/intro/voyage-log-write.png" alt="今日の言葉を一言残す">
+              <img src="/images/intro/voyage-archive-record.png" alt="航海記録として残る">
             </div>
             <div class="step-body">
               <div class="step-number">02</div>
-              <h3>今日の言葉を一言残す</h3>
+              <h3>航海記録になる</h3>
               <p>
-                長い文章でなくても大丈夫です。
-                その日の気持ち、出来事、ふと思ったことを、Voyage Log に静かに書き残します。
+                書いた言葉は、あなたの航海記録として残ります。
+                その一言が、未来のあなたへ届く記録になります。
               </p>
             </div>
           </article>
 
           <article class="step screenshot">
             <div class="step-visual">
-              <img src="/images/intro/voyage-archive-record.png" alt="航海記録として保存される">
+              <img src="/images/intro/cabin-log-timeline.png" alt="人生の航海史になる">
             </div>
             <div class="step-body">
               <div class="step-number">03</div>
-              <h3>航海記録として保存される</h3>
+              <h3>人生の航海史になる</h3>
               <p>
-                残した言葉は、月ごとの保管庫に保存されます。
-                後から読み返せる、あなた自身の航海記録になります。
+                過去の言葉を振り返りながら、
+                自分だけの年表が少しずつ育っていきます。
               </p>
             </div>
           </article>
 
-          <article class="step screenshot">
+          <article class="step">
             <div class="step-visual">
-              <img src="/images/intro/cabin-log-timeline.png" alt="Cabin Log に積み重なる">
+              <img src="/images/harbor-entrance.png" alt="港が育つ">
             </div>
             <div class="step-body">
               <div class="step-number">04</div>
-              <h3>Cabin Log に積み重なる</h3>
+              <h3>港が育つ</h3>
               <p>
-                書いた記録や、港で起きた出来事は船室記録に残ります。
-                航海券、漂着物、船の変化などが、時系列で静かに積み重なっていきます。
+                航海を続けることで、
+                港の景色や海の広がりが少しずつ変わっていきます。
               </p>
             </div>
           </article>
 
           <article class="step item-art">
             <div class="step-visual">
-              <img src="/images/intro/harbor-item-beautiful.png" alt="漂着物や船と出会う">
+              <img src="/images/intro/harbor-item-beautiful.png" alt="船や漂着物と出会う">
             </div>
             <div class="step-body">
               <div class="step-number">05</div>
-              <h3>ときどき漂着物や船と出会う</h3>
+              <h3>あなただけの航海になる</h3>
               <p>
-                言葉を残していく中で、漂着物や新しい船、航海券と出会うことがあります。
-                それらは、あなたの港に少しずつ物語を足していきます。
+                船や漂着物は、続けてきた証として港に残ります。
+                それらが積み重なることで、あなた自身の航海が形になっていきます。
               </p>
             </div>
           </article>
         </div>
+      </section>
+
+      <section class="meaning-box" aria-labelledby="meaning-title">
+        <h2 id="meaning-title">船や漂着物は、ゲームの報酬ではありません。</h2>
+        <p>
+          あなたが言葉を残し続けた証として、
+          静かに港へ積み重なっていくものです。<br>
+          船は継続の証。漂着物は記憶の欠片。
+          Celeste Harbor では、それらがあなたの航海史を彩っていきます。
+        </p>
       </section>
 
       <p class="small-note">
@@ -699,11 +740,11 @@
 
       <section aria-labelledby="tickets-title">
         <div class="section-head">
-          <p class="kicker">港で出会うもの</p>
-          <h2 id="tickets-title">港で出会うもの</h2>
+          <p class="kicker">Special Voyage</p>
+          <h2 id="tickets-title">特別な航海について</h2>
           <p>
-            航海の途中では、静かなチケットや深い海への入口が現れることがあります。
-            それらは機能でありながら、少しだけ物語の気配を持っています。
+            通常の航海とは別に、少し深い対話を行う航海もあります。<br>
+            その入口となるのが、航海券です。
           </p>
         </div>
 
@@ -741,7 +782,7 @@
       </section>
 
       <section class="closing">
-        <h2>今日の一言から、港は始まります。</h2>
+        <h2>今日の一言から、航海は始まります。</h2>
 
         <p>
           何かをきれいにまとめる必要はありません。<br>
@@ -751,10 +792,10 @@
 
         <div class="hero-actions">
           <a class="btn-primary" href="/">
-            入港する
+            港へ戻る
           </a>
           <a class="btn-ghost" href="/about/">
-            もう少し読む
+            港について読む
           </a>
         </div>
       </section>
