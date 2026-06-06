@@ -139,6 +139,11 @@
       z-index:80;
     }
 
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
+
     .nav-menu::before{
       content:"";
       position:absolute;
@@ -150,6 +155,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -1267,6 +1277,11 @@
         z-index:1000;
       }
 
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
       #activeVoyageBanner{
         top:10px;
         margin:-22px 0 24px;
@@ -1347,69 +1362,69 @@
 <body class="auth-locked">
   <div class="wrap">
 
-    <header class="site-header">
-      <a class="brand" href="/">Celeste Harbor</a>
-    
-      <nav class="global-nav" aria-label="Celeste Harbor navigation">
-        <div class="nav-group">
-          <button class="nav-top" type="button">航海記録</button>
-          <div class="nav-menu">
-            <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
-            <a href="/harbor-status/">現在地</a>
-          </div>
+  <header class="site-header">
+    <a class="brand" href="/">Celeste Harbor</a>
+  
+    <nav class="global-nav" aria-label="Celeste Harbor navigation">
+      <div class="nav-group">
+        <button class="nav-top" type="button">航海記録</button>
+        <div class="nav-menu">
+          <a href="/log/">日々の記録</a>
+          <a href="/timeline/">航海年表</a>
+          <a href="/voyage-archive/">航海の保管庫</a>
+          <a href="/harbor-status/">現在地</a>
         </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">漂着物</button>
-          <div class="nav-menu">
-            <a href="/items/">漂着物</a>
-            <a href="/vessels/">船</a>
-            <a href="/tickets/">切符</a>
-          </div>
+      </div>
+  
+      <div class="nav-group">
+        <button class="nav-top" type="button">漂着物</button>
+        <div class="nav-menu">
+          <a href="/items/">漂着物</a>
+          <a href="/vessels/">船</a>
+          <a href="/tickets/">切符</a>
         </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">海図</button>
-          <div class="nav-menu">
-            <a href="/map/">海図</a>
-          </div>
+      </div>
+  
+      <div class="nav-group">
+        <button class="nav-top" type="button">海図</button>
+        <div class="nav-menu">
+          <a href="/map/">海図</a>
         </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
-          <div class="nav-menu">
-            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-          </div>
+      </div>
+  
+      <div class="nav-group">
+        <button class="nav-top" type="button">便り</button>
+        <div class="nav-menu">
+          <a href="/harbor-letter/" class="nav-letter-link">便り</a>
         </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
-          <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
-            <a href="/help/faq/">よくある質問</a>
-            <a href="/help/#login">ログインできないとき</a>
-            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
-          </div>
+      </div>
+  
+      <div class="nav-group">
+        <button class="nav-top" type="button">はじめての方へ</button>
+        <div class="nav-menu">
+          <a href="/help/">はじめての方へ</a>
+          <a href="/help/faq/">よくある質問</a>
+          <a href="/help/#login">ログインできないとき</a>
+          <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
         </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">アカウント</button>
-          <div class="nav-menu">
-            <a href="/account/">アカウント</a>
-            <a href="/billing/">お支払い</a>
-            <a href="/pricing/">Harbor Store</a>
-            <a href="/legal/">法務情報</a>
-            <a href="/legal/terms/">利用規約</a>
-            <a href="/legal/privacy/">プライバシーポリシー</a>
-            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
-            <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
-          </div>
+      </div>
+  
+      <div class="nav-group nav-account">
+        <button class="nav-top" type="button">アカウント</button>
+        <div class="nav-menu">
+          <a href="/account/">アカウント</a>
+          <a href="/billing/">お支払い</a>
+          <a href="/pricing/">Harbor Store</a>
+          <a href="/legal/">法務情報</a>
+          <a href="/legal/terms/">利用規約</a>
+          <a href="/legal/privacy/">プライバシーポリシー</a>
+          <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
         </div>
-      </nav>
-    </header>
+      </div>
+    </nav>
+  </header>
+    
     <div id="activeVoyageBanner"></div>
 
     <main>
@@ -1421,8 +1436,8 @@
       </h1>
 
       <p class="lead">
-        ここでは、現在の船と、次の船に必要な漂着物を確認できます。<br>
-        必要なものが揃ったとき、新しい船が静かに港へ加わります。
+        船は、航海を続けてきた証です。<br>
+        ここでは、現在の船と、次の船に必要な記憶の欠片を確認できます。
       </p>
 
       <section class="panel">
@@ -1441,8 +1456,8 @@
         </div>
 
         <p class="note">
-          船は、航海記録と漂着物によって少しずつ整っていきます。<br>
-          船が整うたびに、港の外にある海も少しずつ開いていきます。
+          船は、ゲームの報酬ではありません。<br>
+          日々の言葉と、そこから流れ着いた漂着物が形になった、継続の証です。
         </p>
       </section>
     </main>
