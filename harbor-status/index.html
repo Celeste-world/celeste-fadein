@@ -488,6 +488,16 @@
       color:var(--text);
     }
 
+    .nav-group.nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
+
+    .nav-group.nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+
     @media(max-width:760px){
       body{
         .nav-group.nav-account .nav-menu{
@@ -521,10 +531,6 @@
         transform:none;
         min-width:190px;
         max-width:calc(100vw - 32px);
-      }
-
-      .nav-group.nav-account{
-        margin-left:auto;
       }
 
       .nav-group.nav-account .nav-menu{
