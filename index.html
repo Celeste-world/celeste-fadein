@@ -511,6 +511,75 @@
         z-index:10 !important;
       }
     }
+
+      .steps{
+        position:fixed;
+        left:50%;
+        bottom:calc(var(--gate-bottom) + var(--gate-height) + 18px);
+        transform:translateX(-50%);
+        z-index:5;
+        width:min(720px, calc(100% - 34px));
+        padding:14px 16px;
+        border-radius:20px;
+        border:1px solid rgba(169,183,255,.16);
+        background:rgba(5,8,17,.34);
+        backdrop-filter:blur(8px);
+        text-align:center;
+        box-shadow:0 14px 38px rgba(0,0,0,.24);
+      }
+  
+      .steps-title{
+        margin:0 0 10px;
+        color:var(--accent);
+        font-size:11px;
+        letter-spacing:.12em;
+        font-weight:400;
+      }
+  
+      .steps-grid{
+        display:grid;
+        grid-template-columns:repeat(3, 1fr);
+        gap:10px;
+      }
+  
+      .step-card{
+        padding:10px 10px;
+        border-radius:16px;
+        background:rgba(255,255,255,.024);
+        border:1px solid rgba(169,183,255,.12);
+      }
+  
+      .step-card h2{
+        margin:0 0 5px;
+        color:rgba(232,235,239,.9);
+        font-size:12px;
+        font-weight:400;
+        letter-spacing:.04em;
+      }
+  
+      .step-card p{
+        margin:0;
+        color:rgba(160,168,187,.78);
+        font-size:10.5px;
+        line-height:1.65;
+      }
+  
+      @media(max-width:760px){
+        .steps{
+          position:relative;
+          left:auto;
+          bottom:auto;
+          transform:none;
+          width:calc(100% - 34px);
+          margin:18px auto 16px;
+          padding:14px;
+        }
+  
+        .steps-grid{
+          grid-template-columns:1fr;
+          gap:8px;
+        }
+      }
     
   </style>
 </head>
@@ -533,6 +602,37 @@
       </p>
     </section>
 
+    
+    <section class="steps" aria-label="Celeste Harbor steps">
+      <p class="steps-title">3ステップで分かる Celeste Harbor</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <h2>① 言葉を残す</h2>
+          <p>
+            今日感じたことを、<br>
+            短い言葉で記録します。
+          </p>
+        </div>
+
+        <div class="step-card">
+          <h2>② 航海が育つ</h2>
+          <p>
+            記録が積み重なり、<br>
+            海や船が少しずつ広がります。
+          </p>
+        </div>
+
+        <div class="step-card">
+          <h2>③ 航海史になる</h2>
+          <p>
+            過去の言葉を振り返りながら、<br>
+            自分だけの年表が育ちます。
+          </p>
+        </div>
+      </div>
+    </section>
+    
     <section class="gate" aria-label="Celeste Harbor entrance">
       <div class="brand">Celeste Harbor</div>
       <div class="subline">
