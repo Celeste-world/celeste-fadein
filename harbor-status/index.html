@@ -691,6 +691,51 @@
         grid-template-columns:1fr;
       }
     }
+
+    .recent-voyage-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    
+    .recent-voyage-item{
+      border:1px solid rgba(169,183,255,.16);
+      border-radius:16px;
+      background:rgba(255,255,255,.024);
+      padding:16px;
+    }
+    
+    .recent-voyage-label{
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.14em;
+      margin-bottom:8px;
+    }
+    
+    .recent-voyage-name{
+      color:var(--text);
+      font-size:18px;
+      line-height:1.7;
+      margin-bottom:8px;
+    }
+    
+    .recent-voyage-text{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+    
+    .recent-voyage-card .harbor-light-number{
+      font-size:28px;
+      margin-bottom:8px;
+    }
+    
+    @media(max-width:760px){
+      .recent-voyage-grid{
+        grid-template-columns:1fr;
+      }
+    }
   </style>
 </head>
 
@@ -857,27 +902,32 @@
           </div>
         </article>
       
-        <article class="card">
-          <div class="card-label">港の灯り</div>
-          <div class="card-title">最近の記録</div>
-          <div class="harbor-light-number" id="harborLightNumber">—</div>
-          <div class="card-text" id="harborLightText">
-            港の灯りを確認しています。
-          </div>
-          <div class="small-meta">
-            過去7日間のうち、航海記録を残した日数です。連続記録ではありません。
-          </div>
-        </article>
+       <article class="card wide recent-voyage-card">
+        <div class="card-label">最近の航海</div>
+        <div class="card-title">港に残っている最近の気配</div>
       
-        <article class="card">
-          <div class="card-label">今の航海の気配</div>
-          <div class="card-title">今の航海の気配</div>
-          <div class="card-text" id="seaTitleName">
-            気配を確認しています。
+        <div class="recent-voyage-grid">
+          <div class="recent-voyage-item">
+            <div class="recent-voyage-label">港の灯り</div>
+            <div class="harbor-light-number" id="harborLightNumber">—</div>
+            <div class="recent-voyage-text" id="harborLightText">
+              港の灯りを確認しています。
+            </div>
+            <div class="small-meta">
+              過去7日間のうち、航海記録を残した日数です。
+            </div>
           </div>
-          <div class="small-meta" id="seaTitleText"></div>
-          <div class="chip-row" id="tagChips"></div>
-        </article>
+      
+          <div class="recent-voyage-item">
+            <div class="recent-voyage-label">今の航海の気配</div>
+            <div class="recent-voyage-name" id="seaTitleName">
+              気配を確認しています。
+            </div>
+            <div class="small-meta" id="seaTitleText"></div>
+            <div class="chip-row" id="tagChips"></div>
+          </div>
+        </div>
+      </article>
       
         <article
           class="card wide memory-card"
