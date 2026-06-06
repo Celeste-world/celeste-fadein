@@ -651,6 +651,46 @@
         white-space:normal;
       }
     }
+
+    .current-location-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    
+    .current-location-item{
+      border:1px solid rgba(169,183,255,.16);
+      border-radius:16px;
+      background:rgba(255,255,255,.024);
+      padding:16px;
+    }
+    
+    .current-location-label{
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.14em;
+      margin-bottom:8px;
+    }
+    
+    .current-location-name{
+      color:var(--text);
+      font-size:20px;
+      line-height:1.7;
+      margin-bottom:8px;
+    }
+    
+    .current-location-text{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+    
+    @media(max-width:760px){
+      .current-location-grid{
+        grid-template-columns:1fr;
+      }
+    }
   </style>
 </head>
 
@@ -780,19 +820,26 @@
           </div>
         </article>
       
-        <article class="card">
-          <div class="card-label">現在の船</div>
-          <div class="card-title" id="currentVesselName">確認中</div>
-          <div class="card-text" id="currentVesselText">
-            現在の船を確認しています。
-          </div>
-        </article>
-      
-        <article class="card">
-          <div class="card-label">現在の海域</div>
-          <div class="card-title" id="currentAreaName">確認中</div>
-          <div class="card-text" id="currentAreaText">
-            現在の海域を確認しています。
+        <article class="card wide current-location-card">
+          <div class="card-label">現在地</div>
+          <div class="card-title">今の航海</div>
+        
+          <div class="current-location-grid">
+            <div class="current-location-item">
+              <div class="current-location-label">船</div>
+              <div class="current-location-name" id="currentVesselName">確認中</div>
+              <div class="current-location-text" id="currentVesselText">
+                現在の船を確認しています。
+              </div>
+            </div>
+        
+            <div class="current-location-item">
+              <div class="current-location-label">海域</div>
+              <div class="current-location-name" id="currentAreaName">確認中</div>
+              <div class="current-location-text" id="currentAreaText">
+                現在の海域を確認しています。
+              </div>
+            </div>
           </div>
         </article>
       
