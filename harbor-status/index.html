@@ -1505,7 +1505,7 @@
       voyageDays.textContent = voyageDaysFrom(harborSummary.voyage_started_at);
       voyageLogCount.textContent = String(harborSummary.voyage_log_count || 0) + "件";
       vesselCount.textContent = String(harborSummary.vessel_count || 0) + "隻";
-      itemCount.textContent = String(harborSummary.harbor_item_total_count || 0) + "個";
+      itemCount.textContent = String(harborSummary.harbor_item_kind_count || 0) + "種";
 
       currentVesselName.textContent =
         harborSummary.current_vessel_name_ja ||
