@@ -167,6 +167,11 @@
         z-index:80;
       }
 
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
       .nav-menu::before{
         content:"";
         position:absolute;
@@ -178,6 +183,11 @@
         border-left:1px solid rgba(169,183,255,.24);
         border-top:1px solid rgba(169,183,255,.24);
         background:rgba(10,14,28,.96);
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
       }
   
       .nav-group.open .nav-menu{
@@ -936,6 +946,11 @@
         left:0;
         transform:none;
         min-width:190px;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
       }
     
       #activeVoyageBanner{
