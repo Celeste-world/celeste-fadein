@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>船室記録 – Celeste Harbor</title>
+  <title>人生の航海年表 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -156,6 +156,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -168,6 +173,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -197,6 +207,7 @@
     .logout-link:hover{
       color:var(--text);
     }
+
     #activeVoyageBanner{
       position:sticky;
       top:12px;
@@ -761,56 +772,61 @@
         padding:36px 16px 32px;
       }
 
-    .site-header{
-      display:flex !important;
-      flex-direction:column !important;
-      align-items:flex-start !important;
-      justify-content:flex-start;
-      gap:12px;
-      margin-bottom:44px;
-      overflow:visible;
-    }
-    
-    .brand{
-      display:block;
-      flex:0 0 auto;
-      width:100%;
-      white-space:nowrap;
-    }
-    
-    .global-nav{
-      display:flex;
-      width:100%;
-      flex:0 0 auto;
-      justify-content:flex-start;
-      align-items:center;
-      gap:10px 18px;
-      font-size:12px;
-      flex-wrap:wrap;
-      overflow:visible;
-    }
-    
-    .nav-group{
-      position:relative;
-      flex:0 0 auto;
-    }
-    
-    .global-nav .nav-top{
-      width:auto;
-      min-width:0;
-      padding:6px 0;
-      white-space:nowrap;
-    }
-    
-    .nav-menu{
-      position:absolute;
-      top:calc(100% + 10px);
-      left:0;
-      transform:none;
-      min-width:190px;
-      max-width:calc(100vw - 32px);
-      z-index:1000;
-    }
+      .site-header{
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:flex-start !important;
+        justify-content:flex-start;
+        gap:12px;
+        margin-bottom:44px;
+        overflow:visible;
+      }
+      
+      .brand{
+        display:block;
+        flex:0 0 auto;
+        width:100%;
+        white-space:nowrap;
+      }
+      
+      .global-nav{
+        display:flex;
+        width:100%;
+        flex:0 0 auto;
+        justify-content:flex-start;
+        align-items:center;
+        gap:10px 18px;
+        font-size:12px;
+        flex-wrap:wrap;
+        overflow:visible;
+      }
+      
+      .nav-group{
+        position:relative;
+        flex:0 0 auto;
+      }
+      
+      .global-nav .nav-top{
+        width:auto;
+        min-width:0;
+        padding:6px 0;
+        white-space:nowrap;
+      }
+      
+      .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;
+        transform:none;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
       
       #activeVoyageBanner{
         top:10px;
@@ -939,7 +955,7 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
+            <a href="/timeline/">航海年表</a>
             <a href="/voyage-archive/">保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
@@ -969,17 +985,16 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -994,19 +1009,20 @@
         </div>
       </nav>
     </header>
+
     <div id="activeVoyageBanner"></div>
 
     <main>
-      <div class="label">船室記録</div>
+      <div class="label">Timeline</div>
 
       <h1>
-        船室に残る、<br>
-        小さな航海の跡。
+        あなたの航海が、<br>
+        年表になる。
       </h1>
 
       <p class="lead">
-        ここでは、港で起きた出来事を時系列で確認できます。<br>
-        漂着物、チケット、船、海域の開放、特別航海の記録が、静かに積もっていきます。
+        ここは、あなたが残した言葉と、港で起きた出来事が積み重なっていく場所です。<br>
+        一つひとつの記録は、やがてあなた自身の航海年表になっていきます。
       </p>
 
       <section class="panel">
@@ -1020,19 +1036,19 @@
       <section>
         <div id="timeline">
           <div class="empty">
-            船室記録を確認しています...
+            航海年表を確認しています...
           </div>
         </div>
 
         <div class="read-more-wrap" id="readMoreWrap" style="display:none;">
           <button class="read-more" id="readMoreBtn" type="button">
-            記録をさらに表示
+            年表をさらに表示
           </button>
         </div>
 
         <p class="note">
-          船室記録は進行のためだけではなく、港に積もっていく記録です。<br>
-          その夜に何かが流れ着いたなら、その小さな出来事もここに残ります。
+          航海年表は、ただの進行履歴ではありません。<br>
+          あなたが言葉を残した日、漂着物と出会った日、新しい船や海域にたどり着いた日が、人生の航海としてここに積もっていきます。
         </p>
       </section>
     </main>
@@ -1050,11 +1066,11 @@
         ×
       </button>
 
-     <div class="timeline-detail-label" id="timelineDetailLabel">船室記録</div>
+      <div class="timeline-detail-label" id="timelineDetailLabel">Timeline</div>
 
-        <h2 class="timeline-detail-title" id="timelineDetailTitle">
-          船室記録
-        </h2>
+      <h2 class="timeline-detail-title" id="timelineDetailTitle">
+        航海年表
+      </h2>
 
       <div class="timeline-detail-date" id="timelineDetailDate"></div>
 
@@ -1124,7 +1140,6 @@
       unnamed_waters: "/images/areas/unnamed-waters.png"
     };
 
-    
     function areaImagePath(areaKey){
       return areaImagePaths[areaKey] || seaChartImagePath;
     }
@@ -1235,19 +1250,19 @@
       const normalized = normalizeEventType(type);
 
       if(normalized === "harbor_find" || normalized === "item_found"){
-        return "Harbor Find";
+        return "漂着物";
       }
 
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
-        return "Vessel";
+        return "船";
       }
 
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
-        return "Drift Ticket";
+        return "航海券";
       }
 
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-        return "New Sea Area";
+        return "新しい海域";
       }
 
       if(normalized === "special_voyage_started"){
@@ -1267,14 +1282,14 @@
       }
 
       if(normalized === "log_saved"){
-        return "Voyage Log";
+        return "航海記録";
       }
 
       if(normalized === "cat_reply"){
-        return "Harbor Cat";
+        return "港の猫";
       }
 
-      return type || "Cabin Log";
+      return type || "Timeline";
     }
 
     function eventClassName(type){
@@ -1432,7 +1447,7 @@
       if(isSpecialVoyageEvent(normalized)){
         return {
           href: "/log/",
-          label: "Voyage Log へ"
+          label: "日々の記録へ"
         };
       }
 
@@ -1472,18 +1487,18 @@
       }
 
       if(normalized === "harbor_find" || normalized === "item_found"){
-        return event.body || "港に、何かが静かに流れ着きました。";
+        return event.body || "港に、記憶の欠片が静かに流れ着きました。";
       }
 
       if(normalized === "special_voyage_find"){
-        return event.body || "特別航海の途中で、漂着物が見つかりました。";
+        return event.body || "特別航海の途中で、記憶の欠片が見つかりました。";
       }
 
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
         return event.body || "小さな航海券が、港に流れ着きました。";
       }
 
-      return event.body || "この出来事は、Cabin Log に静かに残されています。";
+      return event.body || "この出来事は、あなたの航海年表に静かに残されています。";
     }
 
     function renderTimelineImage(event){
@@ -1842,7 +1857,7 @@
         document.body.classList.remove("auth-locked");
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("船室記録を確認しています。");
+        setStatus("航海年表を確認しています。");
 
         await loadActiveSpecialVoyageBanner();
         await loadTimeline();
@@ -1877,13 +1892,13 @@
         showAllTimeline = false;
 
         renderTimeline();
-        setStatus("船室記録を確認しました。");
+        setStatus("航海年表を確認しました。");
       }catch(error){
         console.error("load timeline error:", error);
 
         timelineEl.innerHTML = `
           <div class="empty">
-            船室記録を読み込めませんでした。<br>
+            航海年表を読み込めませんでした。<br>
             ${escapeHtml(error.message)}
           </div>
         `;
@@ -1892,7 +1907,7 @@
           readMoreWrap.style.display = "none";
         }
 
-        setStatus("Cabin Log を読み込めませんでした：" + error.message, true);
+        setStatus("航海年表を読み込めませんでした：" + error.message, true);
       }
     }
 
@@ -1904,8 +1919,8 @@
       if(!events || events.length === 0){
         timelineEl.innerHTML = `
           <div class="empty">
-            まだ船室に残った記録はありません。<br>
-            日々の記録を残した夜や、何かが港へ流れ着いた夜に、ここへ静かに記録されます。
+            まだ航海年表は始まっていません。<br>
+            日々の言葉を残した日や、何かが港へ流れ着いた夜に、ここへ静かに記録されます。
           </div>
         `;
 
@@ -1967,7 +1982,7 @@
       if(readMoreWrap && readMoreBtn){
         if(events.length > initialTimelineLimit){
           readMoreWrap.style.display = "flex";
-          readMoreBtn.textContent = showAllTimeline ? "記録を少なく表示" : "記録をさらに表示";
+          readMoreBtn.textContent = showAllTimeline ? "年表を少なく表示" : "年表をさらに表示";
         }else{
           readMoreWrap.style.display = "none";
         }
