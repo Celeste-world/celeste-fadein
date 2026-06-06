@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>保管庫 – Celeste Harbor</title>
+  <title>過去の自分との再会 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
@@ -122,6 +122,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -136,6 +141,10 @@
       background:rgba(10,14,28,.96);
     }
 
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
     
     .nav-group.open .nav-menu{
       display:block;
@@ -169,9 +178,34 @@
       position:relative;
     }
     
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+    
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
     
     .page-head{
       margin-bottom:30px;
+    }
+
+    .label{
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
     }
 
     h1{
@@ -255,10 +289,7 @@
       outline:none;
     }
     
-    .archive-search-select:focus{
-      border-color:rgba(169,183,255,.58);
-    }
-    
+    .archive-search-select:focus,
     .archive-search-input:focus{
       border-color:rgba(169,183,255,.58);
     }
@@ -856,8 +887,6 @@
       }
     }
 
-    
-
     @media(max-width:760px){
       body{
         padding:28px 16px;
@@ -913,6 +942,12 @@
         max-width:calc(100vw - 32px);
         z-index:1000;
       }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
       h1{
         font-size:30px;
       }
@@ -955,8 +990,8 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -985,17 +1020,16 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -1013,11 +1047,16 @@
 
     <main>
       <div class="page-head">
-        <h1>保管庫</h1>
+        <div class="label">Voyage Archive</div>
+
+        <h1>
+          過去の自分と、<br>
+          もう一度出会う。
+        </h1>
 
         <p class="lead">
-          月ごとに、これまでの航海記録を静かに見返す場所です。<br>
-          ここでは、過去の言葉が月明かりのように並びます。
+          ここは、これまで残した航海記録を月ごとに見返す場所です。<br>
+          その時の言葉、気配、灯りをたどることで、過去の自分と静かに再会できます。
         </p>
       </div>
 
@@ -1028,14 +1067,14 @@
       <div class="status" id="status"></div>
 
       <div class="archive-search-panel">
-        <div class="archive-search-label">記録を探す</div>
+        <div class="archive-search-label">過去の言葉を探す</div>
       
         <div class="archive-search-row">
           <input
             class="archive-search-input"
             id="archiveSearchInput"
             type="search"
-            placeholder="探したい言葉を入力する..."
+            placeholder="もう一度出会いたい言葉を入力する..."
             autocomplete="off"
           >
         
@@ -1071,7 +1110,7 @@
         </div>
       
         <div class="archive-search-result" id="archiveSearchResult">
-          言葉、気配、Lantern Mark を使って、保存した航海記録を探せます。
+          言葉、気配、Lantern Mark を使って、過去の航海記録を探せます。
         </div>
 
         <div class="read-more-wrap" id="archiveSearchMoreWrap" style="display:none;">
@@ -1083,28 +1122,28 @@
       
       <div class="archive-layout">
         <section class="month-list" id="monthListPanel">
-          <div class="section-label">月ごとの記録</div>
-            <div id="monthList"></div>
+          <div class="section-label">月ごとの航海</div>
+          <div id="monthList"></div>
             
-            <div class="read-more-wrap" id="monthReadMoreWrap" style="display:none;">
-              <button class="read-more" id="monthReadMoreBtn" type="button">
-                月をさらに表示
-              </button>
-            </div>
+          <div class="read-more-wrap" id="monthReadMoreWrap" style="display:none;">
+            <button class="read-more" id="monthReadMoreBtn" type="button">
+              月をさらに表示
+            </button>
+          </div>
             
-            <div class="archive-note">
-            Voyage Log の記録を月ごとにまとめています。<br>
-            詳細は月を選ぶと表示されます。
+          <div class="archive-note">
+            航海記録を月ごとにまとめています。<br>
+            月を選ぶと、その頃の言葉と気配を見返せます。
           </div>
         </section>
 
         <section class="month-detail mobile-hidden" id="monthDetailPanel">
           <div class="detail-head">
             <div>
-              <div class="section-label">記録の詳細</div>
+              <div class="section-label">この月の記憶</div>
               <h2 class="detail-title" id="detailTitle">月を選んでください</h2>
               <p class="detail-sub" id="detailSub">
-                左の一覧から、見返したい月を選びます。
+                左の一覧から、もう一度出会いたい月を選びます。
               </p>
             </div>
 
@@ -1227,8 +1266,6 @@
         </div>
       </div>
     </div>
-
-    
 
   </div>
 
@@ -1552,16 +1589,16 @@
     }
     
     function renderMonthSummary(group){
-     if(
-      !monthSummary ||
-      !monthSummaryCount ||
-      !monthSummaryDays ||
-      !monthSummaryTag ||
-      !monthSummaryLanterns ||
-      !monthSummaryText
-    ){
-      return;
-    }
+      if(
+        !monthSummary ||
+        !monthSummaryCount ||
+        !monthSummaryDays ||
+        !monthSummaryTag ||
+        !monthSummaryLanterns ||
+        !monthSummaryText
+      ){
+        return;
+      }
     
       if(!group || !Array.isArray(group.logs) || group.logs.length === 0){
         monthSummary.style.display = "none";
@@ -1751,7 +1788,7 @@
       const lines = [];
     
       lines.push("Celeste Harbor");
-      lines.push("保管庫 月次書き出し");
+      lines.push("航海の保管庫 月次書き出し");
       lines.push("");
       lines.push("出力日時：" + formatDateTime(new Date().toISOString()));
       lines.push("対象月：" + (group?.label || "日付不明"));
@@ -2086,7 +2123,7 @@
     
       if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
-          "言葉、タグ、Lantern Mark を使って、保存した航海記録を探せます。";
+          "言葉、気配、Lantern Mark を使って、過去の航海記録を探せます。";
         updateArchiveSearchMoreButton();
         return;
       }
@@ -2255,6 +2292,7 @@
         updateArchiveSearchResult(archiveSearchLogs, archiveSearchTotalCount);
       }
     }
+
     function buildMonthGroups(logs){
       const map = new Map();
 
@@ -2307,8 +2345,8 @@
           <div class="empty">
             ${
               hasSearch
-                ? "条件に一致する航海記録はありません。<br>言葉やタグを少し変えて探してみてください。"
-                : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの記録が現れます。"
+                ? "条件に一致する航海記録はありません。<br>言葉や気配を少し変えて探してみてください。"
+                : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの航海が現れます。"
             }
           </div>
         `;
@@ -2432,7 +2470,7 @@
     function renderMonthDetail(group){
       if(!group){
         detailTitle.textContent = "月を選んでください";
-        detailSub.textContent = "左の一覧から、見返したい月を選びます。";
+        detailSub.textContent = "左の一覧から、もう一度出会いたい月を選びます。";
 
         if(downloadMonthBtn){
           downloadMonthBtn.disabled = true;
@@ -2549,7 +2587,7 @@
         return;
       }
 
-      setStatus("保管庫を読み込んでいます。");
+      setStatus("航海の保管庫を読み込んでいます。");
 
       const { data, error } = await client
         .from("voyage_logs")
@@ -2569,7 +2607,7 @@
       refreshArchiveView();
       
       setStatus("");
-      }
+    }
 
     async function logout(){
       await client.auth.signOut();
