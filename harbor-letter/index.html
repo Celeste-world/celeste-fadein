@@ -146,6 +146,11 @@
       z-index:80;
     }
 
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
+
     .nav-menu::before{
       content:"";
       position:absolute;
@@ -157,6 +162,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
 
     .nav-group.open .nav-menu{
@@ -490,9 +500,23 @@
       }
 
       .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
         left:0;
         transform:none;
         min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
       }
 
       h1{
@@ -530,8 +554,8 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -560,17 +584,16 @@
         </div>
         
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
 
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
