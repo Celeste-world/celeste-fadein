@@ -6,19 +6,19 @@
 
   <title>Celeste Harbor</title>
 
-  <meta name="description" content="Celeste Harbor は、日々の言葉を航海記録として残す、静かな日記アプリです。Googleログインで港へ入り、気持ちや出来事を静かに書き残していきます。" />
+  <meta name="description" content="Celeste Harbor は、人生を航海として記録する静かなWebの港です。日々の言葉を航海記録として残し、未来の自分が振り返れる人生の航海史を育てていきます。" />
   <link rel="canonical" href="https://celeste.world/" />
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Celeste Harbor">
-  <meta property="og:description" content="日々の言葉を、静かな航海記録として残す日記アプリ。">
+  <meta property="og:description" content="人生を航海として記録する、静かなWebの港。">
   <meta property="og:url" content="https://celeste.world/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Celeste Harbor">
-  <meta name="twitter:description" content="日々の言葉を、静かな航海記録として残す日記アプリ。">
+  <meta name="twitter:description" content="人生を航海として記録する、静かなWebの港。">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -32,11 +32,8 @@
       --dim:#747f96;
       --accent:#a9b7ff;
       --danger:#ff9b9b;
-
-      --gate-height:118px;
-      --gate-bottom:18px;
-      --art-top:18px;
-      --art-safe-bottom:232px;
+      --panel:rgba(5,8,17,.50);
+      --line:rgba(169,183,255,.18);
     }
 
     *{
@@ -52,15 +49,17 @@
 
     body{
       min-height:100vh;
-      min-height:100svh;
-      background:#050811;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(169,183,255,.08), transparent 34%),
+        radial-gradient(circle at 72% 78%, rgba(169,183,255,.05), transparent 34%),
+        #050811;
       color:var(--text);
       font-family:
         "Hiragino Mincho ProN",
         "Yu Mincho",
         "Noto Serif JP",
         serif;
-      overflow:hidden;
+      overflow-x:hidden;
     }
 
     a{
@@ -72,127 +71,91 @@
       font-family:inherit;
     }
 
-    .entrance{
+    .page{
       position:relative;
-      min-height:100vh;
-      min-height:100svh;
       width:100%;
+      min-height:100vh;
       overflow:hidden;
-      background:#050811;
     }
 
-    .entrance::before{
+    .page::after{
       content:"";
-      position:absolute;
+      position:fixed;
       inset:0;
-      z-index:1;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(169,183,255,.06), transparent 30%),
-        radial-gradient(circle at 72% 78%, rgba(169,183,255,.04), transparent 34%);
-      pointer-events:none;
-    }
-
-    .entrance::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:2;
+      z-index:0;
       background:
         linear-gradient(
           to bottom,
-          rgba(3,5,11,.03) 0%,
-          rgba(3,5,11,.06) 48%,
-          rgba(3,5,11,.18) 100%
+          rgba(3,5,11,.04) 0%,
+          rgba(3,5,11,.10) 48%,
+          rgba(3,5,11,.24) 100%
         );
       pointer-events:none;
     }
 
-    .entrance-art{
-      position:absolute;
-      left:50%;
-      top:var(--art-top);
-      z-index:0;
+    .content{
+      position:relative;
+      z-index:2;
+      width:min(860px, calc(100% - 32px));
+      margin:0 auto;
+      padding:28px 0 42px;
+    }
+
+    .hero-art{
       width:100%;
-      height:calc(100svh - var(--art-safe-bottom));
-      min-height:0;
-      transform:translateX(-50%);
-      overflow:hidden;
+      height:min(42vh, 360px);
+      min-height:210px;
+      margin:0 auto 20px;
       background:
         url("/images/harbor-entrance.png") center center / contain no-repeat;
       filter:
-        brightness(.94)
-        saturate(.97)
+        brightness(.95)
+        saturate(.98)
         contrast(1.02);
     }
 
-    .entrance-art::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(5,8,17,.06) 0%,
-          rgba(5,8,17,.08) 48%,
-          rgba(5,8,17,.16) 100%
-        );
-      pointer-events:none;
-    }
-
-    .intro-copy{
-      position:fixed;
-      left:50%;
-      bottom:calc(var(--gate-bottom) + var(--gate-height) + 42px);
-      transform:translateX(-50%);
-      z-index:4;
-      width:min(620px, calc(100% - 34px));
+    .hero{
       text-align:center;
-      padding:0 6px;
-      pointer-events:none;
       text-shadow:
         0 2px 14px rgba(0,0,0,.58),
         0 0 20px rgba(5,8,17,.42);
+      margin-bottom:18px;
     }
 
-    .intro-kicker{
-      margin:0 0 6px;
+    .kicker{
+      margin:0 0 8px;
       color:var(--accent);
-      font-size:9px;
+      font-size:10px;
       letter-spacing:.18em;
       text-transform:uppercase;
-      opacity:.72;
+      opacity:.74;
     }
 
-    .intro-copy h1{
+    .hero h1{
       margin:0;
-      color:rgba(232,235,239,.88);
-      font-size:clamp(14px, 2.1vw, 18px);
+      color:rgba(232,235,239,.92);
+      font-size:clamp(20px, 4vw, 34px);
       font-weight:400;
-      line-height:1.85;
+      line-height:1.65;
       letter-spacing:.04em;
     }
 
-    .intro-lead{
-      margin:8px auto 0;
-      max-width:520px;
-      color:rgba(160,168,187,.78);
-      font-size:11px;
-      line-height:1.9;
+    .lead{
+      margin:14px auto 0;
+      max-width:620px;
+      color:rgba(160,168,187,.84);
+      font-size:14px;
+      line-height:2;
     }
 
     .gate{
-      position:fixed;
-      left:50%;
-      bottom:var(--gate-bottom);
-      transform:translateX(-50%);
-      z-index:4;
-      width:min(680px, calc(100% - 28px));
-      min-height:var(--gate-height);
-      padding:14px;
-      border-radius:22px;
-      border:1px solid rgba(169,183,255,.20);
-      background:rgba(5,8,17,.44);
-      backdrop-filter:blur(8px);
+      margin:22px auto 20px;
+      width:min(680px, 100%);
+      padding:18px;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.22);
+      background:rgba(5,8,17,.48);
+      backdrop-filter:blur(10px);
       box-shadow:
         0 18px 48px rgba(0,0,0,.32),
         inset 0 0 0 1px rgba(255,255,255,.018);
@@ -206,22 +169,23 @@
       color:var(--accent);
       white-space:nowrap;
       text-shadow:0 2px 14px rgba(0,0,0,.55);
-      margin-bottom:4px;
+      margin-bottom:5px;
     }
 
     .subline{
       font-size:12px;
       color:var(--muted);
-      white-space:nowrap;
       text-shadow:0 2px 14px rgba(0,0,0,.55);
-      margin-bottom:12px;
+      margin-bottom:14px;
+      line-height:1.7;
     }
 
     .actions{
       display:grid;
-      grid-template-columns:1.15fr 1fr;
+      grid-template-columns:1.1fr .9fr;
       gap:10px;
-      width:100%;
+      width:min(520px, 100%);
+      margin:0 auto;
     }
 
     .btn-primary,
@@ -230,9 +194,9 @@
       align-items:center;
       justify-content:center;
       width:100%;
-      padding:9px 12px;
+      padding:10px 14px;
       border-radius:999px;
-      font-size:12px;
+      font-size:13px;
       cursor:pointer;
       white-space:nowrap;
     }
@@ -261,7 +225,7 @@
 
     .status{
       min-height:1.4em;
-      margin-top:8px;
+      margin-top:10px;
       font-size:11px;
       line-height:1.5;
       color:var(--dim);
@@ -272,415 +236,257 @@
       color:var(--danger);
     }
 
-    @media(max-width:760px){
-      :root{
-        --gate-height:190px;
-        --gate-bottom:12px;
-        --art-top:12px;
-        --art-safe-bottom:296px;
-      }
-
-      .entrance::after{
-        background:
-          linear-gradient(
-            to bottom,
-            rgba(3,5,11,.04) 0%,
-            rgba(3,5,11,.08) 52%,
-            rgba(3,5,11,.22) 100%
-          );
-      }
-
-      .entrance-art{
-        width:100%;
-        height:calc(100svh - var(--art-safe-bottom));
-        background:
-          url("/images/harbor-entrance.png") center center / contain no-repeat;
-        filter:
-          brightness(.94)
-          saturate(.97)
-          contrast(1.02);
-      }
-
-      .entrance-art::after{
-        background:
-          linear-gradient(
-            to bottom,
-            rgba(5,8,17,.06) 0%,
-            rgba(5,8,17,.10) 52%,
-            rgba(5,8,17,.18) 100%
-          );
-      }
-
-      .intro-copy{
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 34px);
-        width:calc(100% - 28px);
-      }
-
-      .intro-kicker{
-        font-size:9px;
-        margin-bottom:5px;
-      }
-
-      .intro-copy h1{
-        font-size:clamp(13px, 4.2vw, 16px);
-        line-height:1.75;
-      }
-
-      .intro-lead{
-        margin-top:7px;
-        font-size:10px;
-        line-height:1.75;
-      }
-
-      .gate{
-        bottom:var(--gate-bottom);
-        width:calc(100% - 20px);
-        min-height:var(--gate-height);
-        border-radius:18px;
-        padding:12px;
-        background:rgba(5,8,17,.46);
-      }
-
-      .brand{
-        font-size:11px;
-      }
-
-      .subline{
-        font-size:12px;
-      }
-
-      .actions{
-        grid-template-columns:1fr;
-        gap:8px;
-      }
-
-      .btn-primary,
-      .btn-ghost{
-        padding:9px 10px;
-        font-size:12px;
-      }
+    .steps{
+      width:min(760px, 100%);
+      margin:18px auto 20px;
+      padding:18px;
+      border-radius:24px;
+      border:1px solid rgba(169,183,255,.16);
+      background:rgba(5,8,17,.36);
+      backdrop-filter:blur(8px);
+      text-align:center;
+      box-shadow:0 14px 38px rgba(0,0,0,.20);
     }
 
-    @media(max-height:700px){
-      .intro-lead{
-        display:none;
-      }
+    .steps-title{
+      margin:0 0 12px;
+      color:var(--accent);
+      font-size:12px;
+      letter-spacing:.12em;
+      font-weight:400;
     }
 
-    @media(max-height:620px){
-      :root{
-        --gate-height:154px;
-        --gate-bottom:10px;
-        --art-top:10px;
-        --art-safe-bottom:240px;
-      }
-    
-      .gate{
-        bottom:var(--gate-bottom);
-        min-height:var(--gate-height);
-        padding:10px 12px;
-      }
-    
-      .intro-copy{
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 24px);
-      }
-    
-      .intro-kicker{
-        display:none;
-      }
-    
-      .intro-copy h1{
-        font-size:13px;
-        line-height:1.65;
-      }
-    
-      .subline{
-        display:none;
-      }
-    
-      .actions{
-        grid-template-columns:1fr 1fr;
-      }
-    
-      .actions .guide-link{
-        grid-column:1 / -1;
-      }
+    .steps-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
     }
-    
-    @media(max-width:420px){
-      :root{
-        --gate-height:182px;
-        --gate-bottom:10px;
-        --art-top:-24px;
-        --art-safe-bottom:340px;
-      }
-    
-      .entrance-art{
-        top:var(--art-top);
-        height:calc(100svh - var(--art-safe-bottom));
-        background-position:center top;
-      }
-    
-      .gate{
-        bottom:var(--gate-bottom);
-      }
-    
-      .intro-copy{
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 42px);
-        width:calc(100% - 36px);
-      }
-    
-      .intro-kicker{
-        margin-bottom:2px;
-        font-size:8px;
-      }
-    
-      .intro-copy h1{
-        font-size:13px;
-        line-height:1.65;
-      }
-    
-      .intro-lead{
-        display:none;
-      }
-    
-      .brand{
-        font-size:10px;
-      }
-    
-      .btn-primary,
-      .btn-ghost{
-        font-size:11px;
-        padding:8px 9px;
-      }
+
+    .step-card{
+      padding:13px 12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.024);
+      border:1px solid rgba(169,183,255,.12);
+    }
+
+    .step-card h2{
+      margin:0 0 6px;
+      color:rgba(232,235,239,.9);
+      font-size:13px;
+      font-weight:400;
+      letter-spacing:.04em;
+    }
+
+    .step-card p{
+      margin:0;
+      color:rgba(160,168,187,.80);
+      font-size:11px;
+      line-height:1.7;
+    }
+
+    .note{
+      width:min(680px, 100%);
+      margin:18px auto 0;
+      padding:16px 18px;
+      border-radius:22px;
+      border:1px solid rgba(169,183,255,.13);
+      background:rgba(255,255,255,.020);
+      text-align:center;
+      color:rgba(160,168,187,.78);
+      font-size:12px;
+      line-height:1.9;
     }
 
     .sp-only{
       display:none;
     }
-    
+
     @media(max-width:760px){
+      .content{
+        width:calc(100% - 24px);
+        padding:18px 0 34px;
+      }
+
+      .hero-art{
+        height:32vh;
+        min-height:170px;
+        margin-bottom:16px;
+        background-position:center top;
+      }
+
+      .kicker{
+        font-size:9px;
+        margin-bottom:6px;
+      }
+
+      .hero h1{
+        font-size:20px;
+        line-height:1.6;
+      }
+
+      .lead{
+        margin-top:12px;
+        font-size:12px;
+        line-height:1.9;
+      }
+
+      .gate{
+        margin:18px auto 18px;
+        padding:15px;
+        border-radius:20px;
+      }
+
+      .brand{
+        font-size:11px;
+      }
+
+      .subline{
+        font-size:11.5px;
+        margin-bottom:12px;
+      }
+
+      .actions{
+        grid-template-columns:1fr;
+        gap:9px;
+      }
+
+      .btn-primary,
+      .btn-ghost{
+        padding:10px 12px;
+        font-size:12px;
+      }
+
+      .steps{
+        margin:16px auto 18px;
+        padding:14px;
+        border-radius:20px;
+      }
+
+      .steps-title{
+        font-size:11px;
+        margin-bottom:10px;
+      }
+
+      .steps-grid{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+
+      .step-card{
+        padding:10px 12px;
+      }
+
+      .step-card h2{
+        font-size:12px;
+        margin-bottom:4px;
+      }
+
+      .step-card p{
+        font-size:10.5px;
+        line-height:1.6;
+      }
+
+      .note{
+        font-size:11px;
+        padding:14px;
+        border-radius:18px;
+      }
+
       .sp-only{
         display:block;
       }
     }
-    
-    /* Final mobile override: entrance copy spacing */
-    @media(max-width:760px){
-      .entrance-art{
-        position:absolute !important;
-        top:8svh !important;
-        left:50% !important;
-        width:100% !important;
-        height:34svh !important;
-        transform:translateX(-50%) !important;
-        background-position:center top !important;
-        background-size:contain !important;
-      }
-    
-      .intro-copy{
-        position:fixed !important;
-        left:50% !important;
-        top:calc(8svh + 34svh + 14px) !important;
-        bottom:auto !important;
-        transform:translateX(-50%) !important;
-        width:calc(100% - 36px) !important;
-        z-index:20 !important;
-      }
-    
-      .intro-kicker{
-        margin-bottom:4px !important;
-        font-size:8px !important;
-      }
-    
-      .intro-copy h1{
-        font-size:12.5px !important;
-        line-height:1.55 !important;
-        white-space:normal !important;
-        overflow:visible !important;
-        text-overflow:clip !important;
-      }
-    
-      .gate{
-        position:fixed !important;
-        left:50% !important;
-        bottom:calc(env(safe-area-inset-bottom, 0px) + 10px) !important;
-        transform:translateX(-50%) !important;
-        width:calc(100% - 20px) !important;
-        min-height:182px !important;
-        z-index:10 !important;
-      }
-    }
 
-      .steps{
-        position:fixed;
-        left:50%;
-        bottom:calc(var(--gate-bottom) + var(--gate-height) + 18px);
-        transform:translateX(-50%);
-        z-index:5;
-        width:min(720px, calc(100% - 34px));
-        padding:14px 16px;
-        border-radius:20px;
-        border:1px solid rgba(169,183,255,.16);
-        background:rgba(5,8,17,.34);
-        backdrop-filter:blur(8px);
-        text-align:center;
-        box-shadow:0 14px 38px rgba(0,0,0,.24);
+    @media(max-width:420px){
+      .content{
+        width:calc(100% - 22px);
+        padding-top:14px;
       }
-  
-      .steps-title{
-        margin:0 0 10px;
-        color:var(--accent);
-        font-size:11px;
-        letter-spacing:.12em;
-        font-weight:400;
+
+      .hero-art{
+        height:29vh;
+        min-height:150px;
+        margin-bottom:14px;
       }
-  
-      .steps-grid{
-        display:grid;
-        grid-template-columns:repeat(3, 1fr);
-        gap:10px;
+
+      .hero h1{
+        font-size:18px;
+        line-height:1.6;
       }
-  
-      .step-card{
-        padding:10px 10px;
-        border-radius:16px;
-        background:rgba(255,255,255,.024);
-        border:1px solid rgba(169,183,255,.12);
-      }
-  
-      .step-card h2{
-        margin:0 0 5px;
-        color:rgba(232,235,239,.9);
-        font-size:12px;
-        font-weight:400;
-        letter-spacing:.04em;
-      }
-  
-      .step-card p{
-        margin:0;
-        color:rgba(160,168,187,.78);
-        font-size:10.5px;
-        line-height:1.65;
-      }
-  
-     @media(max-width:760px){
-      .steps{
-        position:fixed;
-        left:50%;
-        top:calc(8svh + 34svh + 150px);
-        bottom:auto;
-        transform:translateX(-50%);
-        width:calc(100% - 34px);
-        padding:12px;
-        z-index:12;
-      }
-    
-      .steps-title{
-        margin-bottom:8px;
-        font-size:10px;
-      }
-    
-      .steps-grid{
-        grid-template-columns:1fr;
-        gap:7px;
-      }
-    
-      .step-card{
-        padding:8px 10px;
-      }
-    
-      .step-card h2{
+
+      .lead{
         font-size:11.5px;
-        margin-bottom:4px;
-      }
-    
-      .step-card p{
-        font-size:10px;
-        line-height:1.55;
+        line-height:1.85;
       }
     }
-
-    .actions-compact{
-      grid-template-columns:1.1fr .9fr;
-      max-width:520px;
-      margin:0 auto;
-    }
-    
-    @media(max-width:760px){
-      .actions-compact{
-        grid-template-columns:1fr;
-        max-width:none;
-      }
-    }
-    
   </style>
 </head>
 
 <body>
-  <div class="entrance">
-    <div class="entrance-art" aria-hidden="true"></div>
+  <main class="page">
+    <div class="content">
+      <div class="hero-art" aria-hidden="true"></div>
 
-    <section class="intro-copy" aria-label="Celeste Harbor description">
-      <p class="intro-kicker">A quiet diary harbor</p>
-      <h1>
-        あなたの人生を、<br class="sp-only">
-        航海として残す場所。
-      </h1>
-      <p class="intro-lead">
-        書いた言葉は航海記録となり、
-        少しずつ海を広げていきます。
-        続けるほど、未来のあなたが振り返れる
-        人生の航海史になります。
-      </p>
-    </section>
+      <section class="hero" aria-label="Celeste Harbor description">
+        <p class="kicker">A HARBOR FOR YOUR VOYAGE</p>
 
-    
-    <section class="steps" aria-label="Celeste Harbor steps">
-      <p class="steps-title">航海の流れ</p>
+        <h1>
+          あなたの人生を、<br class="sp-only">
+          航海として残す場所。
+        </h1>
 
-      <div class="steps-grid">
-        <div class="step-card">
-          <h2>① 言葉を残す</h2>
-          <p>
-              今日の出来事を記録
-          </p>
+        <p class="lead">
+          書いた言葉は航海記録となり、少しずつ海を広げていきます。<br>
+          続けるほど、未来のあなたが振り返れる人生の航海史になります。
+        </p>
+      </section>
+
+      <section class="gate" aria-label="Celeste Harbor entrance">
+        <div class="brand">Celeste Harbor</div>
+        <div class="subline">
+          今日の言葉が、未来への航海記録になる。
         </div>
 
-        <div class="step-card">
-          <h2>② 航海が育つ</h2>
-          <p>
-              海や船が広がる
-          </p>
+        <div class="actions">
+          <button class="btn-primary" id="loginBtn" type="button">
+            港へ入る
+          </button>
+
+          <a class="btn-ghost" href="/intro/">
+            はじめての方へ
+          </a>
         </div>
 
-        <div class="step-card">
-          <h2>③ 航海史になる</h2>
-          <p>
-              人生の年表になる
-          </p>
-        </div>
-      </div>
-    </section>
-    
-    <section class="gate" aria-label="Celeste Harbor entrance">
-      <div class="brand">Celeste Harbor</div>
-      <div class="subline">
-        今日の言葉が、未来への航海記録になる。
-      </div>
+        <div class="status" id="status"></div>
+      </section>
 
-      <div class="actions actions-compact">
-        <button class="btn-primary" id="loginBtn" type="button">
-          港へ入る
-        </button>
-      
-        <a class="btn-ghost guide-link" href="/intro/">
-          はじめての方へ
-        </a>
-      </div>
-    <div class="status" id="status"></div>
-    </section>
-  </div>
+      <section class="steps" aria-label="Celeste Harbor steps">
+        <p class="steps-title">航海の流れ</p>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <h2>① 言葉を残す</h2>
+            <p>今日の出来事を記録</p>
+          </div>
+
+          <div class="step-card">
+            <h2>② 記録が積み重なる</h2>
+            <p>海や船が広がる</p>
+          </div>
+
+          <div class="step-card">
+            <h2>③ 人生の航海史になる</h2>
+            <p>過去を振り返れる</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="note" aria-label="Celeste Harbor note">
+        船や漂着物は、ゲームの報酬ではありません。<br>
+        あなたが言葉を残し続けた証として、静かに港へ積み重なっていきます。
+      </section>
+    </div>
+  </main>
 
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
