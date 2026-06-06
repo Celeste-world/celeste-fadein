@@ -490,6 +490,15 @@
 
     @media(max-width:760px){
       body{
+        .nav-group.nav-account .nav-menu{
+          left:auto;
+          right:0;
+        }
+    
+        .nav-group.nav-account .nav-menu::before{
+          left:auto;
+          right:22px;
+        }
         padding:28px 16px;
       }
 
@@ -508,8 +517,24 @@
       
       .nav-menu{
         left:0;
+        right:auto;
         transform:none;
         min-width:190px;
+        max-width:calc(100vw - 32px);
+      }
+
+      .nav-group.nav-account{
+        margin-left:auto;
+      }
+
+      .nav-group.nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-group.nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
       }
 
       h1{
@@ -593,8 +618,8 @@
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
-    
-        <div class="nav-group">
+
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
