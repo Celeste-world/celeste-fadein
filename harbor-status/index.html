@@ -571,6 +571,86 @@
         width:100%;
       }
     }
+
+    .voyage-stats{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .stat-box{
+      border:1px solid rgba(169,183,255,.18);
+      border-radius:16px;
+      background:rgba(255,255,255,.025);
+      padding:14px 12px;
+      text-align:center;
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+      margin-bottom:6px;
+    }
+
+    .stat-value{
+      color:var(--text);
+      font-size:20px;
+      line-height:1.5;
+    }
+
+    .build-list{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .build-item{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(169,183,255,.16);
+      background:rgba(255,255,255,.024);
+    }
+
+    .build-name{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .build-count{
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .build-count.ready{
+      color:var(--ready);
+    }
+
+    @media(max-width:760px){
+      .voyage-stats{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .stat-box:last-child{
+        grid-column:1 / -1;
+      }
+
+      .build-item{
+        grid-template-columns:1fr;
+        gap:4px;
+      }
+
+      .build-count{
+        white-space:normal;
+      }
+    }
   </style>
 </head>
 
@@ -663,9 +743,76 @@
       <div class="status" id="status"></div>
 
       <section class="status-grid">
+      
+        <article class="card wide">
+          <div class="card-label">私の航海</div>
+          <div class="card-title">これまでに積み重なった航海</div>
+      
+          <div class="voyage-stats">
+            <div class="stat-box">
+              <div class="stat-label">航海開始</div>
+              <div class="stat-value" id="voyageStartedAt">—</div>
+            </div>
+      
+            <div class="stat-box">
+              <div class="stat-label">航海日数</div>
+              <div class="stat-value" id="voyageDays">—</div>
+            </div>
+      
+            <div class="stat-box">
+              <div class="stat-label">航海記録</div>
+              <div class="stat-value" id="voyageLogCount">—</div>
+            </div>
+      
+            <div class="stat-box">
+              <div class="stat-label">船</div>
+              <div class="stat-value" id="vesselCount">—</div>
+            </div>
+      
+            <div class="stat-box">
+              <div class="stat-label">漂着物</div>
+              <div class="stat-value" id="itemCount">—</div>
+            </div>
+          </div>
+      
+          <div class="small-meta">
+            船や漂着物は、記録を続けてきた証として港に残ります。
+          </div>
+        </article>
+      
+        <article class="card">
+          <div class="card-label">現在の船</div>
+          <div class="card-title" id="currentVesselName">確認中</div>
+          <div class="card-text" id="currentVesselText">
+            現在の船を確認しています。
+          </div>
+        </article>
+      
+        <article class="card">
+          <div class="card-label">現在の海域</div>
+          <div class="card-title" id="currentAreaName">確認中</div>
+          <div class="card-text" id="currentAreaText">
+            現在の海域を確認しています。
+          </div>
+        </article>
+      
+        <article class="card wide">
+          <div class="card-label">次の船</div>
+          <div class="card-title" id="nextVesselName">
+            次の船の建造状況を確認しています。
+          </div>
+          <div class="card-text" id="nextVesselText"></div>
+      
+          <div class="build-list" id="buildList"></div>
+      
+          <div class="small-meta" id="buildSummary">
+            必要な漂着物を確認しています。
+          </div>
+        </article>
+      
         <article class="card">
           <div class="card-label">港の灯り</div>
-          <div class="card-title">港の灯り</div>
+          <div class="card-title">最近の記録</div>
           <div class="harbor-light-number" id="harborLightNumber">—</div>
           <div class="card-text" id="harborLightText">
             港の灯りを確認しています。
@@ -674,7 +821,7 @@
             過去7日間のうち、航海記録を残した日数です。連続記録ではありません。
           </div>
         </article>
-
+      
         <article class="card">
           <div class="card-label">今の航海の気配</div>
           <div class="card-title">今の航海の気配</div>
@@ -684,7 +831,7 @@
           <div class="small-meta" id="seaTitleText"></div>
           <div class="chip-row" id="tagChips"></div>
         </article>
-
+      
         <article
           class="card wide memory-card"
           id="lastVoyageCard"
@@ -698,7 +845,7 @@
           <div class="card-text" id="lastVoyagePreview"></div>
           <div class="small-meta" id="lastVoyageMeta"></div>
         </article>
-
+      
         <article
           class="card wide memory-card"
           id="memoryTideCard"
@@ -714,14 +861,14 @@
           <div class="card-text" id="memoryTidePreview"></div>
           <div class="small-meta" id="memoryTideMeta"></div>
         </article>
-
+      
         <article class="card wide next-card">
           <div class="card-label">次に進む場所</div>
           <div class="card-title">今日の航海を書く</div>
           <div class="card-text">
-            港の気配を確認したら、今日の航海を残すこともできます。
+            現在地を確認したら、今日の言葉を航海記録として残せます。
           </div>
-
+      
           <div class="actions">
             <a class="btn btn-primary" href="/log/">日々の記録へ</a>
             <a class="btn btn-ghost" href="/voyage-archive/">保管庫を見る</a>
@@ -764,6 +911,21 @@
     const statusEl = document.getElementById("status");
     const logoutLink = document.getElementById("logoutLink");
 
+    const voyageStartedAt = document.getElementById("voyageStartedAt");
+    const voyageDays = document.getElementById("voyageDays");
+    const voyageLogCount = document.getElementById("voyageLogCount");
+    const vesselCount = document.getElementById("vesselCount");
+    const itemCount = document.getElementById("itemCount");
+
+    const currentVesselName = document.getElementById("currentVesselName");
+    const currentVesselText = document.getElementById("currentVesselText");
+    const currentAreaName = document.getElementById("currentAreaName");
+    const currentAreaText = document.getElementById("currentAreaText");
+
+    const nextVesselName = document.getElementById("nextVesselName");
+    const nextVesselText = document.getElementById("nextVesselText");
+    const buildList = document.getElementById("buildList");
+    const buildSummary = document.getElementById("buildSummary");
     const harborLightNumber = document.getElementById("harborLightNumber");
     const harborLightText = document.getElementById("harborLightText");
 
@@ -790,6 +952,8 @@
 
     let currentUser = null;
     let allLogs = [];
+    let harborSummary = null;
+    let nextVesselRequirements = [];
     let lastVoyageLog = null;
     let memoryTideLog = null;
 
@@ -1182,6 +1346,201 @@
       document.body.style.overflow = "";
     }
 
+    function formatDateOnly(value){
+      if(!value){
+        return "—";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return "—";
+      }
+
+      return date.toLocaleDateString("ja-JP", {
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit"
+      });
+    }
+
+    function voyageDaysFrom(value){
+      if(!value){
+        return "—";
+      }
+
+      const start = new Date(value);
+
+      if(Number.isNaN(start.getTime())){
+        return "—";
+      }
+
+      const startKey = localDateKey(start);
+      const todayKey = localDateKey(new Date());
+
+      const startDate = new Date(startKey + "T00:00:00");
+      const todayDate = new Date(todayKey + "T00:00:00");
+
+      const diff = Math.floor(
+        (todayDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      return String(Math.max(diff + 1, 1)) + "日";
+    }
+
+    function renderHarborSummary(){
+      if(!harborSummary){
+        voyageStartedAt.textContent = "—";
+        voyageDays.textContent = "—";
+        voyageLogCount.textContent = "0件";
+        vesselCount.textContent = "0隻";
+        itemCount.textContent = "0個";
+
+        currentVesselName.textContent = "まだ船は静かです";
+        currentVesselText.textContent = "航海を続けることで、船が港に現れます。";
+
+        currentAreaName.textContent = "まだ海域は静かです";
+        currentAreaText.textContent = "航海が進むと、海の広がりが見えてきます。";
+        return;
+      }
+
+      voyageStartedAt.textContent = formatDateOnly(harborSummary.voyage_started_at);
+      voyageDays.textContent = voyageDaysFrom(harborSummary.voyage_started_at);
+      voyageLogCount.textContent = String(harborSummary.voyage_log_count || 0) + "件";
+      vesselCount.textContent = String(harborSummary.vessel_count || 0) + "隻";
+      itemCount.textContent = String(harborSummary.harbor_item_total_count || 0) + "個";
+
+      currentVesselName.textContent =
+        harborSummary.current_vessel_name_ja ||
+        harborSummary.current_vessel_name_en ||
+        "現在の船";
+
+      currentVesselText.textContent =
+        harborSummary.current_vessel_description ||
+        "この船は、これまでの航海を支えてきた証です。";
+
+      currentAreaName.textContent =
+        harborSummary.current_area_name_ja ||
+        harborSummary.current_area_name_en ||
+        "現在の海域";
+
+      currentAreaText.textContent =
+        harborSummary.current_area_description ||
+        "いま開かれている海域です。";
+    }
+
+    function renderNextVesselRequirements(){
+      if(!Array.isArray(nextVesselRequirements) || nextVesselRequirements.length === 0){
+        nextVesselName.textContent = "次の船はまだ静かです";
+        nextVesselText.textContent = "次の船の建造条件が見つかりませんでした。";
+        buildList.innerHTML = "";
+        buildSummary.textContent = "";
+        return;
+      }
+
+      const first = nextVesselRequirements[0];
+
+      nextVesselName.textContent =
+        "次の船：" + (
+          first.next_vessel_name_ja ||
+          first.next_vessel_name_en ||
+          "未定"
+        );
+
+      nextVesselText.textContent =
+        first.next_vessel_description ||
+        "必要な漂着物が揃うと、新しい船を建造できます。";
+
+      let missingTotal = 0;
+
+      buildList.innerHTML = nextVesselRequirements.map(function(item){
+        const required = Number(item.required_count || 0);
+        const owned = Number(item.owned_count || 0);
+        const missing = Math.max(required - owned, 0);
+
+        missingTotal += missing;
+
+        const ready = !!item.is_ready || missing <= 0;
+
+        return `
+          <div class="build-item">
+            <div class="build-name">
+              ${escapeHtml(item.item_name_ja || item.item_name_en || item.item_key || "漂着物")}
+            </div>
+            <div class="build-count ${ready ? "ready" : ""}">
+              ${escapeHtml(owned)} / ${escapeHtml(required)}
+              ${ready ? "　達成" : "　あと" + escapeHtml(missing)}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      if(first.all_ready){
+        buildSummary.textContent =
+          "必要な漂着物はすべて揃っています。新しい船を建造できます。";
+        return;
+      }
+
+      buildSummary.textContent =
+        "あと" + missingTotal + "個の漂着物で、次の船に近づきます。";
+    }
+
+    async function loadHarborSummary(){
+      if(!currentUser){
+        return;
+      }
+
+      const { data, error } = await client
+        .from("user_harbor_status_summary_view")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if(error){
+        console.error("summary error:", error);
+        return;
+      }
+
+      harborSummary = data || null;
+      renderHarborSummary();
+    }
+
+    async function loadNextVesselRequirements(){
+      if(!currentUser){
+        return;
+      }
+
+      const { data, error } = await client
+        .from("next_vessel_requirements_view")
+        .select(`
+          user_id,
+          current_vessel_name_ja,
+          next_vessel_key,
+          next_vessel_name_ja,
+          next_vessel_name_en,
+          next_vessel_description,
+          item_key,
+          item_name_ja,
+          item_name_en,
+          required_count,
+          owned_count,
+          is_ready,
+          all_ready,
+          next_stage_order
+        `)
+        .eq("user_id", currentUser.id)
+        .order("next_stage_order", { ascending:true })
+        .order("item_name_ja", { ascending:true });
+
+      if(error){
+        console.error("next vessel requirements error:", error);
+        return;
+      }
+
+      nextVesselRequirements = Array.isArray(data) ? data : [];
+      renderNextVesselRequirements();
+    }
+
     async function loadLogs(){
       if(!currentUser){
         return;
@@ -1232,6 +1591,8 @@
       userStatus.textContent =
         accountDisplayName(currentUser) + " としてログイン中";
 
+      await loadHarborSummary();
+      await loadNextVesselRequirements();
       await loadLogs();
     }
 
