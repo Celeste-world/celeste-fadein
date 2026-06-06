@@ -1286,7 +1286,7 @@
       font-weight:500;
     }
 
-         /* Fixed Header / Dropdown Navigation */
+    /* Fixed Header / Dropdown Navigation */
 
     .global-nav{
       display:flex;
@@ -1348,6 +1348,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -1360,6 +1365,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -1385,7 +1395,7 @@
         position:relative;
       }
     
-     .global-nav{
+      .global-nav{
         width:100%;
         justify-content:flex-start;
         gap:10px 14px;
@@ -1397,7 +1407,12 @@
         transform:none;
         min-width:190px;
       }
-    }   
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+    }
     
   </style>
     
@@ -1406,69 +1421,68 @@
 <body class="auth-locked">
   <div class="wrap">
 
-    <header class="site-header">
-      <a class="brand" href="/">Celeste Harbor</a>
-    
-      <nav class="global-nav" aria-label="Celeste Harbor navigation">
-        <div class="nav-group">
-          <button class="nav-top" type="button">航海記録</button>
-          <div class="nav-menu">
-            <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
-            <a href="/harbor-status/">現在地</a>
-          </div>
-        </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">漂着物</button>
-          <div class="nav-menu">
-            <a href="/items/">漂着物</a>
-            <a href="/vessels/">船</a>
-            <a href="/tickets/">切符</a>
-          </div>
-        </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">海図</button>
-          <div class="nav-menu">
-            <a href="/map/">海図</a>
-          </div>
-        </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
-          <div class="nav-menu">
-            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-          </div>
-        </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
-          <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
-            <a href="/help/faq/">よくある質問</a>
-            <a href="/help/#login">ログインできないとき</a>
-            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
-          </div>
-        </div>
-    
-        <div class="nav-group">
-          <button class="nav-top" type="button">アカウント</button>
-          <div class="nav-menu">
-            <a href="/account/">アカウント</a>
-            <a href="/billing/">お支払い</a>
-            <a href="/pricing/">Harbor Store</a>
-            <a href="/legal/">法務情報</a>
-            <a href="/legal/terms/">利用規約</a>
-            <a href="/legal/privacy/">プライバシーポリシー</a>
-            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
-            <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
-          </div>
-        </div>
-      </nav>
-    </header>
+        <header class="site-header">
+          <a class="brand" href="/">Celeste Harbor</a>
+        
+          <nav class="global-nav" aria-label="Celeste Harbor navigation">
+            <div class="nav-group">
+              <button class="nav-top" type="button">航海記録</button>
+              <div class="nav-menu">
+                <a href="/log/">日々の記録</a>
+                <a href="/timeline/">航海年表</a>
+                <a href="/voyage-archive/">航海の保管庫</a>
+                <a href="/harbor-status/">現在地</a>
+              </div>
+            </div>
+        
+            <div class="nav-group">
+              <button class="nav-top" type="button">漂着物</button>
+              <div class="nav-menu">
+                <a href="/items/">漂着物</a>
+                <a href="/vessels/">船</a>
+                <a href="/tickets/">切符</a>
+              </div>
+            </div>
+        
+            <div class="nav-group">
+              <button class="nav-top" type="button">海図</button>
+              <div class="nav-menu">
+                <a href="/map/">海図</a>
+              </div>
+            </div>
+        
+            <div class="nav-group">
+              <button class="nav-top" type="button">便り</button>
+              <div class="nav-menu">
+                <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+              </div>
+            </div>
+        
+            <div class="nav-group">
+              <button class="nav-top" type="button">はじめての方へ</button>
+              <div class="nav-menu">
+                <a href="/help/">はじめての方へ</a>
+                <a href="/help/faq/">よくある質問</a>
+                <a href="/help/#login">ログインできないとき</a>
+                <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+              </div>
+            </div>
+        
+            <div class="nav-group nav-account">
+              <button class="nav-top" type="button">アカウント</button>
+              <div class="nav-menu">
+                <a href="/account/">アカウント</a>
+                <a href="/billing/">お支払い</a>
+                <a href="/pricing/">Harbor Store</a>
+                <a href="/legal/">法務情報</a>
+                <a href="/legal/terms/">利用規約</a>
+                <a href="/legal/privacy/">プライバシーポリシー</a>
+                <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+                <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+              </div>
+            </div>
+          </nav>
+        </header>
     
     <div id="activeVoyageBanner"></div>
 
@@ -1762,7 +1776,7 @@
         <div class="tutorial-label">First Voyage Guide</div>
     
         <div class="tutorial-step" id="tutorialStepLabel">
-          1 / 6
+          1 / 5
         </div>
     
         <h2 class="tutorial-title" id="tutorialTitle">
@@ -2197,50 +2211,43 @@
       statusEl.className = isError ? "status error" : "status";
     }
 
-    const firstTutorialSteps = [
-      {
-        title: "ようこそ、Celeste Harborへ",
-        body:
-          "Celeste Harbor は、日々の言葉を静かな航海記録として残す日記アプリです。\n長い文章でなくても大丈夫です。一言だけでも、今日の気配は港に残ります。",
-        hint: ""
-      },
-      {
-        title: "今日の言葉を残す",
-        body:
-          "Voyage Log は、今日の気配や出来事を残す場所です。\nここでは、日記を書くことを「航海記録を残す」と呼んでいます。",
-        hint:
-          "Voyage Log = 今日の言葉を残す場所\n航海記録を残す = 日記を保存する"
-      },
-      {
-        title: "気配（タグ）を選ぶ",
-        body:
-          "タグは、あとで記録を振り返りやすくするための目印です。\n迷ったら、いちばん近い気配を1つ選べば大丈夫です。",
-        hint:
-          "Harbor = 日常・安心\nStorm = 不安・混乱\nFog = 迷い・曖昧さ\nLighthouse = 希望・目印"
-      },
-      {
-        title: "記録は Archive に残ります",
-        body:
-          "保存した言葉は、Voyage Archive に月ごとに残ります。\nあとから読み返したり、言葉やタグで探したりできます。",
-        hint:
-          "Voyage Archive = 航海記録を探す・振り返る場所"
-      },
-      {
-        title: "出来事は Cabin Log に積み重なります",
-        body:
-          "Cabin Log は、港で起きた出来事を時系列で確認する場所です。\n日記、チケット、漂着物、船、海域の開放などが静かに積み重なります。",
-        hint:
-          "Cabin Log = 港で起きた出来事の履歴\n漂着物 = ときどき港へ流れ着くもの\n船 = 航海をともにする存在"
-      },
-      {
-        title: "ときどき、特別な航海があります",
-        body:
-          "Special Voyage Ticket や Deep Sea Ticket は、いつもの記録より少し深く言葉を整えるためのものです。\n必要になったときだけ確認すれば大丈夫です。",
-        hint:
-          "Special Voyage Ticket = 少し深く振り返るためのチケット\n" +
-          "Deep Sea Ticket = さらに深い内省や整理をしたいときのチケット"
-      }
-    ];
+        const firstTutorialSteps = [
+        {
+          title: "ようこそ、Celeste Harborへ",
+          body:
+            "Celeste Harbor は、人生を航海として残すサービスです。\n長い文章でなくても大丈夫です。一言だけでも、今日の言葉はあなたの港に残ります。",
+          hint:
+            "ここで残す言葉は、ただの日記ではなく、あなた自身の航海記録になります。"
+        },
+        {
+          title: "今日の言葉を書く",
+          body:
+            "まずは、今の気配や出来事を少しだけ書いてください。\nうれしかったこと、迷っていること、何もなかった一日でも大丈夫です。",
+          hint:
+            "一言だけでも航海記録になります。\n完璧な文章にしなくても、残すことに意味があります。"
+        },
+        {
+          title: "海が少しずつ育つ",
+          body:
+            "残した言葉は、あなたの航海として積み重なります。\n記録を続けるほど、港の現在地や航海年表、過去の言葉を見返す場所が育っていきます。",
+          hint:
+            "航海年表 = 人生の年表\n航海の保管庫 = 過去の自分との再会\n現在地 = 人生の航海ダッシュボード"
+        },
+        {
+          title: "船や漂着物と出会う",
+          body:
+            "航海を続けていると、港に漂着物が流れ着いたり、新しい船と出会うことがあります。\nそれらはゲームの報酬ではなく、あなたが続けてきた記録の証です。",
+          hint:
+            "船 = 継続の証\n漂着物 = 記憶の欠片"
+        },
+        {
+          title: "人生の航海史になる",
+          body:
+            "今日の小さな言葉も、積み重なることで、あなた自身の航海史になります。\n書いた言葉は消費されるものではなく、あとから過去の自分と再会するための灯りになります。",
+          hint:
+            "迷ったら、まず一言だけ残してください。\nそこから、あなたの航海は静かに始まります。"
+        }
+      ];
     
     function renderFirstTutorial(){
       if(
@@ -4091,7 +4098,7 @@
         if(!pendingDownloadText){
           downloadModalError.textContent = "ダウンロードの準備ができていません。もう一度お試しください。";
           downloadConfirmBtn.dataset.step = "email";
-          downloadConfirmBtn.textContent = "Continue";
+          downloadConfirmBtn.textContent = "確認へ進む";
           return;
         }
     
