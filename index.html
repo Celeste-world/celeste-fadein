@@ -600,6 +600,19 @@
         line-height:1.55;
       }
     }
+
+    .actions-compact{
+      grid-template-columns:1.1fr .9fr;
+      max-width:520px;
+      margin:0 auto;
+    }
+    
+    @media(max-width:760px){
+      .actions-compact{
+        grid-template-columns:1fr;
+        max-width:none;
+      }
+    }
     
   </style>
 </head>
@@ -656,16 +669,16 @@
         今日の言葉が、未来への航海記録になる。
       </div>
 
-      <div class="actions">
-          <button class="btn-primary" id="loginBtn" type="button">
-            港へ入る
-          </button>
-        
-          <a class="btn-ghost guide-link" href="/intro/">
-            はじめての方へ
-          </a>
-        </div>
-      <div class="status" id="status"></div>
+      <div class="actions actions-compact">
+        <button class="btn-primary" id="loginBtn" type="button">
+          港へ入る
+        </button>
+      
+        <a class="btn-ghost guide-link" href="/intro/">
+          はじめての方へ
+        </a>
+      </div>
+    <div class="status" id="status"></div>
     </section>
   </div>
 
