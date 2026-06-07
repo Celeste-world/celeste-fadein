@@ -15,15 +15,15 @@
           <button class="nav-parent" type="button" data-menu="items">漂着物</button>
           <button class="nav-parent" type="button" data-menu="map">海図</button>
           <button class="nav-parent" type="button" data-menu="letter">便り</button>
-          <button class="nav-parent" type="button" data-menu="help">港の歩き方</button>
+          <button class="nav-parent" type="button" data-menu="help">はじめての方へ</button>
           <button class="nav-parent" type="button" data-menu="account">アカウント</button>
         </nav>
 
         <div class="subnav" id="subnav" hidden>
           <div class="subnav-panel" data-panel="log">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
 
@@ -39,12 +39,10 @@
 
           <div class="subnav-panel" data-panel="letter">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
-            <a href="/contact/">お問い合わせ</a>
           </div>
 
           <div class="subnav-panel" data-panel="help">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
@@ -53,8 +51,11 @@
           <div class="subnav-panel" data-panel="account">
             <a href="/account/">アカウント</a>
             <a href="/billing/">お支払い</a>
-            <a href="/settings/">設定</a>
+            <a href="/pricing/">Harbor Store</a>
             <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
             <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
           </div>
         </div>
