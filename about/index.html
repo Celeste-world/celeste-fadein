@@ -6,19 +6,19 @@
 
   <title>Celeste Harborについて – Celeste Harbor</title>
   
-  <meta name="description" content="Celeste Harbor は、静かに航海を続けるための帰港型Web空間です。Voyage Log、Harbor Cat、Moonlit Voyage が静かに重なります。" />
+  <meta name="description" content="Celeste Harbor は、人生を航海として残すサービスです。日々の言葉を航海記録として残し、未来の自分が振り返れる人生の航海史を育てていきます。" />
   <link rel="canonical" href="https://celeste.world/about/" />
   <meta name="robots" content="index, follow">
   
   <meta property="og:type" content="website">
-  <meta property="og:title" content="About – Celeste Harbor">
-  <meta property="og:description" content="Celeste Harbor が何を大切にしているのかを示す灯台。">
+  <meta property="og:title" content="Celeste Harborについて – Celeste Harbor">
+  <meta property="og:description" content="人生を航海として残す、Celeste Harbor が大切にしていること。">
   <meta property="og:url" content="https://celeste.world/about/">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
   
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="About – Celeste Harbor">
-  <meta name="twitter:description" content="Celeste Harbor が何を大切にしているのかを示す灯台。">
+  <meta name="twitter:title" content="Celeste Harborについて – Celeste Harbor">
+  <meta name="twitter:description" content="人生を航海として残す、Celeste Harbor が大切にしていること。">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -32,6 +32,7 @@
       --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --gold:#ffe3a3;
     }
 
     *{ box-sizing:border-box; }
@@ -52,7 +53,7 @@
     }
 
     .wrap{
-      max-width:860px;
+      max-width:900px;
       margin:0 auto;
       padding:48px 20px 60px;
     }
@@ -69,7 +70,7 @@
 
     .brand{
       color:var(--text);
-      letter-spacing:.04em;
+      letter-spacing:.08em;
     }
 
     .nav{
@@ -105,7 +106,7 @@
       font-size:15px;
       line-height:2.2;
       color:var(--muted);
-      max-width:44rem;
+      max-width:46rem;
       margin-bottom:52px;
     }
 
@@ -130,7 +131,7 @@
     .panel{
       background:rgba(10,14,28,.82);
       border:1px solid rgba(70,84,132,.55);
-      border-radius:18px;
+      border-radius:20px;
       padding:24px;
       box-shadow:0 18px 42px rgba(0,0,0,.36);
       margin:34px 0 52px;
@@ -138,6 +139,49 @@
 
     .panel p{
       color:#dbe0ea;
+    }
+
+    .value-panel{
+      border-color:rgba(255,227,163,.24);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.07), transparent 42%),
+        rgba(10,14,28,.82);
+    }
+
+    .definition-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:24px;
+    }
+
+    .definition-card{
+      background:rgba(10,14,28,.62);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+      min-height:150px;
+    }
+
+    .definition-kicker{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:9px;
+    }
+
+    .definition-title{
+      color:var(--text);
+      font-size:16px;
+      line-height:1.7;
+      margin-bottom:10px;
+    }
+
+    .definition-card p{
+      font-size:13px;
+      margin:0;
+      line-height:2;
     }
 
     .map{
@@ -261,7 +305,8 @@
     }
 
     @media(max-width:720px){
-      .map{
+      .map,
+      .definition-grid{
         grid-template-columns:1fr;
       }
     }
@@ -289,6 +334,10 @@
       .panel{
         padding:20px;
       }
+
+      .actions a{
+        width:100%;
+      }
     }
   </style>
 </head>
@@ -299,10 +348,13 @@
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
-      <nav class="nav">
-        <a href="/">Harbor</a>
-        <a href="/about/">About</a>
+      <nav class="nav" aria-label="公開ページナビゲーション">
+        <a href="/">港入口</a>
+        <a href="/intro/">はじめての方へ</a>
+        <a href="/about/">港について</a>
         <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/pricing/">Harbor Store</a>
+        <a href="/log/">日々の記録</a>
       </nav>
     </header>
 
@@ -312,71 +364,106 @@
 
       <h1>
         Celeste Harbor は、<br>
-        静かに帰港するための場所です。
+        人生を航海として残すサービスです。
       </h1>
 
       <p class="lead">
         ここは、速く進むための場所ではありません。<br>
-        今日の航海を少しだけ残し、
-        必要な夜にまた戻ってくるための、
-        小さなWebの港です。
+        今日の言葉を少しだけ残し、
+        未来の自分が振り返れる人生の航海史を育てていくための、
+        静かなWebの港です。
       </p>
 
       <section>
         <h2>何をする場所か</h2>
 
         <p>
-          Celeste Harbor では、
-          自分だけの航海記録を残すことができます。
+          Celeste Harbor では、日々の言葉を航海記録として残せます。
+          長い文章である必要はありません。
+          一言だけでも、その日の気配や出来事は港に残ります。
         </p>
 
         <p>
-          記録は誰かに見せるためではなく、
-          自分がまだ進んでいることを静かに確かめるためにあります。
+          残した言葉は、航海の保管庫に積み重なり、
+          航海年表の中で、あなた自身の時間として並んでいきます。
         </p>
 
         <p>
-          保存された記録には、港のネコが短く反応します。
-          それは助言でも、診断でも、解決でもありません。
-          ただ、記録が届いたことを知らせる小さな気配です。
+          Celeste Harbor は、ただ記録を消費する場所ではありません。
+          書いた言葉をあとから読み返し、過去の自分と静かに再会するための場所です。
+        </p>
+      </section>
+
+      <div class="panel value-panel">
+        <p>
+          今日の小さな一言も、未来から見れば、航海の一部になります。
+        </p>
+
+        <p>
+          Celeste Harbor は、あなたを急がせません。<br>
+          ただ、戻ってこられる場所として、静かに開いています。
+        </p>
+      </div>
+
+      <section>
+        <h2>Celeste Harbor の考え方</h2>
+
+        <p>
+          この港では、記録をうまく書くことよりも、
+          その日の言葉を残すことを大切にしています。
+        </p>
+
+        <p>
+          きれいに整理された文章でなくても構いません。
+          まだ言葉になりきらない気配や、短い断片も、
+          あなたの航海記録として受け取られます。
+        </p>
+
+        <p>
+          書き続けるほど、港は少しずつ育ちます。
+          それは得点やランキングのためではなく、
+          あなた自身の時間が形になっていくためです。
         </p>
       </section>
 
       <section>
-        <h2>Presence AI について</h2>
+        <h2>船と漂着物について</h2>
 
         <p>
-          Celeste Harbor におけるAIは、
-          答えを急いで返す存在ではありません。
+          Celeste Harbor には、船や漂着物があります。
+          ただし、それらはゲームの報酬ではありません。
         </p>
 
         <p>
-          助言者でも、診断者でも、万能の相談相手でもなく、
-          港に残る小さな気配として設計されています。
+          船は、航海を続けてきた証です。
+          漂着物は、記録から生まれる記憶の欠片です。
         </p>
 
         <p>
-          Harbor Cat は、航海記録に対して1〜2行の短い反応を返します。
-          会話を続けるためではなく、
-          記録が静かに受け取られたことを示すためにいます。
+          書いた言葉が積み重なることで、港に少しずつ気配が残り、
+          あなただけの航海が形になっていきます。
         </p>
 
-        <p>
-          鳴き声ではなく、仕草や気配で応えるネコです。
-          ここでは、解決よりも余白を大切にします。
-        </p>
+        <div class="definition-grid">
+          <div class="definition-card">
+            <div class="definition-kicker">Vessel</div>
+            <div class="definition-title">船</div>
+            <p>
+              航海を続けてきた証です。
+              あなたの言葉が積み重なることで、港に加わっていきます。
+            </p>
+          </div>
+
+          <div class="definition-card">
+            <div class="definition-kicker">Drift Item</div>
+            <div class="definition-title">漂着物</div>
+            <p>
+              記録から生まれる記憶の欠片です。
+              いつも届くわけではなく、静かな偶然として港に流れ着きます。
+            </p>
+          </div>
+        </div>
       </section>
-
-      <div class="panel">
-        <p>
-          Harbor は、あなたを変えるための場所ではありません。
-        </p>
-
-        <p>
-          ただ、戻ってこられる場所があること。<br>
-          そのために、ここは静かに開いています。
-        </p>
-      </div>
 
       <section>
         <h2>この港にあるもの</h2>
@@ -384,11 +471,19 @@
         <div class="map">
 
           <a class="card" href="/">
-            <div class="card-kicker">Harbor</div>
+            <div class="card-kicker">Entrance</div>
             <div class="card-title">港入口</div>
             <p>
               Celeste Harbor の公開入口です。
               Googleログインで、港の内側へ入れます。
+            </p>
+          </a>
+
+          <a class="card" href="/intro/">
+            <div class="card-kicker">Guide</div>
+            <div class="card-title">はじめての方へ</div>
+            <p>
+              Celeste Harbor が何をするサービスなのかを、初めての方向けに案内する公開ページです。
             </p>
           </a>
 
@@ -402,51 +497,63 @@
           </a>
 
           <div class="card inactive">
-            <div class="card-kicker">Return</div>
-            <div class="card-title">Voyage Log</div>
+            <div class="card-kicker">Daily Log</div>
+            <div class="card-title">日々の記録</div>
             <p>
-              ログイン後に使える非公開の航海記録です。
-              Harbor Cat が短く反応し、港に小さな気配が残ります。
+              ログイン後に使える、今日の言葉を残す場所です。
+              ここから航海記録が始まります。
             </p>
           </div>
 
           <div class="card inactive">
-            <div class="card-kicker">Cabin</div>
-            <div class="card-title">Cabin Log</div>
+            <div class="card-kicker">Timeline</div>
+            <div class="card-title">航海年表</div>
             <p>
-              航海記録、漂着物、船、チケットの履歴が静かに残る船室です。
-              ログイン後に表示されます。
+              日々の記録、漂着物、船、切符、海域の広がりなど、
+              あなたの航海に起きた出来事を時系列で見られる場所です。
+            </p>
+          </div>
+
+          <div class="card inactive">
+            <div class="card-kicker">Archive</div>
+            <div class="card-title">航海の保管庫</div>
+            <p>
+              保存した航海記録を、月ごとに読み返したり、言葉やタグで探したりする場所です。
+              過去の自分と再会できます。
             </p>
           </div>
 
           <div class="card inactive">
             <div class="card-kicker">Sea Chart</div>
-            <div class="card-title">Map</div>
+            <div class="card-title">海図</div>
             <p>
               開いている海域と、まだ霧の向こうにある海域を見る場所です。
-              港の内側にある海図です。
+              航海が広がっていく感覚を確認できます。
             </p>
           </div>
 
           <div class="card inactive">
-            <div class="card-kicker">Drift</div>
-            <div class="card-title">Fragments</div>
+            <div class="card-kicker">Harbor Status</div>
+            <div class="card-title">現在地</div>
             <p>
-              港に漂着した短い断片です。
-              現在はログイン後の港内部に置いています。
+              航海開始日、記録数、現在の船や海域、次の船の建造状況などを確認する場所です。
             </p>
           </div>
 
         </div>
 
         <p class="note">
-          公開されているのは、この入口と、About と、Moonlit Voyage です。<br>
-          航海記録、漂着物、船、海図、断片、保管庫は、ログイン後の港の内側にあります。
+          公開されているのは、港入口、はじめての方へ、港について、Moonlit Voyage です。<br>
+          日々の記録、航海年表、航海の保管庫、現在地、漂着物、船、海図、切符などは、ログイン後の港の内側にあります。
         </p>
 
         <div class="actions">
           <a class="btn-primary" href="/">
-            Googleログインへ
+            港入口へ戻る
+          </a>
+
+          <a class="btn-ghost" href="/intro/">
+            はじめての方へ
           </a>
 
           <a class="btn-ghost" href="/voyage/">
@@ -459,9 +566,11 @@
 
     <footer>
       <div class="footer-links">
-        <a href="/">Harbor</a>
-        <a href="/about/">About</a>
+        <a href="/">港入口</a>
+        <a href="/intro/">はじめての方へ</a>
+        <a href="/about/">港について</a>
         <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/pricing/">Harbor Store</a>
       </div>
 
       <div>CELESTE HARBOR</div>
