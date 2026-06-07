@@ -372,9 +372,10 @@
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
-        <a href="/log/">Voyage Log</a>
-        <a href="/harbor-letter/">Letter</a>
-        <a href="/account/">Account</a>
+        <a href="/admin/billing/">課金管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/harbor-letter/">便り</a>
+        <a href="/account/">アカウント</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -407,9 +408,10 @@
 
     <footer>
       <div class="footer-links">
-        <a href="/log/">Voyage Log</a>
-        <a href="/harbor-letter/">Letter</a>
-        <a href="/account/">Account</a>
+        <a href="/admin/billing/">課金管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/harbor-letter/">便り</a>
+        <a href="/account/">アカウント</a>
       </div>
 
       <div>CELESTE HARBOR ADMIN</div>
@@ -693,7 +695,7 @@
       }
       
       if(currentUser.id !== ADMIN_USER_ID){
-        window.location.replace("/log/");
+        window.location.replace("/");
         return;
       }
     
