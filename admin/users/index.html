@@ -123,9 +123,15 @@
 
     .search-row{
       display:grid;
-      grid-template-columns:1fr auto auto;
+      grid-template-columns:minmax(260px, 1.6fr) 150px 150px auto auto;
       gap:10px;
       align-items:center;
+    }
+    
+    .search-row button{
+      min-width:88px;
+      width:auto;
+      white-space:nowrap;
     }
 
     .quick-ranges{
@@ -503,7 +509,15 @@
       }
 
       .search-row{
-        grid-template-columns:1fr;
+        grid-template-columns:1fr 1fr;
+      }
+      
+      .search-row input:first-child{
+        grid-column:1 / -1;
+      }
+      
+      .search-row button{
+        width:100%;
       }
 
       .quick-ranges{
@@ -529,11 +543,7 @@
       .quick-chip{
         flex:1 1 calc(50% - 8px);
       }
-
-      .search-row button{
-        width:100%;
-      }
-
+      
       .summary-grid,
       .detail-grid{
         grid-template-columns:1fr;
@@ -1219,19 +1229,15 @@
               page: ${escapeHtml(row.page_path || "")}
             </div>
             <details>
-              <summary>本文を開く</summary>
               <div class="record-body">${escapeHtml(row.message || "")}</div>
-            </details>
-            ${
-              row.admin_reply
-                ? `
-                  <details>
-                    <summary>返信を開く</summary>
+              ${
+                row.admin_reply
+                  ? `
+                    <div class="record-meta" style="margin-top:10px;">管理者返信</div>
                     <div class="record-body">${escapeHtml(row.admin_reply || "")}</div>
-                  </details>
-                `
-                : ""
-            }
+                  `
+                  : ""
+              }
           </article>
         `;
       }).join("");
