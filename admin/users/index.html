@@ -128,6 +128,26 @@
       align-items:center;
     }
 
+    .quick-ranges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    
+    .quick-chip{
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      border:1px solid rgba(160,168,187,.22);
+      padding:8px 12px;
+      font-size:12px;
+    }
+    
+    .quick-chip:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.55);
+    }
+
     input{
       width:100%;
       border-radius:999px;
@@ -486,6 +506,30 @@
         grid-template-columns:1fr;
       }
 
+      .quick-ranges{
+        display:flex;
+        gap:8px;
+        flex-wrap:wrap;
+        margin-top:14px;
+      }
+      
+      .quick-chip{
+        background:rgba(255,255,255,.03);
+        color:var(--muted);
+        border:1px solid rgba(160,168,187,.22);
+        padding:8px 12px;
+        font-size:12px;
+      }
+      
+      .quick-chip:hover{
+        color:var(--text);
+        border-color:rgba(169,183,255,.55);
+      }
+
+      .quick-chip{
+        flex:1 1 calc(50% - 8px);
+      }
+
       .search-row button{
         width:100%;
       }
@@ -535,8 +579,19 @@
             placeholder="ユーザー名 / email / user_id"
             autocomplete="off"
           />
+          <input id="dateFromInput" type="date" aria-label="開始日" />
+          <input id="dateToInput" type="date" aria-label="終了日" />
           <button class="primary" id="searchBtn" type="button">検索</button>
           <button class="ghost" id="resetBtn" type="button">リセット</button>
+        </div>
+        
+        <div class="quick-ranges" aria-label="期間クイック選択">
+          <button class="quick-chip" type="button" data-range="today">今日</button>
+          <button class="quick-chip" type="button" data-range="yesterday">昨日</button>
+          <button class="quick-chip" type="button" data-range="7days">過去7日</button>
+          <button class="quick-chip" type="button" data-range="thisMonth">今月</button>
+          <button class="quick-chip" type="button" data-range="lastMonth">先月</button>
+          <button class="quick-chip" type="button" data-range="clearDates">日付クリア</button>
         </div>
       </section>
 
@@ -582,7 +637,7 @@
             <div class="section-head">
               <div>
                 <h2 class="section-title">最近の航海記録</h2>
-                <p class="section-sub">最新10件を表示します。本文は必要時のみ開いて確認します。</p>
+                <p class="section-sub">指定条件に一致する航海記録を最大50件表示します。</p>
               </div>
               <span class="count-badge" id="logsCount">0件</span>
             </div>
@@ -655,6 +710,9 @@
     const userSearchInput = document.getElementById("userSearchInput");
     const searchBtn = document.getElementById("searchBtn");
     const resetBtn = document.getElementById("resetBtn");
+
+    const dateFromInput = document.getElementById("dateFromInput");
+    const dateToInput = document.getElementById("dateToInput");
 
     const userList = document.getElementById("userList");
     const selectedUserBox = document.getElementById("selectedUserBox");
@@ -808,6 +866,114 @@
       }
     }
 
+    function applyCreatedAtRange(query){
+      if(dateFromInput.value){
+        query = query.gte("created_at", dateFromInput.value + "T00:00:00+09:00");
+      }
+    
+      if(dateToInput.value){
+        query = query.lte("created_at", dateToInput.value + "T23:59:59.999+09:00");
+      }
+    
+      return query;
+    }
+    
+    function applyUpdatedAtRange(query){
+      if(dateFromInput.value){
+        query = query.gte("updated_at", dateFromInput.value + "T00:00:00+09:00");
+      }
+    
+      if(dateToInput.value){
+        query = query.lte("updated_at", dateToInput.value + "T23:59:59.999+09:00");
+      }
+    
+      return query;
+    }
+    
+    function toDateInputValue(date){
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+    
+      return year + "-" + month + "-" + day;
+    }
+    
+    function setDateRange(rangeKey){
+      const now = new Date();
+    
+      const today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      );
+    
+      if(rangeKey === "today"){
+        dateFromInput.value = toDateInputValue(today);
+        dateToInput.value = toDateInputValue(today);
+        reloadSelectedOrSearch();
+        return;
+      }
+    
+      if(rangeKey === "yesterday"){
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+    
+        dateFromInput.value = toDateInputValue(yesterday);
+        dateToInput.value = toDateInputValue(yesterday);
+        reloadSelectedOrSearch();
+        return;
+      }
+    
+      if(rangeKey === "7days"){
+        const start = new Date(today);
+        start.setDate(start.getDate() - 6);
+    
+        dateFromInput.value = toDateInputValue(start);
+        dateToInput.value = toDateInputValue(today);
+        reloadSelectedOrSearch();
+        return;
+      }
+    
+      if(rangeKey === "thisMonth"){
+        const start = new Date(today.getFullYear(), today.getMonth(), 1);
+        const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    
+        dateFromInput.value = toDateInputValue(start);
+        dateToInput.value = toDateInputValue(end);
+        reloadSelectedOrSearch();
+        return;
+      }
+    
+      if(rangeKey === "lastMonth"){
+        const start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        const end = new Date(today.getFullYear(), today.getMonth(), 0);
+    
+        dateFromInput.value = toDateInputValue(start);
+        dateToInput.value = toDateInputValue(end);
+        reloadSelectedOrSearch();
+        return;
+      }
+    
+      if(rangeKey === "clearDates"){
+        dateFromInput.value = "";
+        dateToInput.value = "";
+        reloadSelectedOrSearch();
+      }
+    }
+    
+    function reloadSelectedOrSearch(){
+      const selectedUser = adminUsers.find(function(user){
+        return user.user_id === selectedUserId;
+      });
+    
+      if(selectedUser){
+        loadUserDetail(selectedUser);
+        return;
+      }
+    
+      searchUsers();
+    }
+
     function renderUsers(users){
       userList.innerHTML = "";
 
@@ -919,10 +1085,8 @@
             <div class="record-meta">
               ${escapeHtml(formatDate(row.created_at))} / ${escapeHtml(tag)}
             </div>
-            <details>
-              <summary>本文を開く</summary>
-              <div class="record-body">${escapeHtml(content)}</div>
-            </details>
+            <div class="record-body">${escapeHtml(content)}</div>
+            
           </article>
         `;
       }).join("");
@@ -1090,66 +1254,76 @@
       try{
         const userId = user.user_id;
 
-        const logs = await fetchTableSafe(
-          "voyage_logs",
-          client
-            .from("voyage_logs")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending:false })
-            .limit(10)
-        );
+        let logsQuery = client
+          .from("voyage_logs")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending:false })
+          .limit(50);
+        
+        logsQuery = applyCreatedAtRange(logsQuery);
+        
+        const logs = await fetchTableSafe("voyage_logs", logsQuery);
 
-        const tickets = await fetchTableSafe(
-          "voyage_tickets",
-          client
-            .from("voyage_tickets")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending:false })
-            .limit(50)
-        );
-
-        const purchases = await fetchTableSafe(
-          "billing_purchases",
-          client
-            .from("billing_purchases")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending:false })
-            .limit(50)
-        );
-
-        const subscriptions = await fetchTableSafe(
-          "user_subscriptions",
-          client
-            .from("user_subscriptions")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending:false })
-            .limit(50)
-        );
-
-        const allowances = await fetchTableSafe(
-          "monthly_log_allowances",
-          client
-            .from("monthly_log_allowances")
-            .select("*")
-            .eq("user_id", userId)
-            .order("updated_at", { ascending:false })
-            .limit(50)
-        );
-
-        const feedback = await fetchTableSafe(
-          "user_feedback",
-          client
-            .from("user_feedback")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending:false })
-            .limit(50)
-        );
-
+        let ticketsQuery = client
+          .from("voyage_tickets")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending:false })
+          .limit(50);
+        
+        ticketsQuery = applyCreatedAtRange(ticketsQuery);
+        
+        const tickets = await fetchTableSafe("voyage_tickets", ticketsQuery);
+        
+        
+        let purchasesQuery = client
+          .from("billing_purchases")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending:false })
+          .limit(50);
+        
+        purchasesQuery = applyCreatedAtRange(purchasesQuery);
+        
+        const purchases = await fetchTableSafe("billing_purchases", purchasesQuery);
+        
+        
+        let subscriptionsQuery = client
+          .from("user_subscriptions")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending:false })
+          .limit(50);
+        
+        subscriptionsQuery = applyCreatedAtRange(subscriptionsQuery);
+        
+        const subscriptions = await fetchTableSafe("user_subscriptions", subscriptionsQuery);
+        
+        
+        let allowancesQuery = client
+          .from("monthly_log_allowances")
+          .select("*")
+          .eq("user_id", userId)
+          .order("updated_at", { ascending:false })
+          .limit(50);
+        
+        allowancesQuery = applyUpdatedAtRange(allowancesQuery);
+        
+        const allowances = await fetchTableSafe("monthly_log_allowances", allowancesQuery);
+        
+        
+        let feedbackQuery = client
+          .from("user_feedback")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending:false })
+          .limit(50);
+        
+        feedbackQuery = applyCreatedAtRange(feedbackQuery);
+        
+        const feedback = await fetchTableSafe("user_feedback", feedbackQuery);
+        
         const safeLogs = Array.isArray(logs) ? logs : [];
         const safeTickets = Array.isArray(tickets) ? tickets : [];
         const safePurchases = Array.isArray(purchases) ? purchases : [];
@@ -1183,6 +1357,12 @@
         setStatus(error.message || "ユーザー情報を読み込めませんでした。", true);
       }
     }
+
+    document.querySelectorAll("button[data-range]").forEach(function(button){
+      button.addEventListener("click", function(){
+        setDateRange(button.getAttribute("data-range"));
+      });
+    });
 
     async function searchUsers(){
       const q = userSearchInput.value.trim();
