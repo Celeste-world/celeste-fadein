@@ -17,6 +17,7 @@
       --dim:#747f96;
       --line:#252b3a;
       --accent:#a9b7ff;
+      --warm:#ffe3a3;
     }
 
     *{ box-sizing:border-box; }
@@ -32,9 +33,155 @@
       padding:40px 20px;
     }
 
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
     .wrap{
       max-width:760px;
       margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .global-nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .nav-group{
+      position:relative;
+    }
+
+    .global-nav .nav-top{
+      appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      color:var(--muted);
+      font:inherit;
+      line-height:1.7;
+      cursor:pointer;
+    }
+
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
+      color:var(--text);
+      background:transparent;
+      outline:none;
+    }
+
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
     }
 
     h1{
@@ -164,6 +311,67 @@
         padding:28px 16px;
       }
 
+      .site-header{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:flex-start;
+        gap:12px;
+        margin-bottom:34px;
+        overflow:visible;
+      }
+
+      .brand{
+        display:block;
+        flex:0 0 auto;
+        width:100%;
+        white-space:nowrap;
+      }
+
+      .global-nav{
+        display:flex;
+        width:100%;
+        flex:0 0 auto;
+        justify-content:flex-start;
+        align-items:center;
+        gap:10px 14px;
+        font-size:12px;
+        flex-wrap:wrap;
+        overflow:visible;
+      }
+
+      .nav-group{
+        position:relative;
+        flex:0 0 auto;
+      }
+
+      .global-nav .nav-top{
+        width:auto;
+        min-width:0;
+        padding:6px 0;
+        white-space:nowrap;
+      }
+
+      .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;
+        transform:none;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
+      }
+
       h1{
         font-size:28px;
       }
@@ -182,15 +390,72 @@
       }
     }
   </style>
-
-  <link rel="stylesheet" href="/assets/css/common-nav.css">
-  <script src="/assets/js/common-nav.js" defer></script>
 </head>
 
 <body>
   <div class="wrap">
 
-    <div id="siteHeader"></div>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="global-nav" aria-label="Celeste Harbor navigation">
+        <div class="nav-group">
+          <button class="nav-top" type="button">航海記録</button>
+          <div class="nav-menu">
+            <a href="/log/">日々の記録</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
+            <a href="/harbor-status/">現在地</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">漂着物</button>
+          <div class="nav-menu">
+            <a href="/items/">漂着物</a>
+            <a href="/vessels/">船</a>
+            <a href="/tickets/">切符</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">海図</button>
+          <div class="nav-menu">
+            <a href="/map/">海図</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">便り</button>
+          <div class="nav-menu">
+            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">はじめての方へ</button>
+          <div class="nav-menu">
+            <a href="/help/">はじめての方へ</a>
+            <a href="/help/faq/">よくある質問</a>
+            <a href="/help/#login">ログインできないとき</a>
+            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+          </div>
+        </div>
+
+        <div class="nav-group nav-account">
+          <button class="nav-top" type="button">アカウント</button>
+          <div class="nav-menu">
+            <a href="/account/">アカウント</a>
+            <a href="/billing/">お支払い</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </nav>
+    </header>
 
     <main>
       <h1>案内板</h1>
@@ -206,12 +471,12 @@
         <div class="guide-list">
           <a class="guide-item" href="/help/first-voyage/">
             <div class="guide-title">
-              <div class="guide-name">はじめての航海案内</div>
-              <div class="guide-plain">最初に読む案内</div>
+              <div class="guide-name">初回チュートリアルをもう一度見る</div>
+              <div class="guide-plain">最初の流れを確認する場所</div>
             </div>
             <p class="guide-text">
-              Celeste Harbor の基本的な使い方を、初回チュートリアルと同じ流れで確認できます。
-              はじめての方や、使い方をもう一度見直したいときに開いてください。
+              日々の記録で最初に表示される案内を、もう一度確認できます。
+              言葉を残し、海が育ち、人生の航海史になっていく流れを見直したいときに開いてください。
             </p>
           </a>
         </div>
@@ -235,32 +500,35 @@
           <a class="guide-item" href="/harbor-status/">
             <div class="guide-title">
               <div class="guide-name">現在地</div>
-              <div class="guide-plain">港の状態を見る場所</div>
+              <div class="guide-plain">人生の航海ダッシュボード</div>
             </div>
             <p class="guide-text">
-              現在の港の状態や、航海に関係する利用状況を確認するページです。
+              航海開始日、記録数、現在の船や海域、次の船の建造状況などを確認するページです。
+              今の自分の航海がどこまで進んでいるかを見られます。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
 
           <a class="guide-item" href="/timeline/">
             <div class="guide-title">
-              <div class="guide-name">船室記録</div>
-              <div class="guide-plain">港で起きた出来事の履歴</div>
+              <div class="guide-name">航海年表</div>
+              <div class="guide-plain">人生の年表を見る場所</div>
             </div>
             <p class="guide-text">
-              日記、チケット、漂着物、船、海域の開放など、港で起きた出来事を時系列で確認する場所です。
+              日々の記録、漂着物、船、切符、海域の開放など、
+              あなたの航海に起きた出来事を時系列で確認する場所です。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
 
           <a class="guide-item" href="/voyage-archive/">
             <div class="guide-title">
-              <div class="guide-name">保管庫</div>
-              <div class="guide-plain">航海記録を探す・振り返る場所</div>
+              <div class="guide-name">航海の保管庫</div>
+              <div class="guide-plain">過去の自分と再会する場所</div>
             </div>
             <p class="guide-text">
               保存した航海記録を、月ごとに読み返したり、言葉やタグで探したりするページです。
+              過去の言葉と静かに再会できます。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -268,10 +536,11 @@
           <a class="guide-item" href="/items/">
             <div class="guide-title">
               <div class="guide-name">漂着物</div>
-              <div class="guide-plain">見つかったものを確認する場所</div>
+              <div class="guide-plain">記憶の欠片を見る場所</div>
             </div>
             <p class="guide-text">
-              航海記録のあとに、ときどき港へ流れ着く漂着物を確認する場所です。
+              航海記録のあとに、ときどき港へ流れ着くものを確認する場所です。
+              漂着物は、ゲームの報酬ではなく、記録から生まれる記憶の欠片です。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -279,10 +548,11 @@
           <a class="guide-item" href="/vessels/">
             <div class="guide-title">
               <div class="guide-name">船</div>
-              <div class="guide-plain">航海をともにする存在</div>
+              <div class="guide-plain">継続の証を見る場所</div>
             </div>
             <p class="guide-text">
-              出会った船を確認するページです。船は、航海の中で少しずつ港へ加わっていきます。
+              出会った船や、次の船に必要な漂着物を確認するページです。
+              船はコレクション報酬ではなく、航海を続けてきた証です。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -290,11 +560,11 @@
           <a class="guide-item" href="/map/">
             <div class="guide-title">
               <div class="guide-name">海図</div>
-              <div class="guide-plain">海域と気配を見る場所</div>
+              <div class="guide-plain">航海が広がる海を見る場所</div>
             </div>
             <p class="guide-text">
               いま開いている海域と、まだ霧の向こうにある海域を確認するページです。
-              それぞれの海域には、流れ着きそうなものの気配が静かに漂っています。
+              航海記録と漂着物が、少しずつ次の海を開いていきます。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -305,7 +575,20 @@
               <div class="guide-plain">深く振り返るための券</div>
             </div>
             <p class="guide-text">
-              Special Voyage Ticket や Deep Sea Ticket など、いつもの記録より少し深く言葉を整えるためのチケットを確認する場所です。
+              Drift Ticket、Special Voyage Ticket、Deep Sea Ticket など、
+              いつもの記録より少し深く言葉を整えるためのチケットを確認する場所です。
+            </p>
+            <div class="login-note">ログイン後に開けます。</div>
+          </a>
+
+          <a class="guide-item" href="/special-voyage/">
+            <div class="guide-title">
+              <div class="guide-name">特別航海</div>
+              <div class="guide-plain">切符を使って深く振り返る場所</div>
+            </div>
+            <p class="guide-text">
+              航海券を使って、時間を区切った特別な航海へ進む場所です。
+              いつもの記録より少し深く言葉を整えたいときに使います。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -316,7 +599,8 @@
               <div class="guide-plain">問い合わせと返信</div>
             </div>
             <p class="guide-text">
-              運営への連絡や、港から届いた返信を確認する場所です。
+              Celeste Harbor を使っていて気づいたこと、不具合、違和感、改善してほしいことを送る場所です。
+              港からの返信が届いた場合も、ここで確認できます。
             </p>
             <div class="login-note">ログイン後に開けます。</div>
           </a>
@@ -344,7 +628,17 @@
             <div class="login-note">ログイン後に開けます。</div>
           </a>
 
-          
+          <a class="guide-item" href="/pricing/">
+            <div class="guide-title">
+              <div class="guide-name">Harbor Store</div>
+              <div class="guide-plain">切符と有料機能の案内</div>
+            </div>
+            <p class="guide-text">
+              将来の有料機能や航海券の案内を見るページです。
+              現在は準備中で、ここから実際の決済は行われません。
+            </p>
+            <div class="login-note">ログイン後に開けます。</div>
+          </a>
 
           <a class="guide-item" href="/legal/">
             <div class="guide-title">
@@ -364,28 +658,47 @@
         </p>
       </section>
 
-      <a class="back-link" href="#" id="backLink">
-        ← 前のページに戻る
+      <a class="back-link" href="/help/">
+        ← はじめての方へ戻る
       </a>
     </main>
 
   </div>
 
   <script>
-    const backLink = document.getElementById("backLink");
-
-    if(backLink){
-      backLink.addEventListener("click", function(event){
-        event.preventDefault();
-
-        if(document.referrer && new URL(document.referrer).origin === location.origin){
-          history.back();
-          return;
-        }
-
-        location.href = "/log/";
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
       });
     }
+
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+
+        closeNavMenus();
+
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
   </script>
 </body>
 </html>
