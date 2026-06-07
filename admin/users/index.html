@@ -470,6 +470,36 @@
       background:rgba(5,8,17,.34);
     }
 
+    .back-to-top{
+      position:fixed;
+      right:24px;
+      bottom:24px;
+      z-index:50;
+      border:1px solid rgba(169,183,255,.42);
+      background:rgba(10,14,28,.88);
+      color:var(--soft);
+      box-shadow:0 12px 32px rgba(0,0,0,.35);
+      backdrop-filter:blur(10px);
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(8px);
+      transition:
+        opacity .18s ease,
+        transform .18s ease,
+        border-color .18s ease;
+    }
+    
+    .back-to-top.visible{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(0);
+    }
+    
+    .back-to-top:hover{
+      border-color:rgba(169,183,255,.75);
+      color:var(--text);
+    }
+
     footer{
       margin-top:40px;
       padding-top:18px;
@@ -515,6 +545,13 @@
     @media(max-width:640px){
       body{
         padding:28px 16px;
+      }
+
+      .back-to-top{
+        right:16px;
+        bottom:16px;
+        padding:9px 13px;
+        font-size:12px;
       }
 
       .section-actions{
@@ -728,6 +765,10 @@
       </div>
     </main>
 
+    <button class="back-to-top" id="backToTopBtn" type="button" aria-label="上に戻る">
+      ↑ 上に戻る
+    </button>
+
     <footer>
       <div class="footer-links">
         <a href="/admin/">管理入口</a>
@@ -758,6 +799,8 @@
     const userSearchInput = document.getElementById("userSearchInput");
     const searchBtn = document.getElementById("searchBtn");
     const resetBtn = document.getElementById("resetBtn");
+
+    const backToTopBtn = document.getElementById("backToTopBtn");
 
     const dateFromInput = document.getElementById("dateFromInput");
     const dateToInput = document.getElementById("dateToInput");
@@ -1500,6 +1543,24 @@
       await client.auth.signOut();
       window.location.href = "/account/";
     }
+
+    function updateBackToTopVisibility(){
+      if(window.scrollY > 420){
+        backToTopBtn.classList.add("visible");
+      }else{
+        backToTopBtn.classList.remove("visible");
+      }
+    }
+    
+    backToTopBtn.addEventListener("click", function(){
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+    });
+    
+    window.addEventListener("scroll", updateBackToTopVisibility);
+    updateBackToTopVisibility();
 
     searchBtn.addEventListener("click", searchUsers);
     resetBtn.addEventListener("click", resetSearch);
