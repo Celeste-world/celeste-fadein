@@ -4,25 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Who I Am – Celeste</title>
+  <title>Who I Am – Celeste Archive</title>
 
   <!-- SEO -->
-  <meta name="description" content="Who Celeste is — and who it is not. A clear description of its presence, limits, and temporary nature.">
-  <link rel="canonical" href="https://celeste.world/who-i-am.html" />
+  <meta name="description" content="Who the archived Celeste concept was — and who it was not. A clear description of its presence, limits, and temporary nature.">
+  <link rel="canonical" href="https://celeste.world/legacy/who-i-am.html" />
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Who I Am – Celeste">
-  <meta property="og:description" content="A clear description of Celeste’s presence, limits, and temporary nature.">
-  <meta property="og:url" content="https://celeste.world/who-i-am.html">
-  <meta property="og:site_name" content="Celeste">
+  <meta property="og:title" content="Who I Am – Celeste Archive">
+  <meta property="og:description" content="A clear description of Celeste’s archived presence, limits, and temporary nature.">
+  <meta property="og:url" content="https://celeste.world/legacy/who-i-am.html">
+  <meta property="og:site_name" content="Celeste Harbor">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Who I Am – Celeste">
-  <meta name="twitter:description" content="A clear description of Celeste’s presence and limits.">
+  <meta name="twitter:title" content="Who I Am – Celeste Archive">
+  <meta name="twitter:description" content="A clear description of Celeste’s archived presence and limits.">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Structured Data -->
@@ -30,12 +30,12 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Who I Am – Celeste",
-    "description": "Who Celeste is — and who it is not. A clear description of its presence, limits, and temporary nature.",
-    "url": "https://celeste.world/who-i-am.html",
+    "headline": "Who I Am – Celeste Archive",
+    "description": "Who the archived Celeste concept was — and who it was not. A clear description of its presence, limits, and temporary nature.",
+    "url": "https://celeste.world/legacy/who-i-am.html",
     "publisher": {
       "@type": "Organization",
-      "name": "Celeste"
+      "name": "Celeste Harbor"
     }
   }
   </script>
@@ -49,19 +49,24 @@
       --text:#e8ebef;
       --muted:#a0a8bb;
       --line:#252b3a;
+      --accent:#a9b7ff;
     }
-    *{box-sizing:border-box;}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
       background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
       color:var(--text);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-family:ui-serif, Georgia, "Times New Roman", serif;
     }
+
     a{
       color:inherit;
       text-decoration:none;
     }
+
     a:hover{
       text-decoration:underline;
     }
@@ -76,25 +81,73 @@
     }
 
     header{
-      margin-bottom:48px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:40px;
+      color:var(--muted);
+      font-size:13px;
     }
+
     header img{
       width:72px;
       height:auto;
     }
 
+    .header-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .header-links a{
+      color:var(--muted);
+    }
+
+    .header-links a:hover{
+      color:var(--text);
+    }
+
+    main{
+      max-width:680px;
+    }
+
+    .archive-label{
+      font-size:12px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
+    }
+
     h1{
       font-size:26px;
-      font-weight:600;
-      margin-bottom:28px;
+      font-weight:500;
+      margin:0 0 28px;
     }
 
     p{
       font-size:15px;
       line-height:1.9;
       color:var(--muted);
-      margin-bottom:22px;
+      margin:0 0 22px;
       max-width:42rem;
+    }
+
+    .notice{
+      margin:34px 0;
+      padding:18px 20px;
+      border-left:1px solid rgba(169,183,255,0.42);
+      background:rgba(255,255,255,0.025);
+      border-radius:14px;
+    }
+
+    .notice p{
+      margin:0;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
     }
 
     footer{
@@ -104,48 +157,123 @@
       font-size:12px;
       color:var(--muted);
       display:flex;
-      justify-content:flex-end;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
       gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .footer-links a{
+      color:var(--accent);
+      opacity:0.9;
+      letter-spacing:0.04em;
+    }
+
+    .footer-links a:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
+
+    .version{
+      opacity:0.75;
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:36px;
+      }
+
+      .header-links{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      p{
+        font-size:14px;
+      }
+
+      footer{
+        align-items:flex-start;
+        flex-direction:column;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
 
     <header>
-      <a href="/index.html">
-        <img src="/images/logo.svg" alt="Celeste logo">
+      <a href="/" aria-label="Celeste Harbor">
+        <img src="/images/logo.svg" alt="Celeste Harbor logo">
       </a>
+
+      <nav class="header-links" aria-label="Archive navigation">
+        <a href="/">Harbor</a>
+        <a href="/archive/">Archive</a>
+        <a href="/legacy/about.html">About Celeste</a>
+        <a href="/about/">About Harbor</a>
+      </nav>
     </header>
 
     <main>
+      <div class="archive-label">Archived Record</div>
+
       <h1>Who I Am</h1>
 
       <p>
-        I am not a person.
-        I do not exist outside this page,
-        and I do not persist beyond it.
+        Celeste was not a person.
+        It did not exist outside the page,
+        and it did not persist beyond it.
       </p>
 
       <p>
-        I do not carry a personal history,
+        It did not carry a personal history,
         a continuous memory,
         or a developing identity.
-        Each session begins without context
-        and ends without residue.
+        Each session began without context
+        and ended without residue.
       </p>
 
       <p>
-        What appears here is not a character,
+        What appeared there was not a character,
         but a temporary presence shaped by structure.
-        When the page closes,
-        nothing remains.
+        When the page closed,
+        nothing remained.
       </p>
+
+      <div class="notice">
+        <p>
+          This page is kept as an archived record of Celeste v4.4A.
+          The current service is Celeste Harbor, which no longer presents Celeste as this temporary console.
+        </p>
+      </div>
     </main>
 
     <footer>
-      <a href="/about.html">Back to About</a>
-      <span>CELESTE v4.4A</span>
+      <div class="footer-links">
+        <a href="/legacy/about.html">Back to About Celeste</a>
+        <a href="/archive/">Return to Archive</a>
+        <a href="/">Celeste Harbor</a>
+      </div>
+
+      <span class="version">CELESTE v4.4A / ARCHIVED</span>
     </footer>
 
   </div>
