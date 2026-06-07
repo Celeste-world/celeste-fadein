@@ -67,21 +67,6 @@
       letter-spacing:.04em;
     }
 
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-    }
-
-    .nav a:hover{
-      color:var(--text);
-    }
-
     .nav-letter-link{
       position:relative;
     }
@@ -164,6 +149,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -176,6 +166,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -444,7 +439,6 @@
       margin-top:34px;
     }
 
-    
     @media(max-width:760px){
       .archive-item{
         grid-template-columns:1fr;
@@ -468,7 +462,7 @@
         margin-bottom:44px;
       }
 
-     .global-nav{
+      .global-nav{
         width:100%;
         justify-content:flex-start;
         gap:10px 14px;
@@ -476,9 +470,23 @@
       }
       
       .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
         left:0;
         transform:none;
         min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
       }
 
       h1{
@@ -518,8 +526,8 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -548,17 +556,16 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -585,7 +592,7 @@
         </h1>
 
         <p class="lead">
-          Fragment は、
+          断片は、
           『Moonlit Voyage』本編の切り売りではありません。<br>
           同じ海域で記録された、
           別の夜の短い航海です。
@@ -605,7 +612,7 @@
 
         <div class="actions">
           <a class="btn-ghost" href="/log/">日々の記録へ</a>
-          <a class="btn-ghost" href="/timeline/">船室記録へ</a>
+          <a class="btn-ghost" href="/timeline/">航海年表へ</a>
           <a class="btn-ghost" href="/map/">海図へ</a>
         </div>
 
@@ -705,15 +712,13 @@
         </div>
 
         <p class="note">
-          Fragment は、少しずつ増えていきます。<br>
+          断片は、少しずつ増えていきます。<br>
           すべてを急いで読む必要はありません。
           必要な夜に、必要な断片だけを開いてください。
         </p>
       </section>
 
     </main>
-
-  
 
   </div>
 
@@ -770,7 +775,7 @@
         document.body.classList.remove("auth-locked");
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("Fragments を表示しています。");
+        setStatus("断片を表示しています。");
       }else{
         window.location.replace("/");
         return;
@@ -828,10 +833,12 @@
       }
     });
 
-    logoutLink.addEventListener("click", function(event){
-      event.preventDefault();
-      logout();
-    });
+    if(logoutLink){
+      logoutLink.addEventListener("click", function(event){
+        event.preventDefault();
+        logout();
+      });
+    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
