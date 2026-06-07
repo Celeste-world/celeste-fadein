@@ -706,15 +706,6 @@
         .replaceAll("'", "&#039;");
     }
 
-    function escapePostgrestPattern(str){
-      return String(str || "")
-        .replaceAll("\\", "\\\\")
-        .replaceAll("%", "\\%")
-        .replaceAll("_", "\\_")
-        .replaceAll(",", "\\,")
-        .trim();
-    }
-
     function isUuid(value){
       return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ""));
     }
@@ -871,7 +862,7 @@
 
     async function resolveUserSearch(filters){
       const term = filters.userSearch.trim();
-
+    
       if(!term){
         return {
           userIds:null,
@@ -879,14 +870,15 @@
           searchedCustomers:null
         };
       }
-
+    
       const userIds = new Set();
       const stripeCustomerIds = new Set();
       let searchedCustomers = [];
-
+    
+      // user_id 直接検索
       if(isUuid(term)){
         userIds.add(term);
-
+    
         const directCustomers = await fetchTable(
           "billing_customers",
           client
@@ -895,41 +887,57 @@
             .eq("user_id", term)
             .limit(100)
         );
-
+    
         searchedCustomers = searchedCustomers.concat(directCustomers);
       }
-
-      const pattern = escapePostgrestPattern(term);
-
-      const customerMatches = await fetchTable(
+    
+      // email 部分一致検索
+      const emailCustomers = await fetchTable(
         "billing_customers",
         client
           .from("billing_customers")
           .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
-          .or("email.ilike.%" + pattern + "%,stripe_customer_id.ilike.%" + pattern + "%")
+          .ilike("email", "%" + term + "%")
           .limit(100)
       );
-
-      searchedCustomers = searchedCustomers.concat(customerMatches);
-
+    
+      searchedCustomers = searchedCustomers.concat(emailCustomers);
+    
+      // stripe_customer_id 部分一致検索
+      const stripeCustomers = await fetchTable(
+        "billing_customers",
+        client
+          .from("billing_customers")
+          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+          .ilike("stripe_customer_id", "%" + term + "%")
+          .limit(100)
+      );
+    
+      searchedCustomers = searchedCustomers.concat(stripeCustomers);
+    
+      // 重複除去
+      const uniqueCustomersMap = new Map();
+    
+      searchedCustomers.forEach(function(row){
+        const key = row.id || row.user_id || row.stripe_customer_id || row.email;
+    
+        if(key){
+          uniqueCustomersMap.set(key, row);
+        }
+      });
+    
+      searchedCustomers = Array.from(uniqueCustomersMap.values());
+    
       searchedCustomers.forEach(function(row){
         if(row.user_id){
           userIds.add(row.user_id);
         }
-
+    
         if(row.stripe_customer_id){
           stripeCustomerIds.add(row.stripe_customer_id);
         }
       });
-
-      const uniqueCustomersMap = new Map();
-
-      searchedCustomers.forEach(function(row){
-        uniqueCustomersMap.set(row.id || row.user_id || row.stripe_customer_id, row);
-      });
-
-      searchedCustomers = Array.from(uniqueCustomersMap.values());
-
+    
       return {
         userIds:Array.from(userIds),
         stripeCustomerIds:Array.from(stripeCustomerIds),
