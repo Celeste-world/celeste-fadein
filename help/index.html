@@ -33,9 +33,155 @@
       padding:40px 20px;
     }
 
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
     .wrap{
       max-width:760px;
       margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    .nav-letter-link{
+      position:relative;
+    }
+
+    body.has-unread-letter .nav-letter-link{
+      color:var(--text);
+    }
+
+    body.has-unread-letter .nav-letter-link::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
+    .global-nav{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .nav-group{
+      position:relative;
+    }
+
+    .global-nav .nav-top{
+      appearance:none;
+      -webkit-appearance:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      width:auto;
+      min-width:0;
+      padding:8px 0;
+      margin:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      color:var(--muted);
+      font:inherit;
+      line-height:1.7;
+      cursor:pointer;
+    }
+
+    .global-nav .nav-top:hover,
+    .global-nav .nav-top:focus{
+      color:var(--text);
+      background:transparent;
+      outline:none;
+    }
+
+    .global-nav .nav-top:focus-visible{
+      outline:1px solid rgba(169,183,255,.45);
+      outline-offset:4px;
+    }
+
+    .nav-menu{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:0;
+      transform:none;
+      min-width:180px;
+      padding:10px;
+      border:1px solid rgba(169,183,255,.24);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
+        rgba(10,14,28,.96);
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+      display:none;
+      z-index:80;
+    }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
+
+    .nav-menu::before{
+      content:"";
+      position:absolute;
+      top:-7px;
+      left:22px;
+      width:12px;
+      height:12px;
+      transform:rotate(45deg);
+      border-left:1px solid rgba(169,183,255,.24);
+      border-top:1px solid rgba(169,183,255,.24);
+      background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
+    }
+
+    .nav-group.open .nav-menu{
+      display:block;
+    }
+
+    .nav-menu a{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:var(--muted);
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .nav-menu a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
     }
 
     h1{
@@ -183,6 +329,67 @@
         padding:28px 16px;
       }
 
+      .site-header{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:flex-start;
+        gap:12px;
+        margin-bottom:34px;
+        overflow:visible;
+      }
+
+      .brand{
+        display:block;
+        flex:0 0 auto;
+        width:100%;
+        white-space:nowrap;
+      }
+
+      .global-nav{
+        display:flex;
+        width:100%;
+        flex:0 0 auto;
+        justify-content:flex-start;
+        align-items:center;
+        gap:10px 14px;
+        font-size:12px;
+        flex-wrap:wrap;
+        overflow:visible;
+      }
+
+      .nav-group{
+        position:relative;
+        flex:0 0 auto;
+      }
+
+      .global-nav .nav-top{
+        width:auto;
+        min-width:0;
+        padding:6px 0;
+        white-space:nowrap;
+      }
+
+      .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;
+        transform:none;
+        min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
+      }
+
       h1{
         font-size:28px;
       }
@@ -192,24 +399,79 @@
       }
     }
   </style>
-
-  <link rel="stylesheet" href="/assets/css/common-nav.css">
-  <script src="/assets/js/common-nav.js" defer></script>
 </head>
 
 <body>
   <div class="wrap">
 
-    <div id="siteHeader"></div>
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="global-nav" aria-label="Celeste Harbor navigation">
+        <div class="nav-group">
+          <button class="nav-top" type="button">航海記録</button>
+          <div class="nav-menu">
+            <a href="/log/">日々の記録</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
+            <a href="/harbor-status/">現在地</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">漂着物</button>
+          <div class="nav-menu">
+            <a href="/items/">漂着物</a>
+            <a href="/vessels/">船</a>
+            <a href="/tickets/">切符</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">海図</button>
+          <div class="nav-menu">
+            <a href="/map/">海図</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">便り</button>
+          <div class="nav-menu">
+            <a href="/harbor-letter/" class="nav-letter-link">便り</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-top" type="button">はじめての方へ</button>
+          <div class="nav-menu">
+            <a href="/help/">はじめての方へ</a>
+            <a href="/help/faq/">よくある質問</a>
+            <a href="/help/#login">ログインできないとき</a>
+            <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
+          </div>
+        </div>
+
+        <div class="nav-group nav-account">
+          <button class="nav-top" type="button">アカウント</button>
+          <div class="nav-menu">
+            <a href="/account/">アカウント</a>
+            <a href="/billing/">お支払い</a>
+            <a href="/pricing/">Harbor Store</a>
+            <a href="/legal/">法務情報</a>
+            <a href="/legal/terms/">利用規約</a>
+            <a href="/legal/privacy/">プライバシーポリシー</a>
+            <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </nav>
+    </header>
 
     <main>
       <h1>はじめての方へ</h1>
 
       <p class="lead">
-        <p class="lead">
-          Celeste Harbor は、人生を航海として残すサービスです。<br>
-          はじめて使う方や、もう一度流れを確認したい方は、ここから必要な案内を開いてください。
-        </p>
+        Celeste Harbor は、人生を航海として残すサービスです。<br>
+        はじめて使う方や、もう一度流れを確認したい方は、ここから必要な案内を開いてください。
       </p>
 
       <section class="panel priority-panel">
@@ -280,10 +542,9 @@
           </a>
         </div>
 
-       <p class="note">
-        はじめての方への案内は、必要なときだけ開く案内板です。すべてを最初から覚える必要はありません。
-      </p>
-        
+        <p class="note">
+          はじめての方への案内は、必要なときだけ開く案内板です。すべてを最初から覚える必要はありません。
+        </p>
       </section>
 
       <a class="back-link" href="#" id="backLink">
@@ -294,6 +555,40 @@
   </div>
 
   <script>
+    function closeNavMenus(){
+      document.querySelectorAll(".nav-group.open").forEach(function(group){
+        group.classList.remove("open");
+      });
+    }
+
+    document.querySelectorAll(".nav-top").forEach(function(button){
+      button.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+
+        const group = button.closest(".nav-group");
+        const alreadyOpen = group.classList.contains("open");
+
+        closeNavMenus();
+
+        if(!alreadyOpen){
+          group.classList.add("open");
+        }
+      });
+    });
+
+    document.addEventListener("click", function(event){
+      if(!event.target.closest(".global-nav")){
+        closeNavMenus();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeNavMenus();
+      }
+    });
+
     const backLink = document.getElementById("backLink");
 
     if(backLink){
