@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>保管庫 – Celeste Harbor</title>
+  <title>旧Celesteアーカイブ – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -74,22 +74,6 @@
     .brand{
       color:var(--text);
       letter-spacing:.04em;
-    }
-
-    .nav{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav a{
-      color:var(--muted);
-    }
-
-    .nav a:hover{
-      color:var(--text);
-      text-decoration:none;
     }
 
     .nav-letter-link{
@@ -174,6 +158,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -186,6 +175,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -482,9 +476,23 @@
       }
       
       .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
         left:0;
         transform:none;
         min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
+      }
+
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
       }
 
       h1{
@@ -520,8 +528,8 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -550,17 +558,16 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -579,7 +586,7 @@
     <main>
 
       <section class="hero">
-        <div class="label">保管庫</div>
+        <div class="label">旧Celesteアーカイブ</div>
 
         <h1>
           古い灯りを、<br>
@@ -587,7 +594,7 @@
         </h1>
 
         <p class="lead">
-          Archive は、Celeste Harbor になる前の記録や、
+          旧Celesteアーカイブは、Celeste Harbor になる前の記録や、
           旧Celeste時代の思想、構造、言葉を静かに保存する場所です。
         </p>
 
@@ -608,7 +615,7 @@
 
         <div class="actions">
           <a class="btn-ghost" href="/log/">日々の記録へ</a>
-          <a class="btn-ghost" href="/timeline/">船室記録へ</a>
+          <a class="btn-ghost" href="/timeline/">航海年表へ</a>
           <a class="btn-ghost" href="/map/">海図へ</a>
         </div>
 
@@ -620,7 +627,7 @@
 
         <p class="section-lead">
           Celeste v4.4A 時代の思想と構造を保存しています。
-          現在の Harbor とは役割が異なりますが、その根にある静けさはここから続いています。
+          現在の Celeste Harbor とは役割が異なりますが、その根にある静けさはここから続いています。
         </p>
 
         <div class="archive-grid">
@@ -698,7 +705,7 @@
         </div>
 
         <p class="note">
-          Archive にある記録は、現在の Harbor へそのまま戻すためのものではありません。<br>
+          旧Celesteアーカイブにある記録は、現在の Celeste Harbor へそのまま戻すためのものではありません。<br>
           ここに残しておくことで、Celeste がどこから来たのかを静かに示しています。
         </p>
       </section>
@@ -708,47 +715,49 @@
 
         <p class="section-lead">
           古い記録を見たあと、現在の Celeste Harbor へ戻るための導線です。
-          Harbor は、旧Celesteの思想を受け継ぎながら、より広い海域へ進み始めています。
+          Celeste Harbor は、旧Celesteの静けさを受け継ぎながら、人生を航海として残すサービスへ進みました。
         </p>
 
         <div class="current-grid">
 
           <article class="current-card">
-            <h3>Voyage Log</h3>
+            <h3>日々の記録</h3>
             <p>
               現在の港の中心。
-              今日の航海記録を残す場所です。
+              今日の言葉を航海記録として残す場所です。
             </p>
 
             <div class="card-actions">
               <a class="btn-ghost" href="/log/">
-                Voyage Logへ
+                日々の記録へ
               </a>
             </div>
           </article>
 
           <article class="current-card">
-            <h3>Sea Chart</h3>
+            <h3>海図</h3>
             <p>
               開いている海域と、まだ霧の向こうにある海を見る場所です。
+              航海が広がっていく気配を確認できます。
             </p>
 
             <div class="card-actions">
               <a class="btn-ghost" href="/map/">
-                Mapへ
+                海図へ
               </a>
             </div>
           </article>
 
           <article class="current-card">
-            <h3>Cabin Log</h3>
+            <h3>航海年表</h3>
             <p>
-              漂着物、船、チケット、記録が積もっていく船室のログです。
+              日々の記録、漂着物、船、切符、海域の広がりなど、
+              あなたの航海に起きた出来事を時系列で見られる場所です。
             </p>
 
             <div class="card-actions">
               <a class="btn-ghost" href="/timeline/">
-                Cabin Logへ
+                航海年表へ
               </a>
             </div>
           </article>
@@ -758,7 +767,18 @@
 
     </main>
 
-    </div>
+    <footer>
+      <div class="footer-links">
+        <a href="/log/">日々の記録</a>
+        <a href="/timeline/">航海年表</a>
+        <a href="/voyage-archive/">航海の保管庫</a>
+        <a href="/map/">海図</a>
+      </div>
+
+      <div>CELESTE HARBOR ARCHIVE</div>
+    </footer>
+
+  </div>
 
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
@@ -813,7 +833,7 @@
         document.body.classList.remove("auth-locked");
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("Archive を表示しています。");
+        setStatus("旧Celesteアーカイブを表示しています。");
       }else{
         window.location.replace("/");
         return;
@@ -871,10 +891,12 @@
       }
     });
 
-    logoutLink.addEventListener("click", function(event){
-      event.preventDefault();
-      logout();
-    });
+    if(logoutLink){
+      logoutLink.addEventListener("click", function(event){
+        event.preventDefault();
+        logout();
+      });
+    }
 
     client.auth.onAuthStateChange(function(event, session){
       if(session && session.user){
