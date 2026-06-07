@@ -286,6 +286,46 @@
       line-height:1.5;
     }
 
+    .detail-jump-nav{
+      display:none;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:0 0 18px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.45);
+      background:rgba(5,8,17,.32);
+    }
+
+    .detail-jump-nav.visible{
+      display:flex;
+    }
+
+    .detail-jump-nav a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.24);
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      text-decoration:none;
+      font-size:12px;
+      line-height:1.6;
+      padding:8px 12px;
+      white-space:nowrap;
+    }
+
+    .detail-jump-nav a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.62);
+      background:rgba(169,183,255,.08);
+    }
+
+    .jump-target{
+      scroll-margin-top:24px;
+    }
+
     .section{
       margin-top:20px;
       padding:18px;
@@ -543,8 +583,12 @@
     }
 
     @media(max-width:640px){
-      body{
+      body{<div id="selectedUserBox">
         padding:28px 16px;
+      }
+
+      .detail-jump-nav a{
+        flex:1 1 calc(50% - 8px);
       }
 
       .back-to-top{
@@ -687,6 +731,14 @@
             </div>
           </div>
 
+          <nav class="detail-jump-nav" id="detailJumpNav" aria-label="ユーザー詳細内ジャンプ">
+            <a href="#userDetailSection">ユーザー情報</a>
+            <a href="#logsSection">最近の航海記録</a>
+            <a href="#ticketsSection">航海券</a>
+            <a href="#billingSection">課金・契約</a>
+            <a href="#feedbackSection">港への便り</a>
+          </nav>
+
           <section class="summary-grid" id="summaryGrid" style="display:none;">
             <div class="summary-card">
               <div class="summary-label">Voyage Logs</div>
@@ -709,7 +761,7 @@
             </div>
           </section>
 
-          <section class="section" id="logsSection" style="display:none;">
+          <section class="section jump-target" id="logsSection" style="display:none;">
             <div class="section-head">
               <div>
                 <h2 class="section-title">最近の航海記録</h2>
@@ -729,7 +781,7 @@
             <div class="list" id="logsBox"></div>
           </section>
 
-          <section class="section" id="ticketsSection" style="display:none;">
+          <section class="section jump-target" id="ticketsSection" style="display:none;">
             <div class="section-head">
               <div>
                 <h2 class="section-title">航海券</h2>
@@ -740,7 +792,7 @@
             <div class="list" id="ticketsBox"></div>
           </section>
 
-          <section class="section" id="billingSection" style="display:none;">
+          <section class="section jump-target" id="billingSection" style="display:none;">
             <div class="section-head">
               <div>
                 <h2 class="section-title">課金・契約</h2>
@@ -751,7 +803,7 @@
             <div class="list" id="billingBox"></div>
           </section>
 
-          <section class="section" id="feedbackSection" style="display:none;">
+          <section class="section jump-target" id="feedbackSection" style="display:none;">
             <div class="section-head">
               <div>
                 <h2 class="section-title">港への便り</h2>
@@ -808,6 +860,8 @@
     const userList = document.getElementById("userList");
     const selectedUserBox = document.getElementById("selectedUserBox");
     const summaryGrid = document.getElementById("summaryGrid");
+
+    const detailJumpNav = document.getElementById("detailJumpNav");
 
     const summaryLogs = document.getElementById("summaryLogs");
     const summaryTickets = document.getElementById("summaryTickets");
@@ -1108,7 +1162,7 @@
       const email = user.email || "";
 
       selectedUserBox.innerHTML = `
-        <section class="section" style="margin-top:0;">
+        <section class="section jump-target" id="userDetailSection" style="margin-top:0;">
           <div class="section-head">
             <div>
               <h2 class="section-title">${escapeHtml(displayName)}</h2>
@@ -1147,6 +1201,7 @@
     }
 
     function showDetailSections(){
+      detailJumpNav.classList.add("visible");
       summaryGrid.style.display = "";
       logsSection.style.display = "";
       ticketsSection.style.display = "";
@@ -1493,6 +1548,8 @@
           ユーザーを選択すると、ここに航海状況が表示されます。
         </div>
       `;
+
+      detailJumpNav.classList.remove("visible");
     
       summaryGrid.style.display = "none";
       logsSection.style.display = "none";
