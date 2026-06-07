@@ -871,62 +871,36 @@
         };
       }
     
+      const normalizedTerm = term.toLowerCase();
+    
       const userIds = new Set();
       const stripeCustomerIds = new Set();
-      let searchedCustomers = [];
     
-      // user_id 直接検索
-      if(isUuid(term)){
-        userIds.add(term);
+      /*
+        PostgREST の ilike / or に頼らず、
+        管理者として billing_customers を取得してから画面側で検索する。
+        管理者RLSは確認済みなので、このページでは安全に実行できる。
+      */
+      const allCustomers = await fetchTable(
+        "billing_customers",
+        client
+          .from("billing_customers")
+          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+          .order("created_at", { ascending:false })
+          .limit(1000)
+      );
     
-        const directCustomers = await fetchTable(
-          "billing_customers",
-          client
-            .from("billing_customers")
-            .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
-            .eq("user_id", term)
-            .limit(100)
+      const searchedCustomers = allCustomers.filter(function(row){
+        const userId = String(row.user_id || "").toLowerCase();
+        const email = String(row.email || "").toLowerCase();
+        const stripeCustomerId = String(row.stripe_customer_id || "").toLowerCase();
+    
+        return (
+          userId.includes(normalizedTerm) ||
+          email.includes(normalizedTerm) ||
+          stripeCustomerId.includes(normalizedTerm)
         );
-    
-        searchedCustomers = searchedCustomers.concat(directCustomers);
-      }
-    
-      // email 部分一致検索
-      const emailCustomers = await fetchTable(
-        "billing_customers",
-        client
-          .from("billing_customers")
-          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
-          .ilike("email", "%" + term + "%")
-          .limit(100)
-      );
-    
-      searchedCustomers = searchedCustomers.concat(emailCustomers);
-    
-      // stripe_customer_id 部分一致検索
-      const stripeCustomers = await fetchTable(
-        "billing_customers",
-        client
-          .from("billing_customers")
-          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
-          .ilike("stripe_customer_id", "%" + term + "%")
-          .limit(100)
-      );
-    
-      searchedCustomers = searchedCustomers.concat(stripeCustomers);
-    
-      // 重複除去
-      const uniqueCustomersMap = new Map();
-    
-      searchedCustomers.forEach(function(row){
-        const key = row.id || row.user_id || row.stripe_customer_id || row.email;
-    
-        if(key){
-          uniqueCustomersMap.set(key, row);
-        }
       });
-    
-      searchedCustomers = Array.from(uniqueCustomersMap.values());
     
       searchedCustomers.forEach(function(row){
         if(row.user_id){
@@ -944,33 +918,7 @@
         searchedCustomers
       };
     }
-
-    function renderCustomers(rows){
-      customersCount.textContent = String(rows.length) + "件";
-
-      customersBox.innerHTML = tableHtml(
-        [
-          {
-            label:"created_at",
-            render:function(row){ return escapeHtml(formatDate(row.created_at)); }
-          },
-          {
-            label:"user_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(row.user_id) + '</span>'; }
-          },
-          {
-            label:"stripe_customer_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(row.stripe_customer_id) + '</span>'; }
-          },
-          {
-            label:"email",
-            render:function(row){ return escapeHtml(row.email || ""); }
-          }
-        ],
-        rows
-      );
-    }
-
+    
     function renderPurchases(rows){
       purchasesCount.textContent = String(rows.length) + "件";
 
@@ -1398,7 +1346,12 @@
           }
         }
 
-        const customers = await fetchTable("billing_customers", customersQuery);
+        let customers = await fetchTable("billing_customers", customersQuery);
+
+        if(filters.userSearch && Array.isArray(resolved.searchedCustomers)){
+          customers = resolved.searchedCustomers;
+        }
+        
         const purchases = await fetchTable("billing_purchases", purchasesQuery);
         const subscriptions = await fetchTable("user_subscriptions", subscriptionsQuery);
         const tickets = await fetchTable("voyage_tickets", ticketsQuery);
