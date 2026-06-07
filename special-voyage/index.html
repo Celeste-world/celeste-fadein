@@ -42,10 +42,6 @@
       position:relative;
     }
     
-    .nav-letter-link{
-      position:relative;
-    }
-    
     body.has-unread-letter .nav-letter-link{
       color:var(--text);
     }
@@ -172,6 +168,11 @@
       display:none;
       z-index:80;
     }
+
+    .nav-account .nav-menu{
+      left:auto;
+      right:0;
+    }
     
     .nav-menu::before{
       content:"";
@@ -184,6 +185,11 @@
       border-left:1px solid rgba(169,183,255,.24);
       border-top:1px solid rgba(169,183,255,.24);
       background:rgba(10,14,28,.96);
+    }
+
+    .nav-account .nav-menu::before{
+      left:auto;
+      right:22px;
     }
     
     .nav-group.open .nav-menu{
@@ -1113,40 +1119,66 @@
       }
 
       .site-header{
-        align-items:center;
-        flex-direction:row;
-        flex-wrap:nowrap;
-        gap:14px;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:flex-start;
+        gap:12px;
         margin-bottom:44px;
-        overflow-x:auto;
-        overflow-y:visible;
-        -webkit-overflow-scrolling:touch;
+        overflow:visible;
       }
       
       .brand{
+        display:block;
         flex:0 0 auto;
+        width:100%;
         white-space:nowrap;
       }
       
       .global-nav{
-        width:auto;
+        display:flex;
+        width:100%;
         flex:0 0 auto;
         justify-content:flex-start;
-        gap:14px;
+        align-items:center;
+        gap:10px 14px;
         font-size:12px;
-        flex-wrap:nowrap;
+        flex-wrap:wrap;
+        overflow:visible;
       }
       
-      .nav-top{
+      .nav-group{
+        position:relative;
+        flex:0 0 auto;
+      }
+      
+      .global-nav .nav-top{
+        width:auto;
+        min-width:0;
+        padding:6px 0;
         white-space:nowrap;
       }
       
       .nav-menu{
+        position:absolute;
+        top:calc(100% + 10px);
         left:0;
         transform:none;
         min-width:190px;
+        max-width:calc(100vw - 32px);
+        z-index:1000;
       }
 
+      .nav-account .nav-menu{
+        left:auto;
+        right:0;
+      }
+
+      .nav-account .nav-menu::before{
+        left:auto;
+        right:22px;
+      }
+      
       h1{
         font-size:31px;
       }
@@ -1195,8 +1227,8 @@
           <button class="nav-top" type="button">航海記録</button>
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
-            <a href="/timeline/">船室記録</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/timeline/">航海年表</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -1225,17 +1257,16 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">港の歩き方</button>
+          <button class="nav-top" type="button">はじめての方へ</button>
           <div class="nav-menu">
-            <a href="/help/">港の歩き方</a>
-            <a href="/help/first-voyage/">はじめての航海案内</a>
+            <a href="/help/">はじめての方へ</a>
             <a href="/help/faq/">よくある質問</a>
             <a href="/help/#login">ログインできないとき</a>
             <a href="/help/#in-app-browser">アプリ内ブラウザについて</a>
           </div>
         </div>
     
-        <div class="nav-group">
+        <div class="nav-group nav-account">
           <button class="nav-top" type="button">アカウント</button>
           <div class="nav-menu">
             <a href="/account/">アカウント</a>
@@ -1250,6 +1281,7 @@
         </div>
       </nav>
     </header>
+    
     <main>
       <div class="label">特別航海</div>
 
@@ -1788,7 +1820,7 @@
         lead:
           "10分の特別航海を開始できます。",
         note:
-          "通常の Voyage Log より、漂着物が届く気配が強まります。",
+          "通常の 日々の記録より、漂着物が届く気配が強まります。",
         button: "10分チケットで航海を開始する",
         benefits: [
           "最大1個まで漂着物が届く可能性があります",
@@ -1849,7 +1881,7 @@
         ticketArea.innerHTML = `
           <div class="empty">
             現在、航海に使える有効な航海券はありません。<br>
-            ときどき、Voyage Log のあとに小さな航海券が漂着することがあります。
+            ときどき、日々の記録のあとに小さな航海券が漂着することがあります。
           </div>
         `;
         return;
@@ -2603,14 +2635,14 @@
 
           specialReply.style.display = "block";
           specialReplyText.textContent =
-            "この航海はここで閉じられました。\n8秒後に、Voyage Log へ戻ります。";
+            "この航海はここで閉じられました。\n8秒後に、日々の記録へ戻ります。";
 
           if(specialFind && specialFindText){
             specialFind.classList.remove("visible");
             specialFindText.textContent = "";
           }
 
-          setStatus("航海の時間が終了しました。Voyage Logへ戻ります。");
+          setStatus("航海の時間が終了しました。日々の記録へ戻ります。");
 
           expireActiveSession();
           activeSession = null;
@@ -2636,7 +2668,7 @@
           specialReplyText.textContent =
             "この航海はここで閉じられました。\n" +
             seconds +
-            "秒後に、Voyage Log へ戻ります。";
+            "秒後に、日々の記録へ戻ります。";
         }
     
         if(seconds <= 0){
