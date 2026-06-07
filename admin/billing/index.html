@@ -789,6 +789,40 @@
       `;
     }
 
+    function renderCustomers(rows){
+      customersCount.textContent = String(rows.length) + "件";
+    
+      customersBox.innerHTML = tableHtml(
+        [
+          {
+            label:"created_at",
+            render:function(row){
+              return escapeHtml(formatDate(row.created_at));
+            }
+          },
+          {
+            label:"user_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(row.user_id || "") + '</span>';
+            }
+          },
+          {
+            label:"stripe_customer_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(row.stripe_customer_id || "") + '</span>';
+            }
+          },
+          {
+            label:"email",
+            render:function(row){
+              return escapeHtml(row.email || "");
+            }
+          }
+        ],
+        rows
+      );
+    }
+
     function getFilters(){
       return {
         userSearch: userSearchInput.value.trim(),
