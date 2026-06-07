@@ -1292,35 +1292,37 @@
         feedbackBox.innerHTML = emptyBox(rowsOrError.error);
         return;
       }
-
+    
       const rows = rowsOrError || [];
       feedbackCount.textContent = String(rows.length) + "件";
-
+    
       if(rows.length === 0){
         feedbackBox.innerHTML = emptyBox("便りはありません。");
         return;
       }
-
+    
       feedbackBox.innerHTML = rows.map(function(row){
         return `
           <article class="record-card">
             <div class="record-title">
               ${escapeHtml(row.type || "feedback")} ${badge(row.status)}
             </div>
+    
             <div class="record-meta">
               ${escapeHtml(formatDate(row.created_at))}<br>
               page: ${escapeHtml(row.page_path || "")}
             </div>
-            <details>
-              <div class="record-body">${escapeHtml(row.message || "")}</div>
-              ${
-                row.admin_reply
-                  ? `
-                    <div class="record-meta" style="margin-top:10px;">管理者返信</div>
-                    <div class="record-body">${escapeHtml(row.admin_reply || "")}</div>
-                  `
-                  : ""
-              }
+    
+            <div class="record-body">${escapeHtml(row.message || "")}</div>
+    
+            ${
+              row.admin_reply
+                ? `
+                  <div class="record-meta" style="margin-top:10px;">管理者返信</div>
+                  <div class="record-body">${escapeHtml(row.admin_reply || "")}</div>
+                `
+                : ""
+            }
           </article>
         `;
       }).join("");
