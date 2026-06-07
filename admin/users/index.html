@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>User Admin – Celeste Harbor</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#050811;
+      --panel:#111623;
+      --text:#e8ebef;
+      --muted:#a0a8bb;
+      --dim:#747f96;
+      --line:#252b3a;
+      --accent:#a9b7ff;
+      --danger:#ff9b9b;
+      --ready:#b9f6ca;
+      --warn:#ffe3a3;
+      --soft:#d4dcff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#1a2440 0,#0b1020 34%,var(--bg) 68%),
+        linear-gradient(180deg,#050811 0%,#03050b 100%);
+      color:var(--text);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      padding:40px 20px;
+    }
+
+    body.auth-locked .wrap{
+      visibility:hidden;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:44px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .brand{
+      color:var(--text);
+      letter-spacing:.04em;
+      text-decoration:none;
+    }
+
+    .nav{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .nav a,
+    .logout-link{
+      color:var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .nav a:hover,
+    .logout-link:hover{
+      color:var(--text);
+    }
+
+    h1{
+      font-size:34px;
+      font-weight:500;
+      line-height:1.7;
+      margin:0 0 12px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:2;
+      font-size:14px;
+      margin:0 0 28px;
+    }
+
+    .panel{
+      padding:20px;
+      border-radius:20px;
+      border:1px solid rgba(70,84,132,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+      margin-bottom:24px;
+    }
+
+    .panel-title{
+      font-size:16px;
+      line-height:1.7;
+      margin:0 0 4px;
+      font-weight:500;
+    }
+
+    .panel-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin:0 0 16px;
+    }
+
+    .search-row{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    input{
+      width:100%;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.82);
+      color:var(--text);
+      padding:11px 14px;
+      font-family:inherit;
+      font-size:13px;
+      outline:none;
+    }
+
+    input:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      padding:10px 16px;
+      font-family:inherit;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    .primary{
+      background:linear-gradient(135deg,#a9b7ff,#d4dcff);
+      color:#050811;
+    }
+
+    .ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+
+    button:hover{
+      opacity:.92;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .status{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+      margin-bottom:18px;
+      min-height:1.9em;
+    }
+
+    .status.error{
+      color:var(--danger);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:360px minmax(0, 1fr);
+      gap:22px;
+      align-items:start;
+    }
+
+    .user-list{
+      display:grid;
+      gap:12px;
+      max-height:680px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .user-card{
+      width:100%;
+      text-align:left;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.45);
+      background:rgba(5,8,17,.38);
+      color:var(--text);
+      padding:15px;
+      cursor:pointer;
+    }
+
+    .user-card:hover,
+    .user-card.active{
+      border-color:rgba(169,183,255,.62);
+      background:rgba(169,183,255,.08);
+    }
+
+    .user-name{
+      font-size:15px;
+      line-height:1.7;
+      margin-bottom:4px;
+    }
+
+    .user-email,
+    .mono{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:11px;
+      color:var(--muted);
+      word-break:break-all;
+      line-height:1.7;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .summary-card{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.50);
+      background:rgba(5,8,17,.34);
+    }
+
+    .summary-label{
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .summary-value{
+      color:var(--text);
+      font-size:22px;
+      line-height:1.5;
+    }
+
+    .section{
+      margin-top:20px;
+      padding:18px;
+      border-radius:20px;
+      border:1px solid rgba(70,84,132,.55);
+      background:rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.26);
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      padding-bottom:12px;
+      margin-bottom:14px;
+      border-bottom:1px solid rgba(160,168,187,.13);
+    }
+
+    .section-title{
+      font-size:17px;
+      line-height:1.7;
+      margin:0;
+      font-weight:500;
+    }
+
+    .section-sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin:2px 0 0;
+    }
+
+    .count-badge{
+      display:inline-flex;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.24);
+      color:var(--muted);
+      font-size:12px;
+      padding:5px 10px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .detail-item{
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.13);
+      background:rgba(5,8,17,.30);
+      padding:13px;
+    }
+
+    .detail-label{
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin-bottom:5px;
+    }
+
+    .detail-value{
+      color:var(--text);
+      font-size:13px;
+      line-height:1.8;
+      word-break:break-all;
+    }
+
+    .list{
+      display:grid;
+      gap:12px;
+    }
+
+    .record-card{
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.13);
+      background:rgba(5,8,17,.32);
+      padding:14px;
+    }
+
+    .record-meta{
+      color:var(--dim);
+      font-size:12px;
+      line-height:1.8;
+      margin-bottom:8px;
+    }
+
+    .record-title{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.8;
+      margin-bottom:6px;
+    }
+
+    .record-body{
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
+      white-space:pre-wrap;
+    }
+
+    details summary{
+      color:var(--accent);
+      cursor:pointer;
+      font-size:12px;
+      line-height:1.8;
+      margin-top:8px;
+    }
+
+    .badge{
+      display:inline-block;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.28);
+      color:var(--muted);
+      font-size:11px;
+      padding:4px 9px;
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .badge.active,
+    .badge.granted,
+    .badge.available,
+    .badge.processed{
+      color:var(--ready);
+      border-color:rgba(185,246,202,.36);
+      background:rgba(185,246,202,.06);
+    }
+
+    .badge.pending,
+    .badge.paid,
+    .badge.open,
+    .badge.reviewing{
+      color:var(--warn);
+      border-color:rgba(255,227,163,.36);
+      background:rgba(255,227,163,.06);
+    }
+
+    .badge.failed,
+    .badge.canceled,
+    .badge.expired,
+    .badge.closed{
+      color:var(--danger);
+      border-color:rgba(255,155,155,.36);
+      background:rgba(255,155,155,.06);
+    }
+
+    .empty{
+      padding:18px;
+      border:1px solid rgba(70,84,132,.35);
+      border-radius:16px;
+      color:var(--muted);
+      line-height:2;
+      background:rgba(5,8,17,.34);
+    }
+
+    footer{
+      margin-top:40px;
+      padding-top:18px;
+      border-top:1px solid rgba(37,43,58,.9);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    footer a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    footer a:hover{
+      color:var(--text);
+    }
+
+    @media(max-width:980px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .user-list{
+        max-height:none;
+      }
+
+      .summary-grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:640px){
+      body{
+        padding:28px 16px;
+      }
+
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .search-row{
+        grid-template-columns:1fr;
+      }
+
+      .search-row button{
+        width:100%;
+      }
+
+      .summary-grid,
+      .detail-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-locked">
+  <div class="wrap">
+
+    <header class="site-header">
+      <a class="brand" href="/">Celeste Harbor</a>
+
+      <nav class="nav">
+        <a href="/admin/">管理入口</a>
+        <a href="/admin/billing/">課金管理</a>
+        <a href="/admin/feedback/">便り管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/account/">アカウント</a>
+        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>User Admin</h1>
+
+      <p class="lead">
+        ユーザーごとの航海状況を確認するための管理ページです。<br>
+        ユーザー名、メールアドレス、user_id から検索し、記録・課金・チケット・便りを読み取り専用で確認します。
+      </p>
+
+      <section class="panel" aria-label="ユーザー検索">
+        <h2 class="panel-title">ユーザー検索</h2>
+        <p class="panel-note">
+          ユーザー名、メールアドレス、user_id で検索できます。
+        </p>
+
+        <div class="search-row">
+          <input
+            id="userSearchInput"
+            type="search"
+            placeholder="ユーザー名 / email / user_id"
+            autocomplete="off"
+          />
+          <button class="primary" id="searchBtn" type="button">検索</button>
+          <button class="ghost" id="resetBtn" type="button">リセット</button>
+        </div>
+      </section>
+
+      <div class="status" id="status">管理者権限を確認しています。</div>
+
+      <div class="layout">
+        <aside class="panel">
+          <h2 class="panel-title">Users</h2>
+          <p class="panel-note">検索結果から確認するユーザーを選択します。</p>
+          <div class="user-list" id="userList"></div>
+        </aside>
+
+        <section>
+          <div id="selectedUserBox">
+            <div class="empty">
+              ユーザーを選択すると、ここに航海状況が表示されます。
+            </div>
+          </div>
+
+          <section class="summary-grid" id="summaryGrid" style="display:none;">
+            <div class="summary-card">
+              <div class="summary-label">Voyage Logs</div>
+              <div class="summary-value" id="summaryLogs">0</div>
+            </div>
+
+            <div class="summary-card">
+              <div class="summary-label">Tickets</div>
+              <div class="summary-value" id="summaryTickets">0</div>
+            </div>
+
+            <div class="summary-card">
+              <div class="summary-label">Purchases</div>
+              <div class="summary-value" id="summaryPurchases">0</div>
+            </div>
+
+            <div class="summary-card">
+              <div class="summary-label">Letters</div>
+              <div class="summary-value" id="summaryFeedback">0</div>
+            </div>
+          </section>
+
+          <section class="section" id="logsSection" style="display:none;">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">最近の航海記録</h2>
+                <p class="section-sub">最新10件を表示します。本文は必要時のみ開いて確認します。</p>
+              </div>
+              <span class="count-badge" id="logsCount">0件</span>
+            </div>
+            <div class="list" id="logsBox"></div>
+          </section>
+
+          <section class="section" id="ticketsSection" style="display:none;">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">航海券</h2>
+                <p class="section-sub">ユーザーに付与されたチケットを確認します。</p>
+              </div>
+              <span class="count-badge" id="ticketsCount">0件</span>
+            </div>
+            <div class="list" id="ticketsBox"></div>
+          </section>
+
+          <section class="section" id="billingSection" style="display:none;">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">課金・契約</h2>
+                <p class="section-sub">購入履歴、契約状態、月間記録枠を確認します。</p>
+              </div>
+              <span class="count-badge" id="billingCount">0件</span>
+            </div>
+            <div class="list" id="billingBox"></div>
+          </section>
+
+          <section class="section" id="feedbackSection" style="display:none;">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">港への便り</h2>
+                <p class="section-sub">ユーザーから届いた便りを確認します。</p>
+              </div>
+              <span class="count-badge" id="feedbackCount">0件</span>
+            </div>
+            <div class="list" id="feedbackBox"></div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="/admin/">管理入口</a>
+        <a href="/admin/billing/">課金管理</a>
+        <a href="/admin/feedback/">便り管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/account/">アカウント</a>
+      </div>
+
+      <div>CELESTE HARBOR USER ADMIN</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+
+    const ADMIN_USER_ID = "72667f4c-ae4e-46fa-ab6f-468cb198e6ad";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const statusEl = document.getElementById("status");
+    const logoutLink = document.getElementById("logoutLink");
+    const userSearchInput = document.getElementById("userSearchInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const userList = document.getElementById("userList");
+    const selectedUserBox = document.getElementById("selectedUserBox");
+    const summaryGrid = document.getElementById("summaryGrid");
+
+    const summaryLogs = document.getElementById("summaryLogs");
+    const summaryTickets = document.getElementById("summaryTickets");
+    const summaryPurchases = document.getElementById("summaryPurchases");
+    const summaryFeedback = document.getElementById("summaryFeedback");
+
+    const logsSection = document.getElementById("logsSection");
+    const ticketsSection = document.getElementById("ticketsSection");
+    const billingSection = document.getElementById("billingSection");
+    const feedbackSection = document.getElementById("feedbackSection");
+
+    const logsBox = document.getElementById("logsBox");
+    const ticketsBox = document.getElementById("ticketsBox");
+    const billingBox = document.getElementById("billingBox");
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    const logsCount = document.getElementById("logsCount");
+    const ticketsCount = document.getElementById("ticketsCount");
+    const billingCount = document.getElementById("billingCount");
+    const feedbackCount = document.getElementById("feedbackCount");
+
+    let currentUser = null;
+    let adminUsers = [];
+    let selectedUserId = "";
+
+    function setStatus(message, isError = false){
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status error" : "status";
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "";
+      }
+
+      const date = new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
+
+      return date.toLocaleString("ja-JP", {
+        timeZone:"Asia/Tokyo",
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+    }
+
+    function shortId(value){
+      const text = String(value || "");
+
+      if(text.length <= 12){
+        return text;
+      }
+
+      return text.slice(0, 8) + "..." + text.slice(-4);
+    }
+
+    function badge(value){
+      const status = String(value || "unknown");
+      return '<span class="badge ' + escapeHtml(status) + '">' + escapeHtml(status) + '</span>';
+    }
+
+    function emptyBox(message){
+      return `
+        <div class="empty">
+          ${escapeHtml(message || "表示できるデータはありません。")}
+        </div>
+      `;
+    }
+
+    async function fetchAdminUsers(searchTerm = ""){
+      const { data: sessionData } = await client.auth.getSession();
+      const accessToken = sessionData.session?.access_token || "";
+
+      if(!accessToken){
+        throw new Error("管理者ログイン情報を確認できませんでした。");
+      }
+
+      const url = new URL(supabaseUrl + "/functions/v1/admin-list-users");
+
+      if(searchTerm){
+        url.searchParams.set("q", searchTerm);
+      }
+
+      const response = await fetch(url.toString(), {
+        method:"GET",
+        headers:{
+          "Authorization":"Bearer " + accessToken,
+          "Content-Type":"application/json"
+        }
+      });
+
+      const result = await response.json().catch(function(){
+        return {};
+      });
+
+      if(!response.ok){
+        throw new Error(result.error || "ユーザー一覧を取得できませんでした。");
+      }
+
+      adminUsers = Array.isArray(result.users) ? result.users : [];
+
+      return adminUsers;
+    }
+
+    async function fetchTable(label, builder){
+      const { data, error } = await builder;
+
+      if(error){
+        console.error(label + " load error:", error);
+
+        const detail = [
+          error.message || "",
+          error.details || "",
+          error.hint || "",
+          error.code || ""
+        ].filter(Boolean).join(" / ");
+
+        throw new Error(label + " を読み込めませんでした。 " + detail);
+      }
+
+      return Array.isArray(data) ? data : [];
+    }
+
+    async function fetchTableSafe(label, builder){
+      try{
+        return await fetchTable(label, builder);
+      }catch(error){
+        console.error(error);
+        return {
+          error:error.message || label + " を読み込めませんでした。",
+          rows:[]
+        };
+      }
+    }
+
+    function renderUsers(users){
+      userList.innerHTML = "";
+
+      if(!users || users.length === 0){
+        userList.innerHTML = emptyBox("条件に一致するユーザーはいません。");
+        return;
+      }
+
+      users.forEach(function(user){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "user-card";
+
+        if(user.user_id === selectedUserId){
+          button.classList.add("active");
+        }
+
+        const displayName = user.display_name || "名前未設定";
+        const email = user.email || "";
+
+        button.innerHTML = `
+          <div class="user-name">${escapeHtml(displayName)}</div>
+          <div class="user-email">${escapeHtml(email)}</div>
+          <div class="mono">${escapeHtml(shortId(user.user_id))}</div>
+        `;
+
+        button.addEventListener("click", async function(){
+          selectedUserId = user.user_id;
+          renderUsers(adminUsers);
+          await loadUserDetail(user);
+        });
+
+        userList.appendChild(button);
+      });
+    }
+
+    function renderSelectedUser(user){
+      const displayName = user.display_name || "名前未設定";
+      const email = user.email || "";
+
+      selectedUserBox.innerHTML = `
+        <section class="section" style="margin-top:0;">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">${escapeHtml(displayName)}</h2>
+              <p class="section-sub">選択中のユーザー情報です。</p>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">email</div>
+              <div class="detail-value">${escapeHtml(email)}</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">user_id</div>
+              <div class="detail-value mono">${escapeHtml(user.user_id || "")}</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">provider</div>
+              <div class="detail-value">${escapeHtml(user.provider || "")}</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">created_at</div>
+              <div class="detail-value">${escapeHtml(formatDate(user.created_at))}</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">last_sign_in_at</div>
+              <div class="detail-value">${escapeHtml(formatDate(user.last_sign_in_at))}</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function showDetailSections(){
+      summaryGrid.style.display = "";
+      logsSection.style.display = "";
+      ticketsSection.style.display = "";
+      billingSection.style.display = "";
+      feedbackSection.style.display = "";
+    }
+
+    function renderLogs(rowsOrError){
+      if(rowsOrError && rowsOrError.error){
+        logsCount.textContent = "0件";
+        logsBox.innerHTML = emptyBox(rowsOrError.error);
+        return;
+      }
+
+      const rows = rowsOrError || [];
+      logsCount.textContent = String(rows.length) + "件";
+
+      if(rows.length === 0){
+        logsBox.innerHTML = emptyBox("航海記録はありません。");
+        return;
+      }
+
+      logsBox.innerHTML = rows.map(function(row){
+        const tag = row.tag || row.type || "record";
+        const content = row.content || row.body || row.message || "";
+
+        return `
+          <article class="record-card">
+            <div class="record-meta">
+              ${escapeHtml(formatDate(row.created_at))} / ${escapeHtml(tag)}
+            </div>
+            <details>
+              <summary>本文を開く</summary>
+              <div class="record-body">${escapeHtml(content)}</div>
+            </details>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderTickets(rowsOrError){
+      if(rowsOrError && rowsOrError.error){
+        ticketsCount.textContent = "0件";
+        ticketsBox.innerHTML = emptyBox(rowsOrError.error);
+        return;
+      }
+
+      const rows = rowsOrError || [];
+      ticketsCount.textContent = String(rows.length) + "件";
+
+      if(rows.length === 0){
+        ticketsBox.innerHTML = emptyBox("航海券はありません。");
+        return;
+      }
+
+      ticketsBox.innerHTML = rows.map(function(row){
+        return `
+          <article class="record-card">
+            <div class="record-title">
+              ${escapeHtml(row.ticket_type || "")} ${row.duration_minutes ? escapeHtml(String(row.duration_minutes)) + "分" : ""}
+              ${badge(row.status)}
+            </div>
+            <div class="record-meta">
+              source: ${escapeHtml(row.source || "")}<br>
+              created_at: ${escapeHtml(formatDate(row.created_at))}<br>
+              expires_at: ${escapeHtml(formatDate(row.expires_at))}<br>
+              used_at: ${escapeHtml(formatDate(row.used_at))}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderBilling(data){
+      const purchases = data.purchases || [];
+      const subscriptions = data.subscriptions || [];
+      const allowances = data.allowances || [];
+
+      const total = purchases.length + subscriptions.length + allowances.length;
+      billingCount.textContent = String(total) + "件";
+
+      if(data.error){
+        billingBox.innerHTML = emptyBox(data.error);
+        return;
+      }
+
+      if(total === 0){
+        billingBox.innerHTML = emptyBox("課金・契約・月間枠データはありません。");
+        return;
+      }
+
+      const purchaseHtml = purchases.map(function(row){
+        return `
+          <article class="record-card">
+            <div class="record-title">
+              Purchase: ${escapeHtml(row.product_key || "")} ${badge(row.status)}
+            </div>
+            <div class="record-meta">
+              amount: ${escapeHtml(String(row.amount || ""))} ${escapeHtml(row.currency || "")}<br>
+              month_key: ${escapeHtml(row.month_key || "")}<br>
+              provider: ${escapeHtml(row.provider || "")}<br>
+              created_at: ${escapeHtml(formatDate(row.created_at))}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      const subscriptionHtml = subscriptions.map(function(row){
+        return `
+          <article class="record-card">
+            <div class="record-title">
+              Subscription: ${escapeHtml(row.product_key || "")} ${badge(row.status)}
+            </div>
+            <div class="record-meta">
+              provider: ${escapeHtml(row.provider || "")}<br>
+              period_end: ${escapeHtml(formatDate(row.current_period_end))}<br>
+              cancel_at_period_end: ${escapeHtml(row.cancel_at_period_end ? "true" : "false")}<br>
+              created_at: ${escapeHtml(formatDate(row.created_at))}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      const allowanceHtml = allowances.map(function(row){
+        return `
+          <article class="record-card">
+            <div class="record-title">
+              Monthly Allowance: ${escapeHtml(row.month_key || "")}
+            </div>
+            <div class="record-meta">
+              total: ${escapeHtml(String(row.total_limit || ""))}<br>
+              consumed: ${escapeHtml(String(row.consumed_count || ""))}<br>
+              updated_at: ${escapeHtml(formatDate(row.updated_at))}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      billingBox.innerHTML = purchaseHtml + subscriptionHtml + allowanceHtml;
+    }
+
+    function renderFeedback(rowsOrError){
+      if(rowsOrError && rowsOrError.error){
+        feedbackCount.textContent = "0件";
+        feedbackBox.innerHTML = emptyBox(rowsOrError.error);
+        return;
+      }
+
+      const rows = rowsOrError || [];
+      feedbackCount.textContent = String(rows.length) + "件";
+
+      if(rows.length === 0){
+        feedbackBox.innerHTML = emptyBox("便りはありません。");
+        return;
+      }
+
+      feedbackBox.innerHTML = rows.map(function(row){
+        return `
+          <article class="record-card">
+            <div class="record-title">
+              ${escapeHtml(row.type || "feedback")} ${badge(row.status)}
+            </div>
+            <div class="record-meta">
+              ${escapeHtml(formatDate(row.created_at))}<br>
+              page: ${escapeHtml(row.page_path || "")}
+            </div>
+            <details>
+              <summary>本文を開く</summary>
+              <div class="record-body">${escapeHtml(row.message || "")}</div>
+            </details>
+            ${
+              row.admin_reply
+                ? `
+                  <details>
+                    <summary>返信を開く</summary>
+                    <div class="record-body">${escapeHtml(row.admin_reply || "")}</div>
+                  </details>
+                `
+                : ""
+            }
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadUserDetail(user){
+      if(!user || !user.user_id){
+        return;
+      }
+
+      setStatus("ユーザー情報を読み込んでいます。");
+      showDetailSections();
+      renderSelectedUser(user);
+
+      logsBox.innerHTML = emptyBox("航海記録を読み込んでいます。");
+      ticketsBox.innerHTML = emptyBox("航海券を読み込んでいます。");
+      billingBox.innerHTML = emptyBox("課金情報を読み込んでいます。");
+      feedbackBox.innerHTML = emptyBox("便りを読み込んでいます。");
+
+      try{
+        const userId = user.user_id;
+
+        const logs = await fetchTableSafe(
+          "voyage_logs",
+          client
+            .from("voyage_logs")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending:false })
+            .limit(10)
+        );
+
+        const tickets = await fetchTableSafe(
+          "voyage_tickets",
+          client
+            .from("voyage_tickets")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending:false })
+            .limit(50)
+        );
+
+        const purchases = await fetchTableSafe(
+          "billing_purchases",
+          client
+            .from("billing_purchases")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending:false })
+            .limit(50)
+        );
+
+        const subscriptions = await fetchTableSafe(
+          "user_subscriptions",
+          client
+            .from("user_subscriptions")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending:false })
+            .limit(50)
+        );
+
+        const allowances = await fetchTableSafe(
+          "monthly_log_allowances",
+          client
+            .from("monthly_log_allowances")
+            .select("*")
+            .eq("user_id", userId)
+            .order("updated_at", { ascending:false })
+            .limit(50)
+        );
+
+        const feedback = await fetchTableSafe(
+          "user_feedback",
+          client
+            .from("user_feedback")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending:false })
+            .limit(50)
+        );
+
+        const safeLogs = Array.isArray(logs) ? logs : [];
+        const safeTickets = Array.isArray(tickets) ? tickets : [];
+        const safePurchases = Array.isArray(purchases) ? purchases : [];
+        const safeSubscriptions = Array.isArray(subscriptions) ? subscriptions : [];
+        const safeAllowances = Array.isArray(allowances) ? allowances : [];
+        const safeFeedback = Array.isArray(feedback) ? feedback : [];
+
+        summaryLogs.textContent = String(safeLogs.length);
+        summaryTickets.textContent = String(safeTickets.length);
+        summaryPurchases.textContent = String(safePurchases.length + safeSubscriptions.length);
+        summaryFeedback.textContent = String(safeFeedback.length);
+
+        renderLogs(logs);
+        renderTickets(tickets);
+        renderBilling({
+          purchases:safePurchases,
+          subscriptions:safeSubscriptions,
+          allowances:safeAllowances,
+          error:
+            purchases.error ||
+            subscriptions.error ||
+            allowances.error ||
+            ""
+        });
+        renderFeedback(feedback);
+
+        setStatus("ユーザー情報を読み込みました。");
+
+      }catch(error){
+        console.error(error);
+        setStatus(error.message || "ユーザー情報を読み込めませんでした。", true);
+      }
+    }
+
+    async function searchUsers(){
+      const q = userSearchInput.value.trim();
+
+      setStatus(q ? "ユーザーを検索しています。" : "ユーザー一覧を読み込んでいます。");
+
+      searchBtn.disabled = true;
+      resetBtn.disabled = true;
+
+      try{
+        const users = await fetchAdminUsers(q);
+        renderUsers(users);
+
+        setStatus(q
+          ? users.length + " 件のユーザーを表示しています。"
+          : users.length + " 件のユーザーを表示しています。"
+        );
+
+      }catch(error){
+        console.error(error);
+        setStatus(error.message || "ユーザー一覧を取得できませんでした。", true);
+      }finally{
+        searchBtn.disabled = false;
+        resetBtn.disabled = false;
+      }
+    }
+
+    function resetSearch(){
+      userSearchInput.value = "";
+      selectedUserId = "";
+      selectedUserBox.innerHTML = `
+        <div class="empty">
+          ユーザーを選択すると、ここに航海状況が表示されます。
+        </div>
+      `;
+
+      summaryGrid.style.display = "none";
+      logsSection.style.display = "none";
+      ticketsSection.style.display = "none";
+      billingSection.style.display = "none";
+      feedbackSection.style.display = "none";
+
+      searchUsers();
+    }
+
+    async function checkSession(){
+      const { data } = await client.auth.getSession();
+
+      currentUser = data.session?.user || null;
+
+      if(!currentUser){
+        window.location.replace("/");
+        return;
+      }
+
+      if(currentUser.id !== ADMIN_USER_ID){
+        window.location.replace("/");
+        return;
+      }
+
+      document.body.classList.remove("auth-locked");
+
+      await searchUsers();
+    }
+
+    async function logout(){
+      await client.auth.signOut();
+      window.location.href = "/account/";
+    }
+
+    searchBtn.addEventListener("click", searchUsers);
+    resetBtn.addEventListener("click", resetSearch);
+
+    userSearchInput.addEventListener("keydown", function(event){
+      if(event.key === "Enter"){
+        event.preventDefault();
+        searchUsers();
+      }
+    });
+
+    logoutLink.addEventListener("click", async function(event){
+      event.preventDefault();
+      await logout();
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
