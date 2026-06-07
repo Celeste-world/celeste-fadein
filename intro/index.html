@@ -450,6 +450,50 @@
       line-height:1.8;
     }
 
+    .login-help{
+      margin:0 auto 54px;
+      max-width:860px;
+      padding:24px 24px;
+      border-radius:26px;
+      border:1px solid rgba(255,227,163,.22);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.075), transparent 42%),
+        rgba(10,14,28,.70);
+      color:var(--muted);
+      box-shadow:0 18px 48px rgba(0,0,0,.26);
+    }
+
+    .login-help h2{
+      margin:0;
+      color:var(--text);
+      font-size:22px;
+      font-weight:500;
+      line-height:1.7;
+      letter-spacing:.04em;
+    }
+
+    .login-help p{
+      margin:14px 0 0;
+      font-size:14px;
+      line-height:2;
+    }
+
+    .login-help ul{
+      margin:14px 0 0;
+      padding-left:1.2em;
+      color:var(--muted);
+      font-size:13px;
+      line-height:2;
+    }
+
+    .login-help li{
+      margin-bottom:4px;
+    }
+
+    .login-help .hero-actions{
+      margin-top:20px;
+    }
+
     .closing{
       text-align:center;
       border-radius:28px;
@@ -577,7 +621,8 @@
         font-size:13px;
       }
 
-      .meaning-box{
+      .meaning-box,
+      .login-help{
         padding:22px 18px;
       }
 
@@ -601,6 +646,7 @@
       <nav class="nav" aria-label="公開ページナビゲーション">
         <a href="/">港入口</a>
         <a href="/about/">港について</a>
+        <a href="#login-help">ログインで困ったとき</a>
         <a href="/pricing/">Harbor Store</a>
         <a href="/log/">日々の記録</a>
       </nav>
@@ -628,6 +674,9 @@
             </a>
             <a class="btn-ghost" href="/about/">
               港について読む
+            </a>
+            <a class="btn-ghost" href="#login-help">
+              ログインで困ったとき
             </a>
           </div>
         </div>
@@ -781,6 +830,32 @@
         </div>
       </section>
 
+      <section class="login-help" id="login-help" aria-labelledby="login-help-title">
+        <p class="kicker">Login Help</p>
+
+        <h2 id="login-help-title">ログインで困ったとき</h2>
+
+        <p>
+          Googleログインがうまく進まない場合は、LINE・Instagram・X などのアプリ内ブラウザではなく、
+          Safari または Chrome などの通常ブラウザで Celeste Harbor を開き直してください。
+        </p>
+
+        <ul>
+          <li>LINEなどでURLを受け取った場合は、共有メニューからSafariまたはChromeで開いてください。</li>
+          <li>Googleログイン画面が止まる場合は、通常ブラウザで再度アクセスしてください。</li>
+          <li>ログイン後は、日々の記録から今日の言葉を残せます。</li>
+        </ul>
+
+        <div class="hero-actions">
+          <a class="btn-primary" href="/">
+            港入口へ戻る
+          </a>
+          <a class="btn-ghost" href="/log/">
+            日々の記録へ進む
+          </a>
+        </div>
+      </section>
+
       <section class="closing">
         <h2>今日の一言から、航海は始まります。</h2>
 
@@ -794,8 +869,8 @@
           <a class="btn-primary" href="/">
             港へ戻る
           </a>
-          <a class="btn-ghost" href="/about/">
-            港について読む
+          <a class="btn-ghost" href="#login-help">
+            ログインで困ったとき
           </a>
         </div>
       </section>
@@ -805,7 +880,7 @@
       <div class="footer-links">
         <a href="/">港入口</a>
         <a href="/about/">港について</a>
-        <a href="/help/">使い方を確認する</a>
+        <a href="#login-help">ログインで困ったとき</a>
         <a href="/pricing/">Harbor Store</a>
         <a href="/log/">日々の記録</a>
       </div>
