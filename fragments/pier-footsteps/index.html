@@ -4,10 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>桟橋の足音 – Fragments</title>
-  <meta name="robots" content="noindex, nofollow">
+  <title>桟橋の足音 – Celeste Harbor Fragments</title>
+  <meta name="description" content="Moonlit Voyage の周辺に残された短い航海断片。港に現れた、小さな気配についての記録。" />
+  <link rel="canonical" href="https://celeste.world/fragments/pier-footsteps/" />
+  <meta name="robots" content="index, follow">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="桟橋の足音 – Celeste Harbor Fragments">
+  <meta property="og:description" content="港に現れた、小さな気配についての記録。">
+  <meta property="og:url" content="https://celeste.world/fragments/pier-footsteps/">
+  <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="桟橋の足音 – Celeste Harbor Fragments">
+  <meta name="twitter:description" content="港に現れた、小さな気配についての記録。">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
+
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
@@ -17,7 +29,6 @@
       --muted:#a0a8bb;
       --line:#252b3a;
       --accent:#a9b7ff;
-      --danger:#ff9b9b;
     }
 
     *{ box-sizing:border-box; }
@@ -30,10 +41,6 @@
         linear-gradient(180deg,#050811 0%,#03050b 100%);
       color:var(--text);
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
-    }
-
-    body.auth-locked .wrap{
-      visibility:hidden;
     }
 
     a{
@@ -59,14 +66,15 @@
 
     .brand{
       color:var(--text);
-      letter-spacing:.04em;
+      letter-spacing:.08em;
     }
 
     .nav{
       display:flex;
-      gap:18px;
+      gap:16px;
       flex-wrap:wrap;
       align-items:center;
+      justify-content:flex-end;
     }
 
     .nav a{
@@ -75,196 +83,6 @@
 
     .nav a:hover{
       color:var(--text);
-    }
-
-    
-    .nav-letter-link{
-      position:relative;
-    }
-    
-    body.has-unread-letter .nav-letter-link{
-      color:var(--text);
-    }
-    
-    body.has-unread-letter .nav-letter-link::after{
-      content:"";
-      position:absolute;
-      top:-4px;
-      right:-8px;
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:#ffe3a3;
-      box-shadow:
-        0 0 8px rgba(255,227,163,.85),
-        0 0 18px rgba(255,227,163,.45);
-    }
-    
-    .global-nav{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    
-    .nav-group{
-      position:relative;
-    }
-    
-    .global-nav .nav-top{
-      appearance:none;
-      -webkit-appearance:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:flex-start;
-      width:auto;
-      min-width:0;
-      padding:8px 0;
-      margin:0;
-      border:0;
-      border-radius:0;
-      background:transparent;
-      box-shadow:none;
-      color:var(--muted);
-      font:inherit;
-      line-height:1.7;
-      cursor:pointer;
-    }
-    
-    .global-nav .nav-top:hover,
-    .global-nav .nav-top:focus{
-      color:var(--text);
-      background:transparent;
-      outline:none;
-    }
-    
-    .global-nav .nav-top:focus-visible{
-      outline:1px solid rgba(169,183,255,.45);
-      outline-offset:4px;
-    }
-    
-    .nav-menu{
-      position:absolute;
-      top:calc(100% + 10px);
-      left:0;
-      transform:none;
-      min-width:180px;
-      padding:10px;
-      border:1px solid rgba(169,183,255,.24);
-      border-radius:16px;
-      background:
-        radial-gradient(circle at top left, rgba(169,183,255,.10), transparent 42%),
-        rgba(10,14,28,.96);
-      box-shadow:0 18px 44px rgba(0,0,0,.42);
-      display:none;
-      z-index:80;
-    }
-    
-    .nav-menu::before{
-      content:"";
-      position:absolute;
-      top:-7px;
-      left:22px;
-      width:12px;
-      height:12px;
-      transform:rotate(45deg);
-      border-left:1px solid rgba(169,183,255,.24);
-      border-top:1px solid rgba(169,183,255,.24);
-      background:rgba(10,14,28,.96);
-    }
-    
-    .nav-group.open .nav-menu{
-      display:block;
-    }
-    
-    .nav-menu a{
-      display:block;
-      padding:8px 10px;
-      border-radius:10px;
-      color:var(--muted);
-      white-space:nowrap;
-      text-decoration:none;
-    }
-    
-    .nav-menu a:hover{
-      color:var(--text);
-      background:rgba(255,255,255,.04);
-    }
-
-    .logout-link{
-      color:var(--muted);
-      cursor:pointer;
-    }
-
-    .logout-link:hover{
-      color:var(--text);
-    }
-
-    .panel{
-      background:rgba(10,14,28,.82);
-      border:1px solid rgba(70,84,132,.55);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:0 18px 42px rgba(0,0,0,.36);
-      margin-bottom:42px;
-    }
-
-    .user{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-      margin-bottom:18px;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:center;
-      margin-top:18px;
-    }
-
-    button,
-    .btn-ghost{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:11px 18px;
-      border-radius:999px;
-      font-family:inherit;
-      font-size:14px;
-      cursor:pointer;
-      text-decoration:none;
-    }
-
-    button{
-      border:0;
-    }
-
-    .btn-ghost,
-    .ghost{
-      border:1px solid var(--line);
-      color:var(--muted);
-      background:rgba(255,255,255,.02);
-    }
-
-    .btn-ghost:hover,
-    .ghost:hover{
-      border-color:rgba(169,183,255,.4);
-      color:var(--text);
-    }
-
-    .status{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-      min-height:1.8em;
-    }
-
-    .status.error{
-      color:var(--danger);
     }
 
     .label{
@@ -285,6 +103,7 @@
     .meta{
       color:var(--muted);
       font-size:13px;
+      line-height:1.8;
       margin-bottom:48px;
     }
 
@@ -309,11 +128,18 @@
       );
     }
 
+    .back-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:42px;
+    }
+
     .back{
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap:8px;
-      margin-top:40px;
       padding:11px 18px;
       border-radius:999px;
       border:1px solid var(--line);
@@ -360,30 +186,10 @@
         margin-bottom:52px;
       }
 
-      .global-nav{
-        width:100%;
-        justify-content:flex-start;
-        gap:10px 14px;
+      .nav{
+        gap:12px;
         font-size:12px;
-      }
-      
-      .nav-menu{
-        left:0;
-        transform:none;
-        min-width:190px;
-      }
-
-      .panel{
-        padding:20px;
-      }
-
-      .actions{
-        gap:10px;
-      }
-
-      .btn-ghost,
-      button{
-        width:100%;
+        justify-content:flex-start;
       }
 
       h1{
@@ -394,12 +200,24 @@
         font-size:16px;
         line-height:2.2;
       }
+
+      .back-links{
+        flex-direction:column;
+      }
+
+      .back{
+        width:100%;
+      }
+
+      footer{
+        flex-direction:column;
+        align-items:flex-start;
+      }
     }
   </style>
 </head>
 
-<body class="auth-locked">
-
+<body>
   <div class="wrap">
 
     <header class="site-header">
@@ -407,33 +225,16 @@
         Celeste Harbor
       </a>
 
-      <nav class="nav">
-        <a href="/account/">アカウント</a>
-        <a href="/billing/">お支払い</a>
-        <a href="/pricing/">Harbor Store</a>
-        <a href="/legal/">法務情報</a>
-        <a href="/legal/terms/">利用規約</a>
-        <a href="/legal/privacy/">プライバシーポリシー</a>
-        <a href="/legal/commercial-transaction/">特定商取引法に基づく表記</a>
-        <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
+      <nav class="nav" aria-label="公開ページナビゲーション">
+        <a href="/">港入口</a>
+        <a href="/intro/">はじめての方へ</a>
+        <a href="/about/">港について</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">断片</a>
       </nav>
     </header>
 
     <main>
-
-      <section class="panel">
-        <div class="user" id="userStatus">
-          ログイン状態を確認しています。
-        </div>
-
-        <div class="actions">
-          <a class="btn-ghost" href="/fragments/">断片へ</a>
-          <a class="btn-ghost" href="/timeline/">船室記録へ</a>
-          <a class="btn-ghost" href="/log/">日々の記録へ</a>
-        </div>
-
-        <div class="status" id="status"></div>
-      </section>
 
       <div class="label">
         Fragment 02
@@ -517,149 +318,30 @@
 
       </article>
 
-      <a class="back" href="/fragments/">
-        ← 断片へ戻る
-      </a>
+      <div class="back-links">
+        <a class="back" href="/fragments/">
+          ← 断片へ戻る
+        </a>
+
+        <a class="back" href="/voyage/">
+          Moonlit Voyage へ戻る
+        </a>
+      </div>
 
     </main>
 
-    
+    <footer>
+      <div class="footer-links">
+        <a href="/">港入口</a>
+        <a href="/intro/">はじめての方へ</a>
+        <a href="/about/">港について</a>
+        <a href="/voyage/">Moonlit Voyage</a>
+        <a href="/fragments/">断片</a>
+      </div>
+
+      <div>CELESTE HARBOR FRAGMENT</div>
+    </footer>
+
   </div>
-
-  <script>
-    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
-    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
-
-    const client = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
-    );
-
-    const userStatus = document.getElementById("userStatus");
-    const statusEl = document.getElementById("status");
-    const logoutLink = document.getElementById("logoutLink");
-
-    let currentUser = null;
-    let currentAccessToken = null;
-
-    function setStatus(message, isError = false){
-      statusEl.textContent = message || "";
-      statusEl.className = isError ? "status error" : "status";
-    }
-
-    function accountDisplayName(user){
-      if(!user){
-        return "Guest";
-      }
-
-      return (
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.user_metadata?.display_name ||
-        user.email ||
-        "Account"
-      );
-    }
-
-    async function checkSession(){
-      setStatus("ログイン状態を確認しています。");
-
-      const { data, error } = await client.auth.getSession();
-
-      if(error){
-        console.error("getSession error:", error);
-        window.location.replace("/");
-        return;
-      }
-
-      if(data.session && data.session.user){
-        currentUser = data.session.user;
-        currentAccessToken = data.session.access_token;
-
-        document.body.classList.remove("auth-locked");
-
-        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("Fragment を表示しています。");
-      }else{
-        window.location.replace("/");
-        return;
-      }
-    }
-
-    async function logout(){
-      setStatus("ログアウトしています。");
-
-      const { error } = await client.auth.signOut();
-
-      if(error){
-        console.error("logout error:", error);
-        setStatus(error.message, true);
-        return;
-      }
-
-      currentUser = null;
-      currentAccessToken = null;
-
-      window.location.replace("/");
-    }
-
-    function closeNavMenus(){
-      document.querySelectorAll(".nav-group.open").forEach(function(group){
-        group.classList.remove("open");
-      });
-    }
-    
-    document.querySelectorAll(".nav-top").forEach(function(button){
-      button.addEventListener("click", function(event){
-        event.preventDefault();
-        event.stopPropagation();
-    
-        const group = button.closest(".nav-group");
-        const alreadyOpen = group.classList.contains("open");
-    
-        closeNavMenus();
-    
-        if(!alreadyOpen){
-          group.classList.add("open");
-        }
-      });
-    });
-    
-    document.addEventListener("click", function(event){
-      if(!event.target.closest(".global-nav")){
-        closeNavMenus();
-      }
-    });
-    
-    document.addEventListener("keydown", function(event){
-      if(event.key === "Escape"){
-        closeNavMenus();
-      }
-    });
-
-    logoutLink.addEventListener("click", function(event){
-      event.preventDefault();
-      logout();
-    });
-
-    client.auth.onAuthStateChange(function(event, session){
-      if(session && session.user){
-        currentUser = session.user;
-        currentAccessToken = session.access_token;
-
-        document.body.classList.remove("auth-locked");
-
-        userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-      }else if(event === "SIGNED_OUT"){
-        currentUser = null;
-        currentAccessToken = null;
-
-        window.location.replace("/");
-      }
-    });
-
-    checkSession();
-  </script>
-
 </body>
 </html>
