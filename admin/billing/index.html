@@ -725,6 +725,9 @@
 
     let currentUser = null;
 
+    let adminUsers = [];
+    let usersById = new Map();
+
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
@@ -834,9 +837,9 @@
             }
           },
           {
-            label:"user_id",
+            label:"user",
             render:function(row){
-              return '<span class="mono">' + escapeHtml(row.user_id || "") + '</span>';
+              return renderUserCell(row.user_id);
             }
           },
           {
@@ -927,6 +930,77 @@
       return Array.isArray(data) ? data : [];
     }
 
+    async function fetchAdminUsers(searchTerm = ""){
+      const { data: sessionData } = await client.auth.getSession();
+      const accessToken = sessionData.session?.access_token || "";
+    
+      if(!accessToken){
+        throw new Error("管理者ログイン情報を確認できませんでした。");
+      }
+    
+      const url = new URL(supabaseUrl + "/functions/v1/admin-list-users");
+    
+      if(searchTerm){
+        url.searchParams.set("q", searchTerm);
+      }
+    
+      const response = await fetch(url.toString(), {
+        method:"GET",
+        headers:{
+          "Authorization":"Bearer " + accessToken,
+          "Content-Type":"application/json"
+        }
+      });
+    
+      const result = await response.json().catch(function(){
+        return {};
+      });
+    
+      if(!response.ok){
+        throw new Error(result.error || "ユーザー一覧を取得できませんでした。");
+      }
+    
+      const users = Array.isArray(result.users) ? result.users : [];
+    
+      adminUsers = users;
+      usersById = new Map();
+    
+      users.forEach(function(user){
+        if(user.user_id){
+          usersById.set(user.user_id, user);
+        }
+      });
+    
+      return users;
+    }
+    
+    function getUserInfo(userId){
+      if(!userId){
+        return null;
+      }
+    
+      return usersById.get(userId) || null;
+    }
+    
+    function renderUserCell(userId){
+      const user = getUserInfo(userId);
+    
+      if(!user){
+        return '<span class="mono">' + escapeHtml(shortId(userId)) + '</span>';
+      }
+    
+      const displayName = user.display_name || "名前未設定";
+      const email = user.email || "";
+    
+      return `
+        <div>
+          <div>${escapeHtml(displayName)}</div>
+          <div class="mono">${escapeHtml(email)}</div>
+          <div class="mono">${escapeHtml(shortId(userId))}</div>
+        </div>
+      `;
+    }
+
     async function resolveUserSearch(filters){
       const term = filters.userSearch.trim();
     
@@ -943,11 +1017,22 @@
       const userIds = new Set();
       const stripeCustomerIds = new Set();
     
-      /*
-        PostgREST の ilike / or に頼らず、
-        管理者として billing_customers を取得してから画面側で検索する。
-        管理者RLSは確認済みなので、このページでは安全に実行できる。
-      */
+      adminUsers.forEach(function(user){
+        const userId = String(user.user_id || "").toLowerCase();
+        const email = String(user.email || "").toLowerCase();
+        const displayName = String(user.display_name || "").toLowerCase();
+    
+        if(
+          userId.includes(normalizedTerm) ||
+          email.includes(normalizedTerm) ||
+          displayName.includes(normalizedTerm)
+        ){
+          if(user.user_id){
+            userIds.add(user.user_id);
+          }
+        }
+      });
+    
       const allCustomers = await fetchTable(
         "billing_customers",
         client
@@ -996,8 +1081,8 @@
             render:function(row){ return escapeHtml(formatDate(row.created_at)); }
           },
           {
-            label:"user_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+            label:"user",
+            render:function(row){ return renderUserCell(row.user_id); }
           },
           {
             label:"product_key",
@@ -1062,8 +1147,8 @@
             render:function(row){ return escapeHtml(formatDate(row.created_at)); }
           },
           {
-            label:"user_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+            label:"user",
+            render:function(row){ return renderUserCell(row.user_id); }
           },
           {
             label:"product_key",
@@ -1118,8 +1203,8 @@
             render:function(row){ return escapeHtml(formatDate(row.created_at)); }
           },
           {
-            label:"user_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+            label:"user",
+            render:function(row){ return renderUserCell(row.user_id); }
           },
           {
             label:"ticket_type",
@@ -1166,8 +1251,8 @@
             render:function(row){ return escapeHtml(formatDate(row.updated_at)); }
           },
           {
-            label:"user_id",
-            render:function(row){ return '<span class="mono">' + escapeHtml(shortId(row.user_id)) + '</span>'; }
+            label:"user",
+            render:function(row){ return renderUserCell(row.user_id); }
           },
           {
             label:"month_key",
@@ -1310,6 +1395,8 @@
       refreshBtn.disabled = true;
 
       try{
+        await fetchAdminUsers("");
+
         const resolved = await resolveUserSearch(filters);
 
         if(Array.isArray(resolved.userIds) && resolved.userIds.length === 0){
