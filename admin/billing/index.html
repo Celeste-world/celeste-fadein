@@ -96,12 +96,73 @@
       margin:0 0 28px;
     }
 
-    .toolbar{
-      display:flex;
+    .filter-panel{
+      margin:0 0 22px;
+      padding:20px;
+      border-radius:20px;
+      border:1px solid rgba(70,84,132,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+    }
+
+    .filter-title{
+      font-size:16px;
+      line-height:1.7;
+      margin:0 0 4px;
+      font-weight:500;
+    }
+
+    .filter-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin:0 0 16px;
+    }
+
+    .filter-grid{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;
       gap:12px;
+      align-items:end;
+    }
+
+    .field{
+      display:grid;
+      gap:6px;
+    }
+
+    .field label{
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    input,
+    select{
+      width:100%;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.82);
+      color:var(--text);
+      padding:10px 13px;
+      font-family:inherit;
+      font-size:13px;
+      outline:none;
+    }
+
+    input:focus,
+    select:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+
+    .filter-actions{
+      display:flex;
+      gap:10px;
       flex-wrap:wrap;
-      align-items:center;
-      margin-bottom:20px;
+      margin-top:14px;
     }
 
     button{
@@ -279,7 +340,8 @@
     .badge.active,
     .badge.granted,
     .badge.processed,
-    .badge.available{
+    .badge.available,
+    .badge.trialing{
       color:var(--ready);
       border-color:rgba(185,246,202,.36);
       background:rgba(185,246,202,.06);
@@ -340,6 +402,12 @@
       color:var(--text);
     }
 
+    @media(max-width:980px){
+      .filter-grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
     @media(max-width:760px){
       body{
         padding:28px 16px;
@@ -368,7 +436,11 @@
         flex-direction:column;
       }
 
-      .toolbar button{
+      .filter-grid{
+        grid-template-columns:1fr;
+      }
+
+      .filter-actions button{
         width:100%;
       }
     }
@@ -382,6 +454,7 @@
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
+        <a href="/admin/">管理入口</a>
         <a href="/admin/feedback/">便り管理</a>
         <a href="/log/">日々の記録</a>
         <a href="/account/">アカウント</a>
@@ -397,11 +470,74 @@
         購入履歴、契約状態、航海券、月間記録枠、Webhookイベントを読み取り専用で確認します。
       </p>
 
-      <div class="toolbar">
-        <button class="ghost" id="refreshBtn" type="button">
-          更新
-        </button>
-      </div>
+      <section class="filter-panel" aria-label="課金DB検索">
+        <h2 class="filter-title">検索・絞り込み</h2>
+        <p class="filter-note">
+          メールアドレス、user_id、stripe_customer_id、日付範囲、月、状態、provider で絞り込みます。
+        </p>
+
+        <div class="filter-grid">
+          <div class="field">
+            <label for="userSearchInput">User / Email / Customer</label>
+            <input
+              id="userSearchInput"
+              type="search"
+              placeholder="email / user_id / stripe_customer_id"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field">
+            <label for="dateFromInput">開始日</label>
+            <input id="dateFromInput" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="dateToInput">終了日</label>
+            <input id="dateToInput" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="monthKeyInput">月</label>
+            <input id="monthKeyInput" type="month" />
+          </div>
+
+          <div class="field">
+            <label for="statusFilter">Status</label>
+            <select id="statusFilter">
+              <option value="">すべて</option>
+              <option value="pending">pending</option>
+              <option value="paid">paid</option>
+              <option value="granted">granted</option>
+              <option value="active">active</option>
+              <option value="trialing">trialing</option>
+              <option value="available">available</option>
+              <option value="used">used</option>
+              <option value="processed">processed</option>
+              <option value="failed">failed</option>
+              <option value="canceled">canceled</option>
+              <option value="refunded">refunded</option>
+              <option value="expired">expired</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="providerFilter">Provider</label>
+            <select id="providerFilter">
+              <option value="">すべて</option>
+              <option value="stripe">stripe</option>
+              <option value="google_play">google_play</option>
+              <option value="manual">manual</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button class="primary" id="searchBtn" type="button">検索</button>
+          <button class="ghost" id="resetBtn" type="button">リセット</button>
+          <button class="ghost" id="refreshBtn" type="button">更新</button>
+        </div>
+      </section>
 
       <div class="status" id="status"></div>
 
@@ -500,6 +636,7 @@
 
     <footer>
       <div class="footer-links">
+        <a href="/admin/">管理入口</a>
         <a href="/admin/feedback/">便り管理</a>
         <a href="/log/">日々の記録</a>
         <a href="/account/">アカウント</a>
@@ -522,8 +659,17 @@
     );
 
     const statusEl = document.getElementById("status");
+    const searchBtn = document.getElementById("searchBtn");
+    const resetBtn = document.getElementById("resetBtn");
     const refreshBtn = document.getElementById("refreshBtn");
     const logoutLink = document.getElementById("logoutLink");
+
+    const userSearchInput = document.getElementById("userSearchInput");
+    const dateFromInput = document.getElementById("dateFromInput");
+    const dateToInput = document.getElementById("dateToInput");
+    const monthKeyInput = document.getElementById("monthKeyInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const providerFilter = document.getElementById("providerFilter");
 
     const summaryPendingPurchases = document.getElementById("summaryPendingPurchases");
     const summaryGrantedPurchases = document.getElementById("summaryGrantedPurchases");
@@ -558,6 +704,19 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function escapePostgrestPattern(str){
+      return String(str || "")
+        .replaceAll("\\", "\\\\")
+        .replaceAll("%", "\\%")
+        .replaceAll("_", "\\_")
+        .replaceAll(",", "\\,")
+        .trim();
+    }
+
+    function isUuid(value){
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ""));
     }
 
     function formatDate(value){
@@ -637,6 +796,145 @@
           </table>
         </div>
       `;
+    }
+
+    function getFilters(){
+      return {
+        userSearch: userSearchInput.value.trim(),
+        dateFrom: dateFromInput.value,
+        dateTo: dateToInput.value,
+        monthKey: monthKeyInput.value,
+        status: statusFilter.value,
+        provider: providerFilter.value
+      };
+    }
+
+    function hasActiveFilters(filters){
+      return Boolean(
+        filters.userSearch ||
+        filters.dateFrom ||
+        filters.dateTo ||
+        filters.monthKey ||
+        filters.status ||
+        filters.provider
+      );
+    }
+
+    function applyCreatedAtRange(query, filters){
+      if(filters.dateFrom){
+        query = query.gte("created_at", filters.dateFrom + "T00:00:00+09:00");
+      }
+
+      if(filters.dateTo){
+        query = query.lte("created_at", filters.dateTo + "T23:59:59.999+09:00");
+      }
+
+      return query;
+    }
+
+    function applyUserFilter(query, userIds){
+      if(Array.isArray(userIds)){
+        if(userIds.length === 0){
+          return null;
+        }
+
+        return query.in("user_id", userIds);
+      }
+
+      return query;
+    }
+
+    async function fetchTable(label, builder){
+      if(!builder){
+        return [];
+      }
+
+      const { data, error } = await builder;
+
+      if(error){
+        console.error(label + " load error:", error);
+
+        const detail = [
+          error.message || "",
+          error.details || "",
+          error.hint || "",
+          error.code || ""
+        ].filter(Boolean).join(" / ");
+
+        throw new Error(
+          label + " を読み込めませんでした。 " + detail
+        );
+      }
+
+      return Array.isArray(data) ? data : [];
+    }
+
+    async function resolveUserSearch(filters){
+      const term = filters.userSearch.trim();
+
+      if(!term){
+        return {
+          userIds:null,
+          stripeCustomerIds:null,
+          searchedCustomers:null
+        };
+      }
+
+      const userIds = new Set();
+      const stripeCustomerIds = new Set();
+      let searchedCustomers = [];
+
+      if(isUuid(term)){
+        userIds.add(term);
+
+        const directCustomers = await fetchTable(
+          "billing_customers",
+          client
+            .from("billing_customers")
+            .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+            .eq("user_id", term)
+            .limit(100)
+        );
+
+        searchedCustomers = searchedCustomers.concat(directCustomers);
+      }
+
+      const pattern = escapePostgrestPattern(term);
+
+      const customerMatches = await fetchTable(
+        "billing_customers",
+        client
+          .from("billing_customers")
+          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+          .or("email.ilike.%" + pattern + "%,stripe_customer_id.ilike.%" + pattern + "%")
+          .limit(100)
+      );
+
+      searchedCustomers = searchedCustomers.concat(customerMatches);
+
+      searchedCustomers.forEach(function(row){
+        if(row.user_id){
+          userIds.add(row.user_id);
+        }
+
+        if(row.stripe_customer_id){
+          stripeCustomerIds.add(row.stripe_customer_id);
+        }
+      });
+
+      const uniqueCustomersMap = new Map();
+
+      searchedCustomers.forEach(function(row){
+        uniqueCustomersMap.set(row.id || row.user_id || row.stripe_customer_id, row);
+      });
+
+      searchedCustomers = Array.from(uniqueCustomersMap.values());
+
+      return {
+        userIds:Array.from(userIds),
+        stripeCustomerIds:Array.from(stripeCustomerIds),
+        searchedCustomers
+      };
     }
 
     function renderCustomers(rows){
@@ -952,25 +1250,19 @@
       summaryFailedEvents.textContent = String(failedEvents);
     }
 
-    async function fetchTable(label, builder){
-      const { data, error } = await builder;
+    function renderAllEmpty(){
+      renderCustomers([]);
+      renderPurchases([]);
+      renderSubscriptions([]);
+      renderTickets([]);
+      renderAllowances([]);
+      renderEvents([]);
 
-      if(error){
-        console.error(label + " load error:", error);
-
-        const detail = [
-          error.message || "",
-          error.details || "",
-          error.hint || "",
-          error.code || ""
-        ].filter(Boolean).join(" / ");
-
-        throw new Error(
-          label + " を読み込めませんでした。 " + detail
-        );
-      }
-
-      return Array.isArray(data) ? data : [];
+      updateSummary({
+        purchases:[],
+        subscriptions:[],
+        events:[]
+      });
     }
 
     async function loadBilling(){
@@ -983,63 +1275,127 @@
         return;
       }
 
-      setStatus("課金DBを読み込んでいます。");
+      const filters = getFilters();
+
+      setStatus(hasActiveFilters(filters)
+        ? "条件に一致する課金DBを検索しています。"
+        : "課金DBを読み込んでいます。"
+      );
+
+      searchBtn.disabled = true;
+      resetBtn.disabled = true;
       refreshBtn.disabled = true;
 
       try{
-        const customers = await fetchTable(
-          "billing_customers",
-          client
-            .from("billing_customers")
-            .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
-            .order("created_at", { ascending:false })
-            .limit(100)
-        );
+        const resolved = await resolveUserSearch(filters);
 
-        const purchases = await fetchTable(
-          "billing_purchases",
-          client
-            .from("billing_purchases")
-            .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id,provider,provider_purchase_id,provider_product_id")
-            .order("created_at", { ascending:false })
-            .limit(100)
-        );
+        if(Array.isArray(resolved.userIds) && resolved.userIds.length === 0){
+          renderAllEmpty();
+          setStatus("指定されたユーザー条件に一致するデータはありません。");
+          return;
+        }
 
-        const subscriptions = await fetchTable(
-          "user_subscriptions",
-          client
-            .from("user_subscriptions")
-            .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id,provider,provider_subscription_id,provider_product_id")
-            .order("created_at", { ascending:false })
-            .limit(100)
-        );
+        let customersQuery = client
+          .from("billing_customers")
+          .select("id,user_id,stripe_customer_id,email,created_at,updated_at")
+          .order("created_at", { ascending:false })
+          .limit(100);
 
-        const tickets = await fetchTable(
-          "voyage_tickets",
-          client
-            .from("voyage_tickets")
-            .select("id,user_id,ticket_type,source,duration_minutes,status,expires_at,used_at,billing_purchase_id,created_at,updated_at")
-            .order("created_at", { ascending:false })
-            .limit(100)
-        );
+        customersQuery = applyCreatedAtRange(customersQuery, filters);
 
-        const allowances = await fetchTable(
-          "monthly_log_allowances",
-          client
-            .from("monthly_log_allowances")
-            .select("id,user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,created_at,updated_at")
-            .order("updated_at", { ascending:false })
-            .limit(100)
-        );
+        if(Array.isArray(resolved.userIds)){
+          customersQuery = applyUserFilter(customersQuery, resolved.userIds);
+        }
 
-        const events = await fetchTable(
-          "billing_events",
-          client
-            .from("billing_events")
-            .select("id,stripe_event_id,event_type,status,error_message,processed_at,created_at,stripe_customer_id,stripe_checkout_session_id,stripe_payment_intent_id,stripe_subscription_id")
-            .order("created_at", { ascending:false })
-            .limit(100)
-        );
+        let purchasesQuery = client
+          .from("billing_purchases")
+          .select("id,user_id,product_key,status,amount,currency,month_key,granted_at,created_at,updated_at,stripe_checkout_session_id,stripe_payment_intent_id,stripe_price_id,provider,provider_purchase_id,provider_product_id")
+          .order("created_at", { ascending:false })
+          .limit(100);
+
+        purchasesQuery = applyCreatedAtRange(purchasesQuery, filters);
+        purchasesQuery = applyUserFilter(purchasesQuery, resolved.userIds);
+
+        if(filters.status){
+          purchasesQuery = purchasesQuery.eq("status", filters.status);
+        }
+
+        if(filters.provider){
+          purchasesQuery = purchasesQuery.eq("provider", filters.provider);
+        }
+
+        if(filters.monthKey){
+          purchasesQuery = purchasesQuery.eq("month_key", filters.monthKey);
+        }
+
+        let subscriptionsQuery = client
+          .from("user_subscriptions")
+          .select("id,user_id,product_key,status,current_period_start,current_period_end,cancel_at_period_end,canceled_at,created_at,updated_at,stripe_subscription_id,stripe_price_id,provider,provider_subscription_id,provider_product_id")
+          .order("created_at", { ascending:false })
+          .limit(100);
+
+        subscriptionsQuery = applyCreatedAtRange(subscriptionsQuery, filters);
+        subscriptionsQuery = applyUserFilter(subscriptionsQuery, resolved.userIds);
+
+        if(filters.status){
+          subscriptionsQuery = subscriptionsQuery.eq("status", filters.status);
+        }
+
+        if(filters.provider){
+          subscriptionsQuery = subscriptionsQuery.eq("provider", filters.provider);
+        }
+
+        let ticketsQuery = client
+          .from("voyage_tickets")
+          .select("id,user_id,ticket_type,source,duration_minutes,status,expires_at,used_at,billing_purchase_id,created_at,updated_at")
+          .order("created_at", { ascending:false })
+          .limit(100);
+
+        ticketsQuery = applyCreatedAtRange(ticketsQuery, filters);
+        ticketsQuery = applyUserFilter(ticketsQuery, resolved.userIds);
+
+        if(filters.status){
+          ticketsQuery = ticketsQuery.eq("status", filters.status);
+        }
+
+        let allowancesQuery = client
+          .from("monthly_log_allowances")
+          .select("id,user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,created_at,updated_at")
+          .order("updated_at", { ascending:false })
+          .limit(100);
+
+        allowancesQuery = applyUserFilter(allowancesQuery, resolved.userIds);
+
+        if(filters.monthKey){
+          allowancesQuery = allowancesQuery.eq("month_key", filters.monthKey);
+        }
+
+        let eventsQuery = client
+          .from("billing_events")
+          .select("id,stripe_event_id,event_type,status,error_message,processed_at,created_at,stripe_customer_id,stripe_checkout_session_id,stripe_payment_intent_id,stripe_subscription_id")
+          .order("created_at", { ascending:false })
+          .limit(100);
+
+        eventsQuery = applyCreatedAtRange(eventsQuery, filters);
+
+        if(filters.status){
+          eventsQuery = eventsQuery.eq("status", filters.status);
+        }
+
+        if(Array.isArray(resolved.stripeCustomerIds)){
+          if(resolved.stripeCustomerIds.length > 0){
+            eventsQuery = eventsQuery.in("stripe_customer_id", resolved.stripeCustomerIds);
+          }else if(filters.userSearch){
+            eventsQuery = null;
+          }
+        }
+
+        const customers = await fetchTable("billing_customers", customersQuery);
+        const purchases = await fetchTable("billing_purchases", purchasesQuery);
+        const subscriptions = await fetchTable("user_subscriptions", subscriptionsQuery);
+        const tickets = await fetchTable("voyage_tickets", ticketsQuery);
+        const allowances = await fetchTable("monthly_log_allowances", allowancesQuery);
+        const events = await fetchTable("billing_events", eventsQuery);
 
         renderCustomers(customers);
         renderPurchases(purchases);
@@ -1054,14 +1410,38 @@
           events
         });
 
-        setStatus("課金DBを読み込みました。");
+        const total =
+          customers.length +
+          purchases.length +
+          subscriptions.length +
+          tickets.length +
+          allowances.length +
+          events.length;
+
+        setStatus(hasActiveFilters(filters)
+          ? "検索結果を表示しています。合計 " + total + " 件の関連データを読み込みました。"
+          : "課金DBを読み込みました。"
+        );
 
       }catch(error){
         console.error(error);
         setStatus(error.message || "課金DBを読み込めませんでした。", true);
       }finally{
+        searchBtn.disabled = false;
+        resetBtn.disabled = false;
         refreshBtn.disabled = false;
       }
+    }
+
+    function resetFilters(){
+      userSearchInput.value = "";
+      dateFromInput.value = "";
+      dateToInput.value = "";
+      monthKeyInput.value = "";
+      statusFilter.value = "";
+      providerFilter.value = "";
+
+      loadBilling();
     }
 
     async function checkSession(){
@@ -1089,7 +1469,16 @@
       window.location.href = "/account/";
     }
 
+    searchBtn.addEventListener("click", loadBilling);
+    resetBtn.addEventListener("click", resetFilters);
     refreshBtn.addEventListener("click", loadBilling);
+
+    userSearchInput.addEventListener("keydown", function(event){
+      if(event.key === "Enter"){
+        event.preventDefault();
+        loadBilling();
+      }
+    });
 
     logoutLink.addEventListener("click", async function(event){
       event.preventDefault();
