@@ -235,7 +235,10 @@
     <header class="site-header">
       <a class="brand" href="/">Celeste Harbor</a>
 
-      <nav class="nav">
+     <nav class="nav">
+        <a href="/admin/users/">ユーザー管理</a>
+        <a href="/admin/feedback/">便り管理</a>
+        <a href="/admin/billing/">課金管理</a>
         <a href="/log/">日々の記録</a>
         <a href="/account/">アカウント</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
@@ -253,6 +256,14 @@
       <div class="status" id="status">管理者権限を確認しています。</div>
 
       <section class="admin-grid" aria-label="管理メニュー">
+        <a class="admin-card" href="/admin/users/">
+          <div class="card-label">Users</div>
+          <div class="card-title">ユーザー管理</div>
+          <div class="card-text">
+            ユーザー名、メールアドレス、user_id から検索し、航海記録、チケット、課金状態、港への便りを確認します。
+          </div>
+        </a>
+      
         <a class="admin-card" href="/admin/feedback/">
           <div class="card-label">Harbor Letter</div>
           <div class="card-title">便り管理</div>
@@ -260,7 +271,7 @@
             ユーザーから届いた不具合報告、違和感、改善要望を確認し、返信や対応状況を管理します。
           </div>
         </a>
-
+      
         <a class="admin-card" href="/admin/billing/">
           <div class="card-label">Billing</div>
           <div class="card-title">課金管理</div>
@@ -277,6 +288,7 @@
 
     <footer>
       <div class="footer-links">
+        <a href="/admin/users/">ユーザー管理</a>
         <a href="/admin/feedback/">便り管理</a>
         <a href="/admin/billing/">課金管理</a>
         <a href="/log/">日々の記録</a>
