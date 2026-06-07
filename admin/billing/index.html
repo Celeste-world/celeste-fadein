@@ -382,9 +382,9 @@
       <a class="brand" href="/">Celeste Harbor</a>
 
       <nav class="nav">
-        <a href="/admin/feedback/">Letter Admin</a>
-        <a href="/log/">Voyage Log</a>
-        <a href="/account/">Account</a>
+        <a href="/admin/feedback/">便り管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/account/">アカウント</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -479,7 +479,7 @@
         <div class="section-head">
           <div>
             <h2 class="section-title">Monthly Allowances</h2>
-            <p class="section-sub">月ごとの Voyage Log 記録枠を確認します。</p>
+            <p class="section-sub">月ごとの日々の記録枠を確認します。</p>
           </div>
           <span class="count-badge" id="allowancesCount">0件</span>
         </div>
@@ -500,9 +500,9 @@
 
     <footer>
       <div class="footer-links">
-        <a href="/admin/feedback/">Letter Admin</a>
-        <a href="/log/">Voyage Log</a>
-        <a href="/account/">Account</a>
+        <a href="/admin/feedback/">便り管理</a>
+        <a href="/log/">日々の記録</a>
+        <a href="/account/">アカウント</a>
       </div>
 
       <div>CELESTE HARBOR BILLING ADMIN</div>
@@ -1075,7 +1075,7 @@
       }
 
       if(currentUser.id !== ADMIN_USER_ID){
-        window.location.replace("/log/");
+        window.location.replace("/");
         return;
       }
 
