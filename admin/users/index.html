@@ -1366,9 +1366,11 @@
 
     async function searchUsers(){
       const q = userSearchInput.value.trim();
-
+    
+      clearSelectedUserDetail();
+    
       setStatus(q ? "ユーザーを検索しています。" : "ユーザー一覧を読み込んでいます。");
-
+    
       searchBtn.disabled = true;
       resetBtn.disabled = true;
 
@@ -1390,24 +1392,42 @@
       }
     }
 
-    function resetSearch(){
-      userSearchInput.value = "";
+    function clearSelectedUserDetail(){
       selectedUserId = "";
+    
       selectedUserBox.innerHTML = `
         <div class="empty">
           ユーザーを選択すると、ここに航海状況が表示されます。
         </div>
       `;
-
+    
       summaryGrid.style.display = "none";
       logsSection.style.display = "none";
       ticketsSection.style.display = "none";
       billingSection.style.display = "none";
       feedbackSection.style.display = "none";
-
-      searchUsers();
+    
+      summaryLogs.textContent = "0";
+      summaryTickets.textContent = "0";
+      summaryPurchases.textContent = "0";
+      summaryFeedback.textContent = "0";
+    
+      logsBox.innerHTML = "";
+      ticketsBox.innerHTML = "";
+      billingBox.innerHTML = "";
+      feedbackBox.innerHTML = "";
     }
 
+    function resetSearch(){
+      userSearchInput.value = "";
+      dateFromInput.value = "";
+      dateToInput.value = "";
+    
+      clearSelectedUserDetail();
+    
+      searchUsers();
+    }
+    
     async function checkSession(){
       const { data } = await client.auth.getSession();
 
