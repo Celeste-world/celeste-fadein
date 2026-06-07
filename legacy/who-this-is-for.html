@@ -4,20 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Who This Is For – Celeste</title>
+  <title>Who This Is For – Celeste Archive</title>
 
   <!-- SEO -->
-  <meta name="description" content="Clarifying who Celeste is for — and who it is not. This page defines the intended boundary of the space." />
-  <link rel="canonical" href="https://celeste.world/who-this-is-for.html" />
+  <meta name="description" content="Clarifying who the archived Celeste concept was for — and who it was not. This page defines the intended boundary of the space." />
+  <link rel="canonical" href="https://celeste.world/legacy/who-this-is-for.html" />
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Who This Is For – Celeste">
-  <meta property="og:description" content="A clear boundary. Who this space is for, and who it is not." />
+  <meta property="og:title" content="Who This Is For – Celeste Archive">
+  <meta property="og:description" content="A clear boundary. Who this archived space was for, and who it was not." />
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://celeste.world/who-this-is-for.html">
-  <meta property="og:site_name" content="Celeste">
+  <meta property="og:url" content="https://celeste.world/legacy/who-this-is-for.html">
+  <meta property="og:site_name" content="Celeste Harbor">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Who This Is For – Celeste Archive">
+  <meta name="twitter:description" content="Who the archived Celeste space was for, and who it was not.">
+  <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Favicon -->
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -28,14 +34,17 @@
       --text:#e8ebef;
       --muted:#a0a8bb;
       --line:#252b3a;
+      --accent:#a9b7ff;
     }
-    *{box-sizing:border-box;}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
       background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
       color:var(--text);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-family:ui-serif, Georgia, "Times New Roman", serif;
     }
 
     a{
@@ -43,9 +52,14 @@
       text-decoration:none;
     }
 
+    a:hover{
+      text-decoration:underline;
+    }
+
     a.subtle-link{
       border-bottom:1px solid rgba(160,168,187,0.35);
     }
+
     a.subtle-link:hover{
       border-bottom-color:rgba(160,168,187,0.85);
     }
@@ -60,17 +74,50 @@
     }
 
     header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
       margin-bottom:40px;
+      color:var(--muted);
+      font-size:13px;
     }
+
     header img{
       width:72px;
       height:auto;
     }
 
+    .header-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .header-links a{
+      color:var(--muted);
+    }
+
+    .header-links a:hover{
+      color:var(--text);
+    }
+
+    main{
+      max-width:680px;
+    }
+
+    .archive-label{
+      font-size:12px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
+    }
+
     h1{
       font-size:26px;
-      font-weight:bold;
-      margin-bottom:36px;
+      font-weight:500;
+      margin:0 0 36px;
     }
 
     section{
@@ -79,14 +126,15 @@
 
     h2{
       font-size:18px;
-      margin-bottom:16px;
+      font-weight:500;
+      margin:0 0 16px;
     }
 
     p{
       font-size:14px;
       line-height:1.9;
       color:var(--muted);
-      margin-bottom:14px;
+      margin:0 0 14px;
     }
 
     ul{
@@ -97,6 +145,25 @@
       line-height:1.9;
     }
 
+    li{
+      margin-bottom:6px;
+    }
+
+    .notice{
+      margin:34px 0;
+      padding:18px 20px;
+      border-left:1px solid rgba(169,183,255,0.42);
+      background:rgba(255,255,255,0.025);
+      border-radius:14px;
+    }
+
+    .notice p{
+      margin:0;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
+    }
+
     footer{
       margin-top:auto;
       padding-top:18px;
@@ -104,69 +171,150 @@
       font-size:12px;
       color:var(--muted);
       display:flex;
-      justify-content:flex-end;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
       gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .footer-links a{
+      color:var(--accent);
+      opacity:0.9;
+      letter-spacing:0.04em;
+    }
+
+    .footer-links a:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
+
+    .version{
+      opacity:0.75;
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:36px;
+      }
+
+      .header-links{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      p,
+      ul{
+        font-size:14px;
+      }
+
+      footer{
+        align-items:flex-start;
+        flex-direction:column;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
 
     <header>
-      <a href="/index.html">
-        <img src="/images/logo.svg" alt="Celeste logo">
+      <a href="/" aria-label="Celeste Harbor">
+        <img src="/images/logo.svg" alt="Celeste Harbor logo">
       </a>
+
+      <nav class="header-links" aria-label="Archive navigation">
+        <a href="/">Harbor</a>
+        <a href="/archive/">Archive</a>
+        <a href="/legacy/about.html">About Celeste</a>
+        <a href="/about/">About Harbor</a>
+      </nav>
     </header>
 
     <main>
+      <div class="archive-label">Archived Record</div>
+
       <h1>Who This Is For</h1>
 
       <section>
         <p>
-          Celeste is a quiet space designed with clear limits.
-          It does not adapt to users, learn preferences, or guide outcomes.
+          Celeste was a quiet space designed with clear limits.
+          It did not adapt to users, learn preferences, or guide outcomes.
         </p>
+
         <p>
-          This page exists to clarify who may find this space appropriate —
-          and who likely will not.
+          This page existed to clarify who may have found this space appropriate —
+          and who likely would not.
         </p>
       </section>
 
       <section>
-        <h2>This space may be for you if:</h2>
+        <h2>This space may have been for you if:</h2>
+
         <ul>
-          <li>You want a place to write without receiving advice or direction.</li>
-          <li>You are comfortable with limited responses and silence.</li>
-          <li>You do not expect memory, continuity, or personalization.</li>
-          <li>You prefer to remain responsible for interpretation and decisions.</li>
+          <li>You wanted a place to write without receiving advice or direction.</li>
+          <li>You were comfortable with limited responses and silence.</li>
+          <li>You did not expect memory, continuity, or personalization.</li>
+          <li>You preferred to remain responsible for interpretation and decisions.</li>
         </ul>
       </section>
 
       <section>
-        <h2>This space is not for you if:</h2>
+        <h2>This space was not for you if:</h2>
+
         <ul>
-          <li>You are seeking guidance, coaching, or emotional reassurance.</li>
-          <li>You expect conversation, engagement, or adaptive behavior.</li>
-          <li>You want feedback, improvement, or long-term interaction.</li>
-          <li>You are looking for solutions, validation, or conclusions.</li>
+          <li>You were seeking guidance, coaching, or emotional reassurance.</li>
+          <li>You expected conversation, engagement, or adaptive behavior.</li>
+          <li>You wanted feedback, improvement, or long-term interaction.</li>
+          <li>You were looking for solutions, validation, or conclusions.</li>
         </ul>
       </section>
 
       <section>
         <p>
-          Celeste does not improve through use, feedback, or time.
-          Its limits are intentional and fixed.
+          Celeste did not improve through use, feedback, or time.
+          Its limits were intentional and fixed.
         </p>
+
         <p>
-          If those limits feel restrictive, this space is likely not a fit —
-          and that is expected.
+          If those limits felt restrictive, this space was likely not a fit —
+          and that was expected.
         </p>
       </section>
+
+      <div class="notice">
+        <p>
+          This page is kept as an archived record of Celeste v4.4A.
+          The current service is Celeste Harbor, a different harbor built from this earlier quiet boundary.
+        </p>
+      </div>
     </main>
 
     <footer>
-      <a href="/faq.html">Back to FAQ</a>
-      <span>CELESTE v4.4A</span>
+      <div class="footer-links">
+        <a href="/legacy/faq.html">Back to FAQ</a>
+        <a href="/legacy/about.html">Back to About Celeste</a>
+        <a href="/archive/">Return to Archive</a>
+        <a href="/">Celeste Harbor</a>
+      </div>
+
+      <span class="version">CELESTE v4.4A / ARCHIVED</span>
     </footer>
 
   </div>
