@@ -83,8 +83,14 @@
       text-decoration:none;
     }
 
+    .back + .back{
+      margin-top:10px;
+    }
+
     .back:hover{
+      color:var(--text);
       text-decoration:underline;
+      text-underline-offset:.25em;
     }
 
     .status{
@@ -95,16 +101,26 @@
       text-align:center;
       min-height:1.8em;
     }
+
+    @media(max-width:640px){
+      .panel{
+        padding:26px 22px;
+      }
+
+      h1{
+        font-size:26px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="panel">
-    <h1>港へ帰る。</h1>
+    <h1>港へ入る。</h1>
 
     <p>
       Googleアカウントでログインします。<br>
-      航海記録は、あなた自身のための非公開記録として扱われます。
+      日々の言葉は、あなた自身のための非公開の航海記録として残ります。
     </p>
 
     <button id="loginBtn">
@@ -113,6 +129,10 @@
 
     <a class="back" href="/">
       港へ戻る
+    </a>
+
+    <a class="back" href="/intro/#login-help">
+      ログインで困ったとき
     </a>
 
     <div class="status" id="status"></div>
