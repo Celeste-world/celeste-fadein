@@ -4,27 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>About Celeste</title>
+  <title>About Celeste – Archive</title>
 
   <!-- SEO -->
   <meta name="description" content="Celeste is a quiet archived console concept designed as a temporary place for thoughts. It does not advise, decide, or retain.">
-  <link rel="canonical" href="https://celeste.world/about.html" />
+  <link rel="canonical" href="https://celeste.world/legacy/about.html" />
   <meta name="robots" content="noindex, nofollow">
 
-  <meta name="description" content="Celeste is a quiet archived console concept designed as a temporary place for thoughts. It does not advise, decide, or retain.">
-
   <!-- Open Graph -->
-  <meta property="og:title" content="About Celeste">
+  <meta property="og:title" content="About Celeste – Archive">
   <meta property="og:description" content="An archived quiet space for thoughts. Nothing is stored. Nothing is decided.">
   <meta property="og:site_name" content="Celeste Harbor">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://celeste.world/about.html">
-  <meta property="og:site_name" content="Celeste Harbor">
+  <meta property="og:url" content="https://celeste.world/legacy/about.html">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="About Celeste">
+  <meta name="twitter:title" content="About Celeste – Archive">
   <meta name="twitter:description" content="An archived quiet space for thoughts.">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
@@ -39,7 +36,6 @@
       "@type": "Organization",
       "name": "Celeste Harbor"
     }
-    
   }
   </script>
 
@@ -55,7 +51,9 @@
       --line:#252b3a;
       --accent:#a9b7ff;
     }
-    *{box-sizing:border-box;}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
@@ -63,10 +61,12 @@
       color:var(--text);
       font-family: ui-serif, Georgia, "Times New Roman", serif;
     }
+
     a{
       color:inherit;
       text-decoration:none;
     }
+
     a:hover{
       text-decoration:underline;
     }
@@ -157,6 +157,14 @@
       opacity:0.85;
     }
 
+    .links a{
+      color:var(--accent);
+    }
+
+    .links a:hover{
+      color:var(--text);
+    }
+
     footer{
       margin-top:auto;
       padding-top:18px;
@@ -190,17 +198,48 @@
     .version{
       opacity:0.75;
     }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:36px;
+      }
+
+      .header-links{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      p{
+        font-size:14px;
+      }
+
+      footer{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
 
     <header>
       <a href="/">
-        <img src="/images/logo.svg" alt="Celeste logo">
+        <img src="/images/logo.svg" alt="Celeste Harbor logo">
       </a>
 
-      <nav class="header-links">
+      <nav class="header-links" aria-label="Archive navigation">
         <a href="/">Harbor</a>
         <a href="/archive/">Archive</a>
         <a href="/about/">About Harbor</a>
@@ -241,13 +280,13 @@
       </div>
 
       <div class="links">
-        <a href="/philosophy.html">Philosophy</a>
-        <a href="/silent-structure.html">Silent Structure</a>
-        <a href="/vision.html">Vision</a>
-        <a href="/who-i-am.html">Who I Am</a>
-        <a href="/faq.html">FAQ</a>
-        <a href="/who-this-is-for.html">Who this is for</a>
-        <a href="/timeline.html">Timeline</a>
+        <a href="/legacy/philosophy.html">Philosophy</a>
+        <a href="/legacy/silent-structure.html">Silent Structure</a>
+        <a href="/legacy/vision.html">Vision</a>
+        <a href="/legacy/who-i-am.html">Who I Am</a>
+        <a href="/legacy/faq.html">FAQ</a>
+        <a href="/legacy/who-this-is-for.html">Who this is for</a>
+        <a href="/legacy/timeline.html">Timeline</a>
       </div>
     </main>
 
