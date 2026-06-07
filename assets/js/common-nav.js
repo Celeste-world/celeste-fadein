@@ -94,15 +94,37 @@
       const headerRect = header.getBoundingClientRect();
       const buttonRect = button.getBoundingClientRect();
 
+      const viewportPadding = 16;
+
+      // 表示中のパネル幅を実測する
+      const activePanel = document.querySelector(
+        '.subnav-panel[data-panel="' + button.dataset.menu + '"]'
+      );
+
+      // いったん左へ置いて、幅を測れる状態にする
+      subnav.style.left = "0px";
+
+      const panelRect = activePanel
+        ? activePanel.getBoundingClientRect()
+        : subnav.getBoundingClientRect();
+
+      const panelWidth = panelRect.width || 240;
+
       let left = buttonRect.left - headerRect.left;
 
-      const viewportPadding = 20;
-      const approxPanelWidth = 220;
-      const maxLeft = window.innerWidth - viewportPadding - approxPanelWidth;
-
-      if(left > maxLeft){
-        left = Math.max(viewportPadding, maxLeft);
+      // アカウントメニューだけ右端基準にする
+      if(button.dataset.menu === "account"){
+        left = buttonRect.right - headerRect.left - panelWidth;
       }
+
+      // 画面左にはみ出さない
+      const minLeft = viewportPadding - headerRect.left;
+
+      // 画面右にはみ出さない
+      const maxLeft =
+        window.innerWidth - viewportPadding - headerRect.left - panelWidth;
+
+      left = Math.max(minLeft, Math.min(left, maxLeft));
 
       subnav.style.left = left + "px";
     }
