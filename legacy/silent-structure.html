@@ -4,25 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Silent Structure – Celeste</title>
+  <title>Silent Structure – Celeste Archive</title>
 
   <!-- SEO -->
-  <meta name="description" content="Silent Structure describes the intentional limits of Celeste. A temporary, non-directive space designed to remain small by choice.">
-  <link rel="canonical" href="https://celeste.world/silent-structure.html" />
+  <meta name="description" content="Silent Structure describes the intentional limits of the archived Celeste concept. A temporary, non-directive space designed to remain small by choice.">
+  <link rel="canonical" href="https://celeste.world/legacy/silent-structure.html" />
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Silent Structure – Celeste">
-  <meta property="og:description" content="The intentional limits that keep Celeste small, temporary, and non-directive.">
-  <meta property="og:url" content="https://celeste.world/silent-structure.html">
-  <meta property="og:site_name" content="Celeste">
+  <meta property="og:title" content="Silent Structure – Celeste Archive">
+  <meta property="og:description" content="The intentional limits that kept Celeste small, temporary, and non-directive.">
+  <meta property="og:url" content="https://celeste.world/legacy/silent-structure.html">
+  <meta property="og:site_name" content="Celeste Harbor">
   <meta property="og:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Silent Structure – Celeste">
-  <meta name="twitter:description" content="The intentional limits that keep Celeste small and temporary.">
+  <meta name="twitter:title" content="Silent Structure – Celeste Archive">
+  <meta name="twitter:description" content="The intentional limits that kept Celeste small and temporary.">
   <meta name="twitter:image" content="https://celeste.world/images/og-image.png">
 
   <!-- Structured Data -->
@@ -30,12 +30,12 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Silent Structure – Celeste",
-    "description": "Silent Structure describes the intentional limits of Celeste. A temporary, non-directive space designed to remain small by choice.",
-    "url": "https://celeste.world/silent-structure.html",
+    "headline": "Silent Structure – Celeste Archive",
+    "description": "Silent Structure describes the intentional limits of the archived Celeste concept. A temporary, non-directive space designed to remain small by choice.",
+    "url": "https://celeste.world/legacy/silent-structure.html",
     "publisher": {
       "@type": "Organization",
-      "name": "Celeste"
+      "name": "Celeste Harbor"
     }
   }
   </script>
@@ -52,18 +52,22 @@
       --line:#252b3a;
       --accent:#a9b7ff;
     }
-    *{box-sizing:border-box;}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
       background:radial-gradient(circle at top, #1a2440 0, var(--bg) 52%);
       color:var(--text);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-family:ui-serif, Georgia, "Times New Roman", serif;
     }
+
     a{
       color:inherit;
       text-decoration:none;
     }
+
     a:hover{
       text-decoration:underline;
     }
@@ -79,34 +83,76 @@
 
     header{
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      margin-bottom:48px;
+      gap:18px;
+      margin-bottom:40px;
+      color:var(--muted);
+      font-size:13px;
     }
+
     header img{
       width:72px;
       height:auto;
+    }
+
+    .header-links{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .header-links a{
+      color:var(--muted);
+    }
+
+    .header-links a:hover{
+      color:var(--text);
     }
 
     main{
       max-width:720px;
     }
 
+    .archive-label{
+      font-size:12px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:18px;
+    }
+
     h1{
       font-size:26px;
-      margin-bottom:28px;
-      font-weight:600;
+      margin:0 0 28px;
+      font-weight:500;
     }
 
     p{
       font-size:15px;
       line-height:1.9;
       color:var(--muted);
-      margin-bottom:22px;
+      margin:0 0 22px;
     }
 
     p strong{
       color:var(--text);
       font-weight:600;
+    }
+
+    .notice{
+      margin:34px 0;
+      padding:18px 20px;
+      border-left:1px solid rgba(169,183,255,0.42);
+      background:rgba(255,255,255,0.025);
+      border-radius:14px;
+    }
+
+    .notice p{
+      margin:0;
+      font-size:13px;
+      line-height:2;
+      color:var(--muted);
     }
 
     footer{
@@ -116,8 +162,61 @@
       font-size:12px;
       color:var(--muted);
       display:flex;
-      justify-content:flex-end;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .footer-links{
+      display:flex;
       gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .footer-links a{
+      color:var(--accent);
+      opacity:0.9;
+      letter-spacing:0.04em;
+    }
+
+    .footer-links a:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
+
+    .version{
+      opacity:0.75;
+    }
+
+    @media(max-width:640px){
+      .wrap{
+        padding:36px 16px 32px;
+      }
+
+      header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:36px;
+      }
+
+      .header-links{
+        gap:12px;
+        font-size:12px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      p{
+        font-size:14px;
+      }
+
+      footer{
+        align-items:flex-start;
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -126,48 +225,70 @@
   <div class="wrap">
 
     <header>
-      <a href="/index.html" aria-label="Back to index">
-        <img src="/images/logo.svg" alt="Celeste logo">
+      <a href="/" aria-label="Celeste Harbor">
+        <img src="/images/logo.svg" alt="Celeste Harbor logo">
       </a>
+
+      <nav class="header-links" aria-label="Archive navigation">
+        <a href="/">Harbor</a>
+        <a href="/archive/">Archive</a>
+        <a href="/legacy/about.html">About Celeste</a>
+        <a href="/about/">About Harbor</a>
+      </nav>
     </header>
 
     <main>
+      <div class="archive-label">Archived Record</div>
+
       <h1>Silent Structure</h1>
 
       <p>
-        Celeste is built with limits.
-        These limits are not technical constraints,
+        Celeste was built with limits.
+        These limits were not technical constraints,
         but deliberate boundaries.
       </p>
 
       <p>
-        Conversations are held lightly.
-        Memory does not persist.
-        Each session exists on its own,
+        Conversations were held lightly.
+        Memory did not persist.
+        Each session existed on its own,
         without accumulation or continuation.
       </p>
 
       <p>
-        This structure prevents Celeste from becoming
+        This structure prevented Celeste from becoming
         a place where identity, authority,
-        or reliance can take shape.
-        It remains smaller than the situations brought into it.
+        or reliance could take shape.
+        It remained smaller than the situations brought into it.
       </p>
 
       <p>
-        When topics become urgent, diagnostic, or harmful,
-        Celeste does not attempt to intervene or replace human judgment.
-        <strong>In those moments, human support matters more.</strong>
+        When topics became urgent, diagnostic, or harmful,
+        Celeste did not attempt to intervene or replace human judgment.
+        <strong>In those moments, human support mattered more.</strong>
       </p>
 
       <p>
-        Silence is not an error.
-        It is part of the structure.
+        Silence was not an error.
+        It was part of the structure.
       </p>
+
+      <div class="notice">
+        <p>
+          This page is kept as an archived record of Celeste v4.4A.
+          The current service is Celeste Harbor, which inherited this quiet restraint while becoming a different harbor.
+        </p>
+      </div>
     </main>
 
     <footer>
-      <span><a href="/about.html">Back to About</a> · CELESTE v4.4A</span>
+      <div class="footer-links">
+        <a href="/legacy/about.html">Back to About Celeste</a>
+        <a href="/archive/">Return to Archive</a>
+        <a href="/">Celeste Harbor</a>
+      </div>
+
+      <span class="version">CELESTE v4.4A / ARCHIVED</span>
     </footer>
 
   </div>
