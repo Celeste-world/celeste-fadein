@@ -305,6 +305,30 @@
       border-bottom:1px solid rgba(160,168,187,.13);
     }
 
+    .section-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    
+    .section-actions select{
+      width:auto;
+      min-width:96px;
+      border-radius:999px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.82);
+      color:var(--text);
+      padding:8px 12px;
+      font-family:inherit;
+      font-size:12px;
+      outline:none;
+    }
+    
+    .section-actions select:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+
     .section-title{
       font-size:17px;
       line-height:1.7;
@@ -493,6 +517,11 @@
         padding:28px 16px;
       }
 
+      .section-actions{
+        width:100%;
+        justify-content:space-between;
+      }
+
       .site-header{
         align-items:flex-start;
         flex-direction:column;
@@ -647,10 +676,19 @@
             <div class="section-head">
               <div>
                 <h2 class="section-title">最近の航海記録</h2>
-                <p class="section-sub">指定条件に一致する航海記録を最大50件表示します。</p>
+                <p class="section-sub">指定条件に一致する航海記録を選択件数まで表示します。</p>
               </div>
-              <span class="count-badge" id="logsCount">0件</span>
+            
+              <div class="section-actions">
+                <select id="logsLimitSelect" aria-label="航海記録の表示件数">
+                  <option value="20">20件</option>
+                  <option value="50" selected>50件</option>
+                  <option value="100">100件</option>
+                </select>
+                <span class="count-badge" id="logsCount">0件</span>
+              </div>
             </div>
+            
             <div class="list" id="logsBox"></div>
           </section>
 
@@ -747,6 +785,8 @@
     const ticketsCount = document.getElementById("ticketsCount");
     const billingCount = document.getElementById("billingCount");
     const feedbackCount = document.getElementById("feedbackCount");
+
+    const logsLimitSelect = document.getElementById("logsLimitSelect");
 
     let currentUser = null;
     let adminUsers = [];
@@ -1260,12 +1300,14 @@
       try{
         const userId = user.user_id;
 
+        const logsLimit = Number(logsLimitSelect.value || 50);
+
         let logsQuery = client
           .from("voyage_logs")
           .select("*")
           .eq("user_id", userId)
           .order("created_at", { ascending:false })
-          .limit(50);
+          .limit(logsLimit);
         
         logsQuery = applyCreatedAtRange(logsQuery);
         
@@ -1461,6 +1503,16 @@
 
     searchBtn.addEventListener("click", searchUsers);
     resetBtn.addEventListener("click", resetSearch);
+
+    logsLimitSelect.addEventListener("change", function(){
+      const selectedUser = adminUsers.find(function(user){
+        return user.user_id === selectedUserId;
+      });
+    
+      if(selectedUser){
+        loadUserDetail(selectedUser);
+      }
+    });
 
     userSearchInput.addEventListener("keydown", function(event){
       if(event.key === "Enter"){
