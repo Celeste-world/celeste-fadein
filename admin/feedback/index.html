@@ -110,6 +110,95 @@
       margin-bottom:20px;
     }
 
+    .admin-notice-panel{
+      margin:0 0 24px;
+      padding:20px;
+      border-radius:20px;
+      border:1px solid rgba(70,84,132,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+    }
+
+    .admin-notice-title{
+      font-size:16px;
+      line-height:1.7;
+      margin:0 0 4px;
+      font-weight:500;
+    }
+
+    .admin-notice-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin:0 0 16px;
+    }
+
+    .admin-notice-grid{
+      display:grid;
+      grid-template-columns:180px minmax(0, 1fr);
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .admin-notice-field{
+      display:grid;
+      gap:6px;
+      margin-bottom:12px;
+    }
+
+    .admin-notice-field label{
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .admin-notice-input,
+    .admin-notice-textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(160,168,187,.25);
+      background:rgba(5,8,17,.82);
+      color:var(--text);
+      padding:12px;
+      font-family:inherit;
+      font-size:13px;
+      line-height:1.8;
+      outline:none;
+    }
+
+    .admin-notice-input{
+      border-radius:999px;
+    }
+
+    .admin-notice-textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    .admin-notice-input:focus,
+    .admin-notice-textarea:focus{
+      border-color:rgba(169,183,255,.65);
+    }
+
+    .admin-notice-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:14px;
+    }
+
+    .selected-user-preview{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      min-height:1.8em;
+    }
+
     select{
       background:rgba(5,8,17,.85);
       border:1px solid rgba(160,168,187,.25);
@@ -334,6 +423,14 @@
         padding:28px 16px;
       }
 
+      .admin-notice-grid{
+        grid-template-columns:1fr;
+      }
+
+      .admin-notice-actions button{
+        width:100%;
+      }
+
       .site-header{
         align-items:flex-start;
         flex-direction:column;
@@ -401,6 +498,56 @@
         </button>
       </div>
 
+      <section class="admin-notice-panel" aria-label="管理者からのお知らせ">
+        <h2 class="admin-notice-title">管理者からのお知らせ</h2>
+        <p class="admin-notice-note">
+          サイト内通知として、選択ユーザーまたは全ユーザーへお知らせを送ります。メール送信は行いません。
+        </p>
+
+        <div class="admin-notice-grid">
+          <select id="noticeTargetType">
+            <option value="selected">選択ユーザー</option>
+            <option value="all">全ユーザー</option>
+          </select>
+
+          <select id="noticeUserSelect">
+            <option value="">ユーザーを読み込んでいます</option>
+          </select>
+        </div>
+
+        <div class="selected-user-preview" id="selectedUserPreview">
+          送信先ユーザーを選択してください。
+        </div>
+
+        <div class="admin-notice-field">
+          <label for="noticeTitleInput">Title</label>
+          <input
+            class="admin-notice-input"
+            id="noticeTitleInput"
+            type="text"
+            placeholder="お知らせのタイトル"
+          />
+        </div>
+
+        <div class="admin-notice-field">
+          <label for="noticeMessageInput">Message</label>
+          <textarea
+            class="admin-notice-textarea"
+            id="noticeMessageInput"
+            placeholder="ユーザーに表示するお知らせ本文を書きます。"
+          ></textarea>
+        </div>
+
+        <div class="admin-notice-actions">
+          <button class="primary" id="sendNoticeBtn" type="button">
+            お知らせを送信
+          </button>
+          <button class="ghost" id="clearNoticeBtn" type="button">
+            入力をクリア
+          </button>
+        </div>
+      </section>
+
       <div class="status" id="status"></div>
 
       <div class="feedback-list" id="feedbackList"></div>
@@ -436,7 +583,16 @@
     const refreshBtn = document.getElementById("refreshBtn");
     const logoutLink = document.getElementById("logoutLink");
 
+    const noticeTargetType = document.getElementById("noticeTargetType");
+    const noticeUserSelect = document.getElementById("noticeUserSelect");
+    const selectedUserPreview = document.getElementById("selectedUserPreview");
+    const noticeTitleInput = document.getElementById("noticeTitleInput");
+    const noticeMessageInput = document.getElementById("noticeMessageInput");
+    const sendNoticeBtn = document.getElementById("sendNoticeBtn");
+    const clearNoticeBtn = document.getElementById("clearNoticeBtn");
+
     let currentUser = null;
+    let adminUsers = [];
 
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -482,6 +638,104 @@
       if(status === "reviewing") return "確認中";
       if(status === "closed") return "対応済み";
       return status || "未確認";
+    }
+
+    async function fetchAdminUsers(searchTerm = ""){
+      const { data: sessionData } = await client.auth.getSession();
+      const accessToken = sessionData.session?.access_token || "";
+
+      if(!accessToken){
+        throw new Error("管理者ログイン情報を確認できませんでした。");
+      }
+
+      const url = new URL(supabaseUrl + "/functions/v1/admin-list-users");
+
+      if(searchTerm){
+        url.searchParams.set("q", searchTerm);
+      }
+
+      const response = await fetch(url.toString(), {
+        method:"GET",
+        headers:{
+          "Authorization":"Bearer " + accessToken,
+          "Content-Type":"application/json"
+        }
+      });
+
+      const result = await response.json().catch(function(){
+        return {};
+      });
+
+      if(!response.ok){
+        throw new Error(result.error || "ユーザー一覧を取得できませんでした。");
+      }
+
+      adminUsers = Array.isArray(result.users) ? result.users : [];
+
+      return adminUsers;
+    }
+
+    function renderNoticeUsers(users){
+      noticeUserSelect.innerHTML = "";
+
+      if(!users || users.length === 0){
+        noticeUserSelect.innerHTML = '<option value="">ユーザーがいません</option>';
+        updateNoticeTargetState();
+        return;
+      }
+
+      const firstOption = document.createElement("option");
+      firstOption.value = "";
+      firstOption.textContent = "送信先ユーザーを選択";
+      noticeUserSelect.appendChild(firstOption);
+
+      users.forEach(function(user){
+        const option = document.createElement("option");
+        option.value = user.user_id;
+
+        const displayName = user.display_name || "名前未設定";
+        const email = user.email || "";
+        option.textContent = displayName + " / " + email;
+
+        noticeUserSelect.appendChild(option);
+      });
+
+      updateNoticeTargetState();
+    }
+
+    function updateNoticeTargetState(){
+      const targetType = noticeTargetType.value;
+
+      if(targetType === "all"){
+        noticeUserSelect.disabled = true;
+        selectedUserPreview.textContent = "送信対象：全ユーザー";
+        return;
+      }
+
+      noticeUserSelect.disabled = false;
+
+      const selectedUser = adminUsers.find(function(user){
+        return user.user_id === noticeUserSelect.value;
+      });
+
+      if(!selectedUser){
+        selectedUserPreview.textContent = "送信先ユーザーを選択してください。";
+        return;
+      }
+
+      selectedUserPreview.textContent =
+        "送信対象：" +
+        (selectedUser.display_name || "名前未設定") +
+        " / " +
+        (selectedUser.email || selectedUser.user_id);
+    }
+
+    function clearNoticeForm(){
+      noticeTargetType.value = "selected";
+      noticeUserSelect.value = "";
+      noticeTitleInput.value = "";
+      noticeMessageInput.value = "";
+      updateNoticeTargetState();
     }
 
     function renderFeedback(rows){
@@ -630,6 +884,110 @@
       renderFeedback(data);
     }
 
+    async function sendAdminNotice(){
+      if(!currentUser || currentUser.id !== ADMIN_USER_ID){
+        setStatus("この操作を行う権限がありません。", true);
+        return;
+      }
+
+      const targetType = noticeTargetType.value;
+      const title = noticeTitleInput.value.trim();
+      const message = noticeMessageInput.value.trim();
+
+      if(!title){
+        setStatus("お知らせのタイトルを入力してください。", true);
+        return;
+      }
+
+      if(!message){
+        setStatus("お知らせ本文を入力してください。", true);
+        return;
+      }
+
+      let targetUsers = [];
+
+      if(targetType === "all"){
+        targetUsers = adminUsers.filter(function(user){
+          return Boolean(user.user_id);
+        });
+      }else{
+        const selectedUserId = noticeUserSelect.value;
+
+        if(!selectedUserId){
+          setStatus("送信先ユーザーを選択してください。", true);
+          return;
+        }
+
+        const selectedUser = adminUsers.find(function(user){
+          return user.user_id === selectedUserId;
+        });
+
+        if(!selectedUser){
+          setStatus("送信先ユーザーを確認できませんでした。", true);
+          return;
+        }
+
+        targetUsers = [selectedUser];
+      }
+
+      if(targetUsers.length === 0){
+        setStatus("送信対象ユーザーがいません。", true);
+        return;
+      }
+
+      const confirmMessage =
+        targetType === "all"
+          ? "全ユーザー " + targetUsers.length + " 人にお知らせを送信します。よろしいですか？"
+          : "選択ユーザーにお知らせを送信します。よろしいですか？";
+
+      if(!window.confirm(confirmMessage)){
+        return;
+      }
+
+      setStatus("お知らせを送信しています。");
+      sendNoticeBtn.disabled = true;
+
+      const { data: announcement, error: announcementError } = await client
+        .from("admin_announcements")
+        .insert({
+          title,
+          message,
+          target_type: targetType,
+          created_by: currentUser.id
+        })
+        .select("id")
+        .single();
+
+      if(announcementError){
+        console.error(announcementError);
+        setStatus("お知らせ本文を保存できませんでした。RLS設定を確認してください。", true);
+        sendNoticeBtn.disabled = false;
+        return;
+      }
+
+      const recipientRows = targetUsers.map(function(user){
+        return {
+          announcement_id: announcement.id,
+          user_id: user.user_id
+        };
+      });
+
+      const { error: recipientsError } = await client
+        .from("admin_announcement_recipients")
+        .insert(recipientRows);
+
+      sendNoticeBtn.disabled = false;
+
+      if(recipientsError){
+        console.error(recipientsError);
+        setStatus("送信先ユーザーを保存できませんでした。RLS設定を確認してください。", true);
+        return;
+      }
+
+      setStatus("お知らせを送信しました。対象：" + targetUsers.length + " 人");
+      clearNoticeForm();
+    }
+
     async function saveAdminReply(id, reply){
       if(!id){
         return;
@@ -700,14 +1058,27 @@
       }
     
       document.body.classList.remove("auth-locked");
-    
-      await loadFeedback();
+  
+        try{
+          const users = await fetchAdminUsers("");
+          renderNoticeUsers(users);
+        }catch(error){
+          console.error(error);
+          setStatus(error.message || "ユーザー一覧を取得できませんでした。", true);
+        }
+      
+        await loadFeedback();
     }
 
     async function logout(){
       await client.auth.signOut();
       window.location.href = "/account/";
     }
+
+    noticeTargetType.addEventListener("change", updateNoticeTargetState);
+    noticeUserSelect.addEventListener("change", updateNoticeTargetState);
+    sendNoticeBtn.addEventListener("click", sendAdminNotice);
+    clearNoticeBtn.addEventListener("click", clearNoticeForm);
 
     refreshBtn.addEventListener("click", loadFeedback);
     statusFilter.addEventListener("change", loadFeedback);
