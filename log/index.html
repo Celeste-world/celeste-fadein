@@ -1934,9 +1934,7 @@
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-    
-      console.log("unread harbor replies:", data);
-    
+        
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
     
@@ -1944,11 +1942,6 @@
           link.title = "港から返事が届いています";
         });
       }
-    
-      console.log(
-        "body has-unread-letter:",
-        document.body.classList.contains("has-unread-letter")
-      );
     }
     
     const today = new Date();
@@ -3627,19 +3620,15 @@
 
     async function loadUnreadAdminAnnouncement(){
       if(adminAnnouncementModalChecked){
-        console.log("admin notice: already checked");
         return;
       }
     
       adminAnnouncementModalChecked = true;
     
       if(!currentUser || !currentAccessToken){
-        console.log("admin notice: no currentUser/currentAccessToken");
         return;
       }
     
-      console.log("admin notice: start", currentUser.id);
-      
       try{
         const recipients = await fetchSupabase(
           "/rest/v1/admin_announcement_recipients" +
@@ -3653,10 +3642,7 @@
           }
         );
     
-        console.log("admin notice recipients:", recipients);
-    
         if(!recipients || recipients.length === 0){
-          console.log("admin notice: no unread notice");
           return;
         }
     
@@ -3671,8 +3657,6 @@
             method: "GET"
           }
         );
-    
-        console.log("admin notice announcements:", announcements);
     
         const announcement =
           Array.isArray(announcements) && announcements.length > 0
@@ -3696,8 +3680,6 @@
           }
         );
     
-        console.log("admin notice rewards:", rewards);
-    
         let rewardText = "";
     
         const fuelReward = Array.isArray(rewards)
@@ -3713,8 +3695,6 @@
             " が付与されました。" +
             (fuelReward.month_key ? " 対象月：" + fuelReward.month_key : "");
         }
-    
-        console.log("admin notice: opening modal");
     
         openAdminAnnouncementModal({
           recipientId: recipient.id,
