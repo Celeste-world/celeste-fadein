@@ -272,6 +272,42 @@
       margin-top:4px;
     }
 
+        .admin-jump-nav{
+          display:flex;
+          gap:8px;
+          flex-wrap:wrap;
+          margin:0 0 22px;
+          padding:12px;
+          border-radius:18px;
+          border:1px solid rgba(70,84,132,.45);
+          background:rgba(5,8,17,.32);
+        }
+    
+        .admin-jump-nav a{
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          border-radius:999px;
+          border:1px solid rgba(160,168,187,.24);
+          background:rgba(255,255,255,.02);
+          color:var(--muted);
+          text-decoration:none;
+          font-size:12px;
+          line-height:1.6;
+          padding:8px 12px;
+          white-space:nowrap;
+        }
+    
+        .admin-jump-nav a:hover{
+          color:var(--text);
+          border-color:rgba(169,183,255,.62);
+          background:rgba(169,183,255,.08);
+        }
+    
+        .jump-target{
+          scroll-margin-top:24px;
+        }
+
     .section{
       margin-top:26px;
       padding:20px;
@@ -551,6 +587,19 @@
         color:var(--text);
         border-color:rgba(169,183,255,.55);
       }
+
+      .admin-jump-nav{
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        padding:10px;
+        gap:8px;
+      }
+    
+      .admin-jump-nav a{
+        flex:0 0 auto;
+        min-width:max-content;
+      }
     
       .filter-actions{
         display:flex;
@@ -684,6 +733,15 @@
 
       <div class="status" id="status"></div>
 
+        <nav class="admin-jump-nav" aria-label="課金管理内ジャンプ">
+          <a href="#customersSection">Customers</a>
+          <a href="#purchasesSection">Purchases</a>
+          <a href="#subscriptionsSection">Subscriptions</a>
+          <a href="#ticketsSection">Tickets</a>
+          <a href="#allowancesSection">Monthly Allowances</a>
+          <a href="#eventsSection">Webhook Events</a>
+        </nav>
+
       <section class="summary-grid" id="summaryGrid">
         <div class="summary-card">
           <div class="summary-label">Pending / Paid</div>
@@ -710,7 +768,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="customersSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Customers</h2>
@@ -721,7 +779,7 @@
         <div id="customersBox"></div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="purchasesSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Purchases</h2>
@@ -732,7 +790,7 @@
         <div id="purchasesBox"></div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="subscriptionsSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Subscriptions</h2>
@@ -743,7 +801,7 @@
         <div id="subscriptionsBox"></div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="ticketsSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Tickets</h2>
@@ -754,7 +812,7 @@
         <div id="ticketsBox"></div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="allowancesSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Monthly Allowances</h2>
@@ -765,7 +823,7 @@
         <div id="allowancesBox"></div>
       </section>
 
-      <section class="section">
+      <section class="section jump-target" id="eventsSection">
         <div class="section-head">
           <div>
             <h2 class="section-title">Webhook Events</h2>
