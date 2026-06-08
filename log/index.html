@@ -2624,6 +2624,14 @@
       `;
     }
 
+    function getCurrentMonthKey(){
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+    
+      return year + "-" + month;
+    }
+
     function renderMonthlyLogLimit(row){
       if(!monthlyLogLimit || !monthlyLogLimitMain || !monthlyLogLimitSub){
         return;
@@ -2635,6 +2643,15 @@
         updateAuthUI();
         return;
       }
+    
+      const baseLimit =
+        Number(row.out_base_limit ?? row.base_limit ?? 0);
+    
+      const supportBonus =
+        Number(row.out_support_bonus ?? row.support_bonus ?? 0);
+    
+      const fuelBonus =
+        Number(row.out_fuel_bonus ?? row.fuel_bonus ?? 0);
     
       const total =
         Number(row.out_total_limit ?? row.total_limit ?? 0);
@@ -2654,12 +2671,26 @@
         total +
         "</span>";
     
+      const detailLines = [];
+    
+      detailLines.push("基本枠 " + baseLimit + " 回");
+    
+      if(supportBonus > 0){
+        detailLines.push("支援枠 +" + supportBonus + " 回");
+      }
+    
+      if(fuelBonus > 0){
+        detailLines.push("航海燃料 +" + fuelBonus + " 回");
+      }
+    
       if(remaining <= 0){
         monthlyLogLimitSub.textContent =
-          "今月の航海記録は、いったん港に収まりました。次の月、または追加の航海枠で続きを残せます。";
+          detailLines.join(" / ") +
+          "。今月の航海記録は、いったん港に収まりました。次の月、または追加の航海枠で続きを残せます。";
       }else{
         monthlyLogLimitSub.textContent =
-          "今月あと " + remaining + " 回、航海記録を残せます。";
+          detailLines.join(" / ") +
+          "。今月あと " + remaining + " 回、航海記録を残せます。";
       }
     
       monthlyLogLimit.style.display = "block";
@@ -2673,23 +2704,37 @@
       }
     
       try{
-        const result = await fetchSupabase(
+        const monthKey = getCurrentMonthKey();
+    
+        await fetchSupabase(
           "/rest/v1/rpc/ensure_monthly_log_allowance",
           {
             method: "POST",
             body: {
               p_user_id: currentUser.id,
-              p_month_key: null
+              p_month_key: monthKey
             }
           }
         );
     
+        const rows = await fetchSupabase(
+          "/rest/v1/monthly_log_allowances" +
+            "?user_id=eq." + encodeURIComponent(currentUser.id) +
+            "&month_key=eq." + encodeURIComponent(monthKey) +
+            "&select=user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,updated_at" +
+            "&limit=1",
+          {
+            method: "GET"
+          }
+        );
+    
         const row =
-          Array.isArray(result) && result.length > 0
-            ? result[0]
+          Array.isArray(rows) && rows.length > 0
+            ? rows[0]
             : null;
     
         renderMonthlyLogLimit(row);
+    
       }catch(error){
         console.warn("monthly log limit load failed:", error);
     
@@ -2702,7 +2747,6 @@
         }
       }
     }
-
     async function loadActiveSpecialVoyageBanner(){
       if(!currentUser || !currentAccessToken){
         return;
