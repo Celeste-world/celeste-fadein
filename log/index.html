@@ -3625,30 +3625,27 @@
     }
 
     async function loadUnreadAdminAnnouncement(){
-      if(!currentUser){
-        console.log("admin notice: no currentUser");
+      if(!currentUser || !currentAccessToken){
+        console.log("admin notice: no currentUser/currentAccessToken");
         return;
       }
     
       console.log("admin notice: start", currentUser.id);
     
       try{
-        const { data: recipients, error: recipientError } = await client
-          .from("admin_announcement_recipients")
-          .select("id, announcement_id, created_at, read_at")
-          .eq("user_id", currentUser.id)
-          .is("read_at", null)
-          .order("created_at", { ascending:false })
-          .limit(1);
+        const recipients = await fetchSupabase(
+          "/rest/v1/admin_announcement_recipients" +
+            "?user_id=eq." + encodeURIComponent(currentUser.id) +
+            "&read_at=is.null" +
+            "&select=id,announcement_id,created_at,read_at" +
+            "&order=created_at.desc" +
+            "&limit=1",
+          {
+            method: "GET"
+          }
+        );
     
         console.log("admin notice recipients:", recipients);
-        console.log("admin notice recipientError:", recipientError);
-    
-        if(recipientError){
-          console.warn("admin announcement recipient load failed:", recipientError);
-          setStatus("お知らせ受信情報を確認できませんでした。", true);
-          return;
-        }
     
         if(!recipients || recipients.length === 0){
           console.log("admin notice: no unread notice");
@@ -3657,34 +3654,41 @@
     
         const recipient = recipients[0];
     
-        const { data: announcement, error: announcementError } = await client
-          .from("admin_announcements")
-          .select("id,title,message,target_type,created_at")
-          .eq("id", recipient.announcement_id)
-          .maybeSingle();
+        const announcements = await fetchSupabase(
+          "/rest/v1/admin_announcements" +
+            "?id=eq." + encodeURIComponent(recipient.announcement_id) +
+            "&select=id,title,message,target_type,created_at" +
+            "&limit=1",
+          {
+            method: "GET"
+          }
+        );
     
-        console.log("admin notice announcement:", announcement);
-        console.log("admin notice announcementError:", announcementError);
+        console.log("admin notice announcements:", announcements);
     
-        if(announcementError || !announcement){
-          console.warn("admin announcement load failed:", announcementError);
+        const announcement =
+          Array.isArray(announcements) && announcements.length > 0
+            ? announcements[0]
+            : null;
+    
+        if(!announcement){
+          console.warn("admin notice: announcement not found");
           setStatus("お知らせ本文を読み込めませんでした。", true);
           return;
         }
     
-        const { data: rewards, error: rewardError } = await client
-          .from("admin_reward_grants")
-          .select("reward_type,reward_key,quantity,month_key,granted_at")
-          .eq("user_id", currentUser.id)
-          .eq("announcement_id", announcement.id)
-          .order("granted_at", { ascending:false });
+        const rewards = await fetchSupabase(
+          "/rest/v1/admin_reward_grants" +
+            "?user_id=eq." + encodeURIComponent(currentUser.id) +
+            "&announcement_id=eq." + encodeURIComponent(announcement.id) +
+            "&select=reward_type,reward_key,quantity,month_key,granted_at" +
+            "&order=granted_at.desc",
+          {
+            method: "GET"
+          }
+        );
     
         console.log("admin notice rewards:", rewards);
-        console.log("admin notice rewardError:", rewardError);
-    
-        if(rewardError){
-          console.warn("admin reward load failed:", rewardError);
-        }
     
         let rewardText = "";
     
@@ -3699,7 +3703,7 @@
             "航海燃料 +" +
             String(fuelReward.quantity || 0) +
             " が付与されました。" +
-            (fuelReward.month_key ? "対象月：" + fuelReward.month_key : "");
+            (fuelReward.month_key ? " 対象月：" + fuelReward.month_key : "");
         }
     
         console.log("admin notice: opening modal");
@@ -3714,7 +3718,7 @@
     
       }catch(error){
         console.warn("admin announcement modal failed:", error);
-        setStatus("お知らせモーダルの表示に失敗しました。", true);
+        setStatus("お知らせモーダルの表示に失敗しました：" + error.message, true);
       }
     }
     
