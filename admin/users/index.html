@@ -606,18 +606,21 @@
     
       .quick-ranges{
         display:grid;
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:1fr;
         gap:8px;
         margin-top:14px;
       }
     
       .quick-chip{
         width:100%;
+        min-width:0;
+        display:block;
         background:rgba(255,255,255,.03);
         color:var(--muted);
         border:1px solid rgba(160,168,187,.22);
-        padding:8px 12px;
+        padding:9px 12px;
         font-size:12px;
+        text-align:center;
       }
     
       .quick-chip:hover{
@@ -656,10 +659,6 @@
       .section-actions select{
         flex:1;
         min-width:0;
-      }
-    
-      .logs-count-badge{
-        flex:0 0 auto;
       }
     
       .back-to-top{
@@ -850,13 +849,12 @@
                 <p class="section-sub">指定条件に一致する航海記録を選択件数まで表示します。</p>
               </div>
             
-             <div class="section-actions">
+              <div class="section-actions">
                 <select id="logsLimitSelect" aria-label="航海記録の表示件数">
                   <option value="20">20件表示</option>
                   <option value="50" selected>50件表示</option>
                   <option value="100">100件表示</option>
                 </select>
-                <span class="count-badge logs-count-badge" id="logsCount">0件取得</span>
               </div>
             </div>
             
@@ -959,7 +957,6 @@
     const billingBox = document.getElementById("billingBox");
     const feedbackBox = document.getElementById("feedbackBox");
 
-    const logsCount = document.getElementById("logsCount");
     const ticketsCount = document.getElementById("ticketsCount");
     const billingCount = document.getElementById("billingCount");
     const feedbackCount = document.getElementById("feedbackCount");
@@ -1292,13 +1289,11 @@
 
     function renderLogs(rowsOrError){
       if(rowsOrError && rowsOrError.error){
-        logsCount.textContent = "0件";
         logsBox.innerHTML = emptyBox(rowsOrError.error);
         return;
       }
 
       const rows = rowsOrError || [];
-      logsCount.textContent = String(rows.length) + "件取得";
 
       if(rows.length === 0){
         logsBox.innerHTML = emptyBox("航海記録はありません。");
