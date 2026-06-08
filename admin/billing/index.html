@@ -153,6 +153,14 @@
       outline:none;
     }
 
+    input[type="date"],
+    input[type="month"]{
+      min-width:0;
+      max-width:100%;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+
     input:focus,
     select:focus{
       border-color:rgba(169,183,255,.65);
@@ -462,49 +470,114 @@
       body{
         padding:28px 16px;
       }
-
+    
+      .filter-panel{
+        padding:18px 14px;
+      }
+    
+      .site-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom:34px;
+      }
+    
+      .nav{
+        gap:12px;
+        font-size:12px;
+      }
+    
+      h1{
+        font-size:30px;
+      }
+    
+      .filter-grid{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:12px;
+        width:100%;
+      }
+    
+      .field{
+        width:100%;
+        min-width:0;
+      }
+    
+      .field input,
+      .field select{
+        width:100%;
+        max-width:100%;
+        min-width:0;
+      }
+    
+      .field input[type="date"],
+      .field input[type="month"]{
+        display:block;
+        width:100%;
+        max-width:100%;
+        min-width:0;
+        text-align:center;
+      }
+    
+      .field input[type="date"]::-webkit-date-and-time-value,
+      .field input[type="month"]::-webkit-date-and-time-value{
+        text-align:center;
+      }
+    
+      .field input[type="date"]::-webkit-calendar-picker-indicator,
+      .field input[type="month"]::-webkit-calendar-picker-indicator{
+        margin-left:0;
+      }
+    
+      .quick-ranges{
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+        margin-top:14px;
+      }
+    
+      .quick-chip{
+        display:block;
+        width:100%;
+        min-width:0;
+        background:rgba(255,255,255,.03);
+        color:var(--muted);
+        border:1px solid rgba(160,168,187,.22);
+        padding:9px 12px;
+        font-size:12px;
+        text-align:center;
+      }
+    
+      .quick-chip:hover{
+        color:var(--text);
+        border-color:rgba(169,183,255,.55);
+      }
+    
+      .filter-actions{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+    
+      .filter-actions button{
+        width:100%;
+      }
+    
+      .summary-grid{
+        grid-template-columns:1fr;
+      }
+    
+      .section-head{
+        flex-direction:column;
+      }
+    
       .back-to-top{
         right:16px;
         bottom:16px;
         padding:9px 13px;
         font-size:12px;
       }
-
-      .quick-chip{
-        flex:1 1 calc(50% - 8px);
-      }
-
-      .site-header{
-        align-items:flex-start;
-        flex-direction:column;
-        margin-bottom:34px;
-      }
-
-      .nav{
-        gap:12px;
-        font-size:12px;
-      }
-
-      h1{
-        font-size:30px;
-      }
-
-      .summary-grid{
-        grid-template-columns:1fr;
-      }
-
-      .section-head{
-        flex-direction:column;
-      }
-
-      .filter-grid{
-        grid-template-columns:1fr;
-      }
-
-      .filter-actions button{
-        width:100%;
-      }
     }
+    
   </style>
 </head>
 
@@ -516,9 +589,9 @@
 
       <nav class="nav">
         <a href="/admin/">管理入口</a>
+        <a href="/admin/users/">ユーザー管理</a>
+        <a href="/admin/billing/">課金管理</a>
         <a href="/admin/feedback/">便り管理</a>
-        <a href="/log/">日々の記録</a>
-        <a href="/account/">アカウント</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -711,9 +784,9 @@
     <footer>
       <div class="footer-links">
         <a href="/admin/">管理入口</a>
+        <a href="/admin/users/">ユーザー管理</a>
+        <a href="/admin/billing/">課金管理</a>
         <a href="/admin/feedback/">便り管理</a>
-        <a href="/log/">日々の記録</a>
-        <a href="/account/">アカウント</a>
       </div>
 
       <div>CELESTE HARBOR BILLING ADMIN</div>
