@@ -1043,9 +1043,7 @@
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-    
-      console.log("unread harbor replies:", data);
-    
+        
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
     
@@ -1053,11 +1051,6 @@
           link.title = "港から返事が届いています";
         });
       }
-    
-      console.log(
-        "body has-unread-letter:",
-        document.body.classList.contains("has-unread-letter")
-      );
     }
     
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
@@ -1528,7 +1521,6 @@
           return;
         }
     
-        console.log("expire_my_tide_letters:", data);
       }catch(error){
         console.warn("expire tide letters error:", error);
       }
@@ -1542,8 +1534,7 @@
           console.warn("expire voyage tickets rpc error:", error);
           return;
         }
-    
-        console.log("expire_my_voyage_tickets:", data);
+        
       }catch(error){
         console.warn("expire voyage tickets error:", error);
       }
