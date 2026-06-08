@@ -294,6 +294,21 @@
       box-shadow:0 18px 42px rgba(0,0,0,.24);
     }
 
+    .admin-history-toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin:0 0 16px;
+    }
+
+    .admin-history-toolbar .admin-notice-input{
+      max-width:180px;
+      margin:0;
+      padding:10px 14px;
+      font-size:13px;
+    }
+
     .admin-history-list{
       display:grid;
       gap:14px;
@@ -676,6 +691,12 @@
         max-width:none;
       }
 
+      .admin-history-toolbar .admin-notice-input,
+      .admin-history-toolbar button{
+        width:100%;
+        max-width:none;
+      }
+
       .section-return a{
         width:100%;
       }
@@ -890,6 +911,27 @@
         </summary>
 
         <section class="admin-history-panel" aria-label="送信済みのお知らせ">
+          <div class="admin-history-toolbar">
+            <input
+              class="admin-notice-input"
+              id="announcementHistoryMonthFilter"
+              type="month"
+              aria-label="送信済みお知らせの対象月"
+            />
+
+            <button class="ghost" id="announcementHistoryThisMonthBtn" type="button">
+              今月
+            </button>
+
+            <button class="ghost" id="announcementHistoryLastMonthBtn" type="button">
+              先月
+            </button>
+
+            <button class="ghost" id="announcementHistoryClearBtn" type="button">
+              月フィルター解除
+            </button>
+          </div>
+
           <div class="admin-history-list" id="announcementHistoryList">
             <div class="empty">
               送信済みのお知らせを読み込んでいます。
@@ -953,6 +995,18 @@
     const rewardPreview = document.getElementById("rewardPreview");
     const announcementHistoryList =
       document.getElementById("announcementHistoryList");
+
+    const announcementHistoryMonthFilter =
+      document.getElementById("announcementHistoryMonthFilter");
+
+    const announcementHistoryThisMonthBtn =
+      document.getElementById("announcementHistoryThisMonthBtn");
+
+    const announcementHistoryLastMonthBtn =
+      document.getElementById("announcementHistoryLastMonthBtn");
+
+    const announcementHistoryClearBtn =
+      document.getElementById("announcementHistoryClearBtn");
 
     let currentUser = null;
     let adminUsers = [];
@@ -1125,6 +1179,13 @@
       const month = String(date.getMonth() + 1).padStart(2, "0");
     
       return year + "-" + month;
+    }
+
+    function getRelativeMonthInputValue(offset){
+      const date = new Date();
+      date.setMonth(date.getMonth() + offset);
+
+      return toMonthInputValue(date);
     }
     
     function updateRewardState(){
@@ -1433,11 +1494,25 @@
         </div>
       `;
 
-      const { data: announcements, error: announcementError } = await client
+      const selectedMonth = announcementHistoryMonthFilter
+        ? announcementHistoryMonthFilter.value
+        : "";
+
+      let query = client
         .from("admin_announcements")
         .select("id,title,message,target_type,created_at")
         .order("created_at", { ascending:false })
         .limit(30);
+
+      const monthRange = monthRangeFromInput(selectedMonth);
+
+      if(monthRange){
+        query = query
+          .gte("created_at", monthRange.start)
+          .lt("created_at", monthRange.end);
+      }
+
+      const { data: announcements, error: announcementError } = await query;
 
       if(announcementError){
         console.error(announcementError);
@@ -1451,7 +1526,15 @@
       }
 
       if(!Array.isArray(announcements) || announcements.length === 0){
-        renderAnnouncementHistory([], [], []);
+        const monthText = selectedMonth
+          ? selectedMonth + " の送信済みお知らせはありません。"
+          : "まだ送信済みのお知らせはありません。";
+
+        announcementHistoryList.innerHTML = `
+          <div class="empty">
+            ${escapeHtml(monthText)}
+          </div>
+        `;
         return;
       }
 
@@ -1495,7 +1578,7 @@
         rewards || []
       );
     }
-
+    
     async function loadFeedback(){
       if(!currentUser){
         return;
@@ -1885,6 +1968,33 @@
     if(feedbackLimitFilter){
       feedbackLimitFilter.addEventListener("change", async function(){
         await loadFeedback();
+        await loadAnnouncementHistory();
+      });
+    }
+
+    if(announcementHistoryMonthFilter){
+      announcementHistoryMonthFilter.addEventListener("change", async function(){
+        await loadAnnouncementHistory();
+      });
+    }
+
+    if(announcementHistoryThisMonthBtn){
+      announcementHistoryThisMonthBtn.addEventListener("click", async function(){
+        announcementHistoryMonthFilter.value = getRelativeMonthInputValue(0);
+        await loadAnnouncementHistory();
+      });
+    }
+
+    if(announcementHistoryLastMonthBtn){
+      announcementHistoryLastMonthBtn.addEventListener("click", async function(){
+        announcementHistoryMonthFilter.value = getRelativeMonthInputValue(-1);
+        await loadAnnouncementHistory();
+      });
+    }
+
+    if(announcementHistoryClearBtn){
+      announcementHistoryClearBtn.addEventListener("click", async function(){
+        announcementHistoryMonthFilter.value = "";
         await loadAnnouncementHistory();
       });
     }
