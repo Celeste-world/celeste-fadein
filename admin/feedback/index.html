@@ -1211,11 +1211,8 @@
         }
       }
 
-      setStatus("お知らせを送信しました。対象：" + targetUsers.length + " 人");
-      clearNoticeForm();
-      
       let doneMessage = "お知らせを送信しました。対象：" + targetUsers.length + " 人";
-      
+
       if(rewardType === "fuel"){
         doneMessage += " / 航海燃料 +" + fuelAmount + " を付与しました。";
       }
@@ -1223,9 +1220,6 @@
       setStatus(doneMessage);
       clearNoticeForm();
       
-      if(adminNoticeDetails){
-        adminNoticeDetails.open = false;
-      }
       if(adminNoticeDetails){
         adminNoticeDetails.open = false;
       }
