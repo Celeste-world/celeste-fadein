@@ -618,6 +618,34 @@
             ></textarea>
           </div>
 
+          <div class="admin-notice-field">
+            <label for="noticeRewardType">Reward</label>
+            <select id="noticeRewardType">
+              <option value="none">特典なし</option>
+              <option value="fuel">航海燃料を付与</option>
+            </select>
+          </div>
+          
+          <div class="admin-notice-grid" id="noticeRewardOptions" style="display:none;">
+            <select id="noticeFuelAmount">
+              <option value="1">航海燃料 +1</option>
+              <option value="3">航海燃料 +3</option>
+              <option value="5">航海燃料 +5</option>
+              <option value="10">航海燃料 +10</option>
+            </select>
+          
+            <input
+              class="admin-notice-input"
+              id="noticeFuelMonth"
+              type="month"
+              aria-label="燃料を付与する対象月"
+            />
+          </div>
+          
+          <div class="selected-user-preview" id="rewardPreview">
+            特典は付与されません。
+          </div>
+
           <div class="admin-notice-actions">
             <button class="primary" id="sendNoticeBtn" type="button">
               お知らせを送信
@@ -672,6 +700,12 @@
     const noticeMessageInput = document.getElementById("noticeMessageInput");
     const sendNoticeBtn = document.getElementById("sendNoticeBtn");
     const clearNoticeBtn = document.getElementById("clearNoticeBtn");
+
+    const noticeRewardType = document.getElementById("noticeRewardType");
+    const noticeRewardOptions = document.getElementById("noticeRewardOptions");
+    const noticeFuelAmount = document.getElementById("noticeFuelAmount");
+    const noticeFuelMonth = document.getElementById("noticeFuelMonth");
+    const rewardPreview = document.getElementById("rewardPreview");
 
     let currentUser = null;
     let adminUsers = [];
@@ -812,14 +846,53 @@
         (selectedUser.email || selectedUser.user_id);
     }
 
+    function toMonthInputValue(date){
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+    
+      return year + "-" + month;
+    }
+    
+    function updateRewardState(){
+      const rewardType = noticeRewardType.value;
+    
+      if(rewardType === "fuel"){
+        noticeRewardOptions.style.display = "";
+      }else{
+        noticeRewardOptions.style.display = "none";
+      }
+    
+      if(!noticeFuelMonth.value){
+        noticeFuelMonth.value = toMonthInputValue(new Date());
+      }
+    
+      if(rewardType !== "fuel"){
+        rewardPreview.textContent = "特典は付与されません。";
+        return;
+      }
+    
+      rewardPreview.textContent =
+        "特典：対象者に航海燃料 +" +
+        noticeFuelAmount.value +
+        " を " +
+        noticeFuelMonth.value +
+        " に付与します。";
+    }
+
     function clearNoticeForm(){
       noticeTargetType.value = "selected";
       noticeUserSelect.value = "";
       noticeTitleInput.value = "";
       noticeMessageInput.value = "";
+    
+      noticeRewardType.value = "none";
+      noticeFuelAmount.value = "1";
+      noticeFuelMonth.value = toMonthInputValue(new Date());
+    
       updateNoticeTargetState();
+      updateRewardState();
     }
-
+    
     function renderFeedback(rows){
       feedbackList.innerHTML = "";
 
@@ -976,6 +1049,10 @@
       const title = noticeTitleInput.value.trim();
       const message = noticeMessageInput.value.trim();
 
+      const rewardType = noticeRewardType.value;
+      const fuelAmount = Number(noticeFuelAmount.value || 0);
+      const fuelMonth = noticeFuelMonth.value;
+
       if(!title){
         setStatus("お知らせのタイトルを入力してください。", true);
         return;
@@ -1017,10 +1094,33 @@
         return;
       }
 
-      const confirmMessage =
+      if(rewardType === "fuel"){
+        if(!fuelMonth){
+          setStatus("航海燃料を付与する対象月を選択してください。", true);
+          return;
+        }
+      
+        if(!Number.isInteger(fuelAmount) || fuelAmount <= 0){
+          setStatus("航海燃料の付与数を確認してください。", true);
+          return;
+        }
+      }
+
+      let confirmMessage =
         targetType === "all"
-          ? "全ユーザー " + targetUsers.length + " 人にお知らせを送信します。よろしいですか？"
-          : "選択ユーザーにお知らせを送信します。よろしいですか？";
+          ? "全ユーザー " + targetUsers.length + " 人にお知らせを送信します。"
+          : "選択ユーザーにお知らせを送信します。";
+      
+      if(rewardType === "fuel"){
+        confirmMessage +=
+          "\n\nさらに、対象者へ航海燃料 +" +
+          fuelAmount +
+          " を " +
+          fuelMonth +
+          " に付与します。";
+      }
+      
+      confirmMessage += "\n\nよろしいですか？";
 
       if(!window.confirm(confirmMessage)){
         return;
@@ -1066,9 +1166,66 @@
         return;
       }
 
+      if(rewardType === "fuel"){
+        const rewardRows = targetUsers.map(function(user){
+          return {
+            announcement_id: announcement.id,
+            user_id: user.user_id,
+            reward_type: "fuel",
+            reward_key: "monthly_fuel",
+            quantity: fuelAmount,
+            month_key: fuelMonth,
+            metadata: {
+              source: "admin_announcement",
+              title: title
+            },
+            granted_by: currentUser.id
+          };
+        });
+      
+        const { error: rewardLogError } = await client
+          .from("admin_reward_grants")
+          .insert(rewardRows);
+      
+        if(rewardLogError){
+          console.error(rewardLogError);
+          setStatus("燃料付与履歴を保存できませんでした。RLS設定を確認してください。", true);
+          sendNoticeBtn.disabled = false;
+          return;
+        }
+      
+        for(const user of targetUsers){
+          const { error: fuelError } = await client.rpc("admin_grant_monthly_fuel", {
+            p_user_id: user.user_id,
+            p_month_key: fuelMonth,
+            p_fuel_amount: fuelAmount,
+            p_admin_user_id: currentUser.id
+          });
+      
+          if(fuelError){
+            console.error(fuelError);
+            setStatus("航海燃料の付与に失敗しました。対象：" + (user.email || user.user_id), true);
+            sendNoticeBtn.disabled = false;
+            return;
+          }
+        }
+      }
+
       setStatus("お知らせを送信しました。対象：" + targetUsers.length + " 人");
       clearNoticeForm();
-
+      
+      let doneMessage = "お知らせを送信しました。対象：" + targetUsers.length + " 人";
+      
+      if(rewardType === "fuel"){
+        doneMessage += " / 航海燃料 +" + fuelAmount + " を付与しました。";
+      }
+      
+      setStatus(doneMessage);
+      clearNoticeForm();
+      
+      if(adminNoticeDetails){
+        adminNoticeDetails.open = false;
+      }
       if(adminNoticeDetails){
         adminNoticeDetails.open = false;
       }
@@ -1148,6 +1305,7 @@
         try{
           const users = await fetchAdminUsers("");
           renderNoticeUsers(users);
+          updateRewardState();
         }catch(error){
           console.error(error);
           setStatus(error.message || "ユーザー一覧を取得できませんでした。", true);
@@ -1163,6 +1321,9 @@
 
     noticeTargetType.addEventListener("change", updateNoticeTargetState);
     noticeUserSelect.addEventListener("change", updateNoticeTargetState);
+    noticeRewardType.addEventListener("change", updateRewardState);
+    noticeFuelAmount.addEventListener("change", updateRewardState);
+    noticeFuelMonth.addEventListener("change", updateRewardState);
     sendNoticeBtn.addEventListener("click", sendAdminNotice);
     clearNoticeBtn.addEventListener("click", clearNoticeForm);
 
