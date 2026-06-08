@@ -2706,32 +2706,39 @@
       try{
         const monthKey = getCurrentMonthKey();
     
-        await fetchSupabase(
-          "/rest/v1/rpc/ensure_monthly_log_allowance",
-          {
-            method: "POST",
-            body: {
-              p_user_id: currentUser.id,
-              p_month_key: monthKey
+        async function fetchMonthlyAllowanceRow(){
+          const rows = await fetchSupabase(
+            "/rest/v1/monthly_log_allowances" +
+              "?user_id=eq." + encodeURIComponent(currentUser.id) +
+              "&month_key=eq." + encodeURIComponent(monthKey) +
+              "&select=user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,updated_at" +
+              "&limit=1",
+            {
+              method: "GET"
             }
-          }
-        );
+          );
     
-        const rows = await fetchSupabase(
-          "/rest/v1/monthly_log_allowances" +
-            "?user_id=eq." + encodeURIComponent(currentUser.id) +
-            "&month_key=eq." + encodeURIComponent(monthKey) +
-            "&select=user_id,month_key,base_limit,support_bonus,fuel_bonus,total_limit,consumed_count,updated_at" +
-            "&limit=1",
-          {
-            method: "GET"
-          }
-        );
-    
-        const row =
-          Array.isArray(rows) && rows.length > 0
+          return Array.isArray(rows) && rows.length > 0
             ? rows[0]
             : null;
+        }
+    
+        let row = await fetchMonthlyAllowanceRow();
+    
+        if(!row){
+          await fetchSupabase(
+            "/rest/v1/rpc/ensure_monthly_log_allowance",
+            {
+              method: "POST",
+              body: {
+                p_user_id: currentUser.id,
+                p_month_key: monthKey
+              }
+            }
+          );
+    
+          row = await fetchMonthlyAllowanceRow();
+        }
     
         renderMonthlyLogLimit(row);
     
@@ -2747,6 +2754,7 @@
         }
       }
     }
+        
     async function loadActiveSpecialVoyageBanner(){
       if(!currentUser || !currentAccessToken){
         return;
