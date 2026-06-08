@@ -2192,6 +2192,7 @@
       document.getElementById("adminAnnouncementListBtn");
 
     let currentAdminAnnouncementRecipientId = "";
+    let adminAnnouncementModalChecked = false;
 
     const maxContentLength = 800;
 
@@ -3625,13 +3626,20 @@
     }
 
     async function loadUnreadAdminAnnouncement(){
+      if(adminAnnouncementModalChecked){
+        console.log("admin notice: already checked");
+        return;
+      }
+    
+      adminAnnouncementModalChecked = true;
+    
       if(!currentUser || !currentAccessToken){
         console.log("admin notice: no currentUser/currentAccessToken");
         return;
       }
     
       console.log("admin notice: start", currentUser.id);
-    
+      
       try{
         const recipients = await fetchSupabase(
           "/rest/v1/admin_announcement_recipients" +
