@@ -110,6 +110,38 @@
       margin-bottom:20px;
     }
 
+    .toolbar .admin-notice-input{
+      max-width:180px;
+      margin:0;
+      padding:10px 14px;
+      font-size:13px;
+    }
+
+    .section-return{
+      display:flex;
+      justify-content:flex-end;
+      margin:14px 0 24px;
+    }
+
+    .section-return a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:8px 14px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+      font-size:12px;
+      line-height:1.7;
+      text-decoration:none;
+    }
+
+    .section-return a:hover{
+      color:var(--text);
+      border-color:rgba(169,183,255,.4);
+    }
+
     .admin-notice-panel{
       margin:0 0 24px;
       padding:20px;
@@ -639,6 +671,15 @@
         padding:28px 16px;
       }
 
+      .toolbar .admin-notice-input{
+        width:100%;
+        max-width:none;
+      }
+
+      .section-return a{
+        width:100%;
+      }
+
       .admin-notice-grid{
         grid-template-columns:1fr;
       }
@@ -693,7 +734,7 @@
       </nav>
     </header>
 
-    <main>
+    <main id="adminTop">
       <h1>Harbor Letter Admin</h1>
 
       <p class="lead">
@@ -709,6 +750,23 @@
           <option value="all">すべて</option>
         </select>
 
+        <input
+          class="admin-notice-input"
+          id="feedbackMonthFilter"
+          type="month"
+          aria-label="便りの対象月"
+        />
+
+        <select id="feedbackLimitFilter">
+          <option value="20">20件表示</option>
+          <option value="50">50件表示</option>
+          <option value="100">100件表示</option>
+        </select>
+
+        <button class="ghost" id="clearFeedbackFiltersBtn" type="button">
+          フィルター解除
+        </button>
+
         <button class="ghost" id="refreshBtn" type="button">
           更新
         </button>
@@ -718,7 +776,11 @@
 
       <div class="feedback-list" id="feedbackList"></div>
 
-            <details class="admin-notice-details">
+      <div class="section-return">
+        <a href="#adminTop">上に戻る</a>
+      </div>
+            
+      <details class="admin-notice-details">
         <summary>
           <div class="admin-notice-summary">
             <div>
@@ -809,7 +871,11 @@
           </div>
         </section>
       </details>
-
+      
+      <div class="section-return">
+        <a href="#adminTop">上に戻る</a>
+      </div>
+      
       <details class="admin-history-details">
         <summary>
           <div class="admin-history-summary">
@@ -831,6 +897,10 @@
           </div>
         </section>
       </details>
+
+      <div class="section-return">
+        <a href="#adminTop">上に戻る</a>
+      </div>
 
     </main>
 
@@ -861,6 +931,9 @@
     const statusEl = document.getElementById("status");
     const feedbackList = document.getElementById("feedbackList");
     const statusFilter = document.getElementById("statusFilter");
+    const feedbackMonthFilter = document.getElementById("feedbackMonthFilter");
+    const feedbackLimitFilter = document.getElementById("feedbackLimitFilter");
+    const clearFeedbackFiltersBtn = document.getElementById("clearFeedbackFiltersBtn");
     const refreshBtn = document.getElementById("refreshBtn");
     const logoutLink = document.getElementById("logoutLink");
 
@@ -913,6 +986,33 @@
         hour: "2-digit",
         minute: "2-digit"
       });
+    }
+
+    function monthRangeFromInput(monthValue){
+      if(!monthValue){
+        return null;
+      }
+    
+      const parts = String(monthValue).split("-");
+    
+      if(parts.length !== 2){
+        return null;
+      }
+    
+      const year = Number(parts[0]);
+      const month = Number(parts[1]);
+    
+      if(!year || !month){
+        return null;
+      }
+    
+      const start = new Date(year, month - 1, 1, 0, 0, 0);
+      const end = new Date(year, month, 1, 0, 0, 0);
+    
+      return {
+        start: start.toISOString(),
+        end: end.toISOString()
+      };
     }
 
     function typeLabel(type){
@@ -1400,39 +1500,67 @@
       if(!currentUser){
         return;
       }
-
+    
       if(currentUser.id !== ADMIN_USER_ID){
         setStatus("このページを表示する権限がありません。", true);
         feedbackList.innerHTML = "";
         return;
       }
-
+    
       setStatus("港への便りを読み込んでいます。");
       refreshBtn.disabled = true;
-
+    
+      const selectedStatus = statusFilter.value;
+      const selectedMonth = feedbackMonthFilter ? feedbackMonthFilter.value : "";
+      const selectedLimit = feedbackLimitFilter
+        ? Number(feedbackLimitFilter.value || 20)
+        : 20;
+    
       let query = client
         .from("user_feedback")
         .select("id,user_id,type,message,page_path,user_agent,status,admin_reply,replied_at,created_at")
         .order("created_at", { ascending: false })
-        .limit(100);
-
-      const selectedStatus = statusFilter.value;
-
+        .limit(selectedLimit);
+    
       if(selectedStatus !== "all"){
         query = query.eq("status", selectedStatus);
       }
-
+    
+      const monthRange = monthRangeFromInput(selectedMonth);
+    
+      if(monthRange){
+        query = query
+          .gte("created_at", monthRange.start)
+          .lt("created_at", monthRange.end);
+      }
+    
       const { data, error } = await query;
-
+    
       refreshBtn.disabled = false;
-
+    
       if(error){
         console.error(error);
         setStatus("便りを読み込めませんでした。権限またはRLS設定を確認してください。", true);
         return;
       }
-
-      setStatus(data.length + " 件の便りを表示しています。");
+    
+      const filterParts = [];
+    
+      filterParts.push(data.length + " 件の便りを表示しています");
+    
+      if(selectedStatus !== "all"){
+        filterParts.push("状態：" + statusLabel(selectedStatus));
+      }else{
+        filterParts.push("状態：すべて");
+      }
+    
+      if(selectedMonth){
+        filterParts.push("月：" + selectedMonth);
+      }
+    
+      filterParts.push("表示件数：" + selectedLimit + "件");
+    
+      setStatus(filterParts.join(" / "));
       renderFeedback(data);
     }
 
@@ -1720,6 +1848,23 @@
     sendNoticeBtn.addEventListener("click", sendAdminNotice);
     clearNoticeBtn.addEventListener("click", clearNoticeForm);
 
+    if(clearFeedbackFiltersBtn){
+      clearFeedbackFiltersBtn.addEventListener("click", async function(){
+        statusFilter.value = "open";
+    
+        if(feedbackMonthFilter){
+          feedbackMonthFilter.value = "";
+        }
+    
+        if(feedbackLimitFilter){
+          feedbackLimitFilter.value = "20";
+        }
+    
+        await loadFeedback();
+        await loadAnnouncementHistory();
+      });
+    }
+
     refreshBtn.addEventListener("click", async function(){
       await loadFeedback();
       await loadAnnouncementHistory();
@@ -1729,6 +1874,20 @@
       await loadFeedback();
       await loadAnnouncementHistory();
     });
+
+    if(feedbackMonthFilter){
+      feedbackMonthFilter.addEventListener("change", async function(){
+        await loadFeedback();
+        await loadAnnouncementHistory();
+      });
+    }
+
+    if(feedbackLimitFilter){
+      feedbackLimitFilter.addEventListener("change", async function(){
+        await loadFeedback();
+        await loadAnnouncementHistory();
+      });
+    }
 
     logoutLink.addEventListener("click", async function(event){
       event.preventDefault();
