@@ -121,6 +121,73 @@
       box-shadow:0 18px 42px rgba(0,0,0,.28);
     }
 
+    .admin-notice-details{
+      margin:0 0 24px;
+    }
+
+    .admin-notice-details summary{
+      list-style:none;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .admin-notice-details summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .admin-notice-summary{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(70,84,132,.55);
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.08), transparent 44%),
+        rgba(10,14,28,.78);
+      box-shadow:0 18px 42px rgba(0,0,0,.28);
+    }
+
+    .admin-notice-summary-title{
+      color:var(--text);
+      font-size:15px;
+      line-height:1.7;
+    }
+
+    .admin-notice-summary-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+      margin-top:2px;
+    }
+
+    .admin-notice-summary-mark{
+      color:var(--accent);
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    .admin-notice-details[open] .admin-notice-summary{
+      border-color:rgba(169,183,255,.55);
+    }
+
+    .admin-notice-details[open] .admin-notice-summary-mark{
+      color:var(--ready);
+    }
+
+    .admin-notice-details[open] .admin-notice-summary-mark::before{
+      content:"閉じる";
+    }
+
+    .admin-notice-details:not([open]) .admin-notice-summary-mark::before{
+      content:"開く";
+    }
+
+    .admin-notice-details .admin-notice-panel{
+      margin:12px 0 24px;
+    }
+
     .admin-notice-title{
       font-size:16px;
       line-height:1.7;
@@ -498,55 +565,69 @@
         </button>
       </div>
 
-      <section class="admin-notice-panel" aria-label="管理者からのお知らせ">
-        <h2 class="admin-notice-title">管理者からのお知らせ</h2>
-        <p class="admin-notice-note">
-          サイト内通知として、選択ユーザーまたは全ユーザーへお知らせを送ります。メール送信は行いません。
-        </p>
+            <details class="admin-notice-details">
+        <summary>
+          <div class="admin-notice-summary">
+            <div>
+              <div class="admin-notice-summary-title">管理者からのお知らせ</div>
+              <div class="admin-notice-summary-note">
+                全ユーザーまたは選択ユーザーへ、サイト内通知を送ります。
+              </div>
+            </div>
+            <div class="admin-notice-summary-mark" aria-hidden="true"></div>
+          </div>
+        </summary>
 
-        <div class="admin-notice-grid">
-          <select id="noticeTargetType">
-            <option value="selected">選択ユーザー</option>
-            <option value="all">全ユーザー</option>
-          </select>
+        <section class="admin-notice-panel" aria-label="管理者からのお知らせ">
+          <h2 class="admin-notice-title">管理者からのお知らせを作成</h2>
+          <p class="admin-notice-note">
+            サイト内通知として、選択ユーザーまたは全ユーザーへお知らせを送ります。メール送信は行いません。
+          </p>
 
-          <select id="noticeUserSelect">
-            <option value="">ユーザーを読み込んでいます</option>
-          </select>
-        </div>
+          <div class="admin-notice-grid">
+            <select id="noticeTargetType">
+              <option value="selected">選択ユーザー</option>
+              <option value="all">全ユーザー</option>
+            </select>
 
-        <div class="selected-user-preview" id="selectedUserPreview">
-          送信先ユーザーを選択してください。
-        </div>
+            <select id="noticeUserSelect">
+              <option value="">ユーザーを読み込んでいます</option>
+            </select>
+          </div>
 
-        <div class="admin-notice-field">
-          <label for="noticeTitleInput">Title</label>
-          <input
-            class="admin-notice-input"
-            id="noticeTitleInput"
-            type="text"
-            placeholder="お知らせのタイトル"
-          />
-        </div>
+          <div class="selected-user-preview" id="selectedUserPreview">
+            送信先ユーザーを選択してください。
+          </div>
 
-        <div class="admin-notice-field">
-          <label for="noticeMessageInput">Message</label>
-          <textarea
-            class="admin-notice-textarea"
-            id="noticeMessageInput"
-            placeholder="ユーザーに表示するお知らせ本文を書きます。"
-          ></textarea>
-        </div>
+          <div class="admin-notice-field">
+            <label for="noticeTitleInput">Title</label>
+            <input
+              class="admin-notice-input"
+              id="noticeTitleInput"
+              type="text"
+              placeholder="お知らせのタイトル"
+            />
+          </div>
 
-        <div class="admin-notice-actions">
-          <button class="primary" id="sendNoticeBtn" type="button">
-            お知らせを送信
-          </button>
-          <button class="ghost" id="clearNoticeBtn" type="button">
-            入力をクリア
-          </button>
-        </div>
-      </section>
+          <div class="admin-notice-field">
+            <label for="noticeMessageInput">Message</label>
+            <textarea
+              class="admin-notice-textarea"
+              id="noticeMessageInput"
+              placeholder="ユーザーに表示するお知らせ本文を書きます。"
+            ></textarea>
+          </div>
+
+          <div class="admin-notice-actions">
+            <button class="primary" id="sendNoticeBtn" type="button">
+              お知らせを送信
+            </button>
+            <button class="ghost" id="clearNoticeBtn" type="button">
+              入力をクリア
+            </button>
+          </div>
+        </section>
+      </details>
 
       <div class="status" id="status"></div>
 
@@ -583,6 +664,7 @@
     const refreshBtn = document.getElementById("refreshBtn");
     const logoutLink = document.getElementById("logoutLink");
 
+    const adminNoticeDetails = document.querySelector(".admin-notice-details");
     const noticeTargetType = document.getElementById("noticeTargetType");
     const noticeUserSelect = document.getElementById("noticeUserSelect");
     const selectedUserPreview = document.getElementById("selectedUserPreview");
@@ -986,6 +1068,10 @@
 
       setStatus("お知らせを送信しました。対象：" + targetUsers.length + " 人");
       clearNoticeForm();
+
+      if(adminNoticeDetails){
+        adminNoticeDetails.open = false;
+      }
     }
 
     async function saveAdminReply(id, reply){
