@@ -469,6 +469,7 @@
     .feedback-list{
       display:grid;
       gap:16px;
+      margin-bottom:24px;
     }
 
     .feedback-card{
@@ -713,6 +714,10 @@
         </button>
       </div>
 
+      <div class="status" id="status"></div>
+
+      <div class="feedback-list" id="feedbackList"></div>
+
             <details class="admin-notice-details">
         <summary>
           <div class="admin-notice-summary">
@@ -827,9 +832,6 @@
         </section>
       </details>
 
-      <div class="status" id="status"></div>
-
-      <div class="feedback-list" id="feedbackList"></div>
     </main>
 
     <footer>
@@ -1612,10 +1614,10 @@
         doneMessage += " / 航海燃料 +" + fuelAmount + " を付与しました。";
       }
       
-    setStatus(doneMessage);
+      setStatus(doneMessage);
       clearNoticeForm();
       await loadAnnouncementHistory();
-      
+        
       if(adminNoticeDetails){
         adminNoticeDetails.open = false;
       }
@@ -1723,7 +1725,10 @@
       await loadAnnouncementHistory();
     });
     
-    statusFilter.addEventListener("change", loadFeedback);
+    statusFilter.addEventListener("change", async function(){
+      await loadFeedback();
+      await loadAnnouncementHistory();
+    });
 
     logoutLink.addEventListener("click", async function(event){
       event.preventDefault();
