@@ -605,6 +605,91 @@
       margin-bottom:16px;
     }
 
+    .announcement{
+      background:
+        radial-gradient(circle at top left, rgba(169,183,255,.075), transparent 44%),
+        rgba(10,14,28,.68);
+      border:1px solid rgba(70,84,132,.45);
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .announcement.unread{
+      border-color:rgba(255,227,163,.34);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.075), transparent 44%),
+        rgba(10,14,28,.72);
+    }
+
+    .announcement-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .announcement-title{
+      font-size:17px;
+      line-height:1.7;
+      color:var(--text);
+    }
+
+    .announcement-status{
+      font-size:12px;
+      border:1px solid rgba(160,168,187,.28);
+      border-radius:999px;
+      padding:5px 11px;
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+    }
+
+    .announcement-status.unread{
+      color:#ffe3a3;
+      border-color:rgba(255,227,163,.35);
+      background:rgba(255,227,163,.06);
+    }
+
+    .announcement-body{
+      white-space:pre-wrap;
+      font-size:14px;
+      line-height:2;
+      color:var(--muted);
+      margin:0 0 14px;
+    }
+
+    .announcement-reward{
+      display:none;
+      margin:14px 0;
+      padding:12px 13px;
+      border-radius:14px;
+      border:1px solid rgba(255,227,163,.26);
+      background:rgba(255,227,163,.055);
+      color:#ffe3a3;
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    .announcement-reward.visible{
+      display:block;
+    }
+
+    .announcement-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .announcement-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
     .note{
       max-width:760px;
       font-size:13px;
@@ -653,6 +738,9 @@
         font-size:12px;
       }
 
+      .announcement-actions button{
+        width:100%;
+      }
       
       .nav-menu{
         position:absolute;
@@ -832,6 +920,16 @@
         <div class="status" id="status"></div>
       </section>
 
+      <section id="admin-announcements">
+        <h2 class="section-title">港からのお知らせ</h2>
+
+        <div id="adminAnnouncements">
+          <div class="empty">
+            港からのお知らせを確認しています...
+          </div>
+        </div>
+      </section>
+      
       <section>
         <h2 class="section-title">潮の便り</h2>
       
@@ -925,6 +1023,7 @@
     const ticketsEl = document.getElementById("tickets");
     const tideLettersEl = document.getElementById("tideLetters");
     const activeVoyageBanner = document.getElementById("activeVoyageBanner");
+    const adminAnnouncementsEl = document.getElementById("adminAnnouncements");
 
     
     let currentUser = null;
@@ -1324,6 +1423,7 @@
         await loadActiveSpecialVoyageBanner();
         await expireMyTideLetters();
         await expireMyVoyageTickets();
+        await loadAdminAnnouncements();
         await loadTickets();
         await loadTideLetters();
         
@@ -1395,6 +1495,220 @@
         console.log("expire_my_voyage_tickets:", data);
       }catch(error){
         console.warn("expire voyage tickets error:", error);
+      }
+    }
+
+    function announcementReadStatusText(row){
+      return row.read_at ? "既読" : "未読";
+    }
+
+    function announcementReadStatusClass(row){
+      return row.read_at ? "announcement-status" : "announcement-status unread";
+    }
+
+    function buildAnnouncementRewardText(rewards){
+      if(!Array.isArray(rewards) || rewards.length === 0){
+        return "";
+      }
+
+      const fuelReward = rewards.find(function(row){
+        return row.reward_type === "fuel" && row.reward_key === "monthly_fuel";
+      });
+
+      if(!fuelReward){
+        return "";
+      }
+
+      return (
+        "航海燃料 +" +
+        String(fuelReward.quantity || 0) +
+        " が付与されました。" +
+        (fuelReward.month_key ? " 対象月：" + fuelReward.month_key : "")
+      );
+    }
+
+    async function loadAdminAnnouncements(){
+      if(!currentUser || !currentAccessToken || !adminAnnouncementsEl){
+        return;
+      }
+
+      try{
+        const recipients = await fetchSupabase(
+          "/rest/v1/admin_announcement_recipients" +
+            "?user_id=eq." + encodeURIComponent(currentUser.id) +
+            "&select=id,announcement_id,read_at,created_at" +
+            "&order=created_at.desc" +
+            "&limit=30",
+          {
+            method:"GET"
+          }
+        );
+
+        if(!Array.isArray(recipients) || recipients.length === 0){
+          adminAnnouncementsEl.innerHTML = `
+            <div class="empty">
+              現在、港からのお知らせはありません。
+            </div>
+          `;
+          return;
+        }
+
+        const announcementIds = recipients
+          .map(function(row){
+            return row.announcement_id;
+          })
+          .filter(Boolean);
+
+        const announcements = await fetchSupabase(
+          "/rest/v1/admin_announcements" +
+            "?id=in.(" + announcementIds.map(encodeURIComponent).join(",") + ")" +
+            "&select=id,title,message,target_type,created_at",
+          {
+            method:"GET"
+          }
+        );
+
+        const rewards = await fetchSupabase(
+          "/rest/v1/admin_reward_grants" +
+            "?user_id=eq." + encodeURIComponent(currentUser.id) +
+            "&announcement_id=in.(" + announcementIds.map(encodeURIComponent).join(",") + ")" +
+            "&select=announcement_id,reward_type,reward_key,quantity,month_key,granted_at",
+          {
+            method:"GET"
+          }
+        );
+
+        const announcementMap = new Map();
+
+        (announcements || []).forEach(function(item){
+          announcementMap.set(item.id, item);
+        });
+
+        const rewardsByAnnouncement = new Map();
+
+        (rewards || []).forEach(function(reward){
+          const key = reward.announcement_id;
+
+          if(!rewardsByAnnouncement.has(key)){
+            rewardsByAnnouncement.set(key, []);
+          }
+
+          rewardsByAnnouncement.get(key).push(reward);
+        });
+
+        renderAdminAnnouncements(
+          recipients,
+          announcementMap,
+          rewardsByAnnouncement
+        );
+
+      }catch(error){
+        console.error("admin announcements load error:", error);
+
+        adminAnnouncementsEl.innerHTML = `
+          <div class="empty">
+            港からのお知らせを読み込めませんでした。<br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
+    function renderAdminAnnouncements(
+      recipients,
+      announcementMap,
+      rewardsByAnnouncement
+    ){
+      if(!adminAnnouncementsEl){
+        return;
+      }
+
+      adminAnnouncementsEl.innerHTML = "";
+
+      const sortedRecipients = (recipients || []).slice().sort(function(a, b){
+        if(!a.read_at && b.read_at) return -1;
+        if(a.read_at && !b.read_at) return 1;
+
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+
+      sortedRecipients.forEach(function(recipient){
+        const announcement = announcementMap.get(recipient.announcement_id);
+
+        if(!announcement){
+          return;
+        }
+
+        const rewardText = buildAnnouncementRewardText(
+          rewardsByAnnouncement.get(announcement.id) || []
+        );
+
+        const div = document.createElement("div");
+        div.className = recipient.read_at
+          ? "announcement"
+          : "announcement unread";
+
+        div.innerHTML = `
+          <div class="announcement-top">
+            <div class="announcement-title">
+              ${escapeHtml(announcement.title || "港からのお知らせ")}
+            </div>
+
+            <div class="${escapeHtml(announcementReadStatusClass(recipient))}">
+              ${escapeHtml(announcementReadStatusText(recipient))}
+            </div>
+          </div>
+
+          <p class="announcement-body">
+            ${escapeHtml(announcement.message || "")}
+          </p>
+
+          <div class="announcement-reward ${rewardText ? "visible" : ""}">
+            ${escapeHtml(rewardText)}
+          </div>
+
+          <div class="announcement-meta">
+            <span class="tag">
+              届いた日時：${escapeHtml(formatDate(announcement.created_at))}
+            </span>
+
+            ${
+              recipient.read_at
+                ? `
+                  <span class="tag">
+                    確認日時：${escapeHtml(formatDate(recipient.read_at))}
+                  </span>
+                `
+                : ""
+            }
+          </div>
+
+          ${
+            recipient.read_at
+              ? ""
+              : `
+                <div class="announcement-actions">
+                  <button
+                    class="btn-primary"
+                    type="button"
+                    data-admin-announcement-read-id="${escapeHtml(recipient.id)}"
+                  >
+                    確認しました
+                  </button>
+                </div>
+              `
+          }
+        `;
+
+        adminAnnouncementsEl.appendChild(div);
+      });
+
+      if(adminAnnouncementsEl.innerHTML.trim() === ""){
+        adminAnnouncementsEl.innerHTML = `
+          <div class="empty">
+            現在、港からのお知らせはありません。
+          </div>
+        `;
       }
     }
 
@@ -1501,6 +1815,37 @@
         normalizeTicketType(ticket.ticket_type) === normalizeTicketType(letter.ticket_type) &&
         Number(ticket.duration_minutes) === Number(letter.duration_minutes)
       );
+    }
+
+    async function markAdminAnnouncementAsRead(recipientId){
+      if(!recipientId || !currentUser){
+        return;
+      }
+
+      setStatus("お知らせを確認済みにしています。");
+
+      try{
+        const { error } = await client
+          .from("admin_announcement_recipients")
+          .update({
+            read_at: new Date().toISOString()
+          })
+          .eq("id", recipientId)
+          .eq("user_id", currentUser.id);
+
+        if(error){
+          console.error("admin announcement read error:", error);
+          setStatus("お知らせの既読保存に失敗しました：" + error.message, true);
+          return;
+        }
+
+        setStatus("お知らせを確認済みにしました。");
+        await loadAdminAnnouncements();
+
+      }catch(error){
+        console.error("admin announcement read catch:", error);
+        setStatus("お知らせの既読保存に失敗しました：" + error.message, true);
+      }
     }
 
     function canClaimTideLetter(letter){
@@ -1782,6 +2127,23 @@
         claimButton.textContent = "受け取り中...";
     
         claimTideLetter(tideLetterId);
+      });
+    }
+
+    if(adminAnnouncementsEl){
+      adminAnnouncementsEl.addEventListener("click", function(event){
+        const readButton = event.target.closest("[data-admin-announcement-read-id]");
+
+        if(!readButton){
+          return;
+        }
+
+        const recipientId = readButton.getAttribute("data-admin-announcement-read-id");
+
+        readButton.disabled = true;
+        readButton.textContent = "確認中...";
+
+        markAdminAnnouncementAsRead(recipientId);
       });
     }
 
