@@ -816,8 +816,8 @@
         </h1>
 
         <p class="lead">
-          ここでは、最近の航海記録から残っている灯りや、今の航海に漂う気配を静かに確認できます。<br>
-          記録を書く場所ではなく、港の現在地を眺める場所です。
+          Harbor Status（あなたの航海状況）では、これまで残してきた言葉から、今の船・海域・港に残る気配を確認できます。<br>
+          記録を書く場所ではなく、あなたの人生の航海がどこまで進んだかを眺める場所です。
         </p>
       </div>
 
@@ -850,19 +850,20 @@
             </div>
       
             <div class="stat-box">
-              <div class="stat-label">船</div>
+              <div class="stat-label">（継続の証）</div>
               <div class="stat-value" id="vesselCount">—</div>
             </div>
       
             <div class="stat-box">
-              <div class="stat-label">漂着物</div>
+              <div class="stat-label">漂着物<br>（思い出の欠片）</div>
               <div class="stat-value" id="itemCount">—</div>
             </div>
           </div>
       
           <div class="small-meta">
-            船や漂着物は、記録を続けてきた証として港に残ります。
+            船（継続の証）や漂着物（思い出の欠片）は、航海記録を続けてきた証として港に残ります。
           </div>
+          
         </article>
       
         <article class="card wide current-location-card">
@@ -871,7 +872,7 @@
         
           <div class="current-location-grid">
             <div class="current-location-item">
-              <div class="current-location-label">船</div>
+              <div class="current-location-label">船（継続の証）</div>
               <div class="current-location-name" id="currentVesselName">確認中</div>
               <div class="current-location-text" id="currentVesselText">
                 現在の船を確認しています。
@@ -879,7 +880,7 @@
             </div>
         
             <div class="current-location-item">
-              <div class="current-location-label">海域</div>
+              <div class="current-location-label">海域（人生のテーマ）</div>
               <div class="current-location-name" id="currentAreaName">確認中</div>
               <div class="current-location-text" id="currentAreaText">
                 現在の海域を確認しています。
@@ -889,7 +890,7 @@
         </article>
       
         <article class="card wide">
-          <div class="card-label">次の船</div>
+          <div class="card-label">次の船（継続の証）</div>
           <div class="card-title" id="nextVesselName">
             次の船の建造状況を確認しています。
           </div>
@@ -898,7 +899,7 @@
           <div class="build-list" id="buildList"></div>
       
           <div class="small-meta" id="buildSummary">
-            必要な漂着物を確認しています。
+            必要な漂着物（思い出の欠片）を確認しています。
           </div>
         </article>
       
@@ -963,7 +964,8 @@
           <div class="card-label">次に進む場所</div>
           <div class="card-title">今日の航海を書く</div>
           <div class="card-text">
-            現在地を確認したら、今日の言葉を航海記録として残せます。
+            現在地を確認したら、今日の言葉を航海記録として残せます。<br>
+            一言ずつ残した言葉が、船（継続の証）や海域（人生のテーマ）につながっていきます。
           </div>
       
           <div class="actions">
@@ -1494,10 +1496,10 @@
         itemCount.textContent = "0個";
 
         currentVesselName.textContent = "まだ船は静かです";
-        currentVesselText.textContent = "航海を続けることで、船が港に現れます。";
+        currentVesselText.textContent = "航海を続けることで、船（継続の証）が港に現れます。";
 
         currentAreaName.textContent = "まだ海域は静かです";
-        currentAreaText.textContent = "航海が進むと、海の広がりが見えてきます。";
+        currentAreaText.textContent = "航海が進むと、海域（人生のテーマ）の広がりが見えてきます。";
         return;
       }
 
@@ -1514,7 +1516,7 @@
 
       currentVesselText.textContent =
         harborSummary.current_vessel_description ||
-        "この船は、これまでの航海を支えてきた証です。";
+        "この船は、これまでの航海を支えてきた継続の証です。";
 
       currentAreaName.textContent =
         harborSummary.current_area_name_ja ||
@@ -1523,13 +1525,13 @@
 
       currentAreaText.textContent =
         harborSummary.current_area_description ||
-        "いま開かれている海域です。";
+        "いま開かれている海域（人生のテーマ）です。";
     }
 
     function renderNextVesselRequirements(){
       if(!Array.isArray(nextVesselRequirements) || nextVesselRequirements.length === 0){
         nextVesselName.textContent = "次の船はまだ静かです";
-        nextVesselText.textContent = "次の船の建造条件が見つかりませんでした。";
+        nextVesselText.textContent = "次の船（継続の証）の建造条件が見つかりませんでした。";
         buildList.innerHTML = "";
         buildSummary.textContent = "";
         return;
@@ -1546,7 +1548,7 @@
 
       nextVesselText.textContent =
         first.next_vessel_description ||
-        "必要な漂着物が揃うと、新しい船を建造できます。";
+        "必要な漂着物（思い出の欠片）が揃うと、新しい船（継続の証）を建造できます。";
 
       let missingTotal = 0;
 
@@ -1574,12 +1576,12 @@
 
       if(first.all_ready){
         buildSummary.textContent =
-          "必要な漂着物はすべて揃っています。新しい船を建造できます。";
+          "必要な漂着物（思い出の欠片）はすべて揃っています。新しい船（継続の証）を建造できます。";
         return;
       }
 
       buildSummary.textContent =
-        "あと" + missingTotal + "個の漂着物で、次の船に近づきます。";
+        "あと" + missingTotal + "個の漂着物（思い出の欠片）で、次の船（継続の証）に近づきます。";
     }
 
     async function loadHarborSummary(){
