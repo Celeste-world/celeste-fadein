@@ -1105,8 +1105,8 @@
       </h1>
 
       <p class="lead">
-        ここでは、これまでに見つかった漂着物を海域ごとに確認できます。<br>
-        開いた海から届いたものだけが、静かに港へ積もっていきます。
+        ここでは、これまでに見つかった漂着物（思い出の欠片）を海域（人生のテーマ）ごとに確認できます。<br>
+        日々の航海記録から届いた小さな欠片が、静かに港へ積もっていきます。
       </p>
 
       <section class="panel">
@@ -1127,9 +1127,10 @@
         </div>
 
         <p class="note">
-          未発見のものは名前を表示しません。<br>
-          発見数だけが、海域ごとに静かに積もっていきます。
-        </p>
+        未発見の漂着物（思い出の欠片）は名前を表示しません。<br>
+        発見数だけが、海域（人生のテーマ）ごとに静かに積もっていきます。
+      </p>
+        
       </section>
     </main>
 
@@ -1175,8 +1176,6 @@
         return;
       }
     
-      console.log("unread harbor replies:", data);
-    
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
     
@@ -1185,10 +1184,6 @@
         });
       }
     }
-    console.log(
-      "body has-unread-letter:",
-      document.body.classList.contains("has-unread-letter")
-    );
     
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -1467,7 +1462,7 @@
 
       const descriptionText =
         detail.description ||
-        "静かに港へ届いた漂着物です。";
+        "静かに港へ届いた漂着物（思い出の欠片）です。";
 
       const originHtml = detail.origin_text && detail.origin_text !== descriptionText
         ? `<p class="item-detail-origin">${escapeHtml(detail.origin_text)}</p>`
@@ -1485,7 +1480,7 @@
 
           <div>
             <div class="item-detail-kicker">
-              ${detail.kind === "special" ? "特別航海の漂着物" : "港の漂着物"}
+              ${detail.kind === "special" ? "特別航海の漂着物（思い出の欠片）" : "港の漂着物（思い出の欠片）"}
             </div>
 
             <div class="item-detail-title">
@@ -2072,8 +2067,8 @@
           item.description ||
           item.origin_text ||
           (kind === "special"
-            ? "特別航海で見つかった漂着物です。本来の海域は、まだ霧の向こうにあります。海域が開かれると、この漂着物は本来の海域の記録へ移ります。"
-            : "静かに港へ届いた漂着物です。"),
+            ? "特別航海で見つかった漂着物（思い出の欠片）です。本来の海域（人生のテーマ）は、まだ霧の向こうにあります。海域が開かれると、この漂着物は本来の海域の記録へ移ります。"
+            : "静かに港へ届いた漂着物（思い出の欠片）です。"),
         origin_text:
           kind === "special"
             ? ""
@@ -2106,7 +2101,7 @@
             <div class="find-name">${escapeHtml(name)}</div>
 
             <p class="find-line">
-              ${escapeHtml(item.origin_text || item.description || "静かに港へ届いた漂着物です。")}
+              ${escapeHtml(item.origin_text || item.description || "静かに港へ届いた漂着物（思い出の欠片）です。")}
             </p>
 
             <div class="find-meta">
@@ -2151,8 +2146,8 @@
               <div class="area-kicker">特別航海の漂着物</div>
               <div class="area-title">特別航海で届いた漂着物</div>
                 <p class="area-desc">
-                  本来の海域がまだ霧の向こうにあるため、ここに静かに預けられています。<br>
-                  海域が開かれると、その漂着物は本来の海域の記録へ移ります。
+                  本来の海域（人生のテーマ）がまだ霧の向こうにあるため、ここに静かに預けられています。<br>
+                  海域が開かれると、その漂着物（思い出の欠片）は本来の海域の記録へ移ります。
                 </p>
             </div>
 
@@ -2266,7 +2261,7 @@
           ? areaItems.map(item => renderItemCard(item)).join("")
           : `
             <div class="area-empty">
-              この海域から届いた漂着物は、まだありません。
+              この海域（人生のテーマ）から届いた漂着物（思い出の欠片）は、まだありません。
             </div>
           `;
 
@@ -2319,7 +2314,7 @@
                 <div class="area-kicker">霧の向こう</div>
                 <div class="area-title">霧の向こう</div>
                 <p class="area-desc">
-                  まだ開かれていない海域です。漂着物の記録も、今は霧の中にあります。
+                  まだ開かれていない海域（人生のテーマ）です。漂着物（思い出の欠片）の記録も、今は霧の中にあります。
                 </p>
               </div>
       
