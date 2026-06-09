@@ -1292,7 +1292,7 @@
 
       <p class="lead">
         特別航海は、ただ言葉を置くだけの場所ではありません。<br>
-        いつもの記録より少し深く振り返り、言葉を整え、港に何かが届く気配を強めるための短い時間です。
+        いつもの記録より少し深く振り返り、言葉を整え、漂着物（思い出の欠片）が届く気配を強めるための短い時間です。
       </p>
 
       <p class="lead">
@@ -1336,7 +1336,7 @@
               </div>
           
               <div class="voyage-logbook-chip">
-                <div class="voyage-logbook-chip-label">漂着</div>
+                <div class="voyage-logbook-chip-label">漂着物</div>
                 <div class="voyage-logbook-chip-value" id="voyageLogbookFinds">
                   漂着の気配：まだ静か
                 </div>
@@ -1395,7 +1395,7 @@
             <div class="special-reply-text" id="specialReplyText"></div>
 
             <div class="special-find" id="specialFind">
-              <div class="special-find-label">漂着物が届きました</div>
+              <div class="special-find-label">漂着物（思い出の欠片）が届きました</div>
               <div class="special-find-text" id="specialFindText"></div>
             
               <div class="actions">
@@ -1408,15 +1408,13 @@
         </div>
 
         <p class="note">
-          深く向き合う航海ほど、港に何かが流れ着く気配も強くなります。<br>
+          深く向き合う航海ほど、漂着物（思い出の欠片）が流れ着く気配も強くなります。<br>
           Drift Ticket（漂着チケット）は、港にたまたま漂着する短い航海券です。<br>
           Special Voyage Ticket（特別航海チケット）は、いつもより少し深く振り返りたいときに使うチケットです。<br>
           Deep Sea Ticket（深海チケット）は、さらに深い内省や整理をしたいときに使うチケットです。
         </p>
       </section>
     </main>
-
-    
 
   </div>
 
@@ -1458,16 +1456,16 @@
         ×
       </button>
   
-      <div class="item-acquired-label">漂着物</div>
+      <div class="item-acquired-label">漂着物（思い出の欠片）</div>
   
       <div class="item-acquired-title">
-        漂着物が届きました
+        漂着物（思い出の欠片）が届きました
       </div>
   
       <div class="item-acquired-item" id="itemAcquiredItem"></div>
   
       <div class="item-acquired-text">
-        この航海の余韻として、船に収められています。
+        この航海の余韻として、船（継続の証）に収められています。
       </div>
     </div>
   </div>
@@ -1545,9 +1543,7 @@
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-    
-      console.log("unread harbor replies:", data);
-    
+
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
     
@@ -1555,11 +1551,6 @@
           link.title = "港から返事が届いています";
         });
       }
-    
-      console.log(
-        "body has-unread-letter:",
-        document.body.classList.contains("has-unread-letter")
-      );
     }
     
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
@@ -1776,7 +1767,7 @@
             "短い航海なので、今置きたい言葉だけを静かに持って入ってください。",
           button: "漂着チケットで航海を開始する",
           benefits: [
-            "最大1個まで漂着物が届く可能性があります",
+            "最大1個まで漂着物（思い出の欠片）が届く可能性があります",
             "必ず届くとは限りません",
             "無料で、少し深い振り返りの入口を試せます"
           ]
@@ -1789,10 +1780,10 @@
           lead:
             "さらに深い内省や整理の航海を開始できます。",
           note:
-            "深海系の漂着物が届きやすくなります。ただし、必ず届くとは限りません",
+            "深海系の漂着物（思い出の欠片）が届きやすくなります。ただし、必ず届くとは限りません",
           button: "深海航海を開始する",
           benefits: [
-            "最大2個まで漂着物が届く可能性があります",
+            "最大2個まで漂着物（思い出の欠片）が届く可能性があります",
             "深海系アイテムの抽選率が高まります",
             "必ず届くとは限りません"
           ]
@@ -1808,7 +1799,7 @@
             "2個目の漂着物が届く可能性があります。ただし、2個目は低確率です。",
           button: "20分チケットで航海を開始する",
           benefits: [
-            "最大2個まで漂着物が届く可能性があります",
+            "最大2個まで漂着物（思い出の欠片）が届く可能性があります",
             "2個目は低確率です",
             "必ず届くとは限りません"
           ]
@@ -1820,10 +1811,10 @@
         lead:
           "10分の特別航海を開始できます。",
         note:
-          "通常の 日々の記録より、漂着物が届く気配が強まります。",
+          "通常の日々の記録より、漂着物（思い出の欠片）が届く気配が強まります。",
         button: "10分チケットで航海を開始する",
         benefits: [
-          "最大1個まで漂着物が届く可能性があります",
+          "最大1個まで漂着物（思い出の欠片）が届く可能性があります",
           "必ず届くとは限りません",
           "言葉を短い時間で静かに整えられます"
         ]
@@ -2082,7 +2073,7 @@
       }
     
       if(finds > 0){
-        return "この航海には、言葉と漂着の気配が残っています。\n船は、少しだけ深い海の記録を港へ持ち帰ろうとしています。";
+        return "この航海には、言葉と漂着物（思い出の欠片）の気配が残っています。\n船（継続の証）は、少しだけ深い海の記録を港へ持ち帰ろうとしています。";
       }
     
       if(words === 1){
@@ -3018,18 +3009,18 @@
         .filter(Boolean);
     
       if(names.length === 0){
-        return "漂着物が届きました。\n波の間から届いたものが、この航海の記録として船に収められています。";
+        return "漂着物（思い出の欠片）が届きました。\n波の間から届いたものが、この航海の記録として船（継続の証）に収められています。";
       }
     
       if(names.length === 1){
-        return "漂着物が届きました。\n「" + names[0] + "」が、この航海の余韻として船に収められています。";
+        return "漂着物（思い出の欠片）が届きました。\n「" + names[0] + "」が、この航海の余韻として船（継続の証）に収められています。";
       }
     
-      return "漂着物が届きました。\n" +
+      return "漂着物（思い出の欠片）が届きました。\n" +
         names.slice(0, 3).map(function(name){
           return "・" + name;
         }).join("\n") +
-        "\nこれらは、この航海の余韻として船に収められています。";
+        "\nこれらは、この航海の余韻として船（継続の証）に収められています。";
   　  }
     
     function seaResponseForReusedRolls(payload, rewards){
@@ -3042,7 +3033,7 @@
       });
     
       if(foundRewards.length > 0){
-        return "この航海で届いたものは、すでに船に収められています。\n新しい漂着ではありませんが、その記録はまだ航海の中に残っています。";
+        return "この航海で届いたものは、すでに船（継続の証）に収められています。\n新しい漂着物（思い出の欠片）ではありませんが、その記録はまだ航海の中に残っています。";
       }
     
       return "";
