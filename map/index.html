@@ -1806,14 +1806,14 @@
       </h1>
 
       <p class="lead">
-        ここでは、いま開いている海域と、まだ霧の向こうにある海域を確認できます。<br>
+        ここでは、いま開いている海域（人生のテーマ）と、まだ霧の向こうにある海域を確認できます。<br>
         すべての海が最初から見えているわけではありません。<br>
-        航海記録と漂着物が、少しずつ次の海を開いていきます。
+        航海記録と漂着物（思い出の欠片）、そして船（継続の証）が、少しずつ次の海を開いていきます。
       </p>
 
       <div class="map-guide">
-        開いている海域は淡い緑、未開放の海域は霧の色で表示されます。
-        海域を開くには、航海記録と漂着物、そして船の準備が関わります。<br>
+        開いている海域（人生のテーマ）は淡い緑、未開放の海域は霧の色で表示されます。
+        海域を開くには、航海記録、漂着物（思い出の欠片）、そして船（継続の証）の準備が関わります。<br>
         漂着の気配は、その海域に静かに漂う予兆です。必ず何かが流れ着く合図ではありません。
       </div>
 
@@ -1838,8 +1838,8 @@
       </div>
 
       <p class="note">
-        未開放の海域は、ひとつの霧として表示されます。<br>
-        海域が開くたびに、港から見える世界と、航海で出会えるものの範囲が少しずつ広がっていきます。<br>
+        未開放の海域（人生のテーマ）は、ひとつの霧として表示されます。<br>
+        海域が開くたびに、港から見える世界と、航海で出会える漂着物（思い出の欠片）の範囲が少しずつ広がっていきます。<br>
         その向こうに何があるのかは、航海が進むまで静かに伏せられています。
       </p>
     </main>
@@ -1859,14 +1859,14 @@
         ×
       </button>
   
-      <div class="unlock-modal-label">新しい海域</div>
+      <div class="unlock-modal-label">新しい海域（人生のテーマ）</div>
   
       <div class="unlock-modal-title" id="seaUnlockTitle">
         新しい海が開きました
       </div>
   
       <div class="unlock-modal-text" id="seaUnlockText">
-        霧の向こうに、新しい海が姿を見せました。
+        霧の向こうに、新しい海域（人生のテーマ）が姿を見せました。
       </div>
   
       <div class="unlock-modal-image-wrap" id="seaUnlockImageWrap">
@@ -1885,7 +1885,7 @@
     </div>
   </div>
 
-　<div class="item-detail-modal" id="itemDetailModal" aria-hidden="true">
+  <div class="item-detail-modal" id="itemDetailModal" aria-hidden="true">
     <div class="item-detail-card" role="dialog" aria-modal="true" aria-labelledby="itemDetailTitle">
       <button
         class="item-detail-close"
@@ -1896,10 +1896,10 @@
         ×
       </button>
   
-      <div class="item-detail-label">漂着物</div>
+      <div class="item-detail-label">漂着物（思い出の欠片）</div>
   
       <h2 class="item-detail-title" id="itemDetailTitle">
-        漂着物
+        漂着物（思い出の欠片）
       </h2>
   
       <div class="item-detail-image-wrap" id="itemDetailImageWrap">
@@ -1984,14 +1984,14 @@
       {
         area_key:"harbor",
         name_ja:"港",
-        description:"すべての航海が戻ってくる静かな港。記録を書き、船を整え、次の海を待つ場所です。",
+        description:"すべての航海が戻ってくる静かな港。記録を書き、船（継続の証）を整え、次の海域（人生のテーマ）を待つ場所です。",
         sort_order:1,
         position_class:"pos-harbor"
       },
       {
         area_key:"silent_water",
         name_ja:"静かな水域",
-        description:"波の少ない近海。小さな船が、はじめて港の外へ出るための静かな水域です。",
+        description:"波の少ない近海。小さな船（継続の証）が、はじめて港の外へ出るための静かな水域です。",
         sort_order:2,
         position_class:"pos-tide"
       },
@@ -2026,7 +2026,7 @@
       {
         area_key:"unnamed_waters",
         name_ja:"名前のない海域",
-        description:"海図の外側へ続く、まだ名のない水域。終点ではなく、外洋への入口です。",
+        description:"海図の外側へ続く、まだ名のない海域（人生のテーマ）。終点ではなく、外洋への入口です。",
         sort_order:7,
         position_class:"pos-outer"
       }
@@ -2034,7 +2034,7 @@
 
     const areaAtmospheres = {
       harbor:
-        "港の近くには、日常の小さな記録や、木片のような穏やかな漂着物の気配があります。",
+        "港の近くには、日常の小さな記録や、木片のような穏やかな漂着物（思い出の欠片）の気配があります。",
     
       silent_water:
         "静かな水域には、落ち着いた夜や、薄い布、淡い貝殻のような気配があります。",
@@ -2043,16 +2043,16 @@
         "灯台海岸には、遠くを見るための光や、古いランタンの気配があります。",
     
       fog_sea:
-        "霧の海には、まだ形にならない記録や、輪郭の曖昧な漂着物の気配があります。",
+        "霧の海には、まだ形にならない記録や、輪郭の曖昧な漂着物（思い出の欠片）の気配があります。",
     
       moonlit_sea:
         "月明かりの海には、夜の余韻や、静かに光るものの気配があります。",
     
       deep_current:
-        "深潮には、内側へ沈む言葉や、重く静かな漂着物の気配があります。",
+        "深潮には、内側へ沈む言葉や、重く静かな漂着物（思い出の欠片）の気配があります。",
     
       unnamed_waters:
-        "名前のない海には、まだ知らない船や、遠くから流れ着くものの気配があります。"
+        "名前のない海には、まだ知らない船（継続の証）や、遠くから流れ着くものの気配があります。"
     };
 
     const areaImagePaths = {
@@ -2647,7 +2647,7 @@
       ).trim();
     
       if(!text){
-        return "この海に、静かに記録された漂着物です。";
+        return "この海に、静かに記録された漂着物（思い出の欠片）です。";
       }
     
       if(text.length <= 42){
@@ -2877,7 +2877,7 @@
           <div class="area-journal">
             <div class="area-journal-label">Sea Area Journal</div>
             <div class="area-journal-main">
-              この海に残った漂着物：0
+              この海に残った漂着物（思い出の欠片）：0
             </div>
             <div class="area-journal-memory">
               <span class="area-journal-memory-label">航海の記憶</span>
@@ -2901,7 +2901,7 @@
         <div class="area-journal">
           <div class="area-journal-label">Sea Area Journal</div>
           <div class="area-journal-main">
-            この海に残った漂着物：${escapeHtml(count)}
+            この海に残った漂着物（思い出の欠片）：${escapeHtml(count)}
           </div>
           
           <div class="area-journal-memory">
@@ -3005,7 +3005,7 @@
         const displayName = areaChapterTitle(area.area_key, area.name_ja);
         const displayDesc = area.description;
     
-        const kicker = "Open Sea Area";
+        const kicker = "Open Sea Area / 海域（人生のテーマ）";
         const tagText = "開放中";
         const atmosphereText = areaAtmosphereText(area.area_key, true);
         const journalCount = discoveredItemsForArea(area.area_key).length;
@@ -3063,18 +3063,18 @@
             data-area-open="false"
             data-area-key="beyond_the_fog"
             data-area-title="霧の向こう"
-            data-area-desc="まだ開かれていない海域です。"
+            data-area-desc="まだ開かれていない海域（人生のテーマ）です。"
             data-area-atmosphere="まだ霧の向こうにあります。"
             data-area-image="${escapeHtml(seaChartImagePath)}"
           >
-            <div class="sea-kicker">Beyond the Fog</div>
+            <div class="sea-kicker">Beyond the Fog / 未開放の海域</div>
     
             <div class="sea-name">
               霧の向こう
             </div>
     
             <p class="sea-desc">
-              まだ開かれていない海域です。詳細は、航海が進むまで霧の中にあります。
+              まだ開かれていない海域（人生のテーマ）です。詳細は、航海が進むまで霧の中にあります。
             </p>
     
             <div class="sea-atmosphere">
@@ -3189,7 +3189,7 @@
         item.description ||
         item.item_description ||
         item.body ||
-        "この漂着物の詳しい記録は、まだ静かに伏せられています。";
+        "この漂着物（思い出の欠片）の詳しい記録は、まだ静かに伏せられています。";
     
       const origin =
         item.origin_text ||
@@ -3261,8 +3261,8 @@
               <div class="fog-card-label">Beyond the Fog</div>
               <div class="fog-card-title">霧の向こう</div>
               <div class="fog-card-text">
-                まだ、この海は姿を見せていません。<br>
-                船が整い、次の航路が開くまで、<br>
+                まだ、この海域（人生のテーマ）は姿を見せていません。<br>
+                船（継続の証）が整い、次の航路が開くまで、<br>
                 その景色は静かに霧の中にあります。
               </div>
             </div>
@@ -3272,7 +3272,7 @@
         imageModalCaption.innerHTML = `
           <div class="area-caption-title">霧の向こう</div>
           <div class="area-caption-desc">
-            この海域は、まだ開かれていません。
+            この海域（人生のテーマ）は、まだ開かれていません。
           </div>
         `;
 
