@@ -1055,8 +1055,8 @@
         </h1>
 
         <p class="lead">
-          ここは、これまで残した航海記録を月ごとに見返す場所です。<br>
-          その時の言葉、気配、灯りをたどることで、過去の自分と静かに再会できます。
+          航海の保管庫は、過去の自分ともう一度出会う場所です。<br>
+          これまで残した航海記録を月ごとにたどり、その時の言葉、気配、灯りを見返すことで、人生の航海を静かに振り返ることができます。
         </p>
       </div>
 
@@ -1067,7 +1067,7 @@
       <div class="status" id="status"></div>
 
       <div class="archive-search-panel">
-        <div class="archive-search-label">過去の言葉を探す</div>
+        <div class="archive-search-label">過去の自分を探す</div>
       
         <div class="archive-search-row">
           <input
@@ -1110,7 +1110,7 @@
         </div>
       
         <div class="archive-search-result" id="archiveSearchResult">
-          言葉、気配、Lantern Mark を使って、過去の航海記録を探せます。
+          言葉、気配、Lantern Mark を使って、過去の自分と再会できます。
         </div>
 
         <div class="read-more-wrap" id="archiveSearchMoreWrap" style="display:none;">
@@ -1133,7 +1133,7 @@
             
           <div class="archive-note">
             航海記録を月ごとにまとめています。<br>
-            月を選ぶと、その頃の言葉と気配を見返せます。
+            月を選ぶと、その頃の言葉と気配をたどり、過去の自分と静かに再会できます。
           </div>
         </section>
 
@@ -1143,7 +1143,7 @@
               <div class="section-label">この月の記憶</div>
               <h2 class="detail-title" id="detailTitle">月を選んでください</h2>
               <p class="detail-sub" id="detailSub">
-                左の一覧から、もう一度出会いたい月を選びます。
+                左の一覧から、もう一度出会いたい過去の月を選びます。
               </p>
             </div>
 
@@ -1154,7 +1154,7 @@
                 type="button"
                 disabled
               >
-                この月をダウンロード
+                この月を書き出す
               </button>
             
               <button class="back-btn" id="backToMonthsBtn" type="button">
@@ -1164,7 +1164,7 @@
           </div>
 
           <div class="month-summary" id="monthSummary" style="display:none;">
-            <div class="month-summary-label">月のまとめ</div>
+            <div class="month-summary-label">この月の航海まとめ</div>
           
             <div class="month-summary-grid">
               <div class="month-summary-chip">
@@ -1197,7 +1197,7 @@
           </div>
 
           <div class="month-tags" id="monthTags" style="display:none;">
-            <div class="month-tags-label">月の気配</div>
+            <div class="month-tags-label">この月に多かった気配</div>
             <div class="month-tags-list" id="monthTagsList"></div>
           </div>
 
@@ -1221,7 +1221,7 @@
         <div class="download-modal-label">月次書き出し</div>
     
         <h2 id="monthDownloadModalTitle">
-          この月の航海記録をダウンロードします
+          この月の航海記録を書き出します
         </h2>
     
         <p id="monthDownloadModalIntro">
@@ -1863,6 +1863,7 @@
       }
     
       lines.push("この記録は、Celeste Harbor から書き出されました。");
+      lines.push("これは、過去の自分と再会するための航海記録です。");
       lines.push("船は、まだ進んでいます。");
     
       return lines.join("\n");
@@ -1962,7 +1963,7 @@
         );
     
         closeMonthDownloadModal();
-        setStatus("この月の航海記録をダウンロードしました。");
+        setStatus("この月の航海記録を書き出しました。");
         return;
       }
     
@@ -2123,7 +2124,7 @@
     
       if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
-          "言葉、気配、Lantern Mark を使って、過去の航海記録を探せます。";
+          "言葉、気配、Lantern Mark を使って、過去の自分と再会できます。";
         updateArchiveSearchMoreButton();
         return;
       }
@@ -2345,8 +2346,8 @@
           <div class="empty">
             ${
               hasSearch
-                ? "条件に一致する航海記録はありません。<br>言葉や気配を少し変えて探してみてください。"
-                : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの航海が現れます。"
+                ? "条件に一致する航海記録はありません。<br>言葉や気配を少し変えると、別の過去の自分に出会えるかもしれません。"
+                : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの航海が積もり、あとから過去の自分と再会できるようになります。"
             }
           </div>
         `;
@@ -2470,7 +2471,7 @@
     function renderMonthDetail(group){
       if(!group){
         detailTitle.textContent = "月を選んでください";
-        detailSub.textContent = "左の一覧から、もう一度出会いたい月を選びます。";
+        detailSub.textContent = "左の一覧から、もう一度出会いたい過去の月を選びます。";
 
         if(downloadMonthBtn){
           downloadMonthBtn.disabled = true;
