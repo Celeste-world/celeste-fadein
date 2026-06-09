@@ -911,8 +911,8 @@
 
         <p class="lead">
           チケットは、ただAIと話すためのものではありません。<br>
-          いつもの記録より深い航海に入り、漂着物が届く気配を強め、<br>
-          船や海域の進行につながる可能性を広げるためのものです。
+          いつもの記録より深い航海に入り、漂着物（思い出の欠片）が届く気配を強め、<br>
+          船（継続の証）や海域（人生のテーマ）の進行につながる可能性を広げるためのものです。
         </p>
       </section>
 
@@ -990,7 +990,7 @@
               <div class="benefit-title">この航海券でできること</div>
               <ul class="benefit-list">
                 <li>5分だけ、少し深く振り返る時間に入れる</li>
-                <li>通常の記録よりも、漂着物が届く気配が少し強まる</li>
+                <li>通常の記録よりも、漂着物（思い出の欠片）が届く気配が少し強まる</li>
                 <li>無料で、少し深い振り返りの入口を試せる</li>
               </ul>
             </div>
@@ -1035,7 +1035,7 @@
               <div class="benefit-title">この航海券でできること</div>
               <ul class="benefit-list">
                 <li>10分 または 20分の特別航海に入れる</li>
-                <li>通常の記録よりも、漂着物が届く気配がはっきり強まる</li>
+                <li>通常の記録よりも、漂着物（思い出の欠片）が届く気配がはっきり強まる</li>
                 <li>考えや言葉を、短い時間で静かに整えられる</li>
               </ul>
             </div>
@@ -1080,7 +1080,7 @@
               <div class="benefit-title">この航海券でできること</div>
               <ul class="benefit-list">
                 <li>さらに深い内省や整理に向き合える</li>
-                <li>漂着物が届く気配が、より深く濃くなる</li>
+                <li>漂着物（思い出の欠片）が届く気配が、より深く濃くなる</li>
                 <li>まだ言葉にならないものを、急がず扱いやすくなる</li>
               </ul>
             </div>
@@ -1105,7 +1105,7 @@
 
         <p class="ticket-next-text">
           チケットの意味を確認したら、手元に残っている航海券を見ることができます。<br>
-          有効な航海券があれば、そこから桟橋へ向かえます。
+          有効な航海券があれば、そこから特別航海の桟橋へ向かえます。
         </p>
 
         <div class="ticket-next-actions">
@@ -1137,7 +1137,7 @@
         </p>
 
         <p class="note">
-          深い航海ほど、港に何かが流れ着く気配も強くなります。<br>
+          深い航海ほど、漂着物（思い出の欠片）が流れ着く気配も強くなります。<br>
           ただし、チケットは報酬を得るためだけのものではありません。<br>
           自分の言葉と向き合う深さを選ぶための、小さな航海券です。
         </p>
@@ -1235,8 +1235,6 @@
         return;
       }
 
-      console.log("unread harbor replies:", data);
-
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
 
@@ -1244,11 +1242,6 @@
           link.title = "港から返事が届いています";
         });
       }
-
-      console.log(
-        "body has-unread-letter:",
-        document.body.classList.contains("has-unread-letter")
-      );
     }
 
     function activeVoyageLabel(session){
