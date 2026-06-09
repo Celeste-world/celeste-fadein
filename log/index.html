@@ -1864,44 +1864,51 @@
       </div>
     </div>
 
-    <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
-      <div
-        class="tutorial-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="tutorialTitle"
-      >
-        <div class="tutorial-label">First Voyage Guide</div>
+        <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
+          <div
+            class="tutorial-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tutorialTitle"
+          >
+            <div class="tutorial-label">First Voyage Guide</div>
     
-        <div class="tutorial-step" id="tutorialStepLabel">
-          1 / 5
-        </div>
+            <h2 class="tutorial-title" id="tutorialTitle">
+              ようこそ、Celeste Harborへ
+            </h2>
     
-        <h2 class="tutorial-title" id="tutorialTitle">
-          ようこそ、Celeste Harborへ
-        </h2>
+            <p class="tutorial-body" id="tutorialBody">
+    あなたの人生を、
+    航海として残す場所です。
     
-        <p class="tutorial-body" id="tutorialBody"></p>
+    ここでは日々の言葉を
+    航海記録として残します。
     
-        <div class="tutorial-hint" id="tutorialHint" style="display:none;"></div>
+    記録を重ねると
     
-        <div class="tutorial-actions">
-          <button class="tutorial-skip" id="tutorialSkipBtn" type="button">
-            あとで見る
-          </button>
+    ・船（継続の証）が育つ
+    ・海域（人生のテーマ）が広がる
+    ・漂着物（思い出の欠片）と出会う
+    ・人生の航海史になる
+            </p>
     
-          <div class="tutorial-actions-right">
-            <button class="ghost" id="tutorialPrevBtn" type="button">
-              戻る
-            </button>
+            <div class="tutorial-hint" id="tutorialHint">
+              一言だけでも大丈夫です。まずは、今日の気配を少しだけ港に残してください。
+            </div>
     
-            <button class="primary" id="tutorialNextBtn" type="button">
-              次へ
-            </button>
+            <div class="tutorial-actions">
+              <button class="tutorial-skip" id="tutorialSkipBtn" type="button">
+                あとで見る
+              </button>
+    
+              <div class="tutorial-actions-right">
+                <button class="primary" id="tutorialStartBtn" type="button">
+                  最初の航海を始める
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
     
     
 
@@ -2155,13 +2162,11 @@
     const downloadSummaryText = document.getElementById("downloadSummaryText");
 
     const tutorialOverlay = document.getElementById("tutorialOverlay");
-    const tutorialStepLabel = document.getElementById("tutorialStepLabel");
     const tutorialTitle = document.getElementById("tutorialTitle");
     const tutorialBody = document.getElementById("tutorialBody");
     const tutorialHint = document.getElementById("tutorialHint");
     const tutorialSkipBtn = document.getElementById("tutorialSkipBtn");
-    const tutorialPrevBtn = document.getElementById("tutorialPrevBtn");
-    const tutorialNextBtn = document.getElementById("tutorialNextBtn");
+    const tutorialStartBtn = document.getElementById("tutorialStartBtn");
 
     const adminAnnouncementOverlay =
       document.getElementById("adminAnnouncementOverlay");
@@ -2204,7 +2209,6 @@
     let pendingDownloadFileName = "";
     let monthlyLogRemainingCount = null;
     
-    let tutorialCurrentStep = 0;
     let tutorialSaving = false;
 
     const placeholders = [
@@ -2325,91 +2329,12 @@
       statusEl.textContent = message || "";
       statusEl.className = isError ? "status error" : "status";
     }
-
-        const firstTutorialSteps = [
-        {
-          title: "ようこそ、Celeste Harborへ",
-          body:
-            "Celeste Harbor は、人生を航海として残すサービスです。\n長い文章でなくても大丈夫です。一言だけでも、今日の言葉はあなたの港に残ります。",
-          hint:
-            "ここで残す言葉は、ただの日記ではなく、あなた自身の航海記録になります。"
-        },
-        {
-          title: "今日の言葉を書く",
-          body:
-            "まずは、今の気配や出来事を少しだけ書いてください。\nうれしかったこと、迷っていること、何もなかった一日でも大丈夫です。",
-          hint:
-            "一言だけでも航海記録になります。\n完璧な文章にしなくても、残すことに意味があります。"
-        },
-        {
-          title: "海が少しずつ育つ",
-          body:
-            "残した言葉は、あなたの航海として積み重なります。\n記録を続けるほど、港の現在地や航海年表、過去の言葉を見返す場所が育っていきます。",
-          hint:
-            "航海年表 = 人生の年表\n航海の保管庫 = 過去の自分との再会\n現在地 = 人生の航海ダッシュボード"
-        },
-        {
-          title: "船や漂着物と出会う",
-          body:
-            "航海を続けていると、港に漂着物が流れ着いたり、新しい船と出会うことがあります。\nそれらはゲームの報酬ではなく、あなたが続けてきた記録の証です。",
-          hint:
-            "船 = 継続の証\n漂着物 = 記憶の欠片"
-        },
-        {
-          title: "人生の航海史になる",
-          body:
-            "今日の小さな言葉も、積み重なることで、あなた自身の航海史になります。\n書いた言葉は消費されるものではなく、あとから過去の自分と再会するための灯りになります。",
-          hint:
-            "迷ったら、まず一言だけ残してください。\nそこから、あなたの航海は静かに始まります。"
-        }
-      ];
-    
-    function renderFirstTutorial(){
-      if(
-        !tutorialOverlay ||
-        !tutorialStepLabel ||
-        !tutorialTitle ||
-        !tutorialBody ||
-        !tutorialHint ||
-        !tutorialPrevBtn ||
-        !tutorialNextBtn
-      ){
-        return;
-      }
-    
-      const step = firstTutorialSteps[tutorialCurrentStep];
-    
-      tutorialStepLabel.textContent =
-        String(tutorialCurrentStep + 1) + " / " + String(firstTutorialSteps.length);
-    
-      tutorialTitle.textContent = step.title;
-      tutorialBody.textContent = step.body;
-    
-      if(step.hint){
-        tutorialHint.textContent = step.hint;
-        tutorialHint.style.display = "block";
-      }else{
-        tutorialHint.textContent = "";
-        tutorialHint.style.display = "none";
-      }
-    
-      tutorialPrevBtn.style.display =
-        tutorialCurrentStep > 0 ? "inline-block" : "none";
-    
-      tutorialNextBtn.textContent =
-        tutorialCurrentStep >= firstTutorialSteps.length - 1
-          ? "Voyage Log を開く"
-          : "次へ";
-    }
     
     function openFirstTutorial(){
       if(!tutorialOverlay){
         return;
       }
-    
-      tutorialCurrentStep = 0;
-      renderFirstTutorial();
-    
+
       tutorialOverlay.classList.add("visible");
       tutorialOverlay.setAttribute("aria-hidden", "false");
     }
@@ -2460,9 +2385,7 @@
           user_id: currentUser.id,
           tutorial_completed: true,
           skipped: Boolean(skipped),
-          last_seen_step: skipped
-            ? tutorialCurrentStep
-            : firstTutorialSteps.length
+          last_seen_step: skipped ? 0 : 1
         };
     
         if(skipped){
@@ -4794,29 +4717,12 @@
 
     contentEl.addEventListener("input", updateCharCount);
 
-    if(tutorialPrevBtn){
-      tutorialPrevBtn.addEventListener("click", function(){
-        if(tutorialCurrentStep <= 0){
-          return;
-        }
-    
-        tutorialCurrentStep -= 1;
-        renderFirstTutorial();
-      });
-    }
-    
-    if(tutorialNextBtn){
-      tutorialNextBtn.addEventListener("click", async function(){
-        if(tutorialCurrentStep < firstTutorialSteps.length - 1){
-          tutorialCurrentStep += 1;
-          renderFirstTutorial();
-          return;
-        }
-    
+    if(tutorialStartBtn){
+      tutorialStartBtn.addEventListener("click", async function(){
         await saveFirstTutorialState(false);
       });
     }
-    
+
     if(tutorialSkipBtn){
       tutorialSkipBtn.addEventListener("click", async function(){
         await saveFirstTutorialState(true);
