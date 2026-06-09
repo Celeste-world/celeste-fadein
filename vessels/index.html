@@ -1437,8 +1437,8 @@
       </h1>
 
       <p class="lead">
-        船は、航海を続けてきた証です。<br>
-        ここでは、現在の船と、次の船に必要な記憶の欠片を確認できます。
+        船（継続の証）は、航海を続けてきた時間が形になったものです。<br>
+        ここでは、現在の船と、次の船に必要な漂着物（思い出の欠片）を確認できます。
       </p>
 
       <section class="panel">
@@ -1457,8 +1457,8 @@
         </div>
 
         <p class="note">
-          船は、ゲームの報酬ではありません。<br>
-          日々の言葉と、そこから流れ着いた漂着物が形になった、継続の証です。
+          船（継続の証）は、ゲームの報酬ではありません。<br>
+          日々の言葉と、そこから流れ着いた漂着物（思い出の欠片）が形になった、あなたの航海の証です。
         </p>
       </section>
     </main>
@@ -1478,14 +1478,14 @@
         ×
       </button>
   
-      <div class="unlock-modal-label">新しい船</div>
+      <div class="unlock-modal-label">新しい船（継続の証）</div>
   
       <div class="unlock-modal-title" id="vesselUnlockTitle">
         新しい船が、港に姿を現しました
       </div>
   
       <div class="unlock-modal-text" id="vesselUnlockText">
-        これまで集めた漂着物が、静かにひとつの形になりました。
+        これまで集めた漂着物（思い出の欠片）が、静かにひとつの形になりました。
       </div>
   
       <div class="unlock-modal-image-wrap">
@@ -1515,14 +1515,14 @@
         ×
       </button>
   
-      <div class="unlock-modal-label">新しい海域</div>
+      <div class="unlock-modal-label">新しい海域（人生のテーマ）</div>
   
       <div class="unlock-modal-title" id="seaUnlockTitle">
         新しい海が開きました
       </div>
   
       <div class="unlock-modal-text" id="seaUnlockText">
-        霧の向こうに、新しい海が姿を見せました。
+        霧の向こうに、新しい海域（人生のテーマ）が姿を見せました。
       </div>
   
       <div class="unlock-modal-image-wrap">
@@ -1703,7 +1703,7 @@
     
       return `
         <div class="detail-section">
-          <div class="detail-section-label">船の記録</div>
+          <div class="detail-section-label">船（継続の証）の記録</div>
           <div class="detail-section-text">
             ${lines.map(function(line){
               return escapeHtml(line);
@@ -2156,7 +2156,7 @@
 
     function seaAreaDescription(area){
       if(!area){
-        return "この船では、新しい海域は開きません。けれど航海の記録として、港に残ります。";
+        return "この船では、新しい海域（人生のテーマ）は開きません。けれど航海の記録として、港に残ります。";
       }
 
       return area.description || area.description_ja || area.body || "";
@@ -2204,9 +2204,9 @@
       if(!owned){
         return `
           <div class="collection-sea">
-            <div class="collection-sea-label">Sea</div>
+            <div class="collection-sea-label">Sea / 海域（人生のテーマ）</div>
             <div class="collection-sea-name">
-              この船が開く海域は、まだ霧の向こうにあります。
+              この船が開く海域（人生のテーマ）は、まだ霧の向こうにあります。
             </div>
           </div>
         `;
@@ -2214,7 +2214,7 @@
 
       return `
         <div class="collection-sea">
-          <div class="collection-sea-label">Opened Sea</div>
+          <div class="collection-sea-label">Opened Sea / 海域（人生のテーマ）</div>
           <div class="collection-sea-name">
             ${escapeHtml(seaAreaName(area))}
           </div>
@@ -2261,7 +2261,7 @@
 
       const defaultDescription = owned
         ? (row?.description || "")
-        : "まだ霧の向こうにある船です。今の港には、その輪郭だけがかすかに見えています。";
+        : "まだ霧の向こうにある船（継続の証）です。今の港には、その輪郭だけがかすかに見えています。";
 
       return {
         title: optionValue(options, "title", defaultTitle),
@@ -2277,7 +2277,7 @@
           "seaDescription",
           owned
             ? sea.description
-            : "この船が開く海域は、まだ霧の向こうにあります。"
+            : "この船が開く海域（人生のテーマ）は、まだ霧の向こうにあります。"
         ),
         
         acquired_at: optionValue(options, "acquired_at", row?.acquired_at || ""),
@@ -2322,7 +2322,7 @@
         const nextDetail = makeDetailFromVessel({}, {
           title: "霧の向こう",
           imagePath: fogVesselImagePath,
-          description: "次の船は、まだ霧の向こうにあります。今は、その存在だけが静かに示されています。",
+          description: "次の船（継続の証）は、まだ霧の向こうにあります。今は、その存在だけが静かに示されています。",
           cabin: "",
           key: "",
           seaAreas,
@@ -2330,7 +2330,7 @@
           status: "Next",
           owned: false,
           seaName: "霧の向こう",
-          seaDescription: "この船で開く海域も、まだ霧の向こうにあります。"
+          seaDescription: "この船で開く海域（人生のテーマ）も、まだ霧の向こうにあります。"
         });
 
         const nextCardAttrs = detailCardAttributes(nextDetail);
@@ -2382,7 +2382,7 @@
                 </div>
 
                 <p class="vessel-line">
-                  次の船は、まだ霧の向こうにあります。
+                  次の船（継続の証）は、まだ霧の向こうにあります。
                 </p>
 
                 ${detailButton(nextDetail, "霧の記録を見る")}
@@ -2390,10 +2390,10 @@
             </div>
 
             <div class="opened-sea-box">
-              <div class="opened-sea-label">この船で開く海域</div>
+              <div class="opened-sea-label">この船で開く海域（人生のテーマ）</div>
               <div class="opened-sea-name">霧の向こう</div>
               <p class="opened-sea-desc">
-                この船で開く海域も、まだ霧の向こうにあります。
+                この船で開く海域（人生のテーマ）も、まだ霧の向こうにあります。
               </p>
             </div>
 
@@ -2414,7 +2414,7 @@
         nextHtml = `
           <div class="next-box">
             <div class="next-title">
-              次の船は、まだ霧の向こうにあります。
+              次の船（継続の証）は、まだ霧の向こうにあります。
             </div>
 
             <p class="vessel-line">
@@ -2462,7 +2462,7 @@
               </div>
 
               ${seaAreaBox(currentStage, seaAreas, {
-                label: "この船で開いた海域",
+                label: "この船で開いた海域（人生のテーマ）",
                 linkText: "海図で確認する"
               })}
 
@@ -2627,7 +2627,7 @@
 
         const displayDesc = owned
           ? (row.description || "")
-          : "まだ霧の向こうにある船です。今の港には、その輪郭だけがかすかに見えています。";
+          : "まだ霧の向こうにある船（継続の証）です。今の港には、その輪郭だけがかすかに見えています。";
 
         const displayCabin = owned
           ? (row.cabin_description || "")
@@ -2660,7 +2660,7 @@
             : "霧の向こう",
           seaDescription: owned
             ? seaAreaDescription(seaAreaForStage(stageNumber(row), seaAreas))
-            : "この船が開く海域は、まだ霧の向こうにあります。"
+            : "この船が開く海域（人生のテーマ）は、まだ霧の向こうにあります。"
         });
 
         const cardAttrs = detailCardAttributes(detail);
@@ -2732,8 +2732,8 @@
     
       return (
         name + " が、港に姿を現しました。\n\n" +
-        "これまで集めた漂着物が、静かにひとつの形になりました。\n" +
-        "船は、次の海へ向かう準備を整えています。"
+        "これまで集めた漂着物（思い出の欠片）が、静かにひとつの形になりました。\n" +
+        "船（継続の証）は、次の海へ向かう準備を整えています。"
       );
     }
     
@@ -2908,7 +2908,7 @@
           </div>
 
           <div>
-            <div class="detail-kicker">Vessel Record</div>
+            <div class="detail-kicker">Vessel Record / 船（継続の証）</div>
             <div class="detail-title">${escapeHtml(detail.title)}</div>
             ${
               detail.key
@@ -2937,7 +2937,7 @@
             
 
             <div class="${seaSectionClass}">
-              <div class="detail-section-label">Opened Sea</div>
+              <div class="detail-section-label">Opened Sea / 海域（人生のテーマ）</div>
               <div class="detail-section-title">${escapeHtml(detail.seaName)}</div>
               <p class="detail-section-text">
                 ${escapeHtml(detail.seaDescription)}
