@@ -956,7 +956,7 @@
           <div class="nav-menu">
             <a href="/log/">日々の記録</a>
             <a href="/timeline/">航海年表</a>
-            <a href="/voyage-archive/">保管庫</a>
+            <a href="/voyage-archive/">航海の保管庫</a>
             <a href="/harbor-status/">現在地</a>
           </div>
         </div>
@@ -1021,8 +1021,8 @@
       </h1>
 
       <p class="lead">
-        ここは、あなたが残した言葉と、港で起きた出来事が積み重なっていく場所です。<br>
-        一つひとつの記録は、やがてあなた自身の航海年表になっていきます。
+        航海年表は、あなたの人生の年表です。<br>
+        残した言葉、漂着物（思い出の欠片）、船（継続の証）、海域（人生のテーマ）が、時間の順にここへ積み重なっていきます。
       </p>
 
       <section class="panel">
@@ -1036,7 +1036,7 @@
       <section>
         <div id="timeline">
           <div class="empty">
-            航海年表を確認しています...
+            人生の航海年表を確認しています...
           </div>
         </div>
 
@@ -1048,7 +1048,7 @@
 
         <p class="note">
           航海年表は、ただの進行履歴ではありません。<br>
-          あなたが言葉を残した日、漂着物と出会った日、新しい船や海域にたどり着いた日が、人生の航海としてここに積もっていきます。
+          あなたが言葉を残した日、漂着物（思い出の欠片）と出会った日、新しい船（継続の証）や海域（人生のテーマ）にたどり着いた日が、人生の航海としてここに積もっていきます。
         </p>
       </section>
     </main>
@@ -1069,7 +1069,7 @@
       <div class="timeline-detail-label" id="timelineDetailLabel">Timeline</div>
 
       <h2 class="timeline-detail-title" id="timelineDetailTitle">
-        航海年表
+        人生の航海年表
       </h2>
 
       <div class="timeline-detail-date" id="timelineDetailDate"></div>
@@ -1250,11 +1250,11 @@
       const normalized = normalizeEventType(type);
 
       if(normalized === "harbor_find" || normalized === "item_found"){
-        return "漂着物";
+        return "漂着物（思い出の欠片）";
       }
 
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
-        return "船";
+        return "船（継続の証）";
       }
 
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
@@ -1262,7 +1262,7 @@
       }
 
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
-        return "新しい海域";
+        return "新しい海域（人生のテーマ）";
       }
 
       if(normalized === "special_voyage_started"){
@@ -1274,7 +1274,7 @@
       }
 
       if(normalized === "special_voyage_find"){
-        return "特別航海の漂着物";
+        return "特別航海の漂着物（思い出の欠片）";
       }
 
       if(isSpecialVoyageEvent(normalized)){
@@ -1419,21 +1419,21 @@
       if(normalized === "sea_area_opened" || normalized === "sea_area_unlocked"){
         return {
           href: "/map/",
-          label: "この海の記憶を見る"
+          label: "この海域（人生のテーマ）を見る"
         };
       }
 
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
         return {
           href: "/vessels/",
-          label: "この船の記録を見る"
+          label: "この船（継続の証）の記録を見る"
         };
       }
 
       if(normalized === "harbor_find" || normalized === "item_found" || normalized === "special_voyage_find"){
         return {
           href: "/items/",
-          label: "この漂着物を見る"
+          label: "この漂着物（思い出の欠片）を見る"
         };
       }
 
@@ -1464,7 +1464,7 @@
           metadata.area_name_ja ||
           metadata.sea_area_name_ja ||
           event.title ||
-          "開かれた海域";
+          "開かれた海域（人生のテーマ）";
 
         return areaChapterTitle(areaKey, fallbackName);
       }
@@ -1483,15 +1483,15 @@
       }
 
       if(normalized === "vessel_acquired" || normalized === "vessel_unlocked"){
-        return event.body || "新しい船が、港に姿を現しました。";
+        return event.body || "新しい船（継続の証）が、港に姿を現しました。";
       }
 
       if(normalized === "harbor_find" || normalized === "item_found"){
-        return event.body || "港に、記憶の欠片が静かに流れ着きました。";
+        return event.body || "港に、漂着物（思い出の欠片）が静かに流れ着きました。";
       }
 
       if(normalized === "special_voyage_find"){
-        return event.body || "特別航海の途中で、記憶の欠片が見つかりました。";
+        return event.body || "特別航海の途中で、漂着物（思い出の欠片）が見つかりました。";
       }
 
       if(normalized === "ticket_drifted" || normalized === "drift_ticket" || normalized === "ticket_granted"){
@@ -1857,7 +1857,7 @@
         document.body.classList.remove("auth-locked");
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
-        setStatus("航海年表を確認しています。");
+        setStatus("人生の航海年表を確認しています。");
 
         await loadActiveSpecialVoyageBanner();
         await loadTimeline();
@@ -1892,13 +1892,13 @@
         showAllTimeline = false;
 
         renderTimeline();
-        setStatus("航海年表を確認しました。");
+        setStatus("人生の航海年表を確認しました。");
       }catch(error){
         console.error("load timeline error:", error);
 
         timelineEl.innerHTML = `
           <div class="empty">
-            航海年表を読み込めませんでした。<br>
+            人生の航海年表を読み込めませんでした。<br>
             ${escapeHtml(error.message)}
           </div>
         `;
@@ -1907,7 +1907,7 @@
           readMoreWrap.style.display = "none";
         }
 
-        setStatus("航海年表を読み込めませんでした：" + error.message, true);
+        setStatus("人生の航海年表を読み込めませんでした：" + error.message, true);
       }
     }
 
@@ -1919,8 +1919,8 @@
       if(!events || events.length === 0){
         timelineEl.innerHTML = `
           <div class="empty">
-            まだ航海年表は始まっていません。<br>
-            日々の言葉を残した日や、何かが港へ流れ着いた夜に、ここへ静かに記録されます。
+            まだ人生の航海年表は始まっていません。<br>
+            日々の言葉を残した日や、漂着物（思い出の欠片）が港へ流れ着いた夜に、ここへ静かに記録されます。
           </div>
         `;
 
