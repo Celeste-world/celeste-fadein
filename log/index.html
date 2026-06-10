@@ -2791,22 +2791,18 @@
             : null;
         }
     
-        let row = await fetchMonthlyAllowanceRow();
-    
-        if(!row){
-          await fetchSupabase(
-            "/rest/v1/rpc/ensure_monthly_log_allowance",
-            {
-              method: "POST",
-              body: {
-                p_user_id: currentUser.id,
-                p_month_key: monthKey
-              }
+        await fetchSupabase(
+          "/rest/v1/rpc/ensure_monthly_log_allowance",
+          {
+            method: "POST",
+            body: {
+              p_user_id: currentUser.id,
+              p_month_key: monthKey
             }
-          );
+          }
+        );
     
-          row = await fetchMonthlyAllowanceRow();
-        }
+        const row = await fetchMonthlyAllowanceRow();
     
         renderMonthlyLogLimit(row);
     
