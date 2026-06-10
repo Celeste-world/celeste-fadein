@@ -739,6 +739,7 @@
           <a href="#subscriptionsSection">Subscriptions</a>
           <a href="#ticketsSection">Tickets</a>
           <a href="#allowancesSection">Monthly Allowances</a>
+          <a href="#adminGrantsSection">Admin Grants</a>
           <a href="#eventsSection">Webhook Events</a>
         </nav>
 
@@ -823,6 +824,19 @@
         <div id="allowancesBox"></div>
       </section>
 
+      <section class="section jump-target" id="adminGrantsSection">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Admin Grants</h2>
+            <p class="section-sub">
+              管理者から進呈した航海燃料などの付与履歴を確認します。
+            </p>
+          </div>
+          <span class="count-badge" id="adminGrantsCount">0件</span>
+        </div>
+        <div id="adminGrantsBox"></div>
+      </section>
+
       <section class="section jump-target" id="eventsSection">
         <div class="section-head">
           <div>
@@ -889,6 +903,7 @@
     const subscriptionsBox = document.getElementById("subscriptionsBox");
     const ticketsBox = document.getElementById("ticketsBox");
     const allowancesBox = document.getElementById("allowancesBox");
+    const adminGrantsBox = document.getElementById("adminGrantsBox");
     const eventsBox = document.getElementById("eventsBox");
 
     const customersCount = document.getElementById("customersCount");
@@ -896,6 +911,7 @@
     const subscriptionsCount = document.getElementById("subscriptionsCount");
     const ticketsCount = document.getElementById("ticketsCount");
     const allowancesCount = document.getElementById("allowancesCount");
+    const adminGrantsCount = document.getElementById("adminGrantsCount");
     const eventsCount = document.getElementById("eventsCount");
 
     let currentUser = null;
@@ -1458,6 +1474,46 @@
       );
     }
 
+    function renderAdminGrants(rows){
+      adminGrantsCount.textContent = String(rows.length) + "件";
+    
+      adminGrantsBox.innerHTML = tableHtml(
+        [
+          {
+            label:"granted_at",
+            render:function(row){ return escapeHtml(formatDate(row.granted_at)); }
+          },
+          {
+            label:"user",
+            render:function(row){ return renderUserCell(row.user_id); }
+          },
+          {
+            label:"announcement_id",
+            render:function(row){
+              return '<span class="mono">' + escapeHtml(shortId(row.announcement_id)) + '</span>';
+            }
+          },
+          {
+            label:"reward_type",
+            render:function(row){ return badge(row.reward_type || ""); }
+          },
+          {
+            label:"reward_key",
+            render:function(row){ return escapeHtml(row.reward_key || ""); }
+          },
+          {
+            label:"quantity",
+            render:function(row){ return escapeHtml(String(row.quantity || 0)); }
+          },
+          {
+            label:"month_key",
+            render:function(row){ return escapeHtml(row.month_key || ""); }
+          }
+        ],
+        rows
+      );
+    }
+
     function renderEvents(rows){
       eventsCount.textContent = String(rows.length) + "件";
 
@@ -1539,6 +1595,7 @@
       renderSubscriptions([]);
       renderTickets([]);
       renderAllowances([]);
+      renderAdminGrants([]);
       renderEvents([]);
 
       updateSummary({
@@ -1685,6 +1742,7 @@
         const subscriptions = await fetchTable("user_subscriptions", subscriptionsQuery);
         const tickets = await fetchTable("voyage_tickets", ticketsQuery);
         const allowances = await fetchTable("monthly_log_allowances", allowancesQuery);
+        const adminGrants = await fetchTable("admin_reward_grants", adminGrantsQuery);
         const events = await fetchTable("billing_events", eventsQuery);
 
         renderCustomers(customers);
@@ -1692,6 +1750,7 @@
         renderSubscriptions(subscriptions);
         renderTickets(tickets);
         renderAllowances(allowances);
+        renderAdminGrants(adminGrants);
         renderEvents(events);
 
         updateSummary({
@@ -1706,6 +1765,7 @@
           subscriptions.length +
           tickets.length +
           allowances.length +
+          adminGrants.length +
           events.length;
 
         setStatus(hasActiveFilters(filters)
