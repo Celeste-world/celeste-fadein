@@ -1712,6 +1712,18 @@
           allowancesQuery = allowancesQuery.eq("month_key", filters.monthKey);
         }
 
+        let adminGrantsQuery = client
+          .from("admin_reward_grants")
+          .select("id,user_id,announcement_id,reward_type,reward_key,quantity,month_key,granted_at")
+          .order("granted_at", { ascending:false })
+          .limit(100);
+        
+        adminGrantsQuery = applyUserFilter(adminGrantsQuery, resolved.userIds);
+        
+        if(filters.monthKey){
+          adminGrantsQuery = adminGrantsQuery.eq("month_key", filters.monthKey);
+        }
+
         let eventsQuery = client
           .from("billing_events")
           .select("id,stripe_event_id,event_type,status,error_message,processed_at,created_at,stripe_customer_id,stripe_checkout_session_id,stripe_payment_intent_id,stripe_subscription_id")
