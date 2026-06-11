@@ -198,6 +198,34 @@
       color:var(--text);
     }
 
+    .admin-feedback-link,
+    .admin-feedback-card{
+      position:relative;
+    }
+    
+    body.has-open-feedback .admin-feedback-link{
+      color:var(--text);
+    }
+    
+    body.has-open-feedback .admin-feedback-link::after,
+    body.has-open-feedback .admin-feedback-card::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+    
+    body.has-open-feedback .admin-feedback-card{
+      border-color:rgba(255,227,163,.46);
+    }
+
     @media(max-width:760px){
       body{
         padding:28px 16px;
@@ -239,7 +267,7 @@
         <a href="/admin/">管理入口</a>
         <a href="/admin/users/">ユーザー管理</a>
         <a href="/admin/billing/">課金管理</a>
-        <a href="/admin/feedback/">便り管理</a>
+        <a href="/admin/feedback/" class="admin-feedback-link">便り管理</a>
         <a href="#" class="logout-link" id="logoutLink">ログアウト</a>
       </nav>
     </header>
@@ -263,7 +291,7 @@
           </div>
         </a>
       
-        <a class="admin-card" href="/admin/feedback/">
+        <a class="admin-card admin-feedback-card" href="/admin/feedback/">
           <div class="card-label">Harbor Letter</div>
           <div class="card-title">便り管理</div>
           <div class="card-text">
@@ -317,6 +345,44 @@
       statusEl.className = isError ? "status error" : "status";
     }
 
+    async function checkOpenFeedback(){
+      document.body.classList.remove("has-open-feedback");
+    
+      const feedbackLinks = document.querySelectorAll(".admin-feedback-link");
+      const feedbackCards = document.querySelectorAll(".admin-feedback-card");
+    
+      feedbackLinks.forEach(function(link){
+        link.removeAttribute("title");
+      });
+    
+      feedbackCards.forEach(function(card){
+        card.removeAttribute("title");
+      });
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("status", "open")
+        .limit(1);
+    
+      if(error){
+        console.warn("open feedback check failed:", error);
+        return;
+      }
+    
+      if(data && data.length > 0){
+        document.body.classList.add("has-open-feedback");
+    
+        feedbackLinks.forEach(function(link){
+          link.title = "未確認の便りが届いています";
+        });
+    
+        feedbackCards.forEach(function(card){
+          card.title = "未確認の便りが届いています";
+        });
+      }
+    }
+
     async function checkSession(){
       const { data } = await client.auth.getSession();
 
@@ -334,6 +400,8 @@
 
       document.body.classList.remove("auth-locked");
       setStatus("管理者としてログインしています。");
+      
+      await checkOpenFeedback();
     }
 
     async function logout(){
