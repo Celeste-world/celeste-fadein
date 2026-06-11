@@ -68,15 +68,18 @@
       text-decoration:none;
     }
 
-    .nav-letter-link{
+    .nav-letter-link,
+    .nav-letter-top{
       position:relative;
     }
     
-    body.has-unread-letter .nav-letter-link{
+    body.has-unread-letter .nav-letter-link,
+    body.has-unread-letter .nav-letter-top{
       color:var(--text);
     }
     
-    body.has-unread-letter .nav-letter-link::after{
+    body.has-unread-letter .nav-letter-link::after,
+    body.has-unread-letter .nav-letter-top::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -773,7 +776,7 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
+          <button class="nav-top nav-letter-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
           </div>
@@ -1055,7 +1058,51 @@
     let nextVesselRequirements = [];
     let lastVoyageLog = null;
     let memoryTideLog = null;
-
+    
+    async function checkUnreadHarborLetterReplies(){
+      document.body.classList.remove("has-unread-letter");
+    
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+      const letterTopLinks = document.querySelectorAll(".nav-letter-top");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      letterTopLinks.forEach((link) => {
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
+        return;
+      }
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+    
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+          
+      if(data && data.length > 0){
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+    
+        letterTopLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+      }
+    }
     
     function setStatus(message, isError = false){
       statusEl.textContent = message || "";
@@ -1693,6 +1740,7 @@
       await loadHarborSummary();
       await loadNextVesselRequirements();
       await loadLogs();
+      await checkUnreadHarborLetterReplies();
     }
 
     function closeNavMenus(){
