@@ -6,6 +6,9 @@
 
   <title>よくある質問 – Celeste Harbor</title>
   <meta name="robots" content="noindex, nofollow" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 
   <style>
@@ -60,15 +63,18 @@
       white-space:nowrap;
     }
 
-    .nav-letter-link{
+    .nav-letter-link,
+    .nav-letter-top{
       position:relative;
     }
-
-    body.has-unread-letter .nav-letter-link{
+    
+    body.has-unread-letter .nav-letter-link,
+    body.has-unread-letter .nav-letter-top{
       color:var(--text);
     }
-
-    body.has-unread-letter .nav-letter-link::after{
+    
+    body.has-unread-letter .nav-letter-link::after,
+    body.has-unread-letter .nav-letter-top::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -81,7 +87,6 @@
         0 0 8px rgba(255,227,163,.85),
         0 0 18px rgba(255,227,163,.45);
     }
-
     .global-nav{
       display:flex;
       gap:16px;
@@ -382,7 +387,7 @@
         </div>
 
         <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
+          <button class="nav-top nav-letter-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
           </div>
@@ -509,6 +514,78 @@
   </div>
 
   <script>
+
+    const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
+    const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
+    
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+    
+    let currentUser = null;
+    
+    async function checkUnreadHarborLetterReplies(){
+      document.body.classList.remove("has-unread-letter");
+    
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+      const letterTopLinks = document.querySelectorAll(".nav-letter-top");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      letterTopLinks.forEach((link) => {
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
+        return;
+      }
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+    
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+    
+      if(data && data.length > 0){
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+    
+        letterTopLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+      }
+    }
+    
+    async function checkSessionForUnreadHarborLetter(){
+      const { data, error } = await client.auth.getSession();
+    
+      if(error){
+        console.warn("faq help session check failed:", error);
+        return;
+      }
+    
+      if(data.session && data.session.user){
+        currentUser = data.session.user;
+      }else{
+        currentUser = null;
+      }
+    
+      await checkUnreadHarborLetterReplies();
+    }
     function closeNavMenus(){
       document.querySelectorAll(".nav-group.open").forEach(function(group){
         group.classList.remove("open");
@@ -541,6 +618,23 @@
       if(event.key === "Escape"){
         closeNavMenus();
       }
+    });
+
+    client.auth.onAuthStateChange(function(event, session){
+      if(session && session.user){
+        currentUser = session.user;
+    
+        checkUnreadHarborLetterReplies().catch(function(error){
+          console.error("auth state unread harbor letter check error:", error);
+        });
+      }else if(event === "SIGNED_OUT"){
+        currentUser = null;
+        document.body.classList.remove("has-unread-letter");
+      }
+    });
+    
+    checkSessionForUnreadHarborLetter().catch(function(error){
+      console.error("faq help unread harbor letter initial check error:", error);
     });
   </script>
 </body>
