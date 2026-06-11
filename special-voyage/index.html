@@ -38,15 +38,18 @@
       font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
     }
 
-    .nav-letter-link{
+    .nav-letter-link,
+    .nav-letter-top{
       position:relative;
     }
     
-    body.has-unread-letter .nav-letter-link{
+    body.has-unread-letter .nav-letter-link,
+    body.has-unread-letter .nav-letter-top{
       color:var(--text);
     }
     
-    body.has-unread-letter .nav-letter-link::after{
+    body.has-unread-letter .nav-letter-link::after,
+    body.has-unread-letter .nav-letter-top::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -59,7 +62,6 @@
         0 0 8px rgba(255,227,163,.85),
         0 0 18px rgba(255,227,163,.45);
     }
-
     body.auth-locked .wrap{
       visibility:hidden;
     }
@@ -1250,7 +1252,7 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
+          <button class="nav-top nav-letter-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
           </div>
@@ -1517,13 +1519,19 @@
         closeNavMenus();
       }
     });
+    
     async function checkUnreadHarborLetterReplies(){
       document.body.classList.remove("has-unread-letter");
     
       const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+      const letterTopLinks = document.querySelectorAll(".nav-letter-top");
     
       letterNavLinks.forEach((link) => {
         link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      letterTopLinks.forEach((link) => {
         link.removeAttribute("title");
       });
     
@@ -1543,11 +1551,15 @@
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-
+    
       if(data && data.length > 0){
         document.body.classList.add("has-unread-letter");
     
         letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+    
+        letterTopLinks.forEach((link) => {
           link.title = "港から返事が届いています";
         });
       }
@@ -3548,6 +3560,10 @@
 
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
 
+        checkUnreadHarborLetterReplies().catch(function(error){
+          console.error("auth state unread harbor letter check error:", error);
+        });
+        
         loadActiveSession().then(function(hasActiveSession){
           if(!hasActiveSession){
             loadAvailableTickets();
