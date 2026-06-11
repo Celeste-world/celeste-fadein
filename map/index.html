@@ -194,6 +194,31 @@
       color:var(--text);
     }
 
+    .nav-letter-link,
+    .nav-letter-top{
+      position:relative;
+    }
+    
+    body.has-unread-letter .nav-letter-link,
+    body.has-unread-letter .nav-letter-top{
+      color:var(--text);
+    }
+    
+    body.has-unread-letter .nav-letter-link::after,
+    body.has-unread-letter .nav-letter-top::after{
+      content:"";
+      position:absolute;
+      top:-4px;
+      right:-8px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 8px rgba(255,227,163,.85),
+        0 0 18px rgba(255,227,163,.45);
+    }
+
     #activeVoyageBanner{
       position:sticky;
       top:12px;
@@ -1763,7 +1788,7 @@
         </div>
     
         <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
+          <button class="nav-top nav-letter-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
           </div>
@@ -1979,6 +2004,51 @@
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
     let areaJournalItems = [];
+
+    async function checkUnreadHarborLetterReplies(){
+      document.body.classList.remove("has-unread-letter");
+    
+      const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+      const letterTopLinks = document.querySelectorAll(".nav-letter-top");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      letterTopLinks.forEach((link) => {
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
+        return;
+      }
+    
+      const { data, error } = await client
+        .from("user_feedback")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .not("admin_reply", "is", null)
+        .is("user_read_at", null)
+        .limit(1);
+    
+      if(error){
+        console.warn("unread harbor letter check failed:", error);
+        return;
+      }
+    
+      if(data && data.length > 0){
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+    
+        letterTopLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+      }
+    }
 
     const fallbackAreas = [
       {
@@ -2277,6 +2347,7 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
         setStatus("海図を確認しています。");
 
+        await checkUnreadHarborLetterReplies();
         await loadActiveSpecialVoyageBanner();
         await loadSeaChart();
       }else{
@@ -3550,6 +3621,10 @@
         userStatus.textContent = "ログイン中：" + accountDisplayName(currentUser);
 
         setTimeout(function(){
+          checkUnreadHarborLetterReplies().catch(function(error){
+            console.error("auth state unread harbor letter check error:", error);
+          });
+        
           loadActiveSpecialVoyageBanner().catch(function(error){
             console.error("auth state active voyage banner error:", error);
           });
