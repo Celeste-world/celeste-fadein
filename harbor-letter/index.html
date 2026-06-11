@@ -197,15 +197,18 @@
       color:var(--text);
     }
 
-    .nav-letter-link{
+    .nav-letter-link,
+    .nav-letter-top{
       position:relative;
     }
-
-    .nav-letter-link.has-reply{
+    
+    body.has-unread-letter .nav-letter-link,
+    body.has-unread-letter .nav-letter-top{
       color:var(--text);
     }
-
-    .nav-letter-link.has-reply::after{
+    
+    body.has-unread-letter .nav-letter-link::after,
+    body.has-unread-letter .nav-letter-top::after{
       content:"";
       position:absolute;
       top:-4px;
@@ -218,7 +221,6 @@
         0 0 8px rgba(255,227,163,.85),
         0 0 18px rgba(255,227,163,.45);
     }
-
     h1{
       font-size:34px;
       font-weight:500;
@@ -577,7 +579,7 @@
         </div>
 
         <div class="nav-group">
-          <button class="nav-top" type="button">便り</button>
+          <button class="nav-top nav-letter-top" type="button">便り</button>
           <div class="nav-menu">
             <a href="/harbor-letter/" class="nav-letter-link">便り</a>
           </div>
@@ -694,7 +696,8 @@
     const myLettersPanel = document.getElementById("myLettersPanel");
     const myLettersList = document.getElementById("myLettersList");
     const reloadLettersBtn = document.getElementById("reloadLettersBtn");
-    const letterNavLink = document.querySelector(".nav-letter-link");
+    const letterNavLinks = document.querySelectorAll(".nav-letter-link");
+    const letterTopLinks = document.querySelectorAll(".nav-letter-top");
 
     let currentUser = null;
 
@@ -783,10 +786,21 @@
     }
 
     async function checkUnreadHarborLetterReplies(){
-      if(!letterNavLink || !currentUser){
+      document.body.classList.remove("has-unread-letter");
+    
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+    
+      letterTopLinks.forEach((link) => {
+        link.removeAttribute("title");
+      });
+    
+      if(!currentUser){
         return;
       }
-
+    
       const { data, error } = await client
         .from("user_feedback")
         .select("id")
@@ -794,21 +808,24 @@
         .not("admin_reply", "is", null)
         .is("user_read_at", null)
         .limit(1);
-
+    
       if(error){
         console.warn("unread harbor letter check failed:", error);
         return;
       }
-
+    
       if(data && data.length > 0){
-        letterNavLink.classList.add("has-reply");
-        letterNavLink.title = "港から返事が届いています";
-      }else{
-        letterNavLink.classList.remove("has-reply");
-        letterNavLink.removeAttribute("title");
+        document.body.classList.add("has-unread-letter");
+    
+        letterNavLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
+    
+        letterTopLinks.forEach((link) => {
+          link.title = "港から返事が届いています";
+        });
       }
     }
-
     async function markHarborLetterRepliesAsRead(){
       if(!currentUser){
         return;
@@ -835,10 +852,16 @@
 
       console.log("marked harbor letter replies as read:", data);
 
-      if(letterNavLink){
-        letterNavLink.classList.remove("has-reply");
-        letterNavLink.removeAttribute("title");
-      }
+      document.body.classList.remove("has-unread-letter");
+
+      letterNavLinks.forEach((link) => {
+        link.classList.remove("has-reply");
+        link.removeAttribute("title");
+      });
+      
+      letterTopLinks.forEach((link) => {
+        link.removeAttribute("title");
+      });
     }
 
     async function loadMyHarborLetters(){
