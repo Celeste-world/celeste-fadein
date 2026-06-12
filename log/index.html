@@ -958,6 +958,44 @@
         transform .42s ease;
     }
 
+    .cat-play-actions{
+      display:none;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:20px;
+      padding-top:18px;
+      border-top:1px solid rgba(169,183,255,.16);
+    }
+    
+    .cat-play-actions.visible{
+      display:flex;
+    }
+    
+    .cat-play-actions button{
+      padding:9px 14px;
+      font-size:13px;
+    }
+    
+    .cat-icon-wrap.playing{
+      animation:catPlay 1.05s ease-in-out 1;
+    }
+    
+    @keyframes catPlay{
+      0%,100%{
+        transform:translateY(0) rotate(0deg);
+      }
+      25%{
+        transform:translateY(-3px) rotate(-1deg);
+      }
+      50%{
+        transform:translateY(1px) rotate(1deg);
+      }
+      75%{
+        transform:translateY(-2px) rotate(-.5deg);
+      }
+    }
+
     .cat-scroll-text.fading{
       opacity:0;
       transform:translateY(4px);
@@ -1763,6 +1801,20 @@
             </div>
 
             <div class="cat-scroll-text" id="catReplyText"></div>
+
+            <div class="cat-play-actions" id="catPlayActions" aria-label="Harbor Cat と少し過ごす">
+              <button class="ghost" id="catTeaserBtn" type="button">
+                猫じゃらしで遊ぶ
+              </button>
+            
+              <button class="ghost" id="catPetBtn" type="button">
+                そっとなでる
+              </button>
+            
+              <button class="ghost" id="catWatchBtn" type="button">
+                今日は見守る
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -2154,6 +2206,11 @@
     const catCloseBtn = document.getElementById("catCloseBtn");
     const catScroll = document.querySelector(".cat-scroll");
 
+    const catPlayActions = document.getElementById("catPlayActions");
+    const catTeaserBtn = document.getElementById("catTeaserBtn");
+    const catPetBtn = document.getElementById("catPetBtn");
+    const catWatchBtn = document.getElementById("catWatchBtn");
+
     const catSpecialWelcomeImageWrap =
       document.getElementById("catSpecialWelcomeImageWrap");
     
@@ -2227,6 +2284,32 @@
       "帰港の前に、ひとつだけ記録するなら。",
       "灯台の光が見えた夜のことを、少しだけ。",
       "今夜、船に残っていたものを記録する..."
+    ];
+
+    const harborCatSaveLines = [
+      "Harbor Cat が、あなたの言葉を静かに読み終えました。\n\n今日の航海記録は、港の灯りにひとつ加わりました。",
+      "Harbor Cat が、巻物の上で小さく瞬きをしました。\n\n短い言葉でも、港にはちゃんと残っています。",
+      "Harbor Cat は、しっぽをゆっくり揺らしています。\n\n今日の海に置いた言葉を、静かに見守っているようです。",
+      "Harbor Cat が、少しだけ目を細めました。\n\nあなたの航海記録は、今夜の港に静かに届きました。",
+      "Harbor Cat が、灯台の方をちらりと見ました。\n\nこの言葉も、次の海へ向かう小さな灯りになりそうです。"
+    ];
+    
+    const harborCatTeaserLines = [
+      "猫じゃらしをそっと揺らすと、Harbor Cat が前足を少し伸ばしました。\n\n港の灯りが、羽根の先でやわらかく揺れています。",
+      "猫じゃらしの羽根が揺れると、Harbor Cat の耳がぴくりと動きました。\n\n今日の港に、小さな遊びの時間が生まれました。",
+      "Harbor Cat は猫じゃらしを見つめています。\n\nすぐには飛びつかず、少し考えてから、そっと前足を出しました。"
+    ];
+    
+    const harborCatPetLines = [
+      "そっとなでると、Harbor Cat は目を細めました。\n\n今日の言葉は、ちゃんと港に届いたようです。",
+      "Harbor Cat は、あなたの手の近くで静かに座っています。\n\n無理に励まさず、ただそばにいるようです。",
+      "なでられた Harbor Cat が、小さく息を吐きました。\n\n今夜の港は、少しだけやわらかくなりました。"
+    ];
+    
+    const harborCatWatchLines = [
+      "今日は、Harbor Cat と一緒に港を見守ることにしました。\n\n何もしない時間も、航海の一部です。",
+      "Harbor Cat は、あなたの隣で海を見ています。\n\n遠くの波音だけが、静かに続いています。",
+      "Harbor Cat は何も言わず、港の方を見つめています。\n\n今日の記録は、静かにそこへ置かれました。"
     ];
 
     const catIcons = {
@@ -3275,11 +3358,58 @@
       catIcon.src = pickRandom(icons);
     }
 
+    function hideCatPlayActions(){
+      if(!catPlayActions){
+        return;
+      }
+    
+      catPlayActions.classList.remove("visible");
+    }
+    
+    function showCatPlayActions(){
+      if(!catPlayActions){
+        return;
+      }
+    
+      catPlayActions.classList.add("visible");
+    }
+    
+    function playCatMotion(){
+      if(!catIconWrap){
+        return;
+      }
+    
+      catIconWrap.classList.remove("playing");
+    
+      void catIconWrap.offsetWidth;
+    
+      catIconWrap.classList.add("playing");
+    
+      setTimeout(function(){
+        catIconWrap.classList.remove("playing");
+      }, 1100);
+    }
+    
+    async function showCatInteraction(lines){
+      clearCatScrollAutoCloseTimer();
+    
+      playCatMotion();
+    
+      setCatIcon("reply");
+      catScrollSub.textContent = "Harbor Cat と少し過ごしています";
+      catIconWrap.classList.remove("reading");
+    
+      await fadeCatTextTo(pickRandomLine(lines));
+    
+      scheduleCatScrollAutoClose(9000);
+    }
+
     function openCatScroll(message, mode = "reading"){
       hideSpecialWelcomeImage();
-      
+      hideCatPlayActions();
+          
       clearCatScrollAutoCloseTimer();
-
+    
       catReplyText.textContent = message || "";
       catReplyText.classList.remove("fading");
 
@@ -3333,12 +3463,14 @@
 
     function closeCatScroll(){
       clearCatScrollAutoCloseTimer();
-
+    
       catOverlay.classList.remove("visible");
       catOverlay.setAttribute("aria-hidden", "true");
       catReplyText.textContent = "";
       catReplyText.classList.remove("fading");
       catIconWrap.classList.remove("reading");
+      catIconWrap.classList.remove("playing");
+      hideCatPlayActions();
     }
 
     async function ensureUserVessel(){
@@ -3934,35 +4066,15 @@
 
         await holdCatText(1200);
 
-        const reply = await callCatReply(content, tag);
-
-        if(reply){
-          setCatIcon("reply");
-          catScrollSub.textContent = "港からの静かな返事";
-          catIconWrap.classList.remove("reading");
-
-          await fadeCatTextTo(reply);
-          scheduleCatScrollAutoClose(7000);
-
-          await holdCatText(2400);
-
-          setStatus("航海記録を保存しました。");
-        }else{
-          setCatIcon("fallback");
-          catScrollSub.textContent = "港からの静かな返事";
-          catIconWrap.classList.remove("reading");
-
-          await fadeCatTextTo(
-            "港のネコが、灯台の影で小さく耳を動かしているようです。\n航海記録を静かに受け止めました。"
-          );
-
-          scheduleCatScrollAutoClose(7000);
-
-          await holdCatText(2400);
-
-          setStatus("航海記録を保存しました。");
-        }
-
+        setCatIcon("reply");
+        catScrollSub.textContent = "港からの静かな返事";
+        catIconWrap.classList.remove("reading");
+        
+        await fadeCatTextTo(pickRandomLine(harborCatSaveLines));
+        
+        await holdCatText(1800);
+        
+        setStatus("航海記録を保存しました。");
         setHarborFindDisplay(
           "checking",
           "今夜の港を確認しています。",
@@ -4091,11 +4203,14 @@
           );
         }
 
+        showCatPlayActions();
+        scheduleCatScrollAutoClose(12000);
+        
         contentEl.value = "";
         tagEl.value = "Harbor";
         updateCharCount();
         showAllLogs = false;
-
+        
         await applyHarborWeather();
         await loadLogs();
         await loadMonthlyLogLimit();
@@ -4714,6 +4829,24 @@
     });
 
     catCloseBtn.addEventListener("click", closeCatScroll);
+    
+    if(catTeaserBtn){
+      catTeaserBtn.addEventListener("click", async function(){
+        await showCatInteraction(harborCatTeaserLines);
+      });
+    }
+    
+    if(catPetBtn){
+      catPetBtn.addEventListener("click", async function(){
+        await showCatInteraction(harborCatPetLines);
+      });
+    }
+    
+    if(catWatchBtn){
+      catWatchBtn.addEventListener("click", async function(){
+        await showCatInteraction(harborCatWatchLines);
+      });
+    }
 
     catOverlay.addEventListener("click", function(event){
       if(event.target === catOverlay){
