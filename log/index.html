@@ -2314,7 +2314,8 @@
 
     const catIcons = {
       reading: [
-        "/images/harbor-cat/cat-reading-map-warm.png"
+        "/images/harbor-cat/cat-reading-map-warm.png",
+        "/images/harbor-cat/cat-reading-map.png"
       ],
       found: [
         "/images/harbor-cat/cat-found-drift.png",
@@ -2330,12 +2331,25 @@
       ],
       reply: [
         "/images/harbor-cat/cat-harbor-main.png",
+        "/images/harbor-cat/cat-reading-map-warm.png",
+        "/images/harbor-cat/cat-welcome-home.png"
+      ],
+      teaser: [
+        "/images/harbor-cat/cat-found-drift.png",
+        "/images/harbor-cat/cat-found-drift-close.png"
+      ],
+      pet: [
+        "/images/harbor-cat/cat-welcome-home.png",
+        "/images/harbor-cat/cat-harbor-main.png"
+      ],
+      watch: [
         "/images/harbor-cat/cat-looking-lighthouse.png"
       ],
       fallback: [
         "/images/harbor-cat/cat-looking-lighthouse.png"
       ]
     };
+    
     function pickRandom(items){
       return items[Math.floor(Math.random() * items.length)];
     }
@@ -3390,12 +3404,12 @@
       }, 1100);
     }
     
-    async function showCatInteraction(lines){
+    async function showCatInteraction(lines, mode = "reply"){
       clearCatScrollAutoCloseTimer();
     
       playCatMotion();
     
-      setCatIcon("reply");
+      setCatIcon(mode);
       catScrollSub.textContent = "Harbor Cat と少し過ごしています";
       catIconWrap.classList.remove("reading");
     
@@ -4832,19 +4846,19 @@
     
     if(catTeaserBtn){
       catTeaserBtn.addEventListener("click", async function(){
-        await showCatInteraction(harborCatTeaserLines);
+        await showCatInteraction(harborCatTeaserLines, "teaser");
       });
     }
     
     if(catPetBtn){
       catPetBtn.addEventListener("click", async function(){
-        await showCatInteraction(harborCatPetLines);
+        await showCatInteraction(harborCatPetLines, "pet");
       });
     }
     
     if(catWatchBtn){
       catWatchBtn.addEventListener("click", async function(){
-        await showCatInteraction(harborCatWatchLines);
+        await showCatInteraction(harborCatWatchLines, "watch");
       });
     }
 
