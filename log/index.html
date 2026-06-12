@@ -912,6 +912,8 @@
       font-size:18px;
       line-height:1;
       padding:0;
+      position:relative;
+      z-index:5;
     }
 
     .cat-close:hover{
@@ -975,6 +977,232 @@
     .cat-play-actions button{
       padding:9px 14px;
       font-size:13px;
+    }
+
+    .cat-effect-layer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:4;
+      overflow:hidden;
+    }
+    
+    .cat-scroll-head,
+    .cat-special-welcome-image-wrap,
+    .cat-scroll-text,
+    .cat-play-actions{
+      position:relative;
+      z-index:3;
+    }
+    
+    .cat-teaser-line{
+      position:absolute;
+      left:58%;
+      top:38%;
+      width:120px;
+      height:1px;
+      background:linear-gradient(
+        to right,
+        rgba(255,227,163,.08),
+        rgba(255,227,163,.72),
+        rgba(255,227,163,.10)
+      );
+      transform-origin:left center;
+      animation:catTeaserLine 1.25s ease-in-out 1;
+    }
+    
+    .cat-teaser-feather{
+      position:absolute;
+      left:72%;
+      top:43%;
+      width:34px;
+      height:16px;
+      border-radius:80% 20% 80% 20%;
+      background:
+        radial-gradient(circle at 30% 45%, rgba(255,255,255,.92), transparent 28%),
+        linear-gradient(135deg, #ffe3a3, #b9c7ff 58%, rgba(169,183,255,.15));
+      box-shadow:
+        0 0 12px rgba(255,227,163,.58),
+        0 0 24px rgba(169,183,255,.24);
+      transform:rotate(-18deg);
+      animation:catTeaserFeather 1.25s ease-in-out 1;
+    }
+    
+    .cat-teaser-feather::after{
+      content:"";
+      position:absolute;
+      left:4px;
+      right:4px;
+      top:7px;
+      height:1px;
+      background:rgba(5,8,17,.35);
+      transform:rotate(-8deg);
+    }
+    
+    .cat-pet-glow{
+      position:absolute;
+      left:56px;
+      top:44px;
+      width:162px;
+      height:162px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle, rgba(255,227,163,.30), transparent 64%);
+      opacity:0;
+      animation:catPetGlow 1.35s ease-out 1;
+    }
+    
+    .cat-pet-stroke{
+      position:absolute;
+      left:78px;
+      top:60px;
+      width:92px;
+      height:42px;
+      border-top:2px solid rgba(255,227,163,.62);
+      border-radius:999px;
+      transform:rotate(-12deg);
+      opacity:0;
+      animation:catPetStroke 1.35s ease-out 1;
+    }
+    
+    .cat-watch-light{
+      position:absolute;
+      right:-60px;
+      top:72px;
+      width:260px;
+      height:90px;
+      background:
+        linear-gradient(
+          to left,
+          rgba(255,227,163,.20),
+          rgba(169,183,255,.10),
+          transparent
+        );
+      clip-path:polygon(100% 34%, 0 0, 0 100%, 100% 66%);
+      opacity:0;
+      animation:catWatchLight 1.8s ease-in-out 1;
+    }
+    
+    .cat-watch-dot{
+      position:absolute;
+      right:78px;
+      top:116px;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#ffe3a3;
+      box-shadow:
+        0 0 10px rgba(255,227,163,.85),
+        0 0 22px rgba(255,227,163,.45);
+      opacity:0;
+      animation:catWatchDot 1.8s ease-in-out 1;
+    }
+    
+    @keyframes catTeaserLine{
+      0%{
+        opacity:0;
+        transform:rotate(-20deg) translateX(34px);
+      }
+      20%{
+        opacity:1;
+      }
+      45%{
+        transform:rotate(10deg) translateX(-10px);
+      }
+      72%{
+        transform:rotate(-12deg) translateX(8px);
+      }
+      100%{
+        opacity:0;
+        transform:rotate(6deg) translateX(-4px);
+      }
+    }
+    
+    @keyframes catTeaserFeather{
+      0%{
+        opacity:0;
+        transform:translateX(44px) translateY(-12px) rotate(-28deg) scale(.92);
+      }
+      18%{
+        opacity:1;
+      }
+      45%{
+        transform:translateX(-18px) translateY(12px) rotate(22deg) scale(1.04);
+      }
+      72%{
+        transform:translateX(10px) translateY(-4px) rotate(-16deg) scale(1);
+      }
+      100%{
+        opacity:0;
+        transform:translateX(-6px) translateY(4px) rotate(8deg) scale(.96);
+      }
+    }
+    
+    @keyframes catPetGlow{
+      0%{
+        opacity:0;
+        transform:scale(.82);
+      }
+      28%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+        transform:scale(1.18);
+      }
+    }
+    
+    @keyframes catPetStroke{
+      0%{
+        opacity:0;
+        transform:translateX(-20px) translateY(4px) rotate(-16deg);
+      }
+      24%{
+        opacity:1;
+      }
+      70%{
+        opacity:.72;
+        transform:translateX(18px) translateY(-6px) rotate(-8deg);
+      }
+      100%{
+        opacity:0;
+        transform:translateX(34px) translateY(-10px) rotate(-4deg);
+      }
+    }
+    
+    @keyframes catWatchLight{
+      0%{
+        opacity:0;
+        transform:translateX(28px);
+      }
+      28%{
+        opacity:.82;
+      }
+      68%{
+        opacity:.42;
+      }
+      100%{
+        opacity:0;
+        transform:translateX(-18px);
+      }
+    }
+    
+    @keyframes catWatchDot{
+      0%{
+        opacity:0;
+        transform:scale(.8);
+      }
+      28%{
+        opacity:1;
+        transform:scale(1.14);
+      }
+      72%{
+        opacity:.72;
+      }
+      100%{
+        opacity:0;
+        transform:scale(.9);
+      }
     }
     
     .cat-icon-wrap.playing{
@@ -1238,6 +1466,39 @@
 
       .cat-scroll-text{
         font-size:14px;
+      }
+
+      .cat-teaser-line{
+        left:50%;
+        top:31%;
+        width:96px;
+      }
+      
+      .cat-teaser-feather{
+        left:66%;
+        top:35%;
+      }
+      
+      .cat-pet-glow{
+        left:50%;
+        top:72px;
+        transform:translateX(-50%);
+      }
+      
+      .cat-pet-stroke{
+        left:50%;
+        top:88px;
+        transform:translateX(-50%) rotate(-12deg);
+      }
+      
+      .cat-watch-light{
+        right:-96px;
+        top:112px;
+      }
+      
+      .cat-watch-dot{
+        right:44px;
+        top:148px;
       }
 
       .log-top{
@@ -1800,6 +2061,8 @@
               >
             </div>
 
+            <div class="cat-effect-layer" id="catEffectLayer" aria-hidden="true"></div>
+
             <div class="cat-scroll-text" id="catReplyText"></div>
 
             <div class="cat-play-actions" id="catPlayActions" aria-label="Harbor Cat と少し過ごす">
@@ -2205,6 +2468,7 @@
     const catScrollSub = document.getElementById("catScrollSub");
     const catCloseBtn = document.getElementById("catCloseBtn");
     const catScroll = document.querySelector(".cat-scroll");
+    const catEffectLayer = document.getElementById("catEffectLayer");
 
     const catPlayActions = document.getElementById("catPlayActions");
     const catTeaserBtn = document.getElementById("catTeaserBtn");
@@ -3414,6 +3678,44 @@
     
       catPlayActions.classList.add("visible");
     }
+
+    function clearCatEffect(){
+      if(!catEffectLayer){
+        return;
+      }
+    
+      catEffectLayer.innerHTML = "";
+    }
+    
+    function showCatEffect(mode){
+      if(!catEffectLayer){
+        return;
+      }
+    
+      clearCatEffect();
+    
+      if(mode === "teaser"){
+        catEffectLayer.innerHTML =
+          '<span class="cat-teaser-line"></span>' +
+          '<span class="cat-teaser-feather"></span>';
+      }
+    
+      if(mode === "pet"){
+        catEffectLayer.innerHTML =
+          '<span class="cat-pet-glow"></span>' +
+          '<span class="cat-pet-stroke"></span>';
+      }
+    
+      if(mode === "watch"){
+        catEffectLayer.innerHTML =
+          '<span class="cat-watch-light"></span>' +
+          '<span class="cat-watch-dot"></span>';
+      }
+    
+      setTimeout(function(){
+        clearCatEffect();
+      }, 1900);
+    }
     
     function playCatMotion(){
       if(!catIconWrap){
@@ -3434,15 +3736,18 @@
     async function showCatInteraction(lines, mode = "reply"){
       clearCatScrollAutoCloseTimer();
     
-      playCatMotion();
-    
       setCatIcon(mode);
       catScrollSub.textContent = "Harbor Cat と少し過ごしています";
       catIconWrap.classList.remove("reading");
     
+      showCatEffect(mode);
+      playCatMotion();
+    
+      await sleep(520);
+    
       await fadeCatTextTo(pickRandomLine(lines));
     
-      scheduleCatScrollAutoClose(9000);
+      scheduleCatScrollAutoClose(10000);
     }
 
     function openCatScroll(message, mode = "reading"){
@@ -3512,6 +3817,7 @@
       catIconWrap.classList.remove("reading");
       catIconWrap.classList.remove("playing");
       hideCatPlayActions();
+      clearCatEffect();
     }
 
     async function ensureUserVessel(){
