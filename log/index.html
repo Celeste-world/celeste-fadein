@@ -2319,10 +2319,12 @@
       ],
       found: [
         "/images/harbor-cat/cat-found-drift.png",
-        "/images/harbor-cat/cat-found-drift-close.png"
+        "/images/harbor-cat/cat-found-drift-close.png",
+        "/images/harbor-cat/cat-surprised-small.png"
       ],
       ticket: [
-        "/images/harbor-cat/cat-ticket-glow.png"
+        "/images/harbor-cat/cat-ticket-glow.png",
+        "/images/harbor-cat/cat-surprised-small.png"
       ],
       welcome: [
         "/images/harbor-cat/cat-welcome-home.png",
@@ -2330,20 +2332,25 @@
         "/images/harbor-cat/cat-looking-lighthouse.png"
       ],
       reply: [
-        "/images/harbor-cat/cat-harbor-main.png",
-        "/images/harbor-cat/cat-reading-map-warm.png",
-        "/images/harbor-cat/cat-welcome-home.png"
-      ],
-      teaser: [
-        "/images/harbor-cat/cat-found-drift.png",
-        "/images/harbor-cat/cat-found-drift-close.png"
-      ],
-      pet: [
-        "/images/harbor-cat/cat-welcome-home.png",
+        "/images/harbor-cat/cat-soft-smile.png",
+        "/images/harbor-cat/cat-tail-sway.png",
+        "/images/harbor-cat/cat-sleepy-calm.png",
         "/images/harbor-cat/cat-harbor-main.png"
       ],
+      teaser: [
+        "/images/harbor-cat/cat-playing-teaser.png"
+      ],
+      pet: [
+        "/images/harbor-cat/cat-being-petted.png"
+      ],
       watch: [
-        "/images/harbor-cat/cat-looking-lighthouse.png"
+        "/images/harbor-cat/cat-quiet-watch.png"
+      ],
+      sleepy: [
+        "/images/harbor-cat/cat-sleepy-calm.png"
+      ],
+      surprised: [
+        "/images/harbor-cat/cat-surprised-small.png"
       ],
       fallback: [
         "/images/harbor-cat/cat-looking-lighthouse.png"
@@ -3363,6 +3370,26 @@
     
       if(mode === "welcome"){
         icons = catIcons.welcome;
+      }
+    
+      if(mode === "teaser"){
+        icons = catIcons.teaser;
+      }
+    
+      if(mode === "pet"){
+        icons = catIcons.pet;
+      }
+    
+      if(mode === "watch"){
+        icons = catIcons.watch;
+      }
+    
+      if(mode === "sleepy"){
+        icons = catIcons.sleepy;
+      }
+    
+      if(mode === "surprised"){
+        icons = catIcons.surprised;
       }
     
       if(mode === "fallback"){
