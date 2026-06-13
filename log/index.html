@@ -837,20 +837,23 @@
     .cat-scroll::after{ bottom:10px; }
 
     .cat-scroll-head{
+      position:relative;
       display:flex;
       align-items:center;
-      gap:20px;
+      flex-direction:column;
+      text-align:center;
+      gap:14px;
       margin-bottom:22px;
     }
 
     .cat-icon-wrap{
-      width:128px;
-      height:128px;
-      min-width:128px;
+      width:min(360px, 100%);
+      height:min(360px, 72vw);
+      min-width:0;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border-radius:24px;
+      border-radius:26px;
       border:1px solid rgba(169,183,255,.32);
       background:
         radial-gradient(circle at center, rgba(169,183,255,.20), transparent 62%),
@@ -859,13 +862,13 @@
     }
 
     .cat-icon{
-      width:118px;
-      height:118px;
+      width:100%;
+      height:100%;
       object-fit:cover;
       display:block;
-      border-radius:20px;
+      border-radius:24px;
       filter:
-        brightness(1.22)
+        brightness(1.18)
         contrast(1.08)
         saturate(1.04)
         drop-shadow(0 0 14px rgba(169,183,255,.20))
@@ -902,7 +905,10 @@
     }
 
     .cat-close{
-      margin-left:auto;
+      position:absolute;
+      top:0;
+      right:0;
+      z-index:5;
       width:30px;
       height:30px;
       border-radius:999px;
@@ -912,8 +918,6 @@
       font-size:18px;
       line-height:1;
       padding:0;
-      position:relative;
-      z-index:5;
     }
 
     .cat-close:hover{
@@ -1442,16 +1446,16 @@
       }
 
       .cat-icon-wrap{
-        width:136px;
-        height:136px;
-        min-width:136px;
+        width:min(300px, 100%);
+        height:min(300px, 78vw);
+        min-width:0;
         border-radius:24px;
       }
       
       .cat-icon{
-        width:126px;
-        height:126px;
-        border-radius:20px;
+        width:100%;
+        height:100%;
+        border-radius:20px; 
         filter:
           brightness(1.28)
           contrast(1.08)
@@ -1954,32 +1958,34 @@
 
         <div class="quick-log-guide">
           <strong>一言だけでも大丈夫です。</strong><br>
-          今日の気配を少し置くだけでも、航海記録になります。
+          今日の気持ちや出来事を少し置くだけでも、航海記録になります。
         </div>
         
         <textarea
           id="content"
           maxlength="800"
-          placeholder="一言だけでも大丈夫です。今日の気配を少し置いてください..."
+          placeholder="一言だけでも大丈夫です。今日の気持ちを少し置いてください..."
         ></textarea>
         
         <div class="field-row">
-          <div class="field-note">今の気持ちに近い気配を選んでください。</div>
-          <div class="char-count" id="charCount">0 / 800</div>
+        <div class="field-note">
+          今日の記録に近い気持ちを選んでください。迷ったら「いつもの日」のままで大丈夫です。
         </div>
-
-        
-        <select id="tag">
-          <option value="Harbor">Harbor（港）｜日常・安心</option>
-          <option value="Return">Return（帰港）｜帰ってきた感覚・区切り</option>
-          <option value="Calm Tide">Calm Tide（静かな潮）｜落ち着き・静かな流れ</option>
-          <option value="Lighthouse">Lighthouse（灯台）｜希望・目印</option>
-          <option value="Fog">Fog（霧）｜迷い・曖昧さ</option>
-          <option value="Drift">Drift（漂流）｜流されている感覚・保留</option>
-          <option value="Moonlit">Moonlit（月夜）｜静かな余韻・夜の気配</option>
-          <option value="Deep Current">Deep Current（深潮）｜深い思考・内側の動き</option>
-          <option value="Storm">Storm（嵐）｜不安・混乱</option>
-        </select>
+        <div class="char-count" id="charCount">0 / 800</div>
+      </div>
+      
+      
+      <select id="tag" aria-label="今日の気持ち">
+        <option value="Harbor">いつもの日</option>
+        <option value="Return">ひと区切りついた</option>
+        <option value="Calm Tide">落ち着いている</option>
+        <option value="Lighthouse">少し前向き</option>
+        <option value="Fog">迷っている</option>
+        <option value="Drift">流されている・保留</option>
+        <option value="Moonlit">静かな余韻がある</option>
+        <option value="Deep Current">深く考えている</option>
+        <option value="Storm">不安・荒れている</option>
+      </select>
 
         <div class="actions">
           <button class="primary" id="saveBtn">航海記録を残す</button>
@@ -2209,7 +2215,7 @@
 ・人生の航海史になる
             </p>
     
-            <div class="tutorial-hint" id="tutorialHint">一言だけでも大丈夫です。まずは、今日の気配を少しだけ港に残してください。</div>
+            <div class="tutorial-hint" id="tutorialHint">一言だけでも大丈夫です。まずは、今日の気持ちを少しだけ港に残してください。</div>
     
             <div class="tutorial-actions">
               <button class="tutorial-skip" id="tutorialSkipBtn" type="button">
@@ -2620,6 +2626,163 @@
         "/images/harbor-cat/cat-looking-lighthouse.png"
       ]
     };
+
+    const moodReactionMap = {
+      Harbor: {
+        label: "いつもの日",
+        images: [
+          "/images/harbor-cat/cat-harbor-main.png",
+          "/images/harbor-cat/cat-soft-smile.png",
+          "/images/harbor-cat/cat-sleepy-calm.png"
+        ],
+        lines: [
+          "Harbor Cat が、あなたの言葉を静かに読み終えました。\n\n今日の記録は、港の灯りにひとつ加わりました。",
+          "いつもの日にも、ちゃんと波の音があります。\n\nHarbor Cat は、今日の言葉を港に置いてくれました。",
+          "大きな出来事がなくても、今日を残したことに意味があります。\n\n港の灯りは、少しだけ増えました。",
+          "Harbor Cat は、ランタンのそばで小さく瞬きをしました。\n\nこの一日も、静かに航海の一部になりました。",
+          "今日の言葉は、港にそっと残りました。\n\nHarbor Cat は、その灯りを見守っています。"
+        ]
+      },
+    
+      Return: {
+        label: "ひと区切りついた",
+        images: [
+          "/images/harbor-cat/cat-welcome-home.png",
+          "/images/harbor-cat/harbor-cat-special-return-welcome.png",
+          "/images/harbor-cat/cat-soft-smile.png"
+        ],
+        lines: [
+          "Harbor Cat が、桟橋であなたを迎えています。\n\n戻ってきたことも、航海の大切な一部です。",
+          "ひとつの波を越えて、今日は港へ戻ってきました。\n\nHarbor Cat は、静かにその帰港を見ています。",
+          "終わったこと、区切れたこと、戻ってきたこと。\n\nその全部が、今日の記録になりました。",
+          "Harbor Cat は、船のそばでしっぽを揺らしています。\n\n今日の区切りは、港に静かに残りました。",
+          "ここまで来たことを、急いで次へ流さなくても大丈夫です。\n\n今夜は少し、港で休めます。"
+        ]
+      },
+    
+      "Calm Tide": {
+        label: "落ち着いている",
+        images: [
+          "/images/harbor-cat/cat-quiet-watch.png",
+          "/images/harbor-cat/cat-sleepy-calm.png"
+        ],
+        lines: [
+          "今日の海は、静かに凪いでいます。\n\nHarbor Cat は、あなたの言葉を穏やかな潮に預けました。",
+          "大きく動かない日にも、航海は続いています。\n\n今夜の記録は、静かな水面に残りました。",
+          "Harbor Cat は、波の音を聞きながら座っています。\n\n今日の落ち着きは、港にやわらかく広がりました。",
+          "穏やかな日は、何かを急がなくてもいい日です。\n\nあなたの言葉は、静かな潮の中に置かれました。",
+          "Harbor Cat が、目を細めて海を見ています。\n\n今夜の港は、少しだけやさしい静けさに包まれています。"
+        ]
+      },
+    
+      Lighthouse: {
+        label: "少し前向き",
+        images: [
+          "/images/harbor-cat/cat-looking-lighthouse.png",
+          "/images/harbor-cat/cat-ticket-glow.png"
+        ],
+        lines: [
+          "Harbor Cat が、遠くの灯台を見ています。\n\n小さな光が、次の海への目印になりそうです。",
+          "今日の言葉には、少しだけ前へ向かう灯りがありました。\n\n港の外にも、道は続いています。",
+          "まだ大きな一歩でなくても大丈夫です。\n\nHarbor Cat は、その小さな光をちゃんと見つけました。",
+          "灯台の光が、水面に細く伸びています。\n\nあなたの記録も、次の航海への目印になりました。",
+          "Harbor Cat は、ランタンの火を見つめています。\n\n今夜の言葉には、消えない小さな明かりがあります。"
+        ]
+      },
+    
+      Fog: {
+        label: "迷っている",
+        images: [
+          "/images/harbor-cat/cat-fog.png"
+        ],
+        lines: [
+          "霧が出ている日も、記録はちゃんと残ります。\n\nHarbor Cat は、見えない海の向こうを静かに見ています。",
+          "今は、はっきり決めなくても大丈夫です。\n\n迷っていることも、今日の航海の一部です。",
+          "Harbor Cat は、霧の中で耳を澄ませています。\n\n見えない日にも、船は完全には止まっていません。",
+          "答えが出ないままでも、言葉を置けたことには意味があります。\n\n港の灯りは、霧の中にも残っています。",
+          "今日の海は少し見えにくいようです。\n\nそれでもHarbor Catは、あなたの記録を静かに受け取りました。"
+        ]
+      },
+    
+      Drift: {
+        label: "流されている・保留",
+        images: [
+          "/images/harbor-cat/cat-surprised-small.png",
+          "/images/harbor-cat/cat-found-drift.png",
+          "/images/harbor-cat/cat-found-drift-close.png"
+        ],
+        lines: [
+          "流されているように感じる日にも、何かが岸に残ることがあります。\n\nHarbor Cat は、水面を静かに見ています。",
+          "今日は決めきらなくても大丈夫です。\n\n保留にした気持ちも、港にそっと置かれました。",
+          "Harbor Cat が、波打ち際に目を向けました。\n\n流れの中にも、小さな合図が混じっているかもしれません。",
+          "進んだのか、止まったのか分からない日もあります。\n\nそれでも今日の言葉は、ちゃんと漂着しました。",
+          "流れに任せるしかない夜もあります。\n\nHarbor Cat は、その時間を無理に急がせず、そばで見守っています。"
+        ]
+      },
+    
+      Moonlit: {
+        label: "静かな余韻がある",
+        images: [
+          "/images/harbor-cat/cat-tail-sway.png",
+          "/images/harbor-cat/cat-quiet-watch.png"
+        ],
+        lines: [
+          "今日の言葉は、月明かりの下に静かに残りました。\n\nHarbor Cat は、その余韻をそっと見守っています。",
+          "すぐに消えない気持ちが、今夜の海に映っています。\n\n記録は、月の光のように静かに残りました。",
+          "Harbor Cat は、月明かりの中で目を細めています。\n\n今日の余韻は、港にやわらかく漂っています。",
+          "言葉になったあとも、気持ちは少し残ります。\n\nその静けさごと、今日の航海記録になりました。",
+          "今夜の記録は、急いで閉じなくてもいいものです。\n\nHarbor Cat は、月の下でそっと寄り添っています。"
+        ]
+      },
+    
+      "Deep Current": {
+        label: "深く考えている",
+        images: [
+          "/images/harbor-cat/cat-deep-current.png"
+        ],
+        lines: [
+          "水面は静かでも、深いところで潮は動いています。\n\nHarbor Cat は、その流れを静かに感じています。",
+          "すぐには答えが出ない考えも、今日の航海の一部です。\n\n深い潮の中に、言葉が残りました。",
+          "Harbor Cat は、暗い海の奥を見つめています。\n\n表に出ない思いも、ちゃんとここに置かれました。",
+          "深く考える日は、進んでいないように見えることがあります。\n\nそれでも、内側の潮は動いています。",
+          "今日の言葉は、深い海へ静かに沈んでいきました。\n\nHarbor Cat は、その重さを無理に軽くしません。"
+        ]
+      },
+    
+      Storm: {
+        label: "不安・荒れている",
+        images: [
+          "/images/harbor-cat/cat-storm-lantern.png"
+        ],
+        lines: [
+          "荒れた海の日も、港へ戻る灯りは消えていません。\n\nHarbor Cat は、ランタンのそばで待っています。",
+          "今日の波は強かったようです。\n\nそれでも、あなたの言葉はここにたどり着きました。",
+          "不安な日にも、記録を残せたことは小さな帰港です。\n\nHarbor Cat は、静かにそばにいます。",
+          "Harbor Cat は、嵐の音を聞きながらランタンを見ています。\n\n今夜は、無理に遠くへ進まなくても大丈夫です。",
+          "荒れている気持ちを、そのまま置いても大丈夫です。\n\n港は、きれいな言葉だけを受け取る場所ではありません。"
+        ]
+      }
+    };
+    
+    function moodReactionForTag(tag){
+      return moodReactionMap[tag] || moodReactionMap.Harbor;
+    }
+    
+    function setCatMoodImage(tag){
+      const moodReaction = moodReactionForTag(tag);
+    
+      if(
+        moodReaction &&
+        Array.isArray(moodReaction.images) &&
+        moodReaction.images.length > 0
+      ){
+        catIcon.src = pickRandom(moodReaction.images);
+      }else{
+        setCatIcon("reply");
+      }
+    
+      return moodReaction;
+    }
     
     function pickRandom(items){
       return items[Math.floor(Math.random() * items.length)];
@@ -4413,11 +4576,12 @@
 
         await holdCatText(1200);
 
-        setCatIcon("reply");
-        catScrollSub.textContent = "港からの静かな返事";
+        const moodReaction = setCatMoodImage(tag);
+        
+        catScrollSub.textContent = "今日の気持ち：" + moodReaction.label;
         catIconWrap.classList.remove("reading");
         
-        await fadeCatTextTo(pickRandomLine(harborCatSaveLines));
+        await fadeCatTextTo(pickRandomLine(moodReaction.lines));
         
         await holdCatText(1800);
         
