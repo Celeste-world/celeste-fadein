@@ -1727,6 +1727,33 @@
       return null;
     }
 
+    function landmarkNameForEvent(event){
+      const metadata = event?.metadata || {};
+
+      return (
+        metadata.name_ja ||
+        metadata.landmark_name_ja ||
+        event.landmark_name_ja ||
+        ""
+      );
+    }
+
+    function timelineTitleForEvent(event){
+      const normalized = normalizeEventType(event.event_type);
+
+      if(normalized === "landmark_reached"){
+        const landmarkName = landmarkNameForEvent(event);
+
+        if(landmarkName){
+          return "海の名所「" + landmarkName + "」に到達しました";
+        }
+
+        return "海の名所に到達しました";
+      }
+
+      return event.title || eventTypeLabel(event.event_type);
+    }
+
     function timelineDetailTitleForEvent(event){
       const normalized = normalizeEventType(event.event_type);
       const metadata = event.metadata || {};
@@ -1743,7 +1770,7 @@
       }
 
       if(normalized === "landmark_reached"){
-        return metadata.name_ja || metadata.landmark_name_ja || event.title || "海の名所に到達しました";
+        return timelineTitleForEvent(event);
       }
 
       return event.title || eventTypeLabel(event.event_type);
@@ -1836,9 +1863,13 @@
           ? areaImagePath(areaKey)
           : timelineImagePath(event);
 
-      const imageAlt = timelineImageAlt(event);
-      const action = timelineDetailAction(event);
       const isLandmarkReached = normalized === "landmark_reached";
+
+      const imageAlt = isLandmarkReached
+        ? timelineTitleForEvent(event)
+        : timelineImageAlt(event);
+
+      const action = timelineDetailAction(event);
 
       if(timelineDetailLabel){
         timelineDetailLabel.textContent = label;
@@ -2321,7 +2352,7 @@
               </div>
 
               <div class="timeline-title">
-                ${escapeHtml(event.title)}
+                ${escapeHtml(timelineTitleForEvent(event))}
               </div>
 
               ${
