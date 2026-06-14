@@ -1780,17 +1780,21 @@
           "—"
         );
 
-      landmarkCount.textContent =
-        "航海記録：" + logCount + " / " + nextMilestoneCount;
-
       if(item.progress_status === "reached"){
-        landmarkRemaining.textContent = "到達済み";
+        landmarkCount.textContent =
+          "現在の航海記録：" + logCount + "件";
+        landmarkRemaining.textContent =
+          "到達目安：" + reachedCount + "回";
+        landmarkMeta.textContent =
+          "この名所には到達済みです。次の節目に近づくほど、海の先の気配が少しずつ深まっていきます。";
       }else{
-        landmarkRemaining.textContent = "到達まで：あと" + remaining + "回";
+        landmarkCount.textContent =
+          "航海記録：" + logCount + " / " + reachedCount;
+        landmarkRemaining.textContent =
+          "到達まで：あと" + remaining + "回";
+        landmarkMeta.textContent =
+          "進行度：" + percent + "%。航海記録を重ねるほど、名所の姿がはっきりしていきます。";
       }
-
-      landmarkMeta.textContent =
-        "進行度：" + percent + "%。次の節目に近づくほど、名所の姿がはっきりしていきます。";
     }
 
     async function loadLandmarkProgress(){
