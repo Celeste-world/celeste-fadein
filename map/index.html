@@ -594,6 +594,89 @@
       display:none;
     }
 
+    .sea-landmark-chip{
+      position:relative;
+      z-index:1;
+      display:inline-flex;
+      align-items:center;
+      align-self:flex-start;
+      margin:0 0 10px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,227,163,.26);
+      background:rgba(255,227,163,.055);
+      color:#ffe3a3;
+      font-size:10px;
+      line-height:1.6;
+    }
+
+    .sea-card.locked .sea-landmark-chip{
+      display:none;
+    }
+
+    .area-landmark{
+      margin:12px auto 0;
+      padding:12px 14px;
+      max-width:620px;
+      border-radius:16px;
+      border:1px solid rgba(255,227,163,.20);
+      background:
+        radial-gradient(circle at top left, rgba(255,227,163,.07), transparent 44%),
+        rgba(255,255,255,.022);
+      text-align:left;
+    }
+
+    .area-landmark-label{
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#ffe3a3;
+      margin-bottom:8px;
+    }
+
+    .area-landmark-title{
+      color:var(--text);
+      font-size:15px;
+      line-height:1.8;
+      margin-bottom:6px;
+    }
+
+    .area-landmark-stage{
+      display:inline-flex;
+      margin:0 0 8px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,227,163,.24);
+      background:rgba(255,227,163,.045);
+      color:#ffe3a3;
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .area-landmark-text{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.85;
+      white-space:pre-wrap;
+    }
+
+    .area-landmark-progress{
+      height:7px;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      border:1px solid rgba(169,183,255,.12);
+      margin-top:10px;
+    }
+
+    .area-landmark-progress-bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(169,183,255,.78), rgba(255,227,163,.86));
+    }
+
+
     .sea-atmosphere{
       position:relative;
       z-index:1;
@@ -2004,6 +2087,7 @@
     let activeVoyageSession = null;
     let activeVoyageTimer = null;
     let areaJournalItems = [];
+    let landmarkProgress = [];
 
     async function checkUnreadHarborLetterReplies(){
       document.body.classList.remove("has-unread-letter");
@@ -2151,7 +2235,7 @@
     }
 
     function escapeHtml(str){
-      return String(str || "")
+      return String(str ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -2393,6 +2477,19 @@
         }catch(journalError){
           console.warn("area journal load failed:", journalError);
           areaJournalItems = [];
+        }
+
+        try{
+          const { data: landmarkRows, error: landmarkError } = await client.rpc("get_my_landmark_progress");
+
+          if(landmarkError){
+            throw landmarkError;
+          }
+
+          landmarkProgress = Array.isArray(landmarkRows) ? landmarkRows : [];
+        }catch(landmarkError){
+          console.warn("landmark progress load failed:", landmarkError);
+          landmarkProgress = [];
         }
     
         const areas = Array.isArray(seaAreas) && seaAreas.length > 0
@@ -2938,6 +3035,139 @@
       return messages.many;
     }
     
+
+    function landmarkStageLabel(status){
+      if(status === "reached"){
+        return "到達しました";
+      }
+
+      if(status === "silhouette"){
+        return "輪郭が見えています";
+      }
+
+      if(status === "hint"){
+        return "遠くに気配があります";
+      }
+
+      return "まだ霧の向こう";
+    }
+
+    function landmarkMessageFor(item){
+      if(!item){
+        return "";
+      }
+
+      if(item.progress_status === "reached"){
+        return item.reached_message || "この海の名所に到達しました。";
+      }
+
+      if(item.progress_status === "silhouette"){
+        return item.silhouette_message || "名所の輪郭が見えてきました。";
+      }
+
+      if(item.progress_status === "hint"){
+        return item.hint_message || "遠くに名所の気配があります。";
+      }
+
+      return item.description || "この海の名所は、まだ霧の向こうにあります。";
+    }
+
+    function landmarksForArea(areaKey){
+      const normalizedAreaKey = normalizeAreaKeyValue(areaKey);
+
+      return (landmarkProgress || [])
+        .filter(function(item){
+          return normalizeAreaKeyValue(item.area_key) === normalizedAreaKey;
+        })
+        .filter(function(item){
+          return !!item.area_is_open;
+        })
+        .sort(function(a, b){
+          return Number(a.display_order || 0) - Number(b.display_order || 0);
+        });
+    }
+
+    function pickLandmarkForArea(areaKey){
+      const list = landmarksForArea(areaKey);
+
+      if(list.length === 0){
+        return null;
+      }
+
+      const active = list.find(function(item){
+        return item.progress_status === "hint" || item.progress_status === "silhouette";
+      });
+
+      if(active){
+        return active;
+      }
+
+      const reached = list
+        .filter(function(item){
+          return item.progress_status === "reached";
+        })
+        .pop();
+
+      if(reached){
+        return reached;
+      }
+
+      return list[0];
+    }
+
+    function seaLandmarkChipHtml(areaKey){
+      const item = pickLandmarkForArea(areaKey);
+
+      if(!item || item.progress_status === "hidden"){
+        return "";
+      }
+
+      return `
+        <div class="sea-landmark-chip">
+          名所：${escapeHtml(item.name_ja || "海の名所")}・${escapeHtml(landmarkStageLabel(item.progress_status))}
+        </div>
+      `;
+    }
+
+    function areaLandmarkHtml(areaKey){
+      const list = landmarksForArea(areaKey);
+
+      if(list.length === 0){
+        return "";
+      }
+
+      return list.map(function(item){
+        const ratio = Math.max(0, Math.min(Number(item.progress_ratio || 0), 1));
+        const percent = Math.round(ratio * 100);
+        const logCount = Number(item.voyage_log_count || 0);
+        const reachedCount = Number(item.reached_log_count || 0);
+        const remaining = Math.max(reachedCount - logCount, 0);
+
+        const metaText =
+          item.progress_status === "reached"
+            ? "到達目安：" + reachedCount + "回"
+            : "到達まで：あと" + remaining + "回";
+
+        return `
+          <div class="area-landmark">
+            <div class="area-landmark-label">海の名所</div>
+            <div class="area-landmark-title">
+              ${escapeHtml(item.name_ja || "海の名所")}
+            </div>
+            <div class="area-landmark-stage">
+              ${escapeHtml(landmarkStageLabel(item.progress_status))}　${escapeHtml(metaText)}
+            </div>
+            <div class="area-landmark-text">
+              ${escapeHtml(landmarkMessageFor(item))}
+            </div>
+            <div class="area-landmark-progress" aria-hidden="true">
+              <div class="area-landmark-progress-bar" style="width:${escapeHtml(percent)}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     function areaJournalHtml(areaKey){
       const items = discoveredItemsForArea(areaKey);
       const count = items.length;
@@ -3109,6 +3339,8 @@
               ${escapeHtml(memoryStage)}
             </div>
     
+            ${seaLandmarkChipHtml(area.area_key)}
+
             <div class="sea-atmosphere">
               <div class="sea-atmosphere-label">漂着の気配</div>
               <div class="sea-atmosphere-text">
@@ -3380,6 +3612,8 @@
         <div class="area-caption-atmosphere">
           気配：${escapeHtml(areaData.atmosphere || "")}
         </div>
+      
+        ${areaLandmarkHtml(areaData.key)}
       
         ${areaJournalHtml(areaData.key)}
       `;
