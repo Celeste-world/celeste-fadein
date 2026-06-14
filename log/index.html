@@ -1880,6 +1880,40 @@
     }
     
     @media(max-width:640px){
+      .cat-scroll.stacked-mode .cat-scroll-head{
+        gap:8px;
+        margin-bottom:10px;
+      }
+    
+      .cat-scroll.stacked-mode .cat-icon-wrap{
+        width:min(140px, 100%);
+        height:min(140px, 38vw);
+        border-radius:20px;
+      }
+    
+      .cat-scroll.stacked-mode .cat-icon{
+        border-radius:18px;
+      }
+    
+      .cat-scroll.stacked-mode .cat-scroll-text{
+        max-height:calc(100vh - 360px);
+        max-height:calc(100dvh - 360px);
+        overflow-y:auto;
+        padding-right:6px;
+        font-size:13px;
+        line-height:1.75;
+      }
+    
+      .cat-scroll.stacked-mode .cat-play-actions{
+        gap:8px;
+        margin-top:12px;
+        padding-top:12px;
+      }
+    
+      .cat-scroll.stacked-mode .cat-play-actions button{
+        width:100%;
+      }
+      
       .site-header{
         position:relative;
       }
@@ -2849,6 +2883,14 @@
     
     function moodReactionForTag(tag){
       return moodReactionMap[tag] || moodReactionMap.Harbor;
+    }
+
+    function moodLabelForTag(tag){
+      const moodReaction = moodReactionForTag(tag);
+    
+      return moodReaction && moodReaction.label
+        ? moodReaction.label
+        : "いつもの日";
     }
     
     function setCatMoodImage(tag){
@@ -4974,7 +5016,8 @@
       }else{
         voyageLogs.forEach(log => {
           lines.push("日時：" + formatDateTimeForExport(log.created_at));
-          lines.push("タグ：#" + (log.tag || "Harbor"));
+          const logTag = log.tag || "Harbor";
+          lines.push("今日の気持ち：" + moodLabelForTag(logTag) + "（" + logTag + "）");
           lines.push("");
           lines.push(cleanExportText(log.content));
           lines.push("");
@@ -5263,7 +5306,7 @@
           </div>
 
           <div class="content">${escapeHtml(log.content)}</div>
-          <div class="tag">#${escapeHtml(log.tag || "Harbor")}</div>
+          <div class="tag">#${escapeHtml(moodLabelForTag(log.tag || "Harbor"))}</div>
         `;
 
         logsEl.appendChild(div);
