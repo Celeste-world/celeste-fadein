@@ -603,7 +603,7 @@
         </h2>
 
         <p class="billing-text">
-          Celeste Harbor では、今後、月額支援、航海燃料、潮の便り、Special Voyage Ticket などの支払い管理をここにまとめる予定です。
+          Celeste Harbor では、今後、月額支援、航海燃料、潮の便り、特別航海チケットなどの支払い管理をここにまとめる予定です。
           航海燃料は航海記録枠を増やすためのもの、航海券は必要な夜に少し深く振り返るための入口です。
           現時点では、購入・決済・カード登録・サブスクリプション変更は行えません。
         </p>
@@ -682,15 +682,15 @@
 
     function accountDisplayName(user){
       if(!user){
-        return "Guest";
+        return "ゲスト";
       }
-
+    
       return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.user_metadata?.display_name ||
         user.email ||
-        "Account"
+        "アカウント"
       );
     }
 
