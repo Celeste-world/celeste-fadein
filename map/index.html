@@ -491,13 +491,33 @@
     .pos-fog{ left:75%; top:24%; }
     .pos-moon{ left:11%; top:62%; }
     .pos-deep{ left:40%; top:70%; }
-    .pos-outer{ left:68%; top:72%; }
+    .pos-outer{ left:69%; top:65%; }
 
     .sea-card.open{
       border-color:rgba(185,246,202,.58);
       background:
         radial-gradient(circle at top, rgba(185,246,202,.085), transparent 60%),
         rgba(5,8,17,.62);
+    }
+
+    .sea-card.locked{
+      width:clamp(140px, 15vw, 190px);
+      padding:10px 12px;
+      opacity:.58;
+    }
+    
+    .sea-card.locked .sea-desc{
+      font-size:11px;
+      line-height:1.6;
+      margin-bottom:8px;
+    }
+    
+    .sea-card.locked .sea-atmosphere{
+      display:none;
+    }
+    
+    .sea-card.locked .sea-meta{
+      margin-top:4px;
     }
     
     .sea-card.locked{
