@@ -390,8 +390,10 @@
 
     .chart-panel{
       position:relative;
-      width:100%;
+      width:min(1320px, calc(100vw - 40px));
       aspect-ratio:16 / 9;
+      margin-left:50%;
+      transform:translateX(-50%);
       background:
         linear-gradient(
           180deg,
@@ -406,8 +408,9 @@
       border-radius:26px;
       box-shadow:0 20px 48px rgba(0,0,0,.42);
       overflow:visible;
-      margin-bottom:clamp(180px, 18vw, 280px);
+      margin-bottom:clamp(90px, 8vw, 150px);
     }
+    
     .chart-panel::before{
       content:"";
       position:absolute;
@@ -462,7 +465,7 @@
 
     .sea-card{
       position:absolute;
-      width:clamp(160px, 19vw, 245px);
+      width:clamp(150px, 17vw, 230px);
       min-height:auto;
       border-radius:16px;
       padding:12px 14px;
@@ -483,12 +486,12 @@
     }
 
     .pos-harbor{ left:4%; top:9%; }
-    .pos-tide{ left:31%; top:21%; }
-    .pos-lighthouse{ left:51%; top:8%; }
-    .pos-fog{ left:72%; top:20%; }
-    .pos-moon{ left:8%; top:62%; }
-    .pos-deep{ left:39%; top:72%; }
-    .pos-outer{ left:72%; top:78%; }
+    .pos-tide{ left:29%; top:22%; }
+    .pos-lighthouse{ left:52%; top:9%; }
+    .pos-fog{ left:75%; top:24%; }
+    .pos-moon{ left:11%; top:62%; }
+    .pos-deep{ left:40%; top:70%; }
+    .pos-outer{ left:68%; top:72%; }
 
     .sea-card.open{
       border-color:rgba(185,246,202,.58);
@@ -1527,6 +1530,9 @@
 
     @media(max-width:860px){
       .chart-panel{
+        width:100%;
+        margin-left:0;
+        transform:none;
         aspect-ratio:auto;
         min-height:auto;
         padding:18px;
