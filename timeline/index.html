@@ -1234,6 +1234,40 @@
       });
     }
 
+    const moodLabelMap = {
+      Harbor: "いつもの日",
+      Return: "ひと区切りついた",
+      "Calm Tide": "落ち着いている",
+      Lighthouse: "少し前向き",
+      Fog: "迷っている",
+      Drift: "流されている・保留",
+      Moonlit: "静かな余韻がある",
+      "Deep Current": "深く考えている",
+      Storm: "不安・荒れている"
+    };
+    
+    function moodLabelForTag(tag){
+      return moodLabelMap[tag] || moodLabelMap.Harbor;
+    }
+    
+    function moodExportLabelForTag(tag){
+      const key = tag || "Harbor";
+      return moodLabelForTag(key) + "（" + key + "）";
+    }
+    
+    function eventMoodTag(event){
+      const metadata = event && event.metadata ? event.metadata : {};
+    
+      return (
+        event?.tag ||
+        metadata.tag ||
+        metadata.mood_tag ||
+        metadata.log_tag ||
+        metadata.voyage_log_tag ||
+        ""
+      );
+    }
+
     function normalizeEventType(type){
       return String(type || "")
         .trim()
@@ -1636,9 +1670,16 @@
         const eventKey = event.event_key
           ? `<span class="timeline-detail-chip">${escapeHtml(event.event_key)}</span>`
           : "";
-
+      
+        const moodTag = eventMoodTag(event);
+      
+        const moodChip = moodTag
+          ? `<span class="timeline-detail-chip">今日の気持ち：${escapeHtml(moodExportLabelForTag(moodTag))}</span>`
+          : "";
+      
         timelineDetailMeta.innerHTML = `
           <span class="timeline-detail-chip">${escapeHtml(label)}</span>
+          ${moodChip}
           ${eventKey}
         `;
       }
@@ -1985,10 +2026,11 @@
         : events.slice(0, initialTimelineLimit);
 
       const itemsHtml = visibleEvents.map(event => {
-        const typeClass = eventClassName(event.event_type);
-        const eventId = registerTimelineEvent(event);
-
-        return `
+      const typeClass = eventClassName(event.event_type);
+      const eventId = registerTimelineEvent(event);
+      const moodTag = eventMoodTag(event);
+    
+      return `
           <div
             class="timeline-item ${typeClass}"
             data-timeline-event-id="${escapeHtml(eventId)}"
@@ -2015,6 +2057,15 @@
               <div class="timeline-type ${typeClass}">
                 ${escapeHtml(eventTypeLabel(event.event_type))}
               </div>
+              ${
+                moodTag
+                  ? `
+                    <div class="timeline-type ${typeClass}">
+                      今日の気持ち：${escapeHtml(moodLabelForTag(moodTag))}
+                    </div>
+                  `
+                  : ""
+              }
             </div>
           </div>
         `;
