@@ -904,6 +904,7 @@
     
     .item-acquired-card{
       position:relative;
+      pointer-events:auto;
       width:min(420px, 100%);
       border-radius:24px;
       border:1px solid rgba(185,246,202,.34);
@@ -1411,9 +1412,9 @@
 
         <p class="note">
           深く向き合う航海ほど、漂着物（思い出の欠片）が流れ着く気配も強くなります。<br>
-          Drift Ticket（漂着チケット）は、港にたまたま漂着する短い航海券です。<br>
-          Special Voyage Ticket（特別航海チケット）は、いつもより少し深く振り返りたいときに使うチケットです。<br>
-          Deep Sea Ticket（深海チケット）は、さらに深い内省や整理をしたいときに使うチケットです。
+          漂着チケットは、港にたまたま漂着する短い航海券です。<br>
+          特別航海チケットは、いつもより少し深く振り返りたいときに使うチケットです。<br>
+          深海チケットは、さらに深い内省や整理をしたいときに使うチケットです。
         </p>
       </section>
     </main>
@@ -1653,15 +1654,15 @@
 
     function accountDisplayName(user){
       if(!user){
-        return "Guest";
+        return "ゲスト";
       }
-
+    
       return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.user_metadata?.display_name ||
         user.email ||
-        "Account"
+        "アカウント"
       );
     }
 
@@ -1674,20 +1675,20 @@
 
     function ticketLabel(type){
       const normalized = normalizeTicketType(type);
-
+    
       if(normalized === "drift"){
-        return "Drift Ticket（漂着チケット）";
+        return "漂着チケット";
       }
-
+    
       if(normalized === "special"){
-        return "Special Voyage Ticket（特別航海チケット）";
+        return "特別航海チケット";
       }
-
+    
       if(normalized === "deep_sea"){
-        return "Deep Sea Ticket（深海チケット）";
+        return "深海チケット";
       }
-
-      return type || "Voyage Ticket";
+    
+      return type || "航海券";
     }
 
     function ticketCardClass(type){
@@ -1717,11 +1718,11 @@
       }
     
       if(normalized === "special"){
-        return `Special Voyage Ticket は、${minutes}分だけ少し深く振り返り、言葉を整えるためのチケットです。`;
+        return `特別航海チケットは、${minutes}分だけ少し深く振り返り、言葉を整えるためのチケットです。`;
       }
-    
+      
       if(normalized === "deep_sea"){
-        return `Deep Sea Ticket は、${minutes}分、さらに深い内省や整理をしたいときに使うチケットです。`;
+        return `深海チケットは、${minutes}分、さらに深い内省や整理をしたいときに使うチケットです。`;
       }
     
       return `${minutes}分の航海券です。`;
@@ -1741,6 +1742,24 @@
       }
 
       return "航海券";
+    }
+
+    function ticketStatusLabel(status){
+      const value = String(status || "").trim().toLowerCase();
+    
+      if(value === "available"){
+        return "利用できます";
+      }
+    
+      if(value === "used"){
+        return "使用済み";
+      }
+    
+      if(value === "expired"){
+        return "期限切れ";
+      }
+    
+      return status || "航海券";
     }
 
     function voyageEntryText(ticket){
@@ -2723,7 +2742,7 @@
     
         rewards.push({
           type: "harbor_find",
-          label: "HARBOR FIND",
+          label: "漂着物",
           title: item.item_name || item.name_ja || item.item_key || "漂着物",
           item_key: item.item_key || "",
           description: item.description || "",
@@ -2755,7 +2774,7 @@
     
         rewards.push({
           type: "harbor_find",
-          label: "HARBOR FIND",
+          label: "漂着物",
           title: item.item_name || item.name_ja || item.item_key || "漂着物",
           item_key: item.item_key || "",
           description: item.description || "",
@@ -2779,10 +2798,10 @@
     
         rewards.push({
           type: "drift_ticket",
-          label: "DRIFT TICKET",
+          label: "漂着チケット",
           title: ticketType === "drift"
-            ? "Drift Ticket（漂着チケット）"
-            : "Voyage Ticket",
+            ? "漂着チケット"
+            : "航海券",
           ticket_type: ticketType,
           duration_minutes: durationMinutes,
           status: ticket.status || "available",
@@ -2803,7 +2822,7 @@
     
           rewards.push({
             type: "notice",
-            label: "NOTICE",
+            label: "お知らせ",
             title: text,
             description: text
           });
@@ -2823,7 +2842,7 @@
     
             return {
               type: "harbor_find",
-              label: "HARBOR FIND",
+              label: "漂着物",
               title:
                 item.item_name ||
                 item.name_ja ||
@@ -3049,7 +3068,7 @@
       }
     
       return "";
-    }
+      }
     
     function buildSpecialVoyageResponseText(serverReply, payload, rewards){
       const serverText = String(serverReply || "").trim();
@@ -3097,7 +3116,7 @@
         button.style.cursor = "pointer";
 
         const label = document.createElement("div");
-        label.textContent = reward.label || "REWARD";
+        label.textContent = reward.label || "届いたもの";
         label.style.fontSize = "0.72rem";
         label.style.letterSpacing = "0.12em";
         label.style.opacity = "0.75";
@@ -3275,14 +3294,14 @@
         imageBox.style.justifyContent = "center";
         imageBox.style.fontSize = ".75rem";
         imageBox.style.opacity = ".65";
-        imageBox.innerHTML = "image<br>pending";
+        imageBox.innerHTML = "まだ姿は<br>見えません";
       }
     
       const main = document.createElement("div");
       main.style.flex = "1";
     
       const label = document.createElement("div");
-      label.textContent = "HARBOR FIND";
+     label.textContent = "漂着物";
       label.style.fontSize = ".72rem";
       label.style.letterSpacing = ".14em";
       label.style.opacity = ".7";
@@ -3323,14 +3342,14 @@
       const wrapper = document.createElement("div");
 
       const label = document.createElement("div");
-      label.textContent = "DRIFT TICKET";
+      label.textContent = "漂着チケット";
       label.style.fontSize = ".72rem";
       label.style.letterSpacing = ".14em";
       label.style.opacity = ".7";
       label.style.marginBottom = "6px";
 
       const title = document.createElement("h3");
-      title.textContent = reward.title || "Drift Ticket（漂着チケット）";
+      title.textContent = reward.title || "漂着チケット";
       title.style.margin = "0 0 12px";
       title.style.fontSize = "1.25rem";
 
@@ -3349,7 +3368,7 @@
 
       [
         `${reward.duration_minutes || 5}分`,
-        reward.status || "available"
+        ticketStatusLabel(reward.status || "available")
       ].filter(Boolean).forEach((text) => {
         const tag = document.createElement("span");
         tag.textContent = text;
@@ -3372,7 +3391,7 @@
       const wrapper = document.createElement("div");
 
       const label = document.createElement("div");
-      label.textContent = reward.label || "NOTICE";
+      label.textContent = reward.label || "お知らせ";
       label.style.fontSize = ".72rem";
       label.style.letterSpacing = ".14em";
       label.style.opacity = ".7";
