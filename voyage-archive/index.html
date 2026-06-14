@@ -1059,7 +1059,7 @@
 
         <p class="lead">
           航海の保管庫は、過去の自分ともう一度出会う場所です。<br>
-          これまで残した航海記録を月ごとにたどり、その時の言葉、気配、灯りを見返すことで、人生の航海を静かに振り返ることができます。
+          これまで残した航海記録を月ごとにたどり、その時の言葉、気持ち、灯りを見返すことで、人生の航海を静かに振り返ることができます。
         </p>
       </div>
 
@@ -1082,16 +1082,16 @@
           >
         
           <select class="archive-search-select" id="archiveTagFilter">
-            <option value="">すべての気配</option>
-            <option value="Harbor">Harbor</option>
-            <option value="Return">Return</option>
-            <option value="Calm Tide">Calm Tide</option>
-            <option value="Lighthouse">Lighthouse</option>
-            <option value="Fog">Fog</option>
-            <option value="Drift">Drift</option>
-            <option value="Moonlit">Moonlit</option>
-            <option value="Deep Current">Deep Current</option>
-            <option value="Storm">Storm</option>
+            <option value="">すべての気持ち</option>
+            <option value="Harbor">いつもの日</option>
+            <option value="Return">ひと区切りついた</option>
+            <option value="Calm Tide">落ち着いている</option>
+            <option value="Lighthouse">少し前向き</option>
+            <option value="Fog">迷っている</option>
+            <option value="Drift">流されている・保留</option>
+            <option value="Moonlit">静かな余韻がある</option>
+            <option value="Deep Current">深く考えている</option>
+            <option value="Storm">不安・荒れている</option>
           </select>
 
           <label class="archive-lantern-filter">
@@ -1113,7 +1113,7 @@
         </div>
       
         <div class="archive-search-result" id="archiveSearchResult">
-          言葉、気配、Lantern Mark を使って、過去の自分と再会できます。
+          言葉、今日の気持ち、Lantern Mark を使って、過去の自分と再会できます。
         </div>
 
         <div class="read-more-wrap" id="archiveSearchMoreWrap" style="display:none;">
@@ -1136,7 +1136,7 @@
             
           <div class="archive-note">
             航海記録を月ごとにまとめています。<br>
-            月を選ぶと、その頃の言葉と気配をたどり、過去の自分と静かに再会できます。
+            月を選ぶと、その頃の言葉と今日の気持ちをたどり、過去の自分と静かに再会できます。
           </div>
         </section>
 
@@ -1181,8 +1181,8 @@
               </div>
             
               <div class="month-summary-chip">
-                <div class="month-summary-chip-label">主な気配</div>
-                <div class="month-summary-chip-value" id="monthSummaryTag">Harbor</div>
+                <div class="month-summary-chip-label">主な気持ち</div>
+                <div class="month-summary-chip-value" id="monthSummaryTag">いつもの日</div>
               </div>
             
               <div class="month-summary-chip">
@@ -1200,7 +1200,7 @@
           </div>
 
           <div class="month-tags" id="monthTags" style="display:none;">
-            <div class="month-tags-label">この月に多かった気配</div>
+            <div class="month-tags-label">この月に多かった気持ち</div>
             <div class="month-tags-list" id="monthTagsList"></div>
           </div>
 
@@ -1530,6 +1530,27 @@
       return year + "年" + month + "月";
     }
 
+    const moodLabelMap = {
+      Harbor: "いつもの日",
+      Return: "ひと区切りついた",
+      "Calm Tide": "落ち着いている",
+      Lighthouse: "少し前向き",
+      Fog: "迷っている",
+      Drift: "流されている・保留",
+      Moonlit: "静かな余韻がある",
+      "Deep Current": "深く考えている",
+      Storm: "不安・荒れている"
+    };
+    
+    function moodLabelForTag(tag){
+      return moodLabelMap[tag] || moodLabelMap.Harbor;
+    }
+    
+    function moodExportLabelForTag(tag){
+      const key = tag || "Harbor";
+      return moodLabelForTag(key) + "（" + key + "）";
+    }
+
     function mostFrequentTag(logs){
       const counts = {};
 
@@ -1652,7 +1673,7 @@
         monthSummary.style.display = "none";
         monthSummaryCount.textContent = "0件";
         monthSummaryDays.textContent = "0日";
-        monthSummaryTag.textContent = "Harbor";
+        monthSummaryTag.textContent = "いつもの日";
         monthSummaryLanterns.textContent = "0件";
         monthSummaryText.textContent = "";
         return;
@@ -1663,7 +1684,7 @@
       
       monthSummaryCount.textContent = String(group.count || group.logs.length) + "件";
       monthSummaryDays.textContent = String(days) + "日";
-      monthSummaryTag.textContent = group.topTag || "Harbor";
+      monthSummaryTag.textContent = moodLabelForTag(group.topTag || "Harbor");
       monthSummaryLanterns.textContent = String(lanterns) + "件";
       monthSummaryText.textContent = monthlySummaryText(group);
     
@@ -1754,7 +1775,7 @@
     
         return `
           <span class="month-tag-chip${primary}">
-            <span>${escapeHtml(item.tag)}</span>
+            <span>#${escapeHtml(moodLabelForTag(item.tag))}</span>
             <span class="month-tag-count">${item.count}</span>
           </span>
         `;
@@ -1841,7 +1862,7 @@
       lines.push("出力日時：" + formatDateTime(new Date().toISOString()));
       lines.push("対象月：" + (group?.label || "日付不明"));
       lines.push("記録数：" + logs.length + "件");
-      lines.push("多かった気配：" + (group?.topTag || "Harbor"));
+      lines.push("多かった気持ち：" + moodExportLabelForTag(group?.topTag || "Harbor"));
       lines.push("Lantern Marks：" + lanterns + "件");
       lines.push("");
     
@@ -1853,15 +1874,15 @@
       lines.push("");
     
       lines.push("========================");
-      lines.push("月の気配");
+      lines.push("月の気持ち");
       lines.push("========================");
       lines.push("");
     
       if(tagCounts.length === 0){
-        lines.push("タグ記録はありません。");
+        lines.push("今日の気持ちの記録はありません。");
       }else{
         tagCounts.forEach(function(item){
-          lines.push("#" + item.tag + "：" + item.count + "件");
+          lines.push("#" + moodExportLabelForTag(item.tag) + "：" + item.count + "件");
         });
       }
 
@@ -1880,7 +1901,7 @@
       }else{
         markedLogs.forEach(function(log){
           lines.push("日時：" + formatDateTime(log.created_at));
-          lines.push("タグ：#" + (log.tag || "Harbor"));
+          lines.push("今日の気持ち：" + moodExportLabelForTag(log.tag || "Harbor"));
           lines.push("");
           lines.push(cleanExportText(log.content));
           lines.push("");
@@ -1901,7 +1922,7 @@
       }else{
         logs.forEach(function(log){
           lines.push("日時：" + formatDateTime(log.created_at));
-          lines.push("タグ：#" + (log.tag || "Harbor"));
+          lines.push("今日の気持ち：" + moodExportLabelForTag(log.tag || "Harbor"));
           lines.push("");
           lines.push(cleanExportText(log.content));
           lines.push("");
@@ -2077,7 +2098,7 @@
             "・対象月：" + group.label + "\n" +
             "・記録数：" + group.count + "件\n" +
             "・期間：" + monthRangeText(group) + "\n" +
-            "・多かった気配：" + group.topTag + "\n" +
+            "・多かった気持ち：" + moodExportLabelForTag(group.topTag || "Harbor") + "\n" +
             "・Lantern Marks：" + lanternMarkCount(group.logs) + "件\n\n" +
             "形式：.txt\n" +
             "ファイル名：" + fileName + "\n\n" +
@@ -2135,7 +2156,7 @@
       }
     
       if(normalizeSearchText(archiveTagQuery)){
-        parts.push("#" + archiveTagQuery);
+        parts.push("#" + moodLabelForTag(archiveTagQuery));
       }
     
       if(archiveLanternOnly){
@@ -2172,7 +2193,7 @@
     
       if(!hasActiveArchiveFilter()){
         archiveSearchResult.textContent =
-          "言葉、気配、Lantern Mark を使って、過去の自分と再会できます。";
+          "言葉、今日の気持ち、Lantern Mark を使って、過去の自分と再会できます。";
         updateArchiveSearchMoreButton();
         return;
       }
@@ -2394,7 +2415,7 @@
           <div class="empty">
             ${
               hasSearch
-                ? "条件に一致する航海記録はありません。<br>言葉や気配を少し変えると、別の過去の自分に出会えるかもしれません。"
+                ? "条件に一致する航海記録はありません。<br>言葉や今日の気持ちを少し変えると、別の過去の自分に出会えるかもしれません。"
                 : "まだ航海記録がありません。<br>日々の記録に言葉が残ると、ここに月ごとの航海が積もり、あとから過去の自分と再会できるようになります。"
             }
           </div>
@@ -2419,7 +2440,7 @@
             <div class="month-title">${escapeHtml(group.label)}</div>
             <div class="month-meta">記録 ${group.count}件</div>
             <div class="month-meta">最後の記録：${escapeHtml(formatDateTime(group.lastDate))}</div>
-            <div class="month-tag">多かった気配：${escapeHtml(group.topTag)}</div>
+            <div class="month-tag">多かった気持ち：${escapeHtml(moodLabelForTag(group.topTag || "Harbor"))}</div>
           </button>
         `;
       }).join("");
@@ -2552,7 +2573,7 @@
 
       detailTitle.textContent = group.label + "の航海";
       detailSub.textContent =
-        "記録 " + group.count + "件。多かった気配：" + group.topTag + "。";
+        "記録 " + group.count + "件。多かった気持ち：" + moodLabelForTag(group.topTag || "Harbor") + "。";
 
       if(downloadMonthBtn){
         downloadMonthBtn.disabled = !group.logs || group.logs.length === 0;
@@ -2580,7 +2601,7 @@
           <article class="log">
             <div class="log-top">
               <div class="date">${escapeHtml(formatShortDate(log.created_at))}　${escapeHtml(formatDateTime(log.created_at))}</div>
-              <div class="tag">#${escapeHtml(log.tag || "Harbor")}</div>
+              <div class="tag">#${escapeHtml(moodLabelForTag(log.tag || "Harbor"))}</div>
             </div>
       
             <div class="content">${escapeHtml(log.content || "")}</div>
