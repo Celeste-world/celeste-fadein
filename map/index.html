@@ -1997,7 +1997,7 @@
   const itemDetailOrigin = document.getElementById("itemDetailOrigin");
 
     const seaChartImagePath = "/images/sea-chart-z.png";
-    const seaChartLabel = "Celeste Harbor Sea Chart";
+    const seaChartLabel = "Celeste Harbor 海図";
 
     let currentUser = null;
     let currentAccessToken = null;
@@ -2161,15 +2161,15 @@
 
     function accountDisplayName(user){
       if(!user){
-        return "Guest";
+        return "ゲスト";
       }
-
+    
       return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.user_metadata?.display_name ||
         user.email ||
-        "Account"
+        "アカウント"
       );
     }
 
@@ -2946,7 +2946,7 @@
       if(count === 0){
         return `
           <div class="area-journal">
-            <div class="area-journal-label">Sea Area Journal</div>
+            <div class="area-journal-label">海域の記録</div>
             <div class="area-journal-main">
               この海に残った漂着物（思い出の欠片）：0
             </div>
@@ -2970,7 +2970,7 @@
     
       return `
         <div class="area-journal">
-          <div class="area-journal-label">Sea Area Journal</div>
+          <div class="area-journal-label">海域の記録</div>
           <div class="area-journal-main">
             この海に残った漂着物（思い出の欠片）：${escapeHtml(count)}
           </div>
@@ -3076,7 +3076,7 @@
         const displayName = areaChapterTitle(area.area_key, area.name_ja);
         const displayDesc = area.description;
     
-        const kicker = "Open Sea Area / 海域（人生のテーマ）";
+        const kicker = "開いた海域（人生のテーマ）";
         const tagText = "開放中";
         const atmosphereText = areaAtmosphereText(area.area_key, true);
         const journalCount = discoveredItemsForArea(area.area_key).length;
@@ -3110,7 +3110,7 @@
             </div>
     
             <div class="sea-atmosphere">
-              <div class="sea-atmosphere-label">Drift Signs</div>
+              <div class="sea-atmosphere-label">漂着の気配</div>
               <div class="sea-atmosphere-text">
                 ${escapeHtml(atmosphereText)}
               </div>
@@ -3138,7 +3138,7 @@
             data-area-atmosphere="まだ霧の向こうにあります。"
             data-area-image="${escapeHtml(seaChartImagePath)}"
           >
-            <div class="sea-kicker">Beyond the Fog / 未開放の海域</div>
+            <div class="sea-kicker">未開放の海域</div>
     
             <div class="sea-name">
               霧の向こう
@@ -3149,7 +3149,7 @@
             </p>
     
             <div class="sea-atmosphere">
-              <div class="sea-atmosphere-label">Drift Signs</div>
+              <div class="sea-atmosphere-label">漂着の気配</div>
               <div class="sea-atmosphere-text">
                 まだ霧の向こうにあります。
               </div>
@@ -3165,7 +3165,7 @@
         : "";
     
       mapArea.innerHTML = `
-        <section class="chart-panel" aria-label="Celeste Harbor sea chart">
+        <section class="chart-panel" aria-label="Celeste Harbor 海図">
           <div class="sea-grid">
             ${cardsHtml}
             ${fogHtml}
@@ -3329,7 +3329,7 @@
         imageModalContent.innerHTML = `
           <div class="fog-card">
             <div class="fog-card-inner">
-              <div class="fog-card-label">Beyond the Fog</div>
+              <div class="fog-card-label">霧の向こう</div>
               <div class="fog-card-title">霧の向こう</div>
               <div class="fog-card-text">
                 まだ、この海域（人生のテーマ）は姿を見せていません。<br>
