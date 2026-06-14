@@ -4272,6 +4272,7 @@
         await loadActiveSpecialVoyageBanner();
         await loadMonthlyLogLimit();
         await ensureUserVessel();
+        await syncMyLandmarkReaches(false);
         await applyHarborWeather();
         await loadLogs();
         await loadMonthlyLogLimit();
@@ -4616,6 +4617,49 @@
       }
     }
 
+    async function syncMyLandmarkReaches(showNotice = false){
+      if(!currentUser || !currentAccessToken){
+        return [];
+      }
+    
+      try{
+        const result = await fetchSupabase(
+          "/rest/v1/rpc/sync_my_landmark_reaches",
+          {
+            method: "POST",
+            body: {}
+          }
+        );
+    
+        const rows = Array.isArray(result) ? result : [];
+    
+        if(showNotice && rows.length > 0){
+          const names = rows
+            .map(row => row.out_name_ja || row.name_ja || row.out_landmark_key || row.landmark_key)
+            .filter(Boolean);
+    
+          const message =
+            names.length === 1
+              ? "波の向こうに「" + names[0] + "」が姿を現しました。"
+              : "波の向こうに、" + names.map(name => "「" + name + "」").join("、") + "が姿を現しました。";
+    
+          await appendCatScrollNotice(
+            message,
+            "海の名所",
+            "welcome"
+          );
+    
+          await holdCatText(2400);
+        }
+    
+        return rows;
+    
+      }catch(error){
+        console.warn("sync_my_landmark_reaches failed:", error);
+        return [];
+      }
+    }
+
     async function saveLog(){
       setStatus("保存しています。");
 
@@ -4858,6 +4902,8 @@
             "港は静かなままです。"
           );
         }
+
+        await syncMyLandmarkReaches(true);
 
         showCatPlayActions();
         scheduleCatScrollAutoClose(12000);
@@ -5539,6 +5585,7 @@
         
         await loadActiveSpecialVoyageBanner();
         await ensureUserVessel();
+        await syncMyLandmarkReaches(false);
         await applyHarborWeather();
         await loadLogs();
         await loadMonthlyLogLimit();
