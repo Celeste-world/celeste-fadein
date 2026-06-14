@@ -1152,6 +1152,27 @@
       });
     }
 
+    const moodLabelMap = {
+      Harbor: "いつもの日",
+      Return: "ひと区切りついた",
+      "Calm Tide": "落ち着いている",
+      Lighthouse: "少し前向き",
+      Fog: "迷っている",
+      Drift: "流されている・保留",
+      Moonlit: "静かな余韻がある",
+      "Deep Current": "深く考えている",
+      Storm: "不安・荒れている"
+    };
+    
+    function moodLabelForTag(tag){
+      return moodLabelMap[tag] || moodLabelMap.Harbor;
+    }
+    
+    function moodExportLabelForTag(tag){
+      const key = tag || "Harbor";
+      return moodLabelForTag(key) + "（" + key + "）";
+    }
+
     function localDateKey(value){
       const date = new Date(value);
 
@@ -1378,7 +1399,7 @@
       tagChips.innerHTML = counts.map(function(item, index){
         return `
           <span class="chip ${index === 0 ? "accent" : ""}">
-            ${escapeHtml(item.tag)} ${escapeHtml(item.count)}
+            #${escapeHtml(moodLabelForTag(item.tag))} ${escapeHtml(item.count)}
           </span>
         `;
       }).join("");
@@ -1448,7 +1469,7 @@
       if(lastVoyageLog){
         lastVoyagePreview.textContent = previewText(lastVoyageLog.content, 120);
         lastVoyageMeta.textContent =
-          formatDateTime(lastVoyageLog.created_at) + "　#" + (lastVoyageLog.tag || "Harbor");
+          formatDateTime(lastVoyageLog.created_at) + "　#" + moodLabelForTag(lastVoyageLog.tag || "Harbor");
         lastVoyageCard.style.display = "block";
       }else{
         lastVoyageCard.style.display = "none";
@@ -1458,7 +1479,7 @@
         memoryTideTitle.textContent = memoryTideTitleForTag(memoryTideLog.tag);
         memoryTidePreview.textContent = previewText(memoryTideLog.content, 120);
         memoryTideMeta.textContent =
-          formatDateTime(memoryTideLog.created_at) + "　#" + (memoryTideLog.tag || "Harbor");
+          formatDateTime(memoryTideLog.created_at) + "　#" + moodLabelForTag(memoryTideLog.tag || "Harbor");
         memoryTideCard.style.display = "block";
       }else{
         memoryTideCard.style.display = "none";
@@ -1474,7 +1495,7 @@
       recordModalTitle.textContent =
         mode === "memory" ? "以前の潮が戻ってきました" : "前回の航海記録";
       recordModalDate.textContent = formatDateTime(log.created_at);
-      recordModalTag.textContent = "#" + (log.tag || "Harbor");
+      recordModalTag.textContent = "今日の気持ち：" + moodExportLabelForTag(log.tag || "Harbor");
       recordModalContent.textContent = log.content || "記録の本文はありません。";
 
       recordModal.classList.add("visible");
