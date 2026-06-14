@@ -653,6 +653,24 @@
       text-align:left;
     }
 
+    .area-landmark-image-wrap{
+      width:100%;
+      margin:8px 0 10px;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(255,227,163,.18);
+      background:
+        radial-gradient(circle at top, rgba(255,227,163,.08), transparent 58%),
+        rgba(5,8,17,.62);
+    }
+    
+    .area-landmark-image-wrap img{
+      width:100%;
+      aspect-ratio:16 / 9;
+      object-fit:cover;
+      display:block;
+    }
+
     .area-landmark-label{
       font-size:11px;
       letter-spacing:.16em;
@@ -3182,16 +3200,27 @@
           item.progress_status === "reached"
             ? "到達目安：" + reachedCount + "回"
             : "到達まで：あと" + remaining + "回";
-
+        
+        const imageHtml = item.image_path
+          ? `
+            <div class="area-landmark-image-wrap">
+              <img src="${escapeHtml(item.image_path)}" alt="${escapeHtml(item.name_ja || "海の名所")}" loading="lazy">
+            </div>
+          `
+          : "";
+        
         return `
           <div class="area-landmark">
             <div class="area-landmark-label">海の名所</div>
             <div class="area-landmark-title">
               ${escapeHtml(item.name_ja || "海の名所")}
             </div>
-            <div class="area-landmark-stage">
+           <div class="area-landmark-stage">
               ${escapeHtml(landmarkStageLabel(item.progress_status))}　${escapeHtml(metaText)}
             </div>
+            
+            ${imageHtml}
+            
             <div class="area-landmark-text">
               ${escapeHtml(landmarkMessageFor(item))}
             </div>
