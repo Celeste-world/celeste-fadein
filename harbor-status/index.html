@@ -1881,7 +1881,9 @@
 
       buildList.innerHTML = nextVesselRequirements.map(function(item){
         const required = Number(item.required_count || 0);
-        const owned = Number(item.owned_count || 0);
+        const owned = Number.isFinite(Number(item.owned_count))
+          ? Number(item.owned_count)
+          : 0;
         const missing = Math.max(required - owned, 0);
 
         missingTotal += missing;
