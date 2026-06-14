@@ -695,6 +695,72 @@
       }
     }
 
+
+    .landmark-card{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .landmark-card::after{
+      content:"";
+      position:absolute;
+      inset:auto 24px 0 auto;
+      width:180px;
+      height:180px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(255,227,163,.12), transparent 68%);
+      pointer-events:none;
+    }
+
+    .landmark-stage{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,227,163,.30);
+      border-radius:999px;
+      padding:5px 10px;
+      color:var(--gold);
+      background:rgba(255,227,163,.055);
+      font-size:12px;
+      line-height:1.6;
+      margin:8px 0 12px;
+    }
+
+    .landmark-progress{
+      position:relative;
+      height:8px;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(169,183,255,.14);
+      margin-top:16px;
+    }
+
+    .landmark-progress-bar{
+      width:0%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(169,183,255,.78), rgba(255,227,163,.86));
+      transition:width .35s ease;
+    }
+
+    .landmark-meta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .landmark-meta-chip{
+      display:inline-flex;
+      border:1px solid rgba(160,168,187,.24);
+      border-radius:999px;
+      padding:5px 10px;
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+      font-size:12px;
+      line-height:1.6;
+    }
+
     .recent-voyage-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -891,6 +957,31 @@
             </div>
           </div>
         </article>
+
+
+        <article class="card wide landmark-card" id="landmarkCard">
+          <div class="card-label">海の名所</div>
+          <div class="card-title" id="landmarkTitle">
+            海の名所を確認しています。
+          </div>
+          <div class="landmark-stage" id="landmarkStage">
+            確認中
+          </div>
+          <div class="card-text" id="landmarkText">
+            航海記録から、今見えている名所を確認しています。
+          </div>
+          <div class="landmark-progress" aria-hidden="true">
+            <div class="landmark-progress-bar" id="landmarkProgressBar"></div>
+          </div>
+          <div class="landmark-meta-row">
+            <span class="landmark-meta-chip" id="landmarkArea">海域：—</span>
+            <span class="landmark-meta-chip" id="landmarkCount">航海記録：—</span>
+            <span class="landmark-meta-chip" id="landmarkRemaining">到達まで：—</span>
+          </div>
+          <div class="small-meta" id="landmarkMeta">
+            ランドマークは、その海を航海してきた証として海図に刻まれます。
+          </div>
+        </article>
       
         <article class="card wide">
           <div class="card-label">次の船（継続の証）</div>
@@ -1028,6 +1119,17 @@
     const nextVesselText = document.getElementById("nextVesselText");
     const buildList = document.getElementById("buildList");
     const buildSummary = document.getElementById("buildSummary");
+
+    const landmarkCard = document.getElementById("landmarkCard");
+    const landmarkTitle = document.getElementById("landmarkTitle");
+    const landmarkStage = document.getElementById("landmarkStage");
+    const landmarkText = document.getElementById("landmarkText");
+    const landmarkProgressBar = document.getElementById("landmarkProgressBar");
+    const landmarkArea = document.getElementById("landmarkArea");
+    const landmarkCount = document.getElementById("landmarkCount");
+    const landmarkRemaining = document.getElementById("landmarkRemaining");
+    const landmarkMeta = document.getElementById("landmarkMeta");
+
     const harborLightNumber = document.getElementById("harborLightNumber");
     const harborLightText = document.getElementById("harborLightText");
 
@@ -1056,6 +1158,7 @@
     let allLogs = [];
     let harborSummary = null;
     let nextVesselRequirements = [];
+    let landmarkProgress = [];
     let lastVoyageLog = null;
     let memoryTideLog = null;
     
@@ -1555,6 +1658,158 @@
       return String(Math.max(diff + 1, 1)) + "日";
     }
 
+
+    function landmarkStageLabel(status){
+      if(status === "reached"){
+        return "到達しました";
+      }
+
+      if(status === "silhouette"){
+        return "輪郭が見えています";
+      }
+
+      if(status === "hint"){
+        return "遠くに気配があります";
+      }
+
+      return "まだ霧の向こう";
+    }
+
+    function landmarkMessageFor(item){
+      if(!item){
+        return "航海記録から、今見えている名所を確認しています。";
+      }
+
+      if(item.progress_status === "reached"){
+        return item.reached_message || "この海の名所に到達しました。";
+      }
+
+      if(item.progress_status === "silhouette"){
+        return item.silhouette_message || "名所の輪郭が見えてきました。";
+      }
+
+      if(item.progress_status === "hint"){
+        return item.hint_message || "遠くに名所の気配があります。";
+      }
+
+      return item.description || "この海の名所は、まだ霧の向こうにあります。";
+    }
+
+    function pickLandmarkForDisplay(items){
+      const list = Array.isArray(items) ? items.slice() : [];
+
+      if(list.length === 0){
+        return null;
+      }
+
+      const openItems = list
+        .filter(function(item){
+          return !!item.area_is_open;
+        })
+        .sort(function(a, b){
+          return Number(a.display_order || 0) - Number(b.display_order || 0);
+        });
+
+      if(openItems.length === 0){
+        return null;
+      }
+
+      const active = openItems.find(function(item){
+        return item.progress_status === "hint" || item.progress_status === "silhouette";
+      });
+
+      if(active){
+        return active;
+      }
+
+      const reached = openItems
+        .filter(function(item){
+          return item.progress_status === "reached";
+        })
+        .pop();
+
+      if(reached){
+        return reached;
+      }
+
+      return openItems[0];
+    }
+
+    function renderLandmarkProgress(){
+      const item = pickLandmarkForDisplay(landmarkProgress);
+
+      if(!landmarkCard){
+        return;
+      }
+
+      if(!item){
+        landmarkTitle.textContent = "海の名所は、まだ霧の向こうです。";
+        landmarkStage.textContent = "未確認";
+        landmarkText.textContent =
+          "航海が進むと、海域の先に特別な名所が見えてきます。";
+        landmarkProgressBar.style.width = "0%";
+        landmarkArea.textContent = "海域：—";
+        landmarkCount.textContent = "航海記録：—";
+        landmarkRemaining.textContent = "到達まで：—";
+        landmarkMeta.textContent =
+          "ランドマークは、その海を航海してきた証として海図に刻まれます。";
+        return;
+      }
+
+      const logCount = Number(item.voyage_log_count || 0);
+      const reachedCount = Number(item.reached_log_count || 0);
+      const nextMilestoneCount = Number(item.next_milestone_log_count || reachedCount || 0);
+      const remaining = Math.max(reachedCount - logCount, 0);
+      const ratio = Math.max(0, Math.min(Number(item.progress_ratio || 0), 1));
+      const percent = Math.round(ratio * 100);
+
+      landmarkTitle.textContent = item.name_ja || "海の名所";
+      landmarkStage.textContent = landmarkStageLabel(item.progress_status);
+      landmarkText.textContent = landmarkMessageFor(item);
+      landmarkProgressBar.style.width = percent + "%";
+
+      landmarkArea.textContent =
+        "海域：" + (
+          item.area_key === "harbor" ? "港" :
+          item.area_key === "silent_water" ? "静かな水域" :
+          item.area_key === "lighthouse_coast" ? "灯台海岸" :
+          item.area_key === "fog_sea" ? "霧の海" :
+          item.area_key === "moonlit_sea" ? "月光の海" :
+          item.area_key === "deep_current" ? "深潮" :
+          item.area_key === "unnamed_waters" ? "名前のない海域" :
+          "—"
+        );
+
+      landmarkCount.textContent =
+        "航海記録：" + logCount + " / " + nextMilestoneCount;
+
+      if(item.progress_status === "reached"){
+        landmarkRemaining.textContent = "到達済み";
+      }else{
+        landmarkRemaining.textContent = "到達まで：あと" + remaining + "回";
+      }
+
+      landmarkMeta.textContent =
+        "進行度：" + percent + "%。次の節目に近づくほど、名所の姿がはっきりしていきます。";
+    }
+
+    async function loadLandmarkProgress(){
+      if(!currentUser){
+        return;
+      }
+
+      const { data, error } = await client.rpc("get_my_landmark_progress");
+
+      if(error){
+        console.error("landmark progress error:", error);
+        return;
+      }
+
+      landmarkProgress = Array.isArray(data) ? data : [];
+      renderLandmarkProgress();
+    }
+
+
     function renderHarborSummary(){
       if(!harborSummary){
         voyageStartedAt.textContent = "—";
@@ -1759,6 +2014,7 @@
         accountDisplayName(currentUser) + " としてログイン中";
 
       await loadHarborSummary();
+      await loadLandmarkProgress();
       await loadNextVesselRequirements();
       await loadLogs();
       await checkUnreadHarborLetterReplies();
