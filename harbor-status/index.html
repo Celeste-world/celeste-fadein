@@ -725,6 +725,24 @@
       margin:8px 0 12px;
     }
 
+    .landmark-image-wrap{
+      width:100%;
+      margin:12px 0 14px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,227,163,.18);
+      background:
+        radial-gradient(circle at top, rgba(255,227,163,.08), transparent 58%),
+        rgba(5,8,17,.62);
+    }
+    
+    .landmark-image-wrap img{
+      width:100%;
+      aspect-ratio:16 / 9;
+      object-fit:cover;
+      display:block;
+    }
+
     .landmark-progress{
       position:relative;
       height:8px;
@@ -967,6 +985,9 @@
           <div class="landmark-stage" id="landmarkStage">
             確認中
           </div>
+          
+          <div class="landmark-image-wrap" id="landmarkImageWrap" style="display:none;"></div>
+          
           <div class="card-text" id="landmarkText">
             航海記録から、今見えている名所を確認しています。
           </div>
@@ -1123,6 +1144,7 @@
     const landmarkCard = document.getElementById("landmarkCard");
     const landmarkTitle = document.getElementById("landmarkTitle");
     const landmarkStage = document.getElementById("landmarkStage");
+    const landmarkImageWrap = document.getElementById("landmarkImageWrap");
     const landmarkText = document.getElementById("landmarkText");
     const landmarkProgressBar = document.getElementById("landmarkProgressBar");
     const landmarkArea = document.getElementById("landmarkArea");
@@ -1745,6 +1767,12 @@
       if(!item){
         landmarkTitle.textContent = "海の名所は、まだ霧の向こうです。";
         landmarkStage.textContent = "未確認";
+        
+        if(landmarkImageWrap){
+          landmarkImageWrap.innerHTML = "";
+          landmarkImageWrap.style.display = "none";
+        }
+        
         landmarkText.textContent =
           "航海が進むと、海域の先に特別な名所が見えてきます。";
         landmarkProgressBar.style.width = "0%";
@@ -1765,6 +1793,19 @@
 
       landmarkTitle.textContent = item.name_ja || "海の名所";
       landmarkStage.textContent = landmarkStageLabel(item.progress_status);
+      
+      if(landmarkImageWrap){
+        if(item.image_path){
+          landmarkImageWrap.innerHTML = `
+            <img src="${escapeHtml(item.image_path)}" alt="${escapeHtml(item.name_ja || "海の名所")}" loading="lazy">
+          `;
+          landmarkImageWrap.style.display = "block";
+        }else{
+          landmarkImageWrap.innerHTML = "";
+          landmarkImageWrap.style.display = "none";
+        }
+      }
+      
       landmarkText.textContent = landmarkMessageFor(item);
       landmarkProgressBar.style.width = percent + "%";
 
