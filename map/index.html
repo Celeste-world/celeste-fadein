@@ -485,10 +485,10 @@
     .pos-harbor{ left:4%; top:9%; }
     .pos-tide{ left:31%; top:21%; }
     .pos-lighthouse{ left:51%; top:8%; }
-    .pos-fog{ left:72%; top:23%; }
-    .pos-moon{ left:10%; top:58%; }
-    .pos-deep{ left:39%; top:66%; }
-    .pos-outer{ left:72%; top:68%; }
+    .pos-fog{ left:72%; top:20%; }
+    .pos-moon{ left:8%; top:62%; }
+    .pos-deep{ left:39%; top:72%; }
+    .pos-outer{ left:72%; top:78%; }
 
     .sea-card.open{
       border-color:rgba(185,246,202,.58);
@@ -608,6 +608,10 @@
       color:#ffe3a3;
       font-size:10px;
       line-height:1.6;
+      max-width:100%;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .sea-card.locked .sea-landmark-chip{
@@ -3122,9 +3126,14 @@
         return "";
       }
 
+      const prefix =
+        item.progress_status === "reached"
+          ? "名所到達"
+          : "名所";
+      
       return `
         <div class="sea-landmark-chip">
-          名所：${escapeHtml(item.name_ja || "海の名所")}・${escapeHtml(landmarkStageLabel(item.progress_status))}
+          ${escapeHtml(prefix)}：${escapeHtml(item.name_ja || "海の名所")}
         </div>
       `;
     }
