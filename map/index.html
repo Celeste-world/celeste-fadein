@@ -671,6 +671,84 @@
       display:block;
     }
 
+    .landmark-clickable-image{
+      cursor:zoom-in;
+      transition:
+        transform .22s ease,
+        filter .22s ease;
+    }
+    
+    .landmark-clickable-image:hover{
+      transform:scale(1.012);
+      filter:brightness(1.08);
+    }
+
+    .landmark-lightbox-overlay{
+      position:fixed;
+      inset:0;
+      z-index:10050;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background:
+        radial-gradient(circle at center, rgba(169,183,255,.10), transparent 38%),
+        rgba(3,5,11,.84);
+      backdrop-filter:blur(8px);
+    }
+    
+    .landmark-lightbox-overlay.visible{
+      display:flex;
+    }
+    
+    .landmark-lightbox-panel{
+      position:relative;
+      width:min(1180px, 100%);
+      max-height:calc(100vh - 44px);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+    
+    .landmark-lightbox-image{
+      max-width:100%;
+      max-height:calc(100vh - 120px);
+      object-fit:contain;
+      display:block;
+      border-radius:22px;
+      border:1px solid rgba(255,227,163,.26);
+      background:rgba(5,8,17,.72);
+      box-shadow:0 28px 90px rgba(0,0,0,.62);
+    }
+    
+    .landmark-lightbox-caption{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      text-align:center;
+    }
+    
+    .landmark-lightbox-close{
+      position:absolute;
+      top:-14px;
+      right:-10px;
+      width:36px;
+      height:36px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(10,14,28,.92);
+      color:var(--text);
+      font-size:20px;
+      line-height:1;
+      padding:0;
+      cursor:pointer;
+    }
+    
+    .landmark-lightbox-close:hover{
+      background:rgba(18,24,44,.98);
+    }
+
     .area-landmark-label{
       font-size:11px;
       letter-spacing:.16em;
@@ -2092,6 +2170,28 @@
     </div>
   </div>
 
+  <div class="landmark-lightbox-overlay" id="landmarkLightbox" aria-hidden="true">
+    <div class="landmark-lightbox-panel">
+      <button
+        class="landmark-lightbox-close"
+        id="landmarkLightboxClose"
+        type="button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+
+      <img
+        class="landmark-lightbox-image"
+        id="landmarkLightboxImage"
+        src=""
+        alt=""
+      >
+
+      <div class="landmark-lightbox-caption" id="landmarkLightboxCaption"></div>
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://okpsmmtdjtgrjxxocgrs.supabase.co";
     const supabaseKey = "sb_publishable_VD2CoAoDJPLq2SPje9rs9Q_kuqa5EdO";
@@ -2113,6 +2213,12 @@
     const imageModalImg = document.getElementById("imageModalImg");
     const imageModalCaption = document.getElementById("imageModalCaption");
     const imageModalClose = document.getElementById("imageModalClose");
+
+    const landmarkLightbox = document.getElementById("landmarkLightbox");
+    const landmarkLightboxImage = document.getElementById("landmarkLightboxImage");
+    const landmarkLightboxCaption = document.getElementById("landmarkLightboxCaption");
+    const landmarkLightboxClose = document.getElementById("landmarkLightboxClose");
+    
     const seaUnlockModal = document.getElementById("seaUnlockModal");
     const seaUnlockClose = document.getElementById("seaUnlockClose");
     const seaUnlockLaterBtn = document.getElementById("seaUnlockLaterBtn");
@@ -3204,7 +3310,13 @@
         const imageHtml = item.image_path
           ? `
             <div class="area-landmark-image-wrap">
-              <img src="${escapeHtml(item.image_path)}" alt="${escapeHtml(item.name_ja || "海の名所")}" loading="lazy">
+              <img
+                class="landmark-clickable-image"
+                src="${escapeHtml(item.image_path)}"
+                alt="${escapeHtml(item.name_ja || "海の名所")}"
+                loading="lazy"
+                data-landmark-lightbox
+              >
             </div>
           `
           : "";
@@ -3499,6 +3611,48 @@
       document.body.style.overflow = "hidden";
     }
 
+    function openLandmarkLightbox(src, caption){
+      if(!landmarkLightbox || !landmarkLightboxImage){
+        return;
+      }
+    
+      landmarkLightboxImage.src = src || "";
+      landmarkLightboxImage.alt = caption || "海の名所";
+    
+      if(landmarkLightboxCaption){
+        landmarkLightboxCaption.textContent = caption || "";
+      }
+    
+      landmarkLightbox.classList.add("visible");
+      landmarkLightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    
+    function closeLandmarkLightbox(){
+      if(!landmarkLightbox || !landmarkLightboxImage){
+        return;
+      }
+    
+      landmarkLightbox.classList.remove("visible");
+      landmarkLightbox.setAttribute("aria-hidden", "true");
+    
+      landmarkLightboxImage.src = "";
+      landmarkLightboxImage.alt = "";
+    
+      if(landmarkLightboxCaption){
+        landmarkLightboxCaption.textContent = "";
+      }
+    
+      document.body.style.overflow =
+        (
+          imageModal?.classList.contains("visible") ||
+          itemDetailModal?.classList.contains("visible") ||
+          seaUnlockModal?.classList.contains("visible")
+        )
+          ? "hidden"
+          : "";
+    }
+
     function openSeaUnlockModal(area){
       if(!area || !seaUnlockModal){
         return;
@@ -3754,6 +3908,34 @@
         }
       });
     });
+
+    document.addEventListener("click", function(event){
+      const image = event.target.closest("[data-landmark-lightbox]");
+    
+      if(!image){
+        return;
+      }
+    
+      event.preventDefault();
+      event.stopPropagation();
+    
+      openLandmarkLightbox(
+        image.getAttribute("src"),
+        image.getAttribute("alt")
+      );
+    });
+    
+    if(landmarkLightboxClose){
+      landmarkLightboxClose.addEventListener("click", closeLandmarkLightbox);
+    }
+    
+    if(landmarkLightbox){
+      landmarkLightbox.addEventListener("click", function(event){
+        if(event.target === landmarkLightbox){
+          closeLandmarkLightbox();
+        }
+      });
+    }
     
     document.addEventListener("click", function(event){
       if(!event.target.closest(".global-nav")){
@@ -3890,10 +4072,12 @@
 
     document.addEventListener("keydown", function(event){
       if(event.key === "Escape"){
+        closeLandmarkLightbox();
         closeItemDetailModal();
         closeSeaUnlockModal();
         closeImageModal();
       }
+          
       if(event.key === "Enter" || event.key === " "){
         const journalItem = document.activeElement?.closest?.("[data-journal-item-key]");
       
