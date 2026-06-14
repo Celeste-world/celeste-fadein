@@ -1513,6 +1513,40 @@
         top:148px;
       }
 
+      .cat-scroll.stacked-mode .cat-scroll-head{
+        gap:8px;
+        margin-bottom:10px;
+      }
+      
+      .cat-scroll.stacked-mode .cat-icon-wrap{
+        width:min(140px, 100%);
+        height:min(140px, 38vw);
+        border-radius:20px;
+      }
+      
+      .cat-scroll.stacked-mode .cat-icon{
+        border-radius:18px;
+      }
+      
+      .cat-scroll.stacked-mode .cat-scroll-text{
+        max-height:calc(100vh - 360px);
+        max-height:calc(100dvh - 360px);
+        overflow-y:auto;
+        padding-right:6px;
+        font-size:13px;
+        line-height:1.75;
+      }
+      
+      .cat-scroll.stacked-mode .cat-play-actions{
+        gap:8px;
+        margin-top:12px;
+        padding-top:12px;
+      }
+      
+      .cat-scroll.stacked-mode .cat-play-actions button{
+        width:100%;
+      }
+
       .log-top{
         flex-direction:column;
       }
@@ -1802,6 +1836,47 @@
     .nav-menu a:hover{
       color:var(--text);
       background:rgba(255,255,255,.04);
+    }
+
+    /* Harbor Cat stacked notice mode */
+
+    .cat-scroll.stacked-mode .cat-scroll-head{
+      gap:10px;
+      margin-bottom:14px;
+    }
+    
+    .cat-scroll.stacked-mode .cat-icon-wrap{
+      width:min(180px, 100%);
+      height:min(180px, 42vw);
+      border-radius:22px;
+    }
+    
+    .cat-scroll.stacked-mode .cat-icon{
+      border-radius:20px;
+    }
+    
+    .cat-scroll.stacked-mode .cat-scroll-text{
+      max-height:calc(100vh - 360px);
+      overflow-y:auto;
+      padding-right:8px;
+      font-size:14px;
+      line-height:1.85;
+    }
+    
+    .cat-scroll.stacked-mode .cat-play-actions{
+      position:sticky;
+      bottom:-2px;
+      z-index:6;
+      margin-top:14px;
+      padding-top:14px;
+      padding-bottom:4px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8,12,24,0),
+          rgba(8,12,24,.96) 28%,
+          rgba(8,12,24,.98)
+        );
     }
     
     @media(max-width:640px){
@@ -3924,6 +3999,10 @@
     function openCatScroll(message, mode = "reading"){
       hideSpecialWelcomeImage();
       hideCatPlayActions();
+
+      if(catScroll){
+        catScroll.classList.remove("stacked-mode");
+      }
           
       clearCatScrollAutoCloseTimer();
     
@@ -3946,6 +4025,10 @@
 
     async function appendCatScrollNotice(message, label = "Harbor Find", mode = "reply"){
       clearCatScrollAutoCloseTimer();
+
+      if(catScroll){
+        catScroll.classList.add("stacked-mode");
+      }
     
       const current = catReplyText.textContent.trim();
     
@@ -3980,8 +4063,14 @@
 
     function closeCatScroll(){
       clearCatScrollAutoCloseTimer();
+
+      if(catScroll){
+        catScroll.classList.remove("stacked-mode");
+      }
     
       catOverlay.classList.remove("visible");
+
+      
       catOverlay.setAttribute("aria-hidden", "true");
       catReplyText.textContent = "";
       catReplyText.classList.remove("fading");
